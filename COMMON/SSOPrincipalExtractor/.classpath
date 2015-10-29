@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/cas-client-core"/>
+	<classpathentry kind="lib" path="target/dependency-jars/cas-client-core-3.2.1.jar"/>
+	<classpathentry kind="lib" path="target/dependency-jars/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="target/dependency-jars/junit-3.8.1.jar"/>
+	<classpathentry kind="lib" path="target/dependency-jars/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="target/dependency-jars/servlet-api-2.3.jar"/>
+	<classpathentry kind="lib" path="target/dependency-jars/slf4j-api-1.6.6.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

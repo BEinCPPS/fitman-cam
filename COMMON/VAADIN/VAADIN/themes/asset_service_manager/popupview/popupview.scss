@@ -1,0 +1,14 @@
+@mixin asset_service_manager-popupview($primaryStyleName : v-popupview) {
+
+.#{$primaryStyleName} {
+	color: #1b699f;
+}
+.#{$primaryStyleName}:hover {
+	color: #2483c4;
+}
+.#{$primaryStyleName}-popup {
+	background: #fff;
+	padding: 3px;
+}
+
+}

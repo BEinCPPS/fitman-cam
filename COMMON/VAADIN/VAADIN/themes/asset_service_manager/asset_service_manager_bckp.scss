@@ -1,0 +1,13 @@
+/* Import the asset_service_manager theme.*/
+/* This only allows us to use the mixins defined in it and does not add any styles by itself. */
+/*@import "../asset_service_manager/asset_service_manager.scss";*/
+@import "asset_service_manager.scss";
+
+/* This contains all of your theme.*/
+/* If somebody wants to extend the theme she will include this mixin. */
+@mixin asset_service_manager {
+  /* Include all the styles from the asset_service_manager theme */
+  @include asset_service_manager;
+
+  /* Insert your theme rules here */
+}

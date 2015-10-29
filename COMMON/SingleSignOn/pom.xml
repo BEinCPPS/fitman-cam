@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>it.eng.sso.test</groupId>
+	<artifactId>sso</artifactId>
+	<packaging>war</packaging>
+	<version>2.0-SNAPSHOT</version>
+
+	<repositories>
+		<repository>
+			<id>ja-sig</id>
+			<url>http://oss.sonatype.org/content/repositories/releases/ </url>
+		</repository>
+		<repository>
+			<id>jasig-repository</id>
+			<name>Jasig Maven2 Repository</name>
+			<url>http://developer.ja-sig.org/maven2</url>
+		</repository>
+
+		<repository>
+			<id>jboss repo</id>
+			<name>JBoss Repository</name>
+			<layout>default</layout>
+			<url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+		</repository>
+
+		<repository>
+			<id>javanet</id>
+			<name>Repository for Maven2</name>
+			<url>http://download.java.net/maven/2</url>
+		</repository>
+
+		<repository>
+			<id>google</id>
+			<name>Google repository for Maven2</name>
+			<url>https://oss.sonatype.org/content/repositories/google-releases</url>
+		</repository>
+
+		<repository>
+			<id>jboss maven2</id>
+			<name>JBoss repository for Maven2</name>
+			<url>http://repository.jboss.org/maven2/</url>
+		</repository>
+
+		<repository>
+			<id>com.springsource.repository.bundles.release</id>
+			<name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/release</url>
+		</repository>
+
+		<repository>
+			<id>com.springsource.repository.bundles.external</id>
+			<name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/external</url>
+		</repository>
+
+		<repository>
+			<id>com.springsource.repository.libraries.release</id>
+			<name>SpringSource Enterprise Bundle Repository - SpringSource Library Releases</name>
+			<url>http://repository.springsource.com/maven/libraries/release</url>
+		</repository>
+
+		<repository>
+			<id>com.springsource.repository.libraries.external</id>
+			<name>SpringSource Enterprise Bundle Repository - External Library Releases</name>
+			<url>http://repository.springsource.com/maven/libraries/external</url>
+		</repository>
+
+		<repository>
+			<id>artifactory libs </id>
+			<name>JFrog libs releases</name>
+			<url>http://repo.jfrog.org/artifactory/libs-releases</url>
+		</repository>
+
+		<repository>
+			<id>artifactory releases</id>
+			<name>JFrog plugins releases</name>
+			<url>http://repo.jfrog.org/artifactory/plugins-releases-local </url>
+		</repository>
+
+
+		<repository>
+			<id>artifactory repo</id>
+			<name>The Maven Repo1 Cache proxy</name>
+			<url>http://repo.jfrog.org/artifactory/repo1</url>
+		</repository>
+
+		<repository>
+			<id>ibiblio</id>
+			<name>iBiblio</name>
+			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jasig.cas</groupId>
+			<artifactId>cas-server-webapp</artifactId>
+			<version>${cas.version}</version>
+			<type>war</type>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Non serve in deploy -->
+		<dependency>
+			<groupId>org.jasig.cas</groupId>
+			<artifactId>cas-server-core</artifactId>
+			<version>${cas.version}</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jasig.cas</groupId>
+			<artifactId>cas-server-integration-restlet</artifactId>
+			<version>${cas.version}</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxrs</artifactId>
+			<version>2.2.1.GA</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxb-provider</artifactId>
+			<version>2.2.1.GA</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jackson-provider</artifactId>
+			<version>2.2.1.GA</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml</artifactId>
+			<version>2.5.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml</artifactId>
+			<version>1.1b</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.2.1</version>
+			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xercesImpl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- RESTLET DEPENDENCIES -->
+		<dependency>
+			<groupId>org.jasig.cas</groupId>
+			<artifactId>cas-server-integration-restlet</artifactId>
+			<version>3.4.11-RC1</version>
+		</dependency>
+		<!-- RESTLET DEPENDENCIES -->
+
+
+	</dependencies>
+	<properties>
+		<cas.version>3.5.1</cas.version>
+		<source-version>1.6</source-version>
+		<target-version>1.6</target-version>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>local</id>
+			<properties>
+				<host1.key>fitman</host1.key>
+				<host2.key>fitman2</host2.key>
+				<lsa1.uri>http://localhost:8080/portal-lsaservice/api/authenticate</lsa1.uri>
+				<lsa2.uri>http://localhost:8081/portal-lsaservice/api/authenticate</lsa2.uri>
+				
+			</properties>
+			<build>
+				<finalName>${artifactId}</finalName>
+				<plugins>
+					<plugin>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<source>${source-version}</source>
+							<target>${target-version}</target>
+							<showDeprecation>false</showDeprecation>
+							<encoding>ISO-8859-1</encoding>
+							<fork>true</fork>
+							<showWarnings>false</showWarnings>
+						</configuration>
+					</plugin>
+					<plugin>
+						<artifactId>maven-war-plugin</artifactId>
+						<configuration>
+							<warName>sso</warName>
+							<webResources>
+								<resource>
+									<filtering>true</filtering>
+									<directory>${basedir}/src/main/webapp</directory>
+									<includes>
+										<include>**/*.xml</include>
+										<!-- include any other file types you want to filter -->
+									</includes>
+								</resource>
+							</webResources>
+							<packagingExcludes>
+								WEB-INF/lib/servlet-api-2.5.jar,
+								WEB-INF/lib/commons-collections-2.1.jar
+							</packagingExcludes>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<skipTests>true</skipTests>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<!-- This Profile is for REVIEW usage -->
+		<profile>
+			<id>release</id>
+			<properties>
+				<host1.key>fitman</host1.key>
+				<host2.key>fitman2</host2.key>
+				<lsa1.uri>http://localhost:8080/portal-lsaservice/api/authenticate</lsa1.uri>
+				<lsa2.uri>http://localhost:8080/portal-lsaservice/api/authenticate</lsa2.uri>
+			</properties>
+			<build>
+				<finalName>${artifactId}</finalName>
+				<plugins>
+					<plugin>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<source>${source-version}</source>
+							<target>${target-version}</target>
+							<showDeprecation>true</showDeprecation>
+							<encoding>ISO-8859-1</encoding>
+							<fork>true</fork>
+							<showWarnings>false</showWarnings>
+						</configuration>
+					</plugin>
+					<plugin>
+						<artifactId>maven-war-plugin</artifactId>
+						<configuration>
+							<warName>sso</warName>
+							<webResources>
+								<resource>
+									<filtering>true</filtering>
+									<directory>${basedir}/src/main/webapp</directory>
+									<includes>
+										<include>**/*.xml</include>
+										<!-- include any other file types you want to filter -->
+									</includes>
+								</resource>
+							</webResources>
+							<packagingExcludes>
+								WEB-INF/lib/servlet-api-2.5.jar,
+								WEB-INF/lib/commons-collections-2.1.jar
+							</packagingExcludes>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<skipTests>true</skipTests>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

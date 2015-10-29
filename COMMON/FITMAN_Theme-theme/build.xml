@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE project>
+
+<project name="FITMAN_Theme-theme" basedir="." default="deploy">
+
+	<property file="build.properties" />
+	<property name="auto.deploy.dir" value="${LIFERAY_DEPLOY_FOLDER}" />
+	<target name = "deploy">
+		<echo message ="Creating war..."/>
+		<mkdir dir="dist" />	
+		<war destfile="dist/${ant.project.name}.war" basedir="docroot" update="true" webxml="docroot/WEB-INF/web.xml" manifest="docroot/META-INF/MANIFEST.MF" filesetmanifest="merge" whenmanifestonly="skip"/>
+		<echo message ="Deploy to liferay server..."/>
+		<copy file="dist/${ant.project.name}.war" todir="${auto.deploy.dir}" force="true"/>
+		<echo message ="Done"/>
+	</target>
+	
+	<target name = "clean">
+		<echo message ="Cleaning..."/>
+		<delete dir="dist" />	
+	</target>
+	
+	
+</project>	

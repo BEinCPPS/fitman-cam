@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<project name="maven-deploy" default="deploy" basedir=".">
+
+	<property file="build.properties"/>
+	
+	<target name="prepare">
+		<delete dir ="${target.web.dir}/${war.name}"/>
+	</target>
+	
+	<target name="deploy" depends="prepare">
+
+		<echo message="deployo war  "/>
+		<copy todir="${target.web.dir}" overwrite="true">
+			<fileset dir="${project.src}" >
+				<filename name="**/*.war"/>
+			</fileset>
+		</copy>
+	</target>
+</project>

@@ -1,0 +1,336 @@
+09:40:13.886 [main] WARN  o.a.cxf.phase.PhaseInterceptorChain - Interceptor for {http://localhost:8081/cm-api/api/v1}WebClient has thrown exception, unwinding now
+org.apache.cxf.interceptor.Fault: Could not send Message.
+	at org.apache.cxf.interceptor.MessageSenderInterceptor$MessageSenderEndingInterceptor.handleMessage(MessageSenderInterceptor.java:64) ~[cxf-api-2.7.6.jar:2.7.6]
+	at org.apache.cxf.phase.PhaseInterceptorChain.doIntercept(PhaseInterceptorChain.java:271) ~[cxf-api-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.AbstractClient.doRunInterceptorChain(AbstractClient.java:616) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.doChainedInvocation(WebClient.java:1037) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.doInvoke(WebClient.java:858) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.doInvoke(WebClient.java:832) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.invoke(WebClient.java:297) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.post(WebClient.java:306) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at msee.sp3.cm.api.ServiceApiTest.createService(ServiceApiTest.java:26) [test-classes/:na]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.7.0_72]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57) ~[na:1.7.0_72]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.7.0_72]
+	at java.lang.reflect.Method.invoke(Method.java:606) ~[na:1.7.0_72]
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:84) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestRunner.privateRun(TestRunner.java:767) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestRunner.run(TestRunner.java:617) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1224) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1149) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestNG.run(TestNG.java:1057) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:111) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:204) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:175) [testng.jar:6.8.7beta-201309140723]
+Caused by: java.net.SocketTimeoutException: SocketTimeoutException invoking http://localhost:8081/cm-api/api/v1/serviceapi/service: Read timed out
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:1.7.0_72]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57) ~[na:1.7.0_72]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:1.7.0_72]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:526) ~[na:1.7.0_72]
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.mapException(HTTPConduit.java:1334) ~[cxf-rt-transports-http-2.7.6.jar:2.7.6]
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.close(HTTPConduit.java:1318) ~[cxf-rt-transports-http-2.7.6.jar:2.7.6]
+	at org.apache.cxf.transport.AbstractConduit.close(AbstractConduit.java:56) ~[cxf-api-2.7.6.jar:2.7.6]
+	at org.apache.cxf.transport.http.HTTPConduit.close(HTTPConduit.java:623) ~[cxf-rt-transports-http-2.7.6.jar:2.7.6]
+	at org.apache.cxf.interceptor.MessageSenderInterceptor$MessageSenderEndingInterceptor.handleMessage(MessageSenderInterceptor.java:62) ~[cxf-api-2.7.6.jar:2.7.6]
+	... 32 common frames omitted
+Caused by: java.net.SocketTimeoutException: Read timed out
+	at java.net.SocketInputStream.socketRead0(Native Method) ~[na:1.7.0_72]
+	at java.net.SocketInputStream.read(SocketInputStream.java:152) ~[na:1.7.0_72]
+	at java.net.SocketInputStream.read(SocketInputStream.java:122) ~[na:1.7.0_72]
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:235) ~[na:1.7.0_72]
+	at java.io.BufferedInputStream.read1(BufferedInputStream.java:275) ~[na:1.7.0_72]
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:334) ~[na:1.7.0_72]
+	at sun.net.www.http.HttpClient.parseHTTPHeader(HttpClient.java:687) ~[na:1.7.0_72]
+	at sun.net.www.http.HttpClient.parseHTTP(HttpClient.java:633) ~[na:1.7.0_72]
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1323) ~[na:1.7.0_72]
+	at java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:468) ~[na:1.7.0_72]
+	at org.apache.cxf.transport.http.URLConnectionHTTPConduit$URLConnectionWrappedOutputStream.getResponseCode(URLConnectionHTTPConduit.java:260) ~[cxf-rt-transports-http-2.7.6.jar:2.7.6]
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.handleResponseInternal(HTTPConduit.java:1513) ~[cxf-rt-transports-http-2.7.6.jar:2.7.6]
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.handleResponse(HTTPConduit.java:1486) ~[cxf-rt-transports-http-2.7.6.jar:2.7.6]
+	at org.apache.cxf.transport.http.HTTPConduit$WrappedOutputStream.close(HTTPConduit.java:1305) ~[cxf-rt-transports-http-2.7.6.jar:2.7.6]
+	... 35 common frames omitted
+09:52:42.035 [main] WARN  o.a.c.j.p.AbstractJAXBProvider - com.sun.xml.bind.v2.runtime.IllegalAnnotationsException: 1 counts of IllegalAnnotationExceptions
+La proprietà "serviceId" contiene un'annotazione XmlID ma non è di tipo String.
+	this problem is related to the following location:
+		at public java.lang.Long msee.sp3.cm.api.resources.ServiceResourceExtended.getServiceId()
+		at msee.sp3.cm.api.resources.ServiceResourceExtended
+
+	at com.sun.xml.bind.v2.runtime.IllegalAnnotationsException$Builder.check(IllegalAnnotationsException.java:106)
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl.getTypeInfoSet(JAXBContextImpl.java:471)
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl.<init>(JAXBContextImpl.java:303)
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl.<init>(JAXBContextImpl.java:142)
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder.build(JAXBContextImpl.java:1174)
+	at com.sun.xml.bind.v2.ContextFactory.createContext(ContextFactory.java:162)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at javax.xml.bind.ContextFinder.newInstance(ContextFinder.java:248)
+	at javax.xml.bind.ContextFinder.newInstance(ContextFinder.java:235)
+	at javax.xml.bind.ContextFinder.find(ContextFinder.java:432)
+	at javax.xml.bind.JAXBContext.newInstance(JAXBContext.java:637)
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.getClassContext(AbstractJAXBProvider.java:488)
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.getJAXBContext(AbstractJAXBProvider.java:470)
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.createMarshaller(AbstractJAXBProvider.java:589)
+	at org.apache.cxf.jaxrs.provider.JAXBElementProvider.marshal(JAXBElementProvider.java:415)
+	at org.apache.cxf.jaxrs.provider.JAXBElementProvider.writeTo(JAXBElementProvider.java:294)
+	at org.apache.cxf.jaxrs.utils.JAXRSUtils.writeMessageBody(JAXRSUtils.java:1325)
+	at org.apache.cxf.jaxrs.client.AbstractClient.writeBody(AbstractClient.java:434)
+	at org.apache.cxf.jaxrs.client.WebClient$BodyWriter.doWriteBody(WebClient.java:1155)
+	at org.apache.cxf.jaxrs.client.AbstractClient$AbstractBodyWriter.handleMessage(AbstractClient.java:1024)
+	at org.apache.cxf.phase.PhaseInterceptorChain.doIntercept(PhaseInterceptorChain.java:271)
+	at org.apache.cxf.jaxrs.client.AbstractClient.doRunInterceptorChain(AbstractClient.java:616)
+	at org.apache.cxf.jaxrs.client.WebClient.doChainedInvocation(WebClient.java:1037)
+	at org.apache.cxf.jaxrs.client.WebClient.doInvoke(WebClient.java:858)
+	at org.apache.cxf.jaxrs.client.WebClient.doInvoke(WebClient.java:832)
+	at org.apache.cxf.jaxrs.client.WebClient.invoke(WebClient.java:297)
+	at org.apache.cxf.jaxrs.client.WebClient.post(WebClient.java:306)
+	at msee.sp3.cm.api.ServiceApiTest.createService(ServiceApiTest.java:26)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:84)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:767)
+	at org.testng.TestRunner.run(TestRunner.java:617)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1224)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1149)
+	at org.testng.TestNG.run(TestNG.java:1057)
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:111)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:204)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:175)
+
+09:52:42.042 [main] ERROR o.a.cxf.jaxrs.client.AbstractClient - .Problem with writing the request message, class : class msee.sp3.cm.api.resources.ServiceResourceExtended, ContentType : application/xml.
+09:52:42.048 [main] WARN  o.a.cxf.phase.PhaseInterceptorChain - Interceptor for {http://localhost:8081/cm-api/api/v1}WebClient has thrown exception, unwinding now
+org.apache.cxf.interceptor.Fault: .Problem with writing the request message, class : class msee.sp3.cm.api.resources.ServiceResourceExtended, ContentType : application/xml.
+	at org.apache.cxf.jaxrs.client.WebClient$BodyWriter.doWriteBody(WebClient.java:1160) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.AbstractClient$AbstractBodyWriter.handleMessage(AbstractClient.java:1024) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.phase.PhaseInterceptorChain.doIntercept(PhaseInterceptorChain.java:271) ~[cxf-api-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.AbstractClient.doRunInterceptorChain(AbstractClient.java:616) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.doChainedInvocation(WebClient.java:1037) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.doInvoke(WebClient.java:858) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.doInvoke(WebClient.java:832) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.invoke(WebClient.java:297) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.post(WebClient.java:306) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at msee.sp3.cm.api.ServiceApiTest.createService(ServiceApiTest.java:26) [test-classes/:na]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.7.0_72]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57) ~[na:1.7.0_72]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.7.0_72]
+	at java.lang.reflect.Method.invoke(Method.java:606) ~[na:1.7.0_72]
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:84) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestRunner.privateRun(TestRunner.java:767) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestRunner.run(TestRunner.java:617) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1224) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1149) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestNG.run(TestNG.java:1057) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:111) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:204) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:175) [testng.jar:6.8.7beta-201309140723]
+Caused by: javax.ws.rs.client.ClientException: .Problem with writing the request message, class : class msee.sp3.cm.api.resources.ServiceResourceExtended, ContentType : application/xml.
+	at org.apache.cxf.jaxrs.client.AbstractClient.reportMessageHandlerProblem(AbstractClient.java:744) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.AbstractClient.writeBody(AbstractClient.java:448) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient$BodyWriter.doWriteBody(WebClient.java:1155) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	... 33 common frames omitted
+Caused by: javax.ws.rs.BadRequestException: com.sun.xml.bind.v2.runtime.IllegalAnnotationsException: 1 counts of IllegalAnnotationExceptions
+La proprietà "serviceId" contiene un'annotazione XmlID ma non è di tipo String.
+	this problem is related to the following location:
+		at public java.lang.Long msee.sp3.cm.api.resources.ServiceResourceExtended.getServiceId()
+		at msee.sp3.cm.api.resources.ServiceResourceExtended
+
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.handleExceptionEnd(AbstractJAXBProvider.java:681) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.handleJAXBException(AbstractJAXBProvider.java:693) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.provider.JAXBElementProvider.writeTo(JAXBElementProvider.java:297) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.utils.JAXRSUtils.writeMessageBody(JAXRSUtils.java:1325) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.AbstractClient.writeBody(AbstractClient.java:434) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	... 34 common frames omitted
+Caused by: com.sun.xml.bind.v2.runtime.IllegalAnnotationsException: 1 counts of IllegalAnnotationExceptions
+	at com.sun.xml.bind.v2.runtime.IllegalAnnotationsException$Builder.check(IllegalAnnotationsException.java:106) ~[jaxb-impl-2.2.6.jar:2.2.6]
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl.getTypeInfoSet(JAXBContextImpl.java:471) ~[jaxb-impl-2.2.6.jar:2.2.6]
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl.<init>(JAXBContextImpl.java:303) ~[jaxb-impl-2.2.6.jar:2.2.6]
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl.<init>(JAXBContextImpl.java:142) ~[jaxb-impl-2.2.6.jar:2.2.6]
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder.build(JAXBContextImpl.java:1174) ~[jaxb-impl-2.2.6.jar:2.2.6]
+	at com.sun.xml.bind.v2.ContextFactory.createContext(ContextFactory.java:162) ~[jaxb-impl-2.2.6.jar:2.2.6]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.7.0_72]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57) ~[na:1.7.0_72]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.7.0_72]
+	at java.lang.reflect.Method.invoke(Method.java:606) ~[na:1.7.0_72]
+	at javax.xml.bind.ContextFinder.newInstance(ContextFinder.java:248) ~[na:1.7.0_72]
+	at javax.xml.bind.ContextFinder.newInstance(ContextFinder.java:235) ~[na:1.7.0_72]
+	at javax.xml.bind.ContextFinder.find(ContextFinder.java:432) ~[na:1.7.0_72]
+	at javax.xml.bind.JAXBContext.newInstance(JAXBContext.java:637) ~[na:1.7.0_72]
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.getClassContext(AbstractJAXBProvider.java:488) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.getJAXBContext(AbstractJAXBProvider.java:470) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.createMarshaller(AbstractJAXBProvider.java:589) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.provider.JAXBElementProvider.marshal(JAXBElementProvider.java:415) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.provider.JAXBElementProvider.writeTo(JAXBElementProvider.java:294) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	... 36 common frames omitted
+10:03:47.028 [main] WARN  o.a.c.j.p.AbstractJAXBProvider - com.sun.xml.bind.v2.runtime.IllegalAnnotationsException: 1 counts of IllegalAnnotationExceptions
+La proprietà "serviceId" contiene un'annotazione XmlID ma non è di tipo String.
+	this problem is related to the following location:
+		at public java.lang.Long msee.sp3.cm.api.resources.ServiceResourceExtended.getServiceId()
+		at msee.sp3.cm.api.resources.ServiceResourceExtended
+
+	at com.sun.xml.bind.v2.runtime.IllegalAnnotationsException$Builder.check(IllegalAnnotationsException.java:106)
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl.getTypeInfoSet(JAXBContextImpl.java:471)
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl.<init>(JAXBContextImpl.java:303)
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl.<init>(JAXBContextImpl.java:142)
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder.build(JAXBContextImpl.java:1174)
+	at com.sun.xml.bind.v2.ContextFactory.createContext(ContextFactory.java:162)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at javax.xml.bind.ContextFinder.newInstance(ContextFinder.java:248)
+	at javax.xml.bind.ContextFinder.newInstance(ContextFinder.java:235)
+	at javax.xml.bind.ContextFinder.find(ContextFinder.java:432)
+	at javax.xml.bind.JAXBContext.newInstance(JAXBContext.java:637)
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.getClassContext(AbstractJAXBProvider.java:488)
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.getJAXBContext(AbstractJAXBProvider.java:470)
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.createMarshaller(AbstractJAXBProvider.java:589)
+	at org.apache.cxf.jaxrs.provider.JAXBElementProvider.marshal(JAXBElementProvider.java:415)
+	at org.apache.cxf.jaxrs.provider.JAXBElementProvider.writeTo(JAXBElementProvider.java:294)
+	at org.apache.cxf.jaxrs.utils.JAXRSUtils.writeMessageBody(JAXRSUtils.java:1325)
+	at org.apache.cxf.jaxrs.client.AbstractClient.writeBody(AbstractClient.java:434)
+	at org.apache.cxf.jaxrs.client.WebClient$BodyWriter.doWriteBody(WebClient.java:1155)
+	at org.apache.cxf.jaxrs.client.AbstractClient$AbstractBodyWriter.handleMessage(AbstractClient.java:1024)
+	at org.apache.cxf.phase.PhaseInterceptorChain.doIntercept(PhaseInterceptorChain.java:271)
+	at org.apache.cxf.jaxrs.client.AbstractClient.doRunInterceptorChain(AbstractClient.java:616)
+	at org.apache.cxf.jaxrs.client.WebClient.doChainedInvocation(WebClient.java:1037)
+	at org.apache.cxf.jaxrs.client.WebClient.doInvoke(WebClient.java:858)
+	at org.apache.cxf.jaxrs.client.WebClient.doInvoke(WebClient.java:832)
+	at org.apache.cxf.jaxrs.client.WebClient.invoke(WebClient.java:297)
+	at org.apache.cxf.jaxrs.client.WebClient.post(WebClient.java:306)
+	at msee.sp3.cm.api.ServiceApiTest.createService(ServiceApiTest.java:26)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:84)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+	at org.testng.TestRunner.privateRun(TestRunner.java:767)
+	at org.testng.TestRunner.run(TestRunner.java:617)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1224)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1149)
+	at org.testng.TestNG.run(TestNG.java:1057)
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:111)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:204)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:175)
+
+10:03:47.033 [main] ERROR o.a.cxf.jaxrs.client.AbstractClient - .Problem with writing the request message, class : class msee.sp3.cm.api.resources.ServiceResourceExtended, ContentType : application/xml.
+10:03:47.040 [main] WARN  o.a.cxf.phase.PhaseInterceptorChain - Interceptor for {http://localhost:8081/cm-api/api/v1}WebClient has thrown exception, unwinding now
+org.apache.cxf.interceptor.Fault: .Problem with writing the request message, class : class msee.sp3.cm.api.resources.ServiceResourceExtended, ContentType : application/xml.
+	at org.apache.cxf.jaxrs.client.WebClient$BodyWriter.doWriteBody(WebClient.java:1160) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.AbstractClient$AbstractBodyWriter.handleMessage(AbstractClient.java:1024) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.phase.PhaseInterceptorChain.doIntercept(PhaseInterceptorChain.java:271) ~[cxf-api-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.AbstractClient.doRunInterceptorChain(AbstractClient.java:616) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.doChainedInvocation(WebClient.java:1037) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.doInvoke(WebClient.java:858) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.doInvoke(WebClient.java:832) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.invoke(WebClient.java:297) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient.post(WebClient.java:306) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at msee.sp3.cm.api.ServiceApiTest.createService(ServiceApiTest.java:26) [test-classes/:na]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.7.0_72]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57) ~[na:1.7.0_72]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.7.0_72]
+	at java.lang.reflect.Method.invoke(Method.java:606) ~[na:1.7.0_72]
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:84) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:714) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestRunner.privateRun(TestRunner.java:767) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestRunner.run(TestRunner.java:617) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:334) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunner.run(SuiteRunner.java:240) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1224) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1149) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.TestNG.run(TestNG.java:1057) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:111) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:204) [testng.jar:6.8.7beta-201309140723]
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:175) [testng.jar:6.8.7beta-201309140723]
+Caused by: javax.ws.rs.client.ClientException: .Problem with writing the request message, class : class msee.sp3.cm.api.resources.ServiceResourceExtended, ContentType : application/xml.
+	at org.apache.cxf.jaxrs.client.AbstractClient.reportMessageHandlerProblem(AbstractClient.java:744) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.AbstractClient.writeBody(AbstractClient.java:448) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.WebClient$BodyWriter.doWriteBody(WebClient.java:1155) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	... 33 common frames omitted
+Caused by: javax.ws.rs.BadRequestException: com.sun.xml.bind.v2.runtime.IllegalAnnotationsException: 1 counts of IllegalAnnotationExceptions
+La proprietà "serviceId" contiene un'annotazione XmlID ma non è di tipo String.
+	this problem is related to the following location:
+		at public java.lang.Long msee.sp3.cm.api.resources.ServiceResourceExtended.getServiceId()
+		at msee.sp3.cm.api.resources.ServiceResourceExtended
+
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.handleExceptionEnd(AbstractJAXBProvider.java:681) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.handleJAXBException(AbstractJAXBProvider.java:693) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.provider.JAXBElementProvider.writeTo(JAXBElementProvider.java:297) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.utils.JAXRSUtils.writeMessageBody(JAXRSUtils.java:1325) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.client.AbstractClient.writeBody(AbstractClient.java:434) [cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	... 34 common frames omitted
+Caused by: com.sun.xml.bind.v2.runtime.IllegalAnnotationsException: 1 counts of IllegalAnnotationExceptions
+	at com.sun.xml.bind.v2.runtime.IllegalAnnotationsException$Builder.check(IllegalAnnotationsException.java:106) ~[jaxb-impl-2.2.6.jar:2.2.6]
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl.getTypeInfoSet(JAXBContextImpl.java:471) ~[jaxb-impl-2.2.6.jar:2.2.6]
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl.<init>(JAXBContextImpl.java:303) ~[jaxb-impl-2.2.6.jar:2.2.6]
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl.<init>(JAXBContextImpl.java:142) ~[jaxb-impl-2.2.6.jar:2.2.6]
+	at com.sun.xml.bind.v2.runtime.JAXBContextImpl$JAXBContextBuilder.build(JAXBContextImpl.java:1174) ~[jaxb-impl-2.2.6.jar:2.2.6]
+	at com.sun.xml.bind.v2.ContextFactory.createContext(ContextFactory.java:162) ~[jaxb-impl-2.2.6.jar:2.2.6]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.7.0_72]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57) ~[na:1.7.0_72]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.7.0_72]
+	at java.lang.reflect.Method.invoke(Method.java:606) ~[na:1.7.0_72]
+	at javax.xml.bind.ContextFinder.newInstance(ContextFinder.java:248) ~[na:1.7.0_72]
+	at javax.xml.bind.ContextFinder.newInstance(ContextFinder.java:235) ~[na:1.7.0_72]
+	at javax.xml.bind.ContextFinder.find(ContextFinder.java:432) ~[na:1.7.0_72]
+	at javax.xml.bind.JAXBContext.newInstance(JAXBContext.java:637) ~[na:1.7.0_72]
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.getClassContext(AbstractJAXBProvider.java:488) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.getJAXBContext(AbstractJAXBProvider.java:470) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.provider.AbstractJAXBProvider.createMarshaller(AbstractJAXBProvider.java:589) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.provider.JAXBElementProvider.marshal(JAXBElementProvider.java:415) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	at org.apache.cxf.jaxrs.provider.JAXBElementProvider.writeTo(JAXBElementProvider.java:294) ~[cxf-rt-frontend-jaxrs-2.7.6.jar:2.7.6]
+	... 36 common frames omitted

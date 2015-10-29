@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.eng.asset.dao.AssetDAO">
+
+	<sql id="LocalServiceColumns">
+		le.idLocalService AS idLocalService,
+		le.name AS name,
+		le.serviceDescription AS serviceDescription,
+		le.nameAsset AS nameAsset,
+		le.owner AS owner,
+		CAST(le.created AS CHAR) AS created,
+		le.published AS
+		published,
+		CAST(le.publishedDate AS char) AS publishedDate,
+		le.userId AS
+		userId
+	</sql>
+	<sql id="LocalServiceTable"> asset.localservice le
+	</sql>
+	<sql id="LocalServiceWhereCondition"> WHERE le.Name = #{leName}
+	</sql>
+	<sql id="PublicServiceColumns">
+		ps.idService AS idService,
+		ps.name AS name,
+		ps.serviceDescription AS serviceDescription,
+		ps.owner AS owner,
+		CAST(ps.created AS CHAR) AS created,
+		ps.published AS published,
+		CAST(ps.publishedDate AS CHAR) AS publishedDate,
+		ps.userId AS userId
+	</sql>
+	<sql id="PublicServiceTable"> asset.publicservice ps
+	</sql>
+	<sql id="PublicServiceWhereCondition"> WHERE ps.name = #{name}
+	</sql>
+
+	<sql id="ServiceAssetsColumns">
+		sa.idServiceAsset,
+		sa.idService,
+		sa.idLocalService,
+		sa.Created,
+		sa.userId
+	</sql>
+	<sql id="ServiceAssetsTable"> asset.ServiceAssets sa
+	</sql>
+	<sql id="ServiceAssetsWhereCondition"> WHERE sa.idServiceAsset = #{idServiceAsset}
+	</sql>
+	<sql id="ServiceAssetXServiceWhereCondition"> WHERE sa.idService = #{idService}
+	</sql>
+	<sql id="ServiceAssetXLocalServiceWhereCondition"> WHERE sa.idLocalService = #{idLocalService}
+	</sql>
+	<sql id="ServiceAssetXNameAssetWhereCondition"> WHERE le.NameAsset = #{NameAsset}
+	</sql>
+
+	<sql id="ServiceAssetXNameGenericListWhereCondition"> WHERE b.NameAsset = #{NameAsset}
+	</sql>
+	<sql id="LocalServiceDetailsFromPublic"> WHERE c.name = #{NameService}
+	</sql>
+
+	<sql id="Asset_ServiceColumns">
+		ast.asset_id,
+		ast.asset_name,
+		ast.service_id
+	</sql>
+
+	<sql id="Asset_ServiceTable">asset.asset_service ast</sql>
+
+	<select id="getPublicServiceList" resultMap="PSResult">
+		SELECT
+		<include refid="PublicServiceColumns" />
+		FROM
+		<include refid="PublicServiceTable" />
+	</select>
+
+	<update id="publishLocalService" parameterType="java.util.Map">
+		UPDATE
+		localservice
+		SET
+		Published = '1',
+		publishedDate = NOW()
+		WHERE Name =
+		#{Name}
+	</update>
+
+	<update id="publishPublicService" parameterType="java.util.Map">
+		UPDATE
+		publicservice
+		SET
+		Published = '1',
+		publishedDate = NOW()
+		WHERE Name =
+		#{Name}
+	</update>
+
+	<select id="getPublicService" parameterType="java.util.Map"
+		resultMap="PSResult">
+		SELECT
+		<include refid="PublicServiceColumns" />
+		FROM
+		<include refid="PublicServiceTable" />
+		<include refid="PublicServiceWhereCondition" />
+	</select>
+
+	<select id="getLocalService" parameterType="java.util.Map"
+		resultMap="LSResult">
+		SELECT
+		<include refid="LocalServiceColumns" />
+		FROM
+		<include refid="LocalServiceTable" />
+		WHERE Name = #{Name}
+	</select>
+
+	<select id="getListGenericPublicService" parameterType="java.util.Map"
+		resultMap="GenericServiceResult">
+		select DISTINCT 'Public' as Type,
+		c.idService,
+		c.name,
+		c.serviceDescription,
+		c.owner,
+		CAST(c.created AS CHAR) AS created,
+		c.published,
+		CAST(c.publishedDate AS CHAR) AS publishedDate,
+		c.userId
+		from serviceassets a,
+		localservice b, publicservice c
+		<include refid="ServiceAssetXNameGenericListWhereCondition" />
+		and a.IdLocalService = b.idLocalService
+		and a.idService = c.idService
+
+	</select>
+
+	<select id="getListGenericLocalService" parameterType="java.util.Map"
+		resultMap="GenericServiceResult">
+		select DISTINCT 'Local' as Type,
+		b.idLocalService as idService,
+		b.name,
+		b.serviceDescription,
+		b.owner,
+		CAST(b.created AS CHAR) AS created,
+		published,
+		CAST(b.publishedDate AS CHAR) AS publishedDate,
+		b.userId
+		from
+		serviceassets a,
+		localservice b
+		<include refid="ServiceAssetXNameGenericListWhereCondition" />
+		and a.IdLocalService = b.idLocalService
+
+	</select>
+
+	<select id="getLocalServiceDetail" parameterType="java.util.Map"
+		resultMap="LSResult">
+		select
+		<include refid="LocalServiceColumns" />
+		from serviceassets a,
+		localservice le,
+		publicService c
+		<include refid="LocalServiceDetailsFromPublic" />
+		and a.IdLocalService = le.idLocalService
+		and c.idService = a.idService
+
+	</select>
+
+	<select id="getLocalServicePublished" resultMap="LSResult">
+		select
+		<include refid="LocalServiceColumns" />
+		from
+		localservice le
+		where le.published = '1'
+	</select>
+
+
+
+
+	<select id="getLocalServiceList" resultMap="LSResult">
+		SELECT
+		<include refid="LocalServiceColumns" />
+		FROM
+		<include refid="LocalServiceTable" />
+	</select>
+
+	<select id="Service" resultMap="LSResult">
+		SELECT
+		<include refid="LocalServiceColumns" />
+		FROM
+		<include refid="LocalServiceTable" />
+	</select>
+
+	<insert id="insertLocalService" parameterType="LocalService">
+		insert into
+		asset.localservice (
+		name,
+		serviceDescription,
+		nameAsset,
+		owner,
+		created,
+		publishedDate,
+		published,
+		userId) values(#{name}, #{serviceDescription},
+		#{nameAsset}, #{owner}, NOW(),
+		null, '0', null )
+	</insert>
+	<delete id="deleteLocalService" parameterType="java.util.Map">
+		DELETE FROM
+		asset.localService
+		WHERE Name = #{Name}
+	</delete>
+
+	<update id="updateassetLocalService" parameterType="java.util.Map">
+		UPDATE
+		asset.localService set nameAsset = null
+		WHERE name = #{Name}
+	</update>
+	<update id="updateLocalService4Asset" parameterType="java.util.Map">
+		UPDATE
+		asset.localService set nameAsset = #{NameAsset}
+		WHERE name = #{Name}
+	</update>
+
+	<update id="updateLocalServiceDetail" parameterType="java.util.Map">
+		UPDATE
+		asset.localService set serviceDescription = #{serviceDescription},
+		owner = #{owner}
+		WHERE name = #{Name}
+	</update>
+
+	<update id="updatePublicServiceDetail" parameterType="java.util.Map">
+		UPDATE
+		asset.PublicService set serviceDescription = #{serviceDescription},
+		owner = #{owner}
+		WHERE name = #{Name}
+	</update>
+
+
+
+
+	<update id="updateLocalService" parameterType="LocalService">
+		UPDATE
+		<include refid="LocalServiceTable" />
+		SET
+		Name = #{Name},
+		ServiceDescription = #{ServiceDescription},
+		NameAsset = #{NameAsset},
+		Owner = #{Owner},
+		Created = #{Created},
+		Published = #{Published},
+		userId = #{userId}
+		WHERE SE.idLocalService =
+		#{idLocalService}
+	</update>
+
+	<insert id="insertPublicService" parameterType="PublicService">
+		INSERT INTO
+		asset.publicservice
+		(name,
+		serviceDescription,
+		owner,
+		created,
+		published,
+		publishedDate,
+		userId)
+		VALUES
+		(#{name}, #{serviceDescription},
+		#{owner},
+		NOW(), '0', null, null)
+	</insert>
+	<delete id="deletePublicService" parameterType="java.util.Map">
+		DELETE FROM
+		asset.publicservice
+		WHERE name = #{Name}
+	</delete>
+
+	<update id="updatePublicService" parameterType="PublicService">
+		UPDATE
+		<include refid="PublicServiceTable" />
+		SET
+		Name = #{Name},
+		ServiceDescription = #{ServiceDescription},
+		Owner =
+		#{Owner},
+		Created = #{Created},
+		Published = #{Published},
+		userId =
+		#{userId}
+		WHERE SE.idService = #{idService}
+	</update>
+
+
+
+	<select id="getServiceAssetsList" parameterType="java.util.Map"
+		resultMap="SAResult">
+		SELECT
+		<include refid="ServiceAssetsColumns" />
+		FROM
+		<include refid="ServiceAssetsTable" />
+		LEFT JOIN
+		<include refid="LocalServiceTable" />
+		ON sa.idLocalService = le.idLocalService
+	</select>
+
+	<select id="getServiceAssets" parameterType="java.util.Map"
+		resultMap="SAResult">
+		SELECT
+		<include refid="ServiceAssetsColumns" />
+		FROM
+		<include refid="ServiceAssetsTable" />
+		LEFT JOIN
+		<include refid="LocalServiceTable" />
+		ON sa.idLocalService = le.idLocalService
+		<include refid="ServiceAssetsWhereCondition" />
+	</select>
+
+	<select id="getServiceAssetsXLocalService" parameterType="java.util.Map"
+		resultMap="SAResult">
+		SELECT
+		<include refid="ServiceAssetsColumns" />
+		FROM
+		<include refid="ServiceAssetsTable" />
+		<include refid="ServiceAssetXLocalServiceWhereCondition" />
+	</select>
+
+	<select id="getServiceAssetsXService" parameterType="java.util.Map"
+		resultMap="SAResult">
+		SELECT
+		<include refid="ServiceAssetsColumns" />
+		FROM
+		<include refid="ServiceAssetsTable" />
+		<include refid="ServiceAssetXServiceWhereCondition" />
+	</select>
+
+	<insert id="insertServiceAssets" parameterType="ServiceAssets">
+		INSERT INTO
+		asset.serviceassets
+		(idService,
+		IdLocalService,
+		Created,
+		userId)
+		VALUES
+		(#{idService}, #{idLocalService}, NOW(), null)
+	</insert>
+	<delete id="deleteServiceAssets" parameterType="java.util.Map">
+		DELETE FROM
+		asset.serviceassets
+		WHERE idServiceAsset = #{idServiceAsset}
+	</delete>
+	<delete id="deleteServiceAssetsByServices" parameterType="java.util.Map">
+		DELETE
+		FROM
+		asset.serviceassets
+		WHERE idService = #{IdService} and
+		IdLocalService = #{IdLocalService}
+	</delete>
+
+	<select id="getServiceAssetsByIdLocalIdPublic" parameterType="java.util.Map"
+		resultMap="SAResult">
+		SELECT
+		<include refid="ServiceAssetsColumns" />
+		FROM
+		asset.serviceassets sa
+		WHERE sa.idService = #{IdService} and
+		sa.IdLocalService = #{IdLocalService}
+	</select>
+
+	<update id="updateServiceAssets" parameterType="ServiceAssets">
+		UPDATE
+		<include refid="ServiceAssetsTable" />
+		SET
+		idService = #{idService},
+		IdLocalService = #{IdLocalService},
+		Created = #{CreateDate},
+		userId = #{userId}
+		WHERE idServiceAsset =
+		#{idServiceAsset}
+	</update>
+
+	<resultMap type="PublicService" id="PSResult">
+
+		<result property="idService" column="idService" />
+		<result property="name" column="name" />
+		<result property="serviceDescription" column="serviceDescription" />
+		<result property="owner" column="owner" />
+		<result property="created" column="created" />
+		<result property="published" column="published" />
+		<result property="publishedDate" column="publishedDate" />
+		<result property="userId" column="userId" />
+
+	</resultMap>
+
+
+	<resultMap type="GenericService" id="GenericServiceResult">
+
+		<result property="type" column="Type" />
+		<result property="idService" column="idService" />
+		<result property="name" column="Name" />
+		<result property="serviceDescription" column="ServiceDescription" />
+		<result property="owner" column="Owner" />
+		<result property="created" column="Created" />
+		<result property="published" column="Published" />
+		<result property="publishedDate" column="publishedDate" />
+		<result property="userId" column="userId" />
+
+	</resultMap>
+
+
+	<resultMap type="LocalService" id="LSResult">
+		<result property="idLocalService" column="idLocalService" />
+		<result property="name" column="Name" />
+		<result property="serviceDescription" column="ServiceDescription" />
+		<result property="nameAsset" column="NameAsset" />
+		<result property="owner" column="Owner" />
+		<result property="created" column="Created" />
+		<result property="published" column="Published" />
+		<result property="publishedDate" column="PublishedDate" />
+		<result property="userId" column="userId" />
+	</resultMap>
+
+	<resultMap type="ServiceAssets" id="SAResult">
+		<result property="idServiceAsset" column="idServiceAsset" />
+		<result property="idService" column="idService" />
+		<result property="idLocalService" column="idLocalService" />
+		<result property="Created" column="Created" />
+		<result property="userId" column="userId" />
+	</resultMap>
+
+	<resultMap type="AssetExtended" id="AssetServiceResult">
+		<id property="assetId" column="asset_id" />
+		<result property="assetName" column="asset_name" />
+		<!-- <result property="idService" column="idService" /> -->
+		<!-- <result property="idLocalService" column="idLocalService" /> -->
+		<!-- <result property="Created" column="Created" /> -->
+		<!-- <result property="userId" column="userId" /> -->
+		<collection property="services" ofType="PublicService">
+			<id property="idService" column="idService" />
+			<result property="name" column="name" />
+			<result property="serviceDescription" column="serviceDescription" />
+			<result property="owner" column="owner" />
+			<result property="created" column="created" />
+			<result property="published" column="published" />
+			<result property="publishedDate" column="publishedDate" />
+			<result property="userId" column="userId" />
+		</collection>
+	</resultMap>
+
+	<select id="retrieveAllAssetServices" parameterType="AssetExtended"
+		resultMap="AssetServiceResult">
+		SELECT
+		ast.asset_id,
+		ast.asset_name,
+		<!-- <include refid="ServiceAssetsColumns" /> -->
+		<!-- , -->
+		<include refid="PublicServiceColumns" />
+		FROM
+		<include refid="Asset_ServiceTable" />
+		<!-- JOIN -->
+		<!-- <include refid="ServiceAssetsTable" /> -->
+		<!-- ON ast.service_id = sa.idServiceAsset -->
+		LEFT JOIN
+		<include refid="PublicServiceTable" />
+		ON ps.idService = ast.service_id
+		WHERE
+		ast.asset_id = #{assetId}
+		OR
+		ast.asset_name = #{assetName}
+	</select>
+	<!-- SELECT * FROM asset.asset_service ast -->
+	<!-- JOIN asset.serviceassets sa -->
+	<!-- ON ast.asset_id = sa.idServiceAsset -->
+	<!-- LEFT JOIN asset.publicservice ps -->
+	<!-- on ps.idService = ast.service_id -->
+
+	<select id="retrieveAllAssets" resultMap="AssetServiceResult">
+		SELECT
+		ast.asset_id,
+		ast.asset_name,
+		<!-- <include refid="ServiceAssetsColumns" /> -->
+		<!-- , -->
+		<include refid="PublicServiceColumns" />
+		FROM
+		<include refid="Asset_ServiceTable" />
+		<!-- JOIN -->
+		<!-- <include refid="ServiceAssetsTable" /> -->
+		<!-- ON ast.service_id = sa.idServiceAsset -->
+		LEFT JOIN
+		<include refid="PublicServiceTable" />
+		ON ps.idService = ast.service_id
+	</select>
+
+	<select id="retrieveAssetsByServiceId" parameterType="java.lang.Long"
+		resultMap="AssetServiceResult">
+		SELECT
+		ast.asset_id,
+		ast.asset_name
+		FROM
+		<include refid="Asset_ServiceTable" />
+		WHERE
+		ast.service_id = #{serviceId}
+	</select>
+
+	<insert id="addServiceAssets" parameterType="java.util.Map">
+		INSERT INTO
+		asset.asset_service
+		(asset_id,
+		service_id,
+		asset_name)
+		VALUES
+		(#{assetId},
+		#{serviceId},
+		#{assetName})
+	</insert>
+	<select id="retrieveNewAssetId" resultType="java.lang.Long">
+		SELECT MAX(ast.asset_id) + 1
+		FROM
+		<include refid="Asset_ServiceTable" />
+	</select>
+
+	<delete id="removeServiceAsset">
+		DELETE FROM
+		asset.asset_service
+		WHERE asset_id = #{assetId}
+		AND service_id = #{serviceId}
+	</delete>
+</mapper>  

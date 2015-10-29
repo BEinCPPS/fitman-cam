@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+	xmlns:p="http://www.springframework.org/schema/p">
+
+	<!-- <bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> 
+		<property name="locations"> <list> <value>classpath:database.properties</value> 
+		</list> </property> </bean> -->
+	<bean id="platform" class="it.eng.sso.lsa.Platform">
+		<property name="prefix" value="${platform.prefix}" /> <!-- TODO FIX -->
+	</bean>
+
+	<!-- DBCP-pooled JDBC datasource -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="initialSize" value="2" />
+		<property name="maxActive" value="10" />
+	</bean>
+
+	<bean id="authenticationHandler"
+		class="org.jasig.cas.adaptors.jdbc.SearchModeSearchDatabaseAuthenticationHandler">
+		<property name="tableUsers" value="${users.table}" />
+		<property name="fieldUser" value="${users.usernameColumnName}" />
+		<property name="fieldPassword" value="${users.passwordColumnName}" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="jdbcMultiRowAttributesRepository"
+		class="org.jasig.services.persondir.support.jdbc.MultiRowJdbcPersonAttributeDao">
+		<constructor-arg index="0" ref="dataSource" />
+		<constructor-arg index="1" value="${userAttributes.query}" />
+		<property name="nameValueColumnMappings">
+			<map>
+				<entry key="${userAttributes.attributeKeyColumnName}" value="${userAttributes.attributeValueColumnName}" />
+			</map>
+		</property>
+		<property name="queryAttributeMapping">
+			<map>
+				<entry key="username" value="${userAttributes.usernameColumnName}" />
+			</map>
+		</property>
+		<property name="resultAttributeMapping">
+			<map>
+				<entry key="USERNAME" value="username" />
+				<entry key="Name" value="${platform.prefix}_Name" />
+				<entry key="Organization" value="${platform.prefix}_Organization" />
+				<entry key="Role" value="${platform.prefix}_Role" />
+				<entry key="Email" value="${platform.prefix}_Email" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="authenticationManager"
+		class="org.jasig.cas.authentication.DirectMappingAuthenticationManagerImpl">
+		<property name="credentialsMapping">
+			<map>
+				<entry
+					key="org.jasig.cas.authentication.principal.UsernamePasswordCredentials">
+					<bean
+						class="org.jasig.cas.authentication.DirectMappingAuthenticationManagerImpl.DirectAuthenticationHandlerMappingHolder">
+						<property name="credentialsToPrincipalResolver">
+							<bean
+								class="org.jasig.cas.authentication.principal.UsernamePasswordCredentialsToPrincipalResolver">
+								<property name="attributeRepository" ref="jdbcMultiRowAttributesRepository" />
+								<property name="returnNullIfNoAttributes" value="false" />
+							</bean>
+						</property>
+						<property name="authenticationHandler" ref="authenticationHandler" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="authenticator" class="it.eng.sso.lsa.components.PortalAuthenticator">
+		<property name="ah" ref="LiferayAuthenticationHandler" />
+		<property name="verManager" ref="VerManager" />
+	</bean>
+	<bean id="LiferayAuthenticationHandler"
+		class="it.eng.liferay.cas.integration.LiferayAuthenticationHandler">
+		<property name="dataSource" ref="dataSourceLR" />
+		<!-- <property name="sql" -->
+		<!-- value="select u.password_ -->
+		<!-- ,u.screenName -->
+		<!-- ,u.emailAddress -->
+		<!-- ,u.firstName -->
+		<!-- ,u.middleName -->
+		<!-- ,u.lastName -->
+		<!-- ,o.name as organization -->
+		<!-- ,o.organizationId -->
+		<!-- ,r.roleId -->
+		<!-- ,r.name as role -->
+		<!-- from user_ u -->
+		<!-- left join organization_ o -->
+		<!-- on u.companyId=o.companyId -->
+		<!-- left join users_roles ur -->
+		<!-- on u.userId=ur.userId -->
+		<!-- join role_ r -->
+		<!-- on r.roleId=ur.roleId -->
+		<!-- where lower (u.emailAddress)=lower(?)" /> -->
+		<property name="sql"
+			value="select u.password_
+                                        ,u.screenName
+                                        ,u.emailAddress
+                                         ,u.firstName
+                                         ,u.middleName
+                                         ,u.lastName
+                                         ,o.name as organization
+                                         ,o.organizationId               
+                                         ,r.roleId
+                                         ,r.name as role
+                                         from user_ u
+                                             left join users_orgs s
+                                                on s.userId=u. userId
+											 left join organization_ o
+												on s.organizationId =o. organizationId
+                                                left join users_roles ur
+                                                on u.userId=ur.userId
+                                                join role_ r
+                                                on r.roleId=ur.roleId
+												where lower (u.screenName)=lower(?)
+												and u.status = 0" /> <!-- ACTIVE USERS ONLY -->
+		<property name="passwordEncoder" ref="liferayPasswordEncoder" />
+	</bean>
+	<bean id="passwordEncoder"
+		class="org.jasig.cas.authentication.handler.DefaultPasswordEncoder"
+		p:characterEncoding="UTF-8">
+		<constructor-arg index="0" value="HmacSHA1" />
+	</bean>
+
+	<bean class="it.eng.liferay.cas.integration.LiferayPasswordEncoder"
+		id="liferayPasswordEncoder" />
+	<bean id="dataSourceLR" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>${liferay.db.driver}</value>
+		</property>
+		<property name="url">
+			<value>${liferay.db.connection}</value>
+		</property>
+		<property name="username">
+			<value>${liferay.db.username}</value>
+		</property>
+
+		<property name="password">
+			<value>${liferay.db.password}</value>
+		</property>
+	</bean>
+
+	<bean id="VerManager" class="it.eng.sso.lsa.ver.VerManager">
+		<property name="URL" value="${ver.url}" />
+	</bean>
+</beans>

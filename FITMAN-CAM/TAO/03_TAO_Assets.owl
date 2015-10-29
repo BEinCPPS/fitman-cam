@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:msee="http://www.msee-ip.eu/ontology/system#"
+    xmlns="http://www.msee-ip.eu/ontology/default#"
+  xml:base="http://www.msee-ip.eu/ontology/default">
+  <owl:NamedIndividual rdf:ID="Example-WeavingMachine-Model">
+    <rdf:type rdf:resource="#Weaving"/>
+    <ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Serial #00000000</ID>
+    <Description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Description of the example machine</Description>
+    <Weft rdf:datatype="http://www.w3.org/2001/XMLSchema#string">all yarns, except metal</Weft>
+    <Feeler rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Optical-electric tube weft feeler</Feeler>
+    <Pattern rdf:datatype="http://www.w3.org/2001/XMLSchema#string">all</Pattern>
+    <Wrap rdf:datatype="http://www.w3.org/2001/XMLSchema#string">all yarns</Wrap>
+    <Cutter rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Weft End mechanical Cutter</Cutter>
+	<msee:createdOn rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2014-02-11T09:15:33.122+01:00</msee:createdOn>
+	<msee:ownedBy rdf:resource="http://www.msee-ip.eu/ontology/system#Piacenza"/>
+  </owl:NamedIndividual>
+  <owl:NamedIndividual rdf:ID="Example-WeavingMachine-Instance">
+    <rdf:type rdf:resource="#Weaving"/>
+    <ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Serial #00000001</ID>
+    <Description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Description of the example machine</Description>
+    <Weft rdf:datatype="http://www.w3.org/2001/XMLSchema#string">all yarns, except metal</Weft>
+    <Feeler rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Optical-electric tube weft feeler</Feeler>
+    <Pattern rdf:datatype="http://www.w3.org/2001/XMLSchema#string">all</Pattern>
+    <Wrap rdf:datatype="http://www.w3.org/2001/XMLSchema#string">all yarns</Wrap>
+    <Cutter rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Weft End mechanical Cutter</Cutter>
+	<msee:createdOn rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2014-02-11T09:15:33.122+01:00</msee:createdOn>
+	<msee:ownedBy rdf:resource="http://www.msee-ip.eu/ontology/system#Piacenza"/>
+    <msee:instanceOf rdf:resource="#Example-WeavingMachine-Model"/>
+  </owl:NamedIndividual>
+  <owl:NamedIndividual rdf:ID="Example-CuttingMachine-Model">
+    <rdf:type rdf:resource="#Cutting"/>
+    <ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Serial #00000000</ID>
+    <Description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Description of the example machine</Description>
+    <FabricHight rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Single Ply</FabricHight>
+    <CuttingArea rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2,8 - 6,5 - 8,3 - 10,1 - 11,9m</CuttingArea>
+    <HeadAcceleration rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0,5G 200 in/sec2</HeadAcceleration>
+    <CuttingSpeed rdf:datatype="http://www.w3.org/2001/XMLSchema#string">max. 1,1 m/sec = 45 in/sec</CuttingSpeed>
+    <Automation_Level rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Fully Automated</Automation_Level>
+    <Limitation rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></Limitation>
+    <Power_Voltage rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Control and Drive System 110V@20 amps, 200V-240V@10 amps, single phase 50/60Hz (4wire)</Power_Voltage>
+    <hasConstrain rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Temperature (maximum) 43ºC 110ºF Humidity (maximum) 95% (non-condensing)</hasConstrain>
+	<msee:createdOn rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2014-02-11T09:15:33.122+01:00</msee:createdOn>
+	<msee:ownedBy rdf:resource="http://www.msee-ip.eu/ontology/system#Piacenza"/>
+  </owl:NamedIndividual>
+  <owl:NamedIndividual rdf:ID="Example-CuttingMachine-Instance">
+    <rdf:type rdf:resource="#Cutting"/>
+    <ID rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Serial #00000009</ID>
+    <Description rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Description of the example machine</Description>
+    <FabricHight rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Single Ply</FabricHight>
+    <CuttingArea rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2,8 - 6,5 - 8,3 - 10,1 - 11,9m</CuttingArea>
+    <HeadAcceleration rdf:datatype="http://www.w3.org/2001/XMLSchema#string">0,5G 200 in/sec2</HeadAcceleration>
+    <CuttingSpeed rdf:datatype="http://www.w3.org/2001/XMLSchema#string">max. 1,1 m/sec = 45 in/sec</CuttingSpeed>
+    <Automation_Level rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Fully Automated</Automation_Level>
+    <Limitation rdf:datatype="http://www.w3.org/2001/XMLSchema#string"></Limitation>
+    <Power_Voltage rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Control and Drive System 110V@20 amps, 200V-240V@10 amps, single phase 50/60Hz (4wire)</Power_Voltage>
+    <hasConstrain rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Temperature (maximum) 43ºC 110ºF Humidity (maximum) 95% (non-condensing)</hasConstrain>
+	<msee:createdOn rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2014-02-11T09:15:33.122+01:00</msee:createdOn>
+	<msee:ownedBy rdf:resource="http://www.msee-ip.eu/ontology/system#Piacenza"/>
+    <msee:instanceOf rdf:resource="#Example-CuttingMachine-Model"/>
+  </owl:NamedIndividual>
+
+</rdf:RDF>

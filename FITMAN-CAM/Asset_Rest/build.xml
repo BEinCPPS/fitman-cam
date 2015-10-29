@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="war" name="Asset_Rest">
+	<property environment="env" />
+	
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.6" />
+	<property name="source" value="1.6" />
+	
+	<property file="build.properties"/>
+	<path id="Web App Libraries.libraryclasspath">
+		<fileset dir="WebContent/WEB-INF/lib" includes="*.jar"/>
+	</path>
+	<path id="EAR Libraries.libraryclasspath" />
+	
+	<path id="Asset_Rest.classpath">
+		<pathelement location="build/classes" />
+		<path refid="Web App Libraries.libraryclasspath" />
+		<path refid="EAR Libraries.libraryclasspath" />
+	</path>
+	
+	<target name="init" depends="build-be">
+		<mkdir dir="build/classes" />
+		<copy includeemptydirs="false" todir="build/classes">
+			<fileset dir="src">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="clean">
+		<delete dir="build/classes" />
+		<delete dir="dist" />
+	</target>
+	<target depends="clean" name="cleanall" />
+	<target depends="build-subprojects,build-project" name="build" />
+	<target name="build-subprojects" />
+	<target depends="init" name="build-project">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac debug="true" debuglevel="${debuglevel}" destdir="build/classes" includeantruntime="false" source="${source}" target="${target}">
+			<src path="src" />
+			<classpath refid="Asset_Rest.classpath" />
+		</javac>
+	</target>
+	<target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects" />
+	<target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+		<copy todir="${ant.library.dir}">
+			<fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar" />
+		</copy>
+		<unzip dest="${ant.library.dir}">
+			<patternset includes="jdtCompilerAdapter.jar" />
+			<fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar" />
+		</unzip>
+	</target>
+	<target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter" />
+		<antcall target="build" />
+	</target>
+
+	<target name="war" depends="build">
+		<mkdir dir="dist" />
+		<war destfile="dist/${ant.project.name}.war" webxml="WebContent/WEB-INF/web.xml">
+			<lib dir="WebContent/WEB-INF/lib" />
+			<classes dir="build/classes" />
+		</war>
+	</target>
+	
+	<target name="build-be">
+			<ant inheritAll="false" antfile="${be_build_file}" inheritrefs="false" target="jar"/>
+			<delete file="WebContent/WEB-INF/lib/${be_name_file}.jar"/>
+			<copy file="${asset_be_jar}/${be_name_file}.jar" todir="WebContent/WEB-INF/lib"/>
+	</target>
+	
+	<target name="prepare" depends="war">
+		<delete dir ="${TOMCAT_HOME}/webapps/${ant.project.name}"/>
+	</target>
+	
+	<target name="deploy" depends="prepare">
+	<echo message="deployo war  "/>
+		<copy todir="${TOMCAT_HOME}/webapps" overwrite="true">
+			<fileset dir="dist" >
+				<filename name="**/*.war"/>
+			</fileset>
+		</copy>
+	</target>
+</project>

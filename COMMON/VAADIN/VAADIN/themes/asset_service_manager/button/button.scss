@@ -1,0 +1,15 @@
+/* Standard implementation of the button theme
+ * These files contain styles that apply to all browsers
+ */
+@import "button-standard.scss";
+@import "button-primary-style.scss";
+@import "button-small-style.scss";
+@import "button-link-style.scss";
+
+@mixin asset_service_manager-button($primaryStyleName : v-button) {
+	// TODO use $exclude 
+	@include asset_service_manager-button-standard;
+	@include asset_service_manager-button-primary-style;
+	@include asset_service_manager-button-small-style;
+	@include asset_service_manager-button-link-style;
+}
