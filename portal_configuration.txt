@@ -9,7 +9,6 @@ FITMAN CAM.
 It contains the following sections:
    - Description
    - Certificate configuration
-   - Portal startup
    - Portal Configuration
   
 Description
@@ -30,33 +29,6 @@ To generate the certificate, refer to the following guide:
 or (http://docs.oracle.com/cd/E19146-01/821-0793/gdhfz/index.html).
 
 At the end of the configuration, re-start of the server.
-
-
-Portal startup
-=====================================================================
-Follow the instructions below to start and stop the portal services:
-
-start services (commands described are to be executed in a terminal):
-
-  	fitmanportal - cd /opt/fitman_portal/tomacat-7.0.27/bin 
-				 - sudo ./startup.sh
- 	
- 	sso 		 - /etc/init.d/sso start
-
-	sesame 		/opt/tomacat-7.0.54/bin./startup.sh
-
-
-stop services: 
-
-	fitmanportal - cd /opt/fitman_portal/tomacat-7.0.27/bin 
-				 - sudo ./shutdown.sh
-	
-	sso 		 - /etc/init.d/sso stop
-
-	sesame 		/opt/tomacat-7.0.54/bin./shutdown.sh
-
-the password to perform super user operations (sudo command) is "fitman"
-
 
 Portal Configuration
 =====================================================================
