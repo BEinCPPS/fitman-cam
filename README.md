@@ -138,13 +138,13 @@ To configure liferay with a custom database add the following properties to the 
 *   edit the file vam_rest.properties setting the property url with cm-api host/port
 *	open a terminal window and go to the root folder of this project
 *   type the command: ant  to compile the project and  create the jar archive. (optional as the portlets Asset_Viewer_Rep and 
-*   Asset_Viewer_Service_Rep executes the command itself)
+*   Asset_Viewer_Service_Rep execute the command itself)
 
 #### VAM_Rest
 *   edit the file vam_rest.properties setting the property url with cm-api host/port
 *	open a terminal window and go to the root folder of this project
 *   type the command: ant  to compile the project and  create the jar archive. (optional as the portlets Asset_Viewer_Rep and 
-*   Asset_Viewer_Service_Rep executes the command itself)
+*   Asset_Viewer_Service_Rep execute the command itself)
 
 #### Asset_Rest
 
@@ -174,4 +174,4 @@ To configure liferay with a custom database add the following properties to the 
 *	type the command: ant deploy 
 
 
-#### Once the installation is complete, please follow the instructions in portal_configuration.txt to set up the portal
+#### Once the installation is complete, please follow the instructions in portal_configuration.txt
