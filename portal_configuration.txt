@@ -8,7 +8,7 @@ FITMAN CAM.
 
 It contains the following sections:
    - Description
-   - Certificate configuration
+   - SSL - Self signed certificate configuration
    - Portal Configuration
   
 Description
@@ -21,8 +21,8 @@ The fitman cam service provide the following services:
 The integration these services is possible by configuring a certificate 
 properly configured IP address assigned to the machine.
 
-
-Certificate configuration
+   
+SSL - Self signed certificate configuration
 =====================================================================
 To generate the certificate, refer to the following guide: 
 ( http://www.mkyong.com/webservices/jax-ws/suncertpathbuilderexception-unable-to-find-valid-certification-path-to-requested-target/)
