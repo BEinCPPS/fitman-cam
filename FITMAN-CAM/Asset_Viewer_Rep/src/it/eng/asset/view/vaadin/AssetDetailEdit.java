@@ -10,8 +10,10 @@ import it.eng.asset.utils.UtilNavigation;
 import it.eng.msee.ontorepo.Util;
 
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -324,9 +326,31 @@ public class AssetDetailEdit  extends VerticalLayout implements View   {
 				                ok.addStyleName("default");
 				                ok.addClickListener(new ClickListener() {
 				                    public void buttonClick(ClickEvent event) {
-
+				                    	String value ="";
 				                    	Class<?> class_type = returnClassType(combo_type.getValue().toString());
-				                    	String value = value_property.getValue();
+										if (combo_type.getValue().toString().equals("date")) {
+											Calendar cal = Calendar.getInstance();
+											Date date = null;
+											try {
+												date = new SimpleDateFormat("yyyy-MM-dd")
+														.parse(value_property.getValue());
+											} catch (ParseException e) {
+												MessageBox.showPlain(Icon.ERROR, "Error",
+														"Invalid date: correct format is yyyy-MM-dd",
+														de.steinwedel.messagebox.ButtonId.OK);
+											}
+											if (null != date) {
+												cal.setTime(date);
+												value = Util.getDateTimeRepresentation(cal);
+											} else {
+												MessageBox.showPlain(Icon.ERROR, "Error",
+														"Invalid date: correct format is yyyy-MM-dd",
+														de.steinwedel.messagebox.ButtonId.OK);
+											}
+
+										} else {
+											value = value_property.getValue();
+										}
 				                    	String asset = current.getName();
 				                    	try {
 
@@ -355,7 +379,7 @@ public class AssetDetailEdit  extends VerticalLayout implements View   {
 										if (value.equals("string")) {
 											ret = String.class;
 										} else if (value.equals("date")) {
-											ret = Date.class;
+											ret = Calendar.class;
 										} else if (value.equals("int")) {
 											ret = Integer.class;
 										} else if (value.equals("decimal")) {
