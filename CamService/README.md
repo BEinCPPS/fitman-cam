@@ -19,11 +19,11 @@ $ mvn verify opyional
 ```
 To skip Unit Tests use ``-DskipTests`` maven parameter.
 
-C. Integration Tests:
+C. Integration Test (This test uses **Sesame Repository in Memory** and **Apache Tomcat 7 Maven embedded**):
 ```bash
 $ cd CAMService
 $ mvn package
-$ mvn verify (This test uses **Sesame Repository in Memory** and **Apache Tomcat 7 Maven embedded**)
+$ mvn verify 
 ```
 The default port in order to use CAMService with Sesame repo is 8080, feel free to change this parameter inside the file 
 pom.xml into the ``<sesame.url>http://localhost:8180/openrdf-sesame/</sesame.url>`` resource.
