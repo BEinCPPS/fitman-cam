@@ -1,4 +1,4 @@
-#CAM Service 2.0
+#CAM Service
 ###Developer environment
 
 This procedure assumes that you have [Apache Tomcat](https://tomcat.apache.org/download-80.cgi) (version >= **7**)
@@ -29,5 +29,5 @@ pom.xml into the ``<sesame.url>http://localhost:8080/openrdf-sesame/</sesame.url
 
 Copy the CAMService.war into a Tomcat installation.
 ```bash
-$ cp ./BEinCPPS/CAMService/target/target.war ./apache-tomcat-8.0.33/webapps
+$ cp ./CAMService/target/CAMService.war ./apache-tomcat-8.0.33/webapps
 ```

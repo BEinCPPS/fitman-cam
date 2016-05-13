@@ -4,8 +4,8 @@
 	<groupId>it.eng.cam.service</groupId>
 	<artifactId>CAMService</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>CamService Maven Webapp</name>
+	<version>2.0.0</version>
+	<name>CAMService Maven Webapp</name>
 
 	<repositories>
 		<repository>
