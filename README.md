@@ -47,6 +47,9 @@ Copy the CAMService.war into a Tomcat installation.
 $ cp ./BeInCpps/CAMService/target/target.war ./apache-tomcat-8.0.33/webapps
 ```
 
+##CAM
+
+
 **Note**: The project use [travis-ci](https://travis-ci.org/) for continuous integration.
 
 
