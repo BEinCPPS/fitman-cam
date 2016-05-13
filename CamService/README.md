@@ -1,12 +1,9 @@
-[![Build Status](https://travis-ci.org/ascatox/BeInCpps.svg?branch=master)](https://travis-ci.org/ascatox/BeInCpps)
 # BEinCPPS Project - CAM Service
 ## Usage
 ###Developer environment
 This installation use **Sesame Repository in Memory** and **Apache Tomcat 7 Maven embedded** 
 ```bash
-$ git clone https://github.com/ascatox/BeInCpps.git
-$ cd BeInCpps/OntologyRepo
-$ mvn install
+$ git clone https://github.com/BEinCPPS/fitman-cam
 $ cd ../CAMService
 $ mvn package
 $ mvn verify
