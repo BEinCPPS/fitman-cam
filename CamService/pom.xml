@@ -51,12 +51,6 @@
 			<version>${jersey.version}</version>
 		</dependency>
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>OntologyRepo</groupId> -->
-<!-- 			<artifactId>OntologyRepo</artifactId> -->
-<!-- 			<version>1.1</version> -->
-<!-- 		</dependency> -->
-
 		<dependency>
 			<groupId>com.restfuse</groupId>
 			<artifactId>com.eclipsesource.restfuse</artifactId>

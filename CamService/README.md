@@ -26,7 +26,7 @@ $ mvn package
 $ mvn verify 
 ```
 The default port in order to use CAMService with Sesame repo is 8080, feel free to change this parameter inside the file 
-pom.xml into the ``<sesame.url>http://localhost:8180/openrdf-sesame/</sesame.url>`` resource.
+pom.xml into the ``<sesame.url>http://localhost:8080/openrdf-sesame/</sesame.url>`` resource.
 
 Copy the CAMService.war into a Tomcat installation.
 ```bash
