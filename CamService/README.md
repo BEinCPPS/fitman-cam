@@ -2,7 +2,7 @@
 ###Developer environment
 
 This procedure assumes that you have [Apache Tomcat](https://tomcat.apache.org/download-80.cgi) (version >= **7**)
-and [Download](https://sourceforge.net/projects/sesame/files/Sesame%204/4.1.1/openrdf-sesame-4.1.1-sdk.zip/download) on your development environment.
+and [Sesame 4.1.1](https://sourceforge.net/projects/sesame/files/Sesame%204/4.1.1/openrdf-sesame-4.1.1-sdk.zip/download) installed your development environment.
 
 Install CAMService:
 ```bash
