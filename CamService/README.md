@@ -15,7 +15,6 @@ B. Install CAMService:
 ```bash
 $ cd CAMService
 $ mvn package -P prod
-$ mvn verify opyional
 ```
 To skip Unit Tests use ``-DskipTests`` maven parameter.
 
