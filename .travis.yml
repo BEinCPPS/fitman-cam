@@ -1,5 +1,4 @@
 language: java
 jdk:
   - oraclejdk8
-# Configuration **ONLY** For **CamService** **NOT** for project CAM 
 script: cd CamService && mvn test
