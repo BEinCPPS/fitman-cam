@@ -1,9 +1,0 @@
-@import "addons.scss";
-@import "asset_viewer_rep.scss";
-
-/* This file prefixes all rules with the theme name to avoid causing conflicts with other themes. */
-/* The actual styles should be defined in asset_viewer_rep.scss */
-.asset_viewer_rep {
-  @include addons;
-  @include asset_viewer_rep;
-}
