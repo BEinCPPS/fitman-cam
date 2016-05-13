@@ -8,7 +8,7 @@ A. Your project structure is as follows: <br/>
 ```
 <your_project_dir>
    |__ CAM
-   |__ CamService
+   |__ CAMService
 ```
 
 B. Install CAMService:
