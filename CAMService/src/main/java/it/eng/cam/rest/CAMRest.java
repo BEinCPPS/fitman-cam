@@ -246,23 +246,6 @@ public class CAMRest extends ResourceConfig {
 		}
 	}
 
-
-	// TODO Da affinare
-	@GET
-	@Path("/models")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<IndividualItem> getModelsIndividuals() {
-		try {
-			return CAMRestImpl.getIndividuals(SesameRepoInstance.getRepoInstance(getClass()));
-		} catch (Exception e) {
-			logger.error(e);
-			throw new WebApplicationException(e.getMessage());
-		} finally {
-			SesameRepoInstance.releaseRepoDaoConn();
-		}
-		// necessita di un filtro ulteriore
-	}
-
 	@GET
 	@Path("/owners")
 	@Produces(MediaType.APPLICATION_JSON)

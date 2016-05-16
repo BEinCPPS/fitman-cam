@@ -92,12 +92,6 @@ public class CAMRestImpl {
 
 	}
 
-	// TODO Test
-	public static List<IndividualItem> getModelsIndividuals(RepositoryDAO dao) {
-		// Neccessita di un filtro ulteriore per estrarre solo i modelli
-		return dao.getIndividuals();
-	}
-
 	public static void createOwner(RepositoryDAO dao, String ownerName) {
 		dao.createOwner(ownerName);
 	}

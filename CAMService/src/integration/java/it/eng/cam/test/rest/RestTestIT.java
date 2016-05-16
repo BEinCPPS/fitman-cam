@@ -164,11 +164,6 @@ public class RestTestIT extends Assert {
 		assertOk(response);
 	}
 
-	@HttpTest(method = Method.GET, path = "/models", order = 22)
-	public void testGetModels() {
-		assertOk(response);
-	}
-
 	private static int getNextRandom() {
 		Random rand = new Random();
 		return Math.abs(rand.nextInt(Integer.MAX_VALUE));
