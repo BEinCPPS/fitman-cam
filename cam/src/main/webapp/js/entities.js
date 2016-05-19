@@ -11,7 +11,6 @@ var EntityManager = (function () {
             .error(function (error) {
                 console.log("Error encountered :-(");
             });
-
     }
 
     var createAssets = function (data) {

@@ -36,7 +36,7 @@ camApp.controller('homeController', [
             "bDestroy": true
         };
             
-        $scope.BACK_END_URL = 'http://localhost:8080/CAMService'; //TODO Address config.JSON
+        $scope.BACK_END_URL = 'http://192.168.62.204:8080/CAMService'; //TODO Address config.JSON
         entityManager.init($scope, $http);
         $scope.assetList = [];
         entityManager.getClasses();
