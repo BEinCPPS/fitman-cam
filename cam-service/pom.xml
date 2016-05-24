@@ -202,6 +202,9 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
+				<version>${version}</version>
+				<artifact.id>${artifactId}</artifact.id>
+				
 				<sesame.url></sesame.url>
 				<sesame.repository>TEST</sesame.repository>
 				<sesame.namespace>http://www.msee-ip.eu/ontology/bivolino#</sesame.namespace>
@@ -218,6 +221,9 @@
 		<profile>
 			<id>prod</id>
 			<properties>
+				<version>${version}</version>
+				<artifact.id>${artifactId}</artifact.id>
+				
 				<sesame.url>http://localhost:8080/openrdf-sesame/</sesame.url>
 				<sesame.repository>NEST</sesame.repository>
 				<sesame.namespace>http://www.msee-ip.eu/ontology/bivolino#</sesame.namespace>
@@ -228,6 +234,7 @@
 				<destination.url.integration>http://localhost:8080/${artifactId}/</destination.url.integration>
 				<!-- CORS API ENABLING true or false  -->
 				<cors.api>true</cors.api>
+				
 			</properties>
 		</profile>
 

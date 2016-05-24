@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -293,6 +294,7 @@ public class CAMRest extends ResourceConfig {
 	public String summary(@Context HttpServletRequest httpRequest) {
 		String content = "";
 		StringBuilder contentBuilder = new StringBuilder();
+		ResourceBundle finder = ResourceBundle.getBundle("cam-service");
 		try {
 			URL url = getClass().getResource("/summary.html");
 			File file = new File(url.toURI());
@@ -310,6 +312,7 @@ public class CAMRest extends ResourceConfig {
 				protocol = "https";
 			content = content.replaceAll("camServiceUrl",
 					protocol + "://" + serverUrl + ":" + serverPort + "/CAMService");
+			content = content.replaceAll("artifactInfo", finder.getString("artifact.id")+" v"+finder.getString("version"));
 		} catch (IOException e) {
 			logger.error(e);
 		} catch (URISyntaxException e) {
