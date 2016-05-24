@@ -219,7 +219,7 @@
 			<id>prod</id>
 			<properties>
 				<sesame.url>http://localhost:8080/openrdf-sesame/</sesame.url>
-				<sesame.repository>test_00</sesame.repository>
+				<sesame.repository>NEST</sesame.repository>
 				<sesame.namespace>http://www.msee-ip.eu/ontology/bivolino#</sesame.namespace>
 				<sesame.memory.store.data.dir>/data</sesame.memory.store.data.dir>
 				<sesame.rdf.file>/onthology/export.rdf</sesame.rdf.file>

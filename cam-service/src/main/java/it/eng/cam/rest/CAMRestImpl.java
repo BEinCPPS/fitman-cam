@@ -1,7 +1,6 @@
 package it.eng.cam.rest;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import it.eng.ontorepo.ClassItem;
 import it.eng.ontorepo.IndividualItem;
@@ -12,12 +11,11 @@ public class CAMRestImpl {
 
 	public static final String PREFIX = "http://www.w3.org/2002/07/owl#";
 
-	
 	public static ClassItem getClassHierarchy(RepositoryDAO dao) {
 		return dao.getClassHierarchy();
 	}
-	
-	public static List<ClassItem> getClasses(RepositoryDAO dao){
+
+	public static List<ClassItem> getClasses(RepositoryDAO dao) {
 		ClassItem root = getClassHierarchy(dao);
 		return root.getSubClasses();
 	}
@@ -30,27 +28,18 @@ public class CAMRestImpl {
 		return dao.getOwners();
 	}
 
-//TODO
-//	public static List<IndividualItem> getIndividuals(RepositoryDAO dao, String className) {
-//		if(!isNormalized(className))
-//			className = normalize(className);
-//		return dao.getIndividuals(className);
-//	}
-	
-	public static List<ClassItem> getIndividuals(RepositoryDAO dao, String className) {
-		List<ClassItem> subClasses = dao.getClassHierarchy().getSubClasses();
-		return subClasses.stream().filter(cls -> cls.getClassName().equals(className))
-				.collect(Collectors.toList());
+	public static List<IndividualItem> getIndividuals(RepositoryDAO dao, String className) {
+		return dao.getIndividuals(className);
 	}
 
 	public static IndividualItem getIndividual(RepositoryDAO dao, String className) {
-		if(!isNormalized(className))
+		if (!isNormalized(className))
 			className = normalize(className);
 		return dao.getIndividual(className);
 	}
 
 	public static void createClass(RepositoryDAO dao, String name, String parentName) {
-		if(!isNormalized(parentName))
+		if (!isNormalized(parentName))
 			parentName = normalize(parentName);
 		dao.createClass(name, parentName);
 	}
@@ -107,15 +96,17 @@ public class CAMRestImpl {
 	}
 
 	/**
-	 *  A name is normalized if contains the prefix http://www.w3.org/2002/07/owl#
-	 * @param originalName 
+	 * A name is normalized if contains the prefix
+	 * http://www.w3.org/2002/07/owl#
+	 * 
+	 * @param originalName
 	 * @return
 	 */
 	public static String normalize(String originalName) {
 		return PREFIX + originalName;
 	}
-	
-	public static boolean isNormalized(String value){
+
+	public static boolean isNormalized(String value) {
 		return value.contains(PREFIX);
 	}
 
@@ -125,6 +116,5 @@ public class CAMRestImpl {
 			return split[1];
 		return normalizedName;
 	}
-	
-	
+
 }

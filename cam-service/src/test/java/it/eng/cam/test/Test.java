@@ -173,49 +173,7 @@ public class Test extends Assert {
 		assertTrue("Move class: element moved found :-)", classInserted2.size() == 1);
 	}
 
-	@org.junit.Test
-	public void getIndividualsForClass() {
-		String className = "NewClass_" + getNextRandom();
-		String rootName = dao.getClassHierarchy().getClassName(); // Thing
-		try {
-			CAMRestImpl.createClass(dao, className, rootName);
-		} catch (Exception e) {
-			assertFalse(e.getMessage(), true);
-		}
-		String className2 = "NewClass_" + getNextRandom();
-		try {
-			CAMRestImpl.createClass(dao, className2, rootName);
-		} catch (Exception e) {
-			assertFalse(e.getMessage(), true);
-		}
-		tearDown();
-		setUp();
-		try {
-			CAMRestImpl.moveClass(dao, className2, className);
-		} catch (Exception e) {
-			assertFalse(e.getMessage(), true);
-		}
-		List<ClassItem> classes = CAMRestImpl.getIndividuals(dao, className);
-		assertNotNull("classes for class " + className + " are null", classes);
-		assertFalse("Empty classes list", classes.isEmpty());
-	}
-
-	@org.junit.Test
-	public void createOwner() {
-		String ownerName = "MyOwner_" + getNextRandom();
-		try {
-			CAMRestImpl.createOwner(dao, ownerName);
-		} catch (Exception e) {
-			assertFalse(e.getMessage(), true);
-		}
-		List<String> owners = CAMRestImpl.getOwners(dao);
-		List<String> ownersFiltered = owners.stream().filter(own -> own.equals(ownerName)).collect(Collectors.toList());
-
-		assertNotNull("Create owner: owner (null) not retrieved for ownerName: " + ownerName, ownersFiltered);
-		assertFalse("Create owner: owner (empty) not retrieved for ownerName: " + ownerName, ownersFiltered.isEmpty());
-		assertTrue("Create owner: owner created :-)", ownersFiltered.size() == 1);
-	}
-
+	
 	@org.junit.Test
 	public void deleteOwner() {
 		String ownerName = "NewOwner" + getNextRandom();
@@ -425,6 +383,58 @@ public class Test extends Assert {
 			assertFalse(e.getMessage(), true);
 		}
 		assertTrue("Relationship exists!", thrown);
+	}
+	
+	@org.junit.Test
+	public void createOwner() {
+		String ownerName = "MyOwner_" + getNextRandom();
+		try {
+			CAMRestImpl.createOwner(dao, ownerName);
+		} catch (Exception e) {
+			assertFalse(e.getMessage(), true);
+		}
+		List<String> owners = CAMRestImpl.getOwners(dao);
+		List<String> ownersFiltered = owners.stream().filter(own -> own.equals(ownerName)).collect(Collectors.toList());
+
+		assertNotNull("Create owner: owner (null) not retrieved for ownerName: " + ownerName, ownersFiltered);
+		assertFalse("Create owner: owner (empty) not retrieved for ownerName: " + ownerName, ownersFiltered.isEmpty());
+		assertTrue("Create owner: owner created :-)", ownersFiltered.size() == 1);
+	}
+	
+	@org.junit.Test
+	public void getIndividualsForClass() {
+		String className = "NewClass_" + getNextRandom();
+		String rootName = dao.getClassHierarchy().getClassName(); // Thing
+		try {
+			CAMRestImpl.createClass(dao, className, rootName);
+		} catch (Exception e) {
+			assertFalse(e.getMessage(), true);
+		}
+		String ownerName = "NewOwner_" + getNextRandom();
+		try {
+			CAMRestImpl.createOwner(dao, ownerName);
+		} catch (Exception e) {
+			assertFalse(e.getMessage(), true);
+		}
+		tearDown();
+		setUp();
+		String assetModelName = "MyAsset_" + getNextRandom();
+		try {
+			CAMRestImpl.createAssetModel(dao, assetModelName, className, ownerName);
+		} catch (Exception e) {
+			assertFalse(e.getMessage(), true);
+		}
+		tearDown();
+		setUp();
+		String assetName = "NewAsset_" + getNextRandom();
+		try {
+			CAMRestImpl.createAsset(dao, assetName, assetModelName, ownerName);
+		} catch (Exception e) {
+			assertFalse(e.getMessage(), true);
+		}
+		List<IndividualItem> individuals = CAMRestImpl.getIndividuals(dao, className);
+		assertNotNull("individuals for class " + className + " are null", individuals);
+		assertFalse("Empty individuals list", individuals.isEmpty());
 	}
 
 	private int getNextRandom() {

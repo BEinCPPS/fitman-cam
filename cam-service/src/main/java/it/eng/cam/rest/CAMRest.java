@@ -57,7 +57,7 @@ public class CAMRest extends ResourceConfig {
 	@GET
 	@Path("/classes/{className}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ClassItem> getIndividuals(@PathParam("className") String className) {
+	public List<IndividualItem> getIndividuals(@PathParam("className") String className) {
 		try {
 			return CAMRestImpl.getIndividuals(SesameRepoInstance.getRepoInstance(getClass()), className);
 		} catch (Exception e) {
@@ -231,7 +231,7 @@ public class CAMRest extends ResourceConfig {
 			SesameRepoInstance.releaseRepoDaoConn();
 		}
 	}
-	
+
 	@GET
 	@Path("/assets/{assetName}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -291,7 +291,7 @@ public class CAMRest extends ResourceConfig {
 	@GET
 	@Produces("text/html")
 	public String summary(@Context HttpServletRequest httpRequest) {
-		String content ="";
+		String content = "";
 		StringBuilder contentBuilder = new StringBuilder();
 		try {
 			URL url = getClass().getResource("/summary.html");
@@ -306,9 +306,10 @@ public class CAMRest extends ResourceConfig {
 			String serverUrl = httpRequest.getServerName();
 			int serverPort = httpRequest.getServerPort();
 			String protocol = "http";
-			if(serverPort == 443)
-				protocol="https";
-			content = content.replaceAll("camServiceUrl", protocol+"://"+serverUrl+":"+serverPort+"/CAMService");
+			if (serverPort == 443)
+				protocol = "https";
+			content = content.replaceAll("camServiceUrl",
+					protocol + "://" + serverUrl + ":" + serverPort + "/CAMService");
 		} catch (IOException e) {
 			logger.error(e);
 		} catch (URISyntaxException e) {
