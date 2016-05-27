@@ -28,7 +28,7 @@ Before start using application you must have sesame up and running, we also need
 We will refer to this repository as ```<EXAMPLE_REPO>```.
 
 • Open a web browser and navigate to your openrdf-sesame
- ```<host>:<port>/openrdf-workbench/```<br/>
+ ```<host>:<port>/openrdf-workbench/```
 • Click on new repository, on top left, and fill id and title.<br/>
 • Click next, select persistence mode and finally click finish.<br/>
 
