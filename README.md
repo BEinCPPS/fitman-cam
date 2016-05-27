@@ -27,8 +27,11 @@ and [Sesame 4.1.1](https://sourceforge.net/projects/sesame/files/Sesame%204/4.1.
 Before start using application you must have sesame up and running, we also need to create a new repository in it. 
 We will refer to this repository as ```<EXAMPLE_REPO>```.
 
-• Open a web browser and navigate to your openrdf-sesame
- ```<host>:<port>/openrdf-workbench/```
+• Open a web browser and navigate to your openrdf-sesame:
+ ```
+ <host>:<port>/openrdf-workbench/
+ ```
+
 • Click on new repository, on top left, and fill id and title.<br/>
 • Click next, select persistence mode and finally click finish.<br/>
 
