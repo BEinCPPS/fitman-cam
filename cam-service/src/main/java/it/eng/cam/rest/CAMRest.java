@@ -70,7 +70,7 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	@POST
-	@Path("/classes/{name}/{parentName}")
+	@Path("/classes/{name}/{parentName}") //TODO URL: /classes,  body
 	public Response createClass(@PathParam("name") String name, @PathParam("parentName") String parentName) {
 		try {
 			CAMRestImpl.createClass(SesameRepoInstance.getRepoInstance(getClass()), name, parentName);
@@ -84,7 +84,7 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	@PUT
-	@Path("/classes/{name}/{parentName}")
+	@Path("/classes/{name}/{parentName}") //TODO URL: /classes/{name} boby moveClass - renameClass 
 	public Response moveClass(@PathParam("name") String name, @PathParam("parentName") String parentName) {
 		try {
 			CAMRestImpl.moveClass(SesameRepoInstance.getRepoInstance(getClass()), name, parentName);
@@ -112,7 +112,7 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	@POST
-	@Path("/classes/model/{name}/{className}/{ownerName}")
+	@Path("/classes/model/{name}/{className}/{ownerName}") //TODO URL: /assets/ body name, className, modelName, ownerName
 	public Response createAssetModel(@PathParam("name") String name, @PathParam("className") String className,
 			@PathParam("ownerName") String ownerName) {
 		try {
@@ -128,7 +128,7 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	@POST
-	@Path("/classes/{name}/{modelName}/{ownerName}")
+	@Path("/classes/{name}/{modelName}/{ownerName}") //TODO usa metodo sopra
 	public Response createAsset(@PathParam("name") String name, @PathParam("modelName") String modelName,
 			@PathParam("ownerName") String ownerName) {
 		try {
@@ -144,7 +144,7 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	@PUT
-	@Path("/classes/{name}/{individualName}/{referredName}")
+	@Path("/classes/{name}/{individualName}/{referredName}")//TODO URL assets/{assetName} body: relationName, referredName 
 	public Response setRelationship(@PathParam("name") String name, @PathParam("individualName") String individualName,
 			@PathParam("referredName") String referredName) {
 		try {
@@ -162,7 +162,7 @@ public class CAMRest extends ResourceConfig {
 
 	@POST
 	// @Path("/classes/{name}/{individualName}/{value}/{type}")
-	@Path("/classes/attribute")
+	@Path("/classes/attribute") //TODO URL assets/{assetName} body: attributeName, value, type
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response setAttribute(Attribute attribute) {
 		try {
@@ -189,7 +189,7 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	@DELETE
-	@Path("/classes/individual/{assetName}")
+	@Path("/classes/individual/{assetName}")  //TODO URL assets/{assetName}
 	public Response deleteIndividual(@PathParam("assetName") String assetName) {
 		try {
 			CAMRestImpl.deleteIndividual(SesameRepoInstance.getRepoInstance(getClass()), assetName);
@@ -203,7 +203,7 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	@DELETE
-	@Path("/classes/property/{propertyName}/{assetName}")
+	@Path("/classes/property/{propertyName}/{assetName}")  //TODO URL assets/{assetName}/{attributeName}
 	public Response removeProperty(@PathParam("propertyName") String propertyName,
 			@PathParam(" assetName") String assetName) {
 		try {
@@ -234,7 +234,7 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	@GET
-	@Path("/assets/{assetName}")
+	@Path("/assets/{assetName}") //TODO URL: ?assetName=assetName
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PropertyValueItem> getIndividualAttributes(@PathParam("assetName") String assetName) {
 		try {
@@ -262,7 +262,7 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	@POST
-	@Path("/owners/{ownerName}")
+	@Path("/owners/{ownerName}") //TODO URL: /owners/ body: ownerName=ownerName
 	public Response createOwner(@PathParam("ownerName") String ownerName) {
 		try {
 			CAMRestImpl.createOwner(SesameRepoInstance.getRepoInstance(getClass()), ownerName);

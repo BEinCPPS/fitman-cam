@@ -3,8 +3,8 @@ package it.eng.ontorepo;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
-import org.openrdf.model.vocabulary.OWL;
-import org.openrdf.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.model.vocabulary.OWL;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 
 /**
  * DTO representing the declaration of an Object Property

@@ -2,11 +2,12 @@
 var EntityManager = (function () {
     var $http;
     var $scope;
+    var $q;
 
     var getAssets = function (name) {
-        $http.get($scope.BACK_END_URL + '/assets/' + name)
+        $http.get($scope.BACK_END_URL + '/classes/' + name)
             .success(function (data) {
-                $scope.assetList = formatAssetListTable(createAssets(data));
+               $scope.assetList = formatAssetListTable(createAssets(data));
             })
             .error(function (error) {
                 console.log("Error encountered :-(");
@@ -16,7 +17,7 @@ var EntityManager = (function () {
     var createAssets = function (data) {
         var assets = [];
         for (var i in data) {
-            var asset = {
+            /*var asset = {
                 asset: data[i].normalizedName,
                 class: data[i].className,
                 model: data[i].individualName,
@@ -25,16 +26,64 @@ var EntityManager = (function () {
                 isModel: true,
                 action: 'x'
             }
-            assets.push(asset);
+      
+            assets.push(asset);*/
+        if(!isEmpty(data[i].normalizedName) && !isEmpty(data[i].className)){
+         
+            var promise = getAssetDetailForTable( data[i].normalizedName,  data[i].className);
+            promise.then(function(asset){
+                assets.push(asset);
+                console.log(asset);
+            });
         }
+           
+        }
+        
+      
         return assets;
     }
+
+    
+     var getAssetDetailForTable = function(name, clazz){
+         var deferred = $q.defer();
+         
+          $http.get($scope.BACK_END_URL + '/assets/' + name)
+            .success(function (data) {
+              var owned;
+              var model;
+              var created;
+              for (var i =0; i< data.length; i++){
+                  if(data[i].normalizedName.indexOf('ownedBy')> 0)
+                      owned = data[i].propertyValue;
+                  if(data[i].normalizedName.indexOf('instanceOf')> 0)
+                      model = data[i].propertyValue;
+                  if(data[i].normalizedName.indexOf('createdOn')> 0)
+                      created = data[i].propertyValue;
+              }
+               var asset = {
+                    asset: name,
+                    created : created,
+                    model: model,
+                    owner : owned,
+                    class: clazz
+                };
+              deferred.resolve(asset);
+            })
+            .error(function (error) {
+                console.log("Error encountered :-(");
+                deferred.reject(error);
+            });
+           return deferred.promise;
+    }
+    
 
     var formatAssetListTable = function (data) {
         if (!data)
             return [];
         for (var i = 0; i < data.length; i++) {
-            data[i].action = '<div><i data-toggle="tooltip" title="Delete asset model" class="fa fa-remove cam-table-button"></i><i data-toggle="tooltip" title="Open detail" class="fa fa-search cam-table-button"></i>';
+            data[i].action = '<div><i data-toggle="tooltip" title="Delete asset model" class="fa fa-remove cam-table-button"></i> <a class="cam-icon-a" href="#/detail/'
+				+ data[i].asset
+				+ '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-search cam-table-button"></i> </a>';
             if (data[i].isModel == 'true')
                 data[i].action += '<i data-toggle="tooltip" title="Create new asset from this model" class="fa fa-plus cam-table-button"></i></div>';
         }
@@ -65,6 +114,33 @@ var EntityManager = (function () {
         }
         return classes;
     }
+    
+    var getAssetDetail = function(name){
+          $http.get($scope.BACK_END_URL + '/assets/' + name)
+            .success(function (data) {
+              var owned;
+              var model;
+              var created;
+              for (var i =0; i< data.length; i++){
+                  if(data[i].normalizedName.indexOf('ownedBy')> 0)
+                      owned = data[i].propertyValue;
+                  if(data[i].normalizedName.indexOf('instanceOf')> 0)
+                      model = data[i].propertyValue;
+                  if(data[i].normalizedName.indexOf('createdOn')> 0)
+                      created = data[i].propertyValue;
+              }
+                $scope.selectedAsset = {
+                    name: name,
+                    created : created,
+                    model: model,
+                    owner : owned
+                };
+            })
+            .error(function (error) {
+                console.log("Error encountered :-(");
+                return null;
+            });
+    }
 
     var getChildrenForClass = function (className) {
         $http.get($scope.BACK_END_URL + '/classes/' + className)
@@ -75,7 +151,7 @@ var EntityManager = (function () {
                     $scope.currentNode.children = classes;
 
                 } else {
-                    alert("Assets for: " + className);
+                    //alert("Assets for: " + className);
                     $scope.loadAsset();
                 }
 
@@ -102,9 +178,10 @@ var EntityManager = (function () {
         $http = null;
     }
 
-    var init = function ($scopeExt, $httpExt) {
+    var init = function ($scopeExt, $httpExt, $qExt) {
             $scope = $scopeExt;
             $http = $httpExt;
+            $q = $qExt;
         }
         //Costructor
     var EntityManager = function () {
@@ -118,7 +195,8 @@ var EntityManager = (function () {
         init: init,
         getAssets: getAssets,
         getClasses: getClasses,
-        getChildrenForClass: getChildrenForClass
+        getChildrenForClass: getChildrenForClass,
+        getAssetDetail: getAssetDetail
     }
     return EntityManager;
 })();

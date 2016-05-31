@@ -5,3 +5,9 @@ function isEmpty(obj) {
     }
     return false;
 }
+
+var Routes = {
+		HOME : "/",
+		HOME_ASSET : "/:assetName",
+		DETAIL : "/:selectedAssetName"
+}
