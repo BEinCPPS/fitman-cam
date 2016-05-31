@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/BEinCPPS/fitman-cam.svg?branch=master)](https://travis-ci.org/BEinCPPS/fitman-cam)
+
 #Fitman-cam project
 
 ###Description of the component
