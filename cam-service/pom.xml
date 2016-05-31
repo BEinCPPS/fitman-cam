@@ -17,8 +17,8 @@
 	</repositories>
 
 	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+<!-- 		<maven.compiler.source>1.8</maven.compiler.source> -->
+<!-- 		<maven.compiler.target>1.8</maven.compiler.target> -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<jersey.version>2.22.2</jersey.version>
@@ -56,21 +56,26 @@
 			<artifactId>com.eclipsesource.restfuse</artifactId>
 			<version>1.2.0</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>org.openrdf.sesame</groupId>
-			<artifactId>sesame-rio-rdfxml</artifactId>
-			<version>4.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openrdf.sesame</groupId>
-			<artifactId>sesame-runtime</artifactId>
-			<version>4.1.1</version>
-		</dependency>
+
+		<!-- <dependency> -->
+		<!-- <groupId>org.openrdf.sesame</groupId> -->
+		<!-- <artifactId>sesame-rio-rdfxml</artifactId> -->
+		<!-- <version>4.1.1</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.openrdf.sesame</groupId> -->
+		<!-- <artifactId>sesame-runtime</artifactId> -->
+		<!-- <version>4.1.1</version> -->
+		<!-- </dependency> -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-runtime</artifactId>
+			<version>2.0M1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -129,6 +134,15 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -196,7 +210,7 @@
 	</build>
 	<profiles>
 		<profile>
-		<!-- Development environments -->
+			<!-- Development environments -->
 			<id>dev</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -204,7 +218,7 @@
 			<properties>
 				<version>${version}</version>
 				<artifact.id>${artifactId}</artifact.id>
-				
+
 				<sesame.url></sesame.url>
 				<sesame.repository>TEST</sesame.repository>
 				<sesame.namespace>http://www.msee-ip.eu/ontology/bivolino#</sesame.namespace>
@@ -213,7 +227,7 @@
 				<!-- MEMORY or HTTP supported at the moment -->
 				<sesame.repo.type>MEMORY</sesame.repo.type>
 				<destination.url.integration>http://localhost:8080/${artifactId}/</destination.url.integration>
-				<!-- CORS API ENABLING true or false  -->
+				<!-- CORS API ENABLING true or false -->
 				<cors.api>true</cors.api>
 			</properties>
 		</profile>
@@ -223,18 +237,18 @@
 			<properties>
 				<version>${version}</version>
 				<artifact.id>${artifactId}</artifact.id>
-				
-				<sesame.url>http://localhost:8080/openrdf-sesame/</sesame.url>
-				<sesame.repository>NEST</sesame.repository>
-				<sesame.namespace>http://www.msee-ip.eu/ontology/bivolino#</sesame.namespace>
+
+				<sesame.url>http://localhost:8080/rdf4j-server/</sesame.url>
+				<sesame.repository>CAM_REPO</sesame.repository>
+				<sesame.namespace>http://www.msee-ip.eu/ontology/beincppsns#</sesame.namespace>
 				<sesame.memory.store.data.dir>/data</sesame.memory.store.data.dir>
 				<sesame.rdf.file>/onthology/export.rdf</sesame.rdf.file>
 				<!-- MEMORY or HTTP supported at the moment -->
 				<sesame.repo.type>HTTP</sesame.repo.type>
 				<destination.url.integration>http://localhost:8080/${artifactId}/</destination.url.integration>
-				<!-- CORS API ENABLING true or false  -->
+				<!-- CORS API ENABLING true or false -->
 				<cors.api>true</cors.api>
-				
+
 			</properties>
 		</profile>
 

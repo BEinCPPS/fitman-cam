@@ -6,16 +6,13 @@ camApp.config(function ($routeProvider) {
     .when('/', {
         templateUrl: 'pages/home.htm',
         controller: 'homeController'
+    }).when('/:assetName', {
+        templateUrl: 'pages/home.htm',
+        controller: 'homeController'
+    }).when('/detail/:selectedAssetName', {
+        templateUrl: 'pages/assetDetail.htm',
+        controller: 'detailController'
     })
     
-    .when('/forecast', {
-        templateUrl: 'pages/forecast.htm',
-        controller: 'forecastController'
-    })
-    
-    .when('/forecast/:days', {
-        templateUrl: 'pages/forecast.htm',
-        controller: 'forecastController'
-    })
-    
+
 });
