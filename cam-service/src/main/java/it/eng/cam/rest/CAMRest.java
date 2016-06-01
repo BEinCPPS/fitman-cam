@@ -27,6 +27,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import it.eng.cam.rest.dto.AttributeInstance;
 import it.eng.cam.rest.sesame.Attribute;
 import it.eng.cam.rest.sesame.SesameRepoInstance;
 import it.eng.ontorepo.ClassItem;
@@ -41,6 +42,14 @@ public class CAMRest extends ResourceConfig {
 		packages("it.eng.cam.rest");
 	}
 
+	@POST
+	@Path("/test")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public AttributeInstance getAsset(AttributeInstance a){
+		return a;
+	}
+	
 	@GET
 	@Path("/classes")
 	@Produces(MediaType.APPLICATION_JSON)
