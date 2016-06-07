@@ -24,14 +24,14 @@ Cam-Service component exposes its own public, proprietary REST-based web API. By
 ###Developer environment
 
 This procedure assumes that you have [Apache Tomcat](https://tomcat.apache.org/download-80.cgi) (version >= **7**)
-and [Sesame 4.1.1](https://sourceforge.net/projects/sesame/files/Sesame%204/4.1.1/openrdf-sesame-4.1.1-sdk.zip/download) installed in your environment.
+and [RDF4J 2.0M2](http://rdf4j.org/download/) installed in your environment.
 
-Before start using application you must have sesame up and running, we also need to create a new repository in it. 
+Before start using application you must have RDF4J up and running, we also need to create a new repository in it. 
 We will refer to this repository as ```<EXAMPLE_REPO>```.
 
-• Open a web browser and navigate to your openrdf-sesame:
+• Open a web browser and navigate to your rdf4j:
  ```
- <host>:<port>/openrdf-workbench/
+ <host>:<port>/rdf4j-workbench/
  ```
 
 • Click on new repository, on top left, and fill id and title.<br/>
