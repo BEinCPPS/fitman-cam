@@ -461,7 +461,6 @@ public class CAMRest extends ResourceConfig {
 	// FINE ASSETS
 
 	// MODELS
-
 	// @GET
 	// @Path("/models")
 	// @Produces(MediaType.APPLICATION_JSON)
