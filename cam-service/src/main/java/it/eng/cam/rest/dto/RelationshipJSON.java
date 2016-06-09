@@ -2,7 +2,7 @@ package it.eng.cam.rest.dto;
 
 import java.io.Serializable;
 
-public class Relationship implements Serializable {
+public class RelationshipJSON implements Serializable {
 
 	private static final long serialVersionUID = -1595754105699770572L;
 

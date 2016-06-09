@@ -2,9 +2,13 @@ package it.eng.ontorepo;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.xml.bind.DatatypeConverter;
+
+import it.eng.cam.rest.CAMRestImpl;
+import it.eng.cam.rest.sesame.SesameRepoInstance;
 
 /**
  * Collection of utility methods of general interest.
@@ -188,4 +192,5 @@ public class Util {
 		}
 		return false;
 	}
+
 }

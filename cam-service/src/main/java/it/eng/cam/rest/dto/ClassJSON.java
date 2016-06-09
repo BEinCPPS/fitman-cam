@@ -2,7 +2,7 @@ package it.eng.cam.rest.dto;
 
 import java.io.Serializable;
 
-public class ClassInstance implements Serializable{
+public class ClassJSON implements Serializable{
 
 	private static final long serialVersionUID = 2881164817261980430L;
 

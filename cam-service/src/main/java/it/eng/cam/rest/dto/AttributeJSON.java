@@ -2,12 +2,13 @@ package it.eng.cam.rest.dto;
 
 import java.io.Serializable;
 
-public class AttributeInstance implements Serializable {
+public class AttributeJSON implements Serializable {
 
 	private static final long serialVersionUID = 3414014156777972530L;
 
 	private String name;
 	private String value;
+	private String type;
 
 	public String getName() {
 		return name;
@@ -23,6 +24,14 @@ public class AttributeInstance implements Serializable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

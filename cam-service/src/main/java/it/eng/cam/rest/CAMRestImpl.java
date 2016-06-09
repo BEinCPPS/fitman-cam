@@ -47,6 +47,10 @@ public class CAMRestImpl {
 	public static void moveClass(RepositoryDAO dao, String name, String parentName) {
 		dao.moveClass(name, parentName);
 	}
+	
+	public static void renameClass(RepositoryDAO dao, String oldName, String newName){
+		dao.renameClass(oldName, newName);
+	}
 
 	public static void deleteClass(RepositoryDAO dao, String name) {
 		dao.deleteClass(name);
@@ -93,6 +97,20 @@ public class CAMRestImpl {
 	public static void setAttribute(RepositoryDAO dao, String name, String individualName, String value, String type)
 			throws IllegalArgumentException, ClassNotFoundException, RuntimeException {
 		dao.setAttribute(name, individualName, value, Class.forName(type));
+	}
+	
+
+	public static boolean isModel(RepositoryDAO dao, String individualName){
+		List<PropertyValueItem> individualAttributes = dao.getIndividualAttributes(individualName);
+		String model =null;
+		for (PropertyValueItem propertyValueItem : individualAttributes) {
+			if(propertyValueItem.getNormalizedName().equalsIgnoreCase("instanceOf"))
+				model = propertyValueItem.getNormalizedValue();
+				
+		}
+		if(null==model || "".equalsIgnoreCase(model.trim()))
+			return true;
+		return false;
 	}
 
 	/**
