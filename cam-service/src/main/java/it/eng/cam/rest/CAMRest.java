@@ -82,6 +82,7 @@ public class CAMRest extends ResourceConfig {
 
 	@POST
 	@Path("/classes")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createClass(ClassJSON clazz) {
 		try {
 			CAMRestImpl.createClass(SesameRepoInstance.getRepoInstance(getClass()), clazz.getName(),
@@ -97,6 +98,7 @@ public class CAMRest extends ResourceConfig {
 
 	@PUT
 	@Path("/classes/{className}")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateClass(@PathParam("className") String className, ClassJSON clazz) {
 		try {
 			if (!className.equalsIgnoreCase(clazz.getName())) {
@@ -193,6 +195,7 @@ public class CAMRest extends ResourceConfig {
 	@POST
 	@Path("/assets")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createAsset(AssetJSON asset) {
 		try {
 			CAMRestImpl.createAsset(SesameRepoInstance.getRepoInstance(getClass()), asset.getName(),
@@ -209,7 +212,7 @@ public class CAMRest extends ResourceConfig {
 
 	@PUT
 	@Path("/assets/{assetName}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateAsset(@PathParam("assetName") String assetName, AssetJSON asset) {
 		try {
 			if (CAMRestImpl.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()),
@@ -339,7 +342,6 @@ public class CAMRest extends ResourceConfig {
 
 	@DELETE
 	@Path("/assets/{assetName}/attributes/{attributeName}")
-	@Consumes(MediaType.APPLICATION_JSON)
 	public Response removeAttribute(@PathParam("assetName") String assetName,
 			@PathParam("attributeName") String attributeName) {
 		try {
@@ -408,6 +410,7 @@ public class CAMRest extends ResourceConfig {
 	@POST
 	@Path("/assets/{assetName}/relationships")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createRelationship(@PathParam("assetName") String assetName, RelationshipJSON relationship) {
 		try {
 			CAMRestImpl.setRelationship(SesameRepoInstance.getRepoInstance(getClass()), relationship.getName(),
@@ -425,6 +428,7 @@ public class CAMRest extends ResourceConfig {
 	@PUT
 	@Path("/assets/{assetName}/relationships/{relationshipName}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateRelationship(@PathParam("assetName") String assetName,
 			@PathParam("relationshipName") String relationshipName, RelationshipJSON relationship) {
 		try {
@@ -536,6 +540,7 @@ public class CAMRest extends ResourceConfig {
 	@POST
 	@Path("/models")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createAssetModel(AssetModelJSON model) {
 		try {
 			CAMRestImpl.createAssetModel(SesameRepoInstance.getRepoInstance(getClass()), model.getName(),
@@ -553,6 +558,7 @@ public class CAMRest extends ResourceConfig {
 	@PUT
 	@Path("/models/{modelName}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateAssetModel(@PathParam("modelName") String modelName, AssetModelJSON model) {
 		try {
 			if (CAMRestImpl.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()),
@@ -751,6 +757,7 @@ public class CAMRest extends ResourceConfig {
 	@POST
 	@Path("/models/{modelName}/relationships")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createModelRelationship(@PathParam("modelName") String modelName, RelationshipJSON relationship) {
 		try {
 			CAMRestImpl.setRelationship(SesameRepoInstance.getRepoInstance(getClass()), relationship.getName(),
@@ -768,6 +775,7 @@ public class CAMRest extends ResourceConfig {
 	@PUT
 	@Path("/models/{modelName}/relationships/{relationshipName}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateModelRelationship(@PathParam("modelName") String modelName,
 			@PathParam("relationshipName") String relationshipName, RelationshipJSON relationship) {
 		try {
@@ -803,6 +811,7 @@ public class CAMRest extends ResourceConfig {
 
 	@POST
 	@Path("/models")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createModel(AssetModelJSON assetModel) {
 		try {
 			CAMRestImpl.createAssetModel(SesameRepoInstance.getRepoInstance(getClass()), assetModel.getName(),
@@ -856,7 +865,8 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	@POST
-	@Path("/owners/") // TODO URL: /owners/ body: ownerName=ownerName
+	@Path("/owners/") 
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createOwner(OwnerJSON owner) {
 		try {
 			CAMRestImpl.createOwner(SesameRepoInstance.getRepoInstance(getClass()), owner.getName());
@@ -870,7 +880,8 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	@PUT
-	@Path("/owners/{ownerName}") // TODO URL: /owners/ body: ownerName=ownerName
+	@Path("/owners/{ownerName}") 
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateOwner(@PathParam("ownerName") String ownerName, OwnerJSON owner) {
 		try {
 			CAMRestImpl.deleteOwner(SesameRepoInstance.getRepoInstance(getClass()), ownerName);
