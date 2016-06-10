@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 
 import com.eclipsesource.restfuse.Destination;
 import com.eclipsesource.restfuse.HttpJUnitRunner;
+import com.eclipsesource.restfuse.MediaType;
 import com.eclipsesource.restfuse.Method;
 import com.eclipsesource.restfuse.RequestContext;
 import com.eclipsesource.restfuse.Response;
@@ -69,7 +70,7 @@ public class RestTestIT extends Assert {
 
 	// WARNING FAKE CONTENT IS NECESSARY for restfuse library more info at
 	// https://github.com/eclipsesource/restfuse/issues/42
-	@HttpTest(method = Method.POST, path = "/classes", order = 4, content = "{\"name\":\"New_Class_827021468\",\"parentName\":\"Thing\"}")
+	@HttpTest(method = Method.POST, path = "/classes", order = 4, type = MediaType.APPLICATION_JSON, content = "{\"name\":\"New_Class_827021490\",\"parentName\":\"Thing\"}")
 	public void testCreateClass() {
 		assertOk(response);
 	}
