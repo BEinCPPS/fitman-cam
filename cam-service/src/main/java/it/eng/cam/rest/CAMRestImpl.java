@@ -45,6 +45,8 @@ public class CAMRestImpl {
 	}
 
 	public static void moveClass(RepositoryDAO dao, String name, String parentName) {
+		if (!isNormalized(parentName))
+			parentName = normalize(parentName);
 		dao.moveClass(name, parentName);
 	}
 	

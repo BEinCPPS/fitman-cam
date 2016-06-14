@@ -44,7 +44,8 @@ public class RestTestIT extends Assert {
 				.addPathSegment("assetModelNameCreated", "New_Model_" + random)
 				.addPathSegment("ownerNameCreated", "New_Owner_" + random)
 				.addPathSegment("ownerNameCreated2", "New_Owner_2_" + random)
-				.addPathSegment("relationShipNameCreated", "New_Relationship_" + random);
+				.addPathSegment("relationShipNameCreated", "New_Relationship_" + random)
+				.addPathSegment("testClass", "New_Class_827021490");
 		return destination;
 	}
 
@@ -75,20 +76,20 @@ public class RestTestIT extends Assert {
 		assertOk(response);
 	}
 
-//	@HttpTest(method = Method.POST, path = "/classes/{classNameMoved}/{rootName}", order = 5, content = "dummy")
-//	public void testCreateClass2() {
-//		assertOk(response);
-//	}
-//
-//	@HttpTest(method = Method.PUT, path = "/classes/{classNameMoved}/{classNameCreated}", order = 6, content = "dummy")
-//	public void testMoveClass() {
-//		assertOk(response);
-//	}
-//
-//	@HttpTest(method = Method.DELETE, path = "/classes/{classNameMoved}", order = 7)
-//	public void testDeleteClass() {
-//		assertOk(response);
-//	}
+	@HttpTest(method = Method.POST, path = "/classes", order = 5, type = MediaType.APPLICATION_JSON, content = "{\"name\":\"New_Class_827021497\",\"parentName\":\"Thing\"}")
+	public void testCreateClass2() {
+		assertOk(response);
+	}
+
+	@HttpTest(method = Method.PUT, path = "/classes/{testClass}", order = 6, type = MediaType.APPLICATION_JSON, content = "{\"name\":\"New_Class_827021492\",\"parentName\":\"Thing\"}")
+	public void testMoveClass() {
+		assertOk(response);
+	}
+
+	@HttpTest(method = Method.DELETE, path = "/classes/{testClass}", order = 7)
+	public void testDeleteClass() {
+		assertOk(response);
+	}
 //
 //	@HttpTest(method = Method.GET, path = "/classes/{classNameCreated}", order = 8)
 //	public void testGetIndividual() {
