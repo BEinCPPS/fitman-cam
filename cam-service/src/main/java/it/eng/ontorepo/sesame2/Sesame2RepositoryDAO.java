@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.rdf4j.IsolationLevels;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Namespace;
 import org.eclipse.rdf4j.model.Resource;
@@ -1329,7 +1330,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 		RepositoryConnection con = null;
 		try {
 			con = repo.getConnection();
-			con.begin();
+			con.begin(IsolationLevels.READ_COMMITTED);
 			RepositoryResult<Statement> statements = con.getStatements(subject, predicate, object, false);
 			while (statements.hasNext()) {
 				con.remove(statements.next());

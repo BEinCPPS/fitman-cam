@@ -79,7 +79,7 @@ public class Util {
 	}
 	
 	/**
-	 * Returns true is the given name is not qualified by a namespace.
+	 * Returns true if the given name is not qualified by a namespace.
 	 * @param name
 	 * @return
 	 */

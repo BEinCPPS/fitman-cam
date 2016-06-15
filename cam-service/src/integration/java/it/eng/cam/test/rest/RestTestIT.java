@@ -37,7 +37,7 @@ public class RestTestIT extends Assert {
 		Destination destination = new Destination(this, finder.getString("destination.url.integration"));
 		RequestContext context = destination.getRequestContext();
 		context.addPathSegment("rootName", "Thing").addPathSegment("classNameCreated", "New_Class_" + random)
-				.addPathSegment("classNameMoved", "New_Class_2_" + random)
+				.addPathSegment("classNameMoved", "New_Class_2_" )
 				.addPathSegment("assetNameCreated", "New_Asset_" + random)
 				.addPathSegment("assetNameCreated2", "New_Asset_2_" + random)
 				.addPathSegment("assetNameCreated3", "New_Asset_3_" + random)
@@ -71,22 +71,22 @@ public class RestTestIT extends Assert {
 
 	// WARNING FAKE CONTENT IS NECESSARY for restfuse library more info at
 	// https://github.com/eclipsesource/restfuse/issues/42
-	@HttpTest(method = Method.POST, path = "/classes", order = 4, type = MediaType.APPLICATION_JSON, content = "{\"name\":\"New_Class_827021490\",\"parentName\":\"Thing\"}")
+	@HttpTest(method = Method.POST, path = "/classes", order = 4, type = MediaType.APPLICATION_JSON, content = "{\"name\":\"New_Class_2_\",\"parentName\":\"Thing\"}")
 	public void testCreateClass() {
 		assertOk(response);
 	}
 
-	@HttpTest(method = Method.POST, path = "/classes", order = 5, type = MediaType.APPLICATION_JSON, content = "{\"name\":\"New_Class_827021497\",\"parentName\":\"Thing\"}")
-	public void testCreateClass2() {
-		assertOk(response);
-	}
+//	@HttpTest(method = Method.POST, path = "/classes", order = 5, type = MediaType.APPLICATION_JSON, content = "{\"name\":\"{testClass}\",\"parentName\":\"Thing\"}")
+//	public void testCreateClass2() {
+//		assertOk(response);
+//	}
 
-	@HttpTest(method = Method.PUT, path = "/classes/{testClass}", order = 6, type = MediaType.APPLICATION_JSON, content = "{\"name\":\"New_Class_827021492\",\"parentName\":\"Thing\"}")
+	@HttpTest(method = Method.PUT, path = "/classes/{classNameCreated}", order = 6, type = MediaType.APPLICATION_JSON, content = "{\"name\":\"New_Class_2_\",\"parentName\":\"Thing\"}")
 	public void testMoveClass() {
 		assertOk(response);
 	}
 
-	@HttpTest(method = Method.DELETE, path = "/classes/{testClass}", order = 7)
+	@HttpTest(method = Method.DELETE, path = "/classes/{classNameCreated}", order = 7)
 	public void testDeleteClass() {
 		assertOk(response);
 	}

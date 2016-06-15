@@ -45,8 +45,8 @@ public class CAMRestImpl {
 	}
 
 	public static void moveClass(RepositoryDAO dao, String name, String parentName) {
-		if (!isNormalized(parentName))
-			parentName = normalize(parentName);
+//		if (!isNormalized(parentName))
+//			parentName = normalize(parentName);
 		dao.moveClass(name, parentName);
 	}
 	
@@ -83,7 +83,7 @@ public class CAMRestImpl {
 
 	// TODO Test
 	public static void removeProperty(RepositoryDAO dao, String assetName, String propertyName) {
-		dao.removeProperty(assetName, propertyName);
+		dao.removeProperty(propertyName, assetName);
 
 	}
 

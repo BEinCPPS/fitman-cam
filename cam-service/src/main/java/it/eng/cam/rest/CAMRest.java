@@ -102,7 +102,14 @@ public class CAMRest extends ResourceConfig {
 	public Response updateClass(@PathParam("className") String className, ClassJSON clazz) {
 		try {
 			if (!className.equalsIgnoreCase(clazz.getName())) {
-				CAMRestImpl.renameClass(SesameRepoInstance.getRepoInstance(getClass()), className, clazz.getName());
+				try {
+					CAMRestImpl.renameClass(SesameRepoInstance.getRepoInstance(getClass()), className, clazz.getName());
+				} catch (Exception e) {
+					logger.error(e);
+					throw new WebApplicationException(e.getMessage());
+				} finally {
+					SesameRepoInstance.releaseRepoDaoConn();
+				}
 				className = clazz.getName();
 			}
 			CAMRestImpl.moveClass(SesameRepoInstance.getRepoInstance(getClass()), className, clazz.getParentName());
@@ -214,24 +221,42 @@ public class CAMRest extends ResourceConfig {
 	@Path("/assets/{assetName}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateAsset(@PathParam("assetName") String assetName, AssetJSON asset) {
+		List<PropertyValueItem> individualAttributes = null;
 		try {
-			if (CAMRestImpl.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()),
-					assetName) != null) {
-				CAMRestImpl.deleteIndividual(SesameRepoInstance.getRepoInstance(getClass()), assetName);
-				CAMRestImpl.createAsset(SesameRepoInstance.getRepoInstance(getClass()), asset.getName(),
-						asset.getModelName(), asset.getOwnerName());
-				return Response.ok("Asset with name '" + asset.getName() + "' for Model '" + asset.getModelName()
-						+ "' for Owner '" + asset.getOwnerName() + "' was successfully created!").build();
-			} else {
-				return Response.notModified("Asset with name '" + asset.getName() + "' for Model '"
-						+ asset.getModelName() + "' for Owner '" + asset.getOwnerName() + "' does not exist").build();
-			}
+			individualAttributes = CAMRestImpl.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()),
+					assetName);
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
 		} finally {
 			SesameRepoInstance.releaseRepoDaoConn();
 		}
+		if (individualAttributes != null) {
+			try {
+				CAMRestImpl.deleteIndividual(SesameRepoInstance.getRepoInstance(getClass()), assetName);
+			} catch (Exception e) {
+				logger.error(e);
+				throw new WebApplicationException(e.getMessage());
+			} finally {
+				SesameRepoInstance.releaseRepoDaoConn();
+			}
+			try {
+				CAMRestImpl.createAsset(SesameRepoInstance.getRepoInstance(getClass()), asset.getName(),
+						asset.getModelName(), asset.getOwnerName());
+				return Response.ok("Asset with name '" + asset.getName() + "' for Model '" + asset.getModelName()
+						+ "' for Owner '" + asset.getOwnerName() + "' was successfully created!").build();
+
+			} catch (Exception e) {
+				logger.error(e);
+				throw new WebApplicationException(e.getMessage());
+			} finally {
+				SesameRepoInstance.releaseRepoDaoConn();
+			}
+		} else {
+			return Response.notModified("Asset with name '" + asset.getName() + "' for Model '" + asset.getModelName()
+					+ "' for Owner '" + asset.getOwnerName() + "' does not exist").build();
+		}
+
 	}
 
 	@DELETE
@@ -317,6 +342,13 @@ public class CAMRest extends ResourceConfig {
 			@PathParam("attributeName") String attributeName, AttributeJSON attribute) {
 		try {
 			CAMRestImpl.removeProperty(SesameRepoInstance.getRepoInstance(getClass()), assetName, attributeName);
+		} catch (Exception e) {
+			logger.error(e);
+			throw new WebApplicationException(e.getMessage());
+		} finally {
+			SesameRepoInstance.releaseRepoDaoConn();
+		}
+		try {
 			CAMRestImpl.setAttribute(SesameRepoInstance.getRepoInstance(getClass()), attribute.getName(), assetName,
 					attribute.getValue(), attribute.getType());
 			return Response.ok(
@@ -433,6 +465,13 @@ public class CAMRest extends ResourceConfig {
 			@PathParam("relationshipName") String relationshipName, RelationshipJSON relationship) {
 		try {
 			CAMRestImpl.removeProperty(SesameRepoInstance.getRepoInstance(getClass()), assetName, relationshipName);
+		} catch (Exception e) {
+			logger.error(e);
+			throw new WebApplicationException(e.getMessage());
+		} finally {
+			SesameRepoInstance.releaseRepoDaoConn();
+		}
+		try {
 			CAMRestImpl.setRelationship(SesameRepoInstance.getRepoInstance(getClass()), relationship.getName(),
 					assetName, relationship.getReferredName());
 			return Response.ok("Relation with name '" + relationshipName + "'between '" + assetName + "' and '"
@@ -561,13 +600,27 @@ public class CAMRest extends ResourceConfig {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateAssetModel(@PathParam("modelName") String modelName, AssetModelJSON model) {
 		try {
-			if (CAMRestImpl.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()),
-					modelName) != null) {
+			List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()),
+					modelName);
+			if (individualAttributes != null) {
+				try{
 				CAMRestImpl.deleteIndividual(SesameRepoInstance.getRepoInstance(getClass()), modelName);
+				} catch (Exception e) {
+					logger.error(e);
+					throw new WebApplicationException(e.getMessage());
+				} finally {
+					SesameRepoInstance.releaseRepoDaoConn();
+				}try{
 				CAMRestImpl.createAsset(SesameRepoInstance.getRepoInstance(getClass()), model.getName(),
 						model.getClassName(), model.getOwnerName());
 				return Response.ok("Model with name '" + model.getName() + "' for Model '" + model.getClassName()
 						+ "' for Owner '" + model.getOwnerName() + "' was successfully created!").build();
+				} catch (Exception e) {
+					logger.error(e);
+					throw new WebApplicationException(e.getMessage());
+				} finally {
+					SesameRepoInstance.releaseRepoDaoConn();
+				}
 			} else {
 				return Response.notModified("Model with name '" + model.getName() + "' for Model '"
 						+ model.getClassName() + "' for Owner '" + model.getOwnerName() + "' does not exist").build();
@@ -663,6 +716,13 @@ public class CAMRest extends ResourceConfig {
 			@PathParam("attributeName") String attributeName, AttributeJSON attribute) {
 		try {
 			CAMRestImpl.removeProperty(SesameRepoInstance.getRepoInstance(getClass()), modelName, attributeName);
+		} catch (Exception e) {
+			logger.error(e);
+			throw new WebApplicationException(e.getMessage());
+		} finally {
+			SesameRepoInstance.releaseRepoDaoConn();
+		}
+		try {
 			CAMRestImpl.setAttribute(SesameRepoInstance.getRepoInstance(getClass()), attribute.getName(), modelName,
 					attribute.getValue(), attribute.getType());
 			return Response.ok(
@@ -780,6 +840,13 @@ public class CAMRest extends ResourceConfig {
 			@PathParam("relationshipName") String relationshipName, RelationshipJSON relationship) {
 		try {
 			CAMRestImpl.removeProperty(SesameRepoInstance.getRepoInstance(getClass()), modelName, relationshipName);
+		} catch (Exception e) {
+			logger.error(e);
+			throw new WebApplicationException(e.getMessage());
+		} finally {
+			SesameRepoInstance.releaseRepoDaoConn();
+		}
+		try {
 			CAMRestImpl.setRelationship(SesameRepoInstance.getRepoInstance(getClass()), relationship.getName(),
 					modelName, relationship.getReferredName());
 			return Response.ok("Relation with name '" + relationshipName + "'between '" + modelName + "' and '"
@@ -865,7 +932,7 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	@POST
-	@Path("/owners/") 
+	@Path("/owners/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createOwner(OwnerJSON owner) {
 		try {
@@ -880,11 +947,18 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	@PUT
-	@Path("/owners/{ownerName}") 
+	@Path("/owners/{ownerName}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateOwner(@PathParam("ownerName") String ownerName, OwnerJSON owner) {
 		try {
 			CAMRestImpl.deleteOwner(SesameRepoInstance.getRepoInstance(getClass()), ownerName);
+		} catch (Exception e) {
+			logger.error(e);
+			throw new WebApplicationException(e.getMessage());
+		} finally {
+			SesameRepoInstance.releaseRepoDaoConn();
+		}
+		try {
 			CAMRestImpl.createOwner(SesameRepoInstance.getRepoInstance(getClass()), owner.getName());
 			return Response.ok("Owner with name '" + owner.getName() + "' was successfully updated!").build();
 		} catch (Exception e) {
