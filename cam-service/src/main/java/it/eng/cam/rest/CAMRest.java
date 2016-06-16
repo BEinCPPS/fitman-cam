@@ -139,21 +139,6 @@ public class CAMRest extends ResourceConfig {
 	// FINE CLASSES
 
 	// ASSETS
-	//
-	// @GET
-	// @Path("/assets")
-	// @Produces(MediaType.APPLICATION_JSON)
-	// public List<IndividualItem> getIndividuals() {
-	// try {
-	// return
-	// CAMRestImpl.getIndividuals(SesameRepoInstance.getRepoInstance(getClass()));
-	// } catch (Exception e) {
-	// logger.error(e);
-	// throw new WebApplicationException(e.getMessage());
-	// } finally {
-	// SesameRepoInstance.releaseRepoDaoConn();
-	// }
-	// }
 
 	@GET
 	@Path("/assets/{assetName}")
@@ -165,16 +150,6 @@ public class CAMRest extends ResourceConfig {
 				return assets;
 			return assets.stream().filter(asset -> asset.getNormalizedName().equalsIgnoreCase(assetName))
 					.collect(Collectors.toList());
-			// List<IndividualItem> retval = new ArrayList<IndividualItem>();
-			// IndividualItem individualItem =
-			// CAMRestImpl.getIndividual(SesameRepoInstance.getRepoInstance(getClass()),
-			// assetName);
-			// if
-			// (CAMRestImpl.isModel(SesameRepoInstance.getRepoInstance(getClass()),
-			// individualItem.getIndividualName()))
-			// retval.add(individualItem);
-			//
-			// return retval;
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -201,7 +176,6 @@ public class CAMRest extends ResourceConfig {
 
 	@POST
 	@Path("/assets")
-	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createAsset(AssetJSON asset) {
 		try {
@@ -244,7 +218,7 @@ public class CAMRest extends ResourceConfig {
 				CAMRestImpl.createAsset(SesameRepoInstance.getRepoInstance(getClass()), asset.getName(),
 						asset.getModelName(), asset.getOwnerName());
 				return Response.ok("Asset with name '" + asset.getName() + "' for Model '" + asset.getModelName()
-						+ "' for Owner '" + asset.getOwnerName() + "' was successfully created!").build();
+						+ "' for Owner '" + asset.getOwnerName() + "' was successfully updated!").build();
 
 			} catch (Exception e) {
 				logger.error(e);
@@ -425,8 +399,7 @@ public class CAMRest extends ResourceConfig {
 			List<PropertyValueItem> individualAttributes = CAMRestImpl
 					.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), assetName);
 			for (PropertyValueItem propertyValueItem : individualAttributes) {
-				if (propertyValueItem.getPropertyType().equals(OWL.OBJECTPROPERTY)
-						&& propertyValueItem.getNormalizedName().equalsIgnoreCase(relationshipName)) {
+				if (propertyValueItem.getNormalizedName().equalsIgnoreCase(relationshipName)) {
 					return propertyValueItem;
 				}
 			}
@@ -441,7 +414,6 @@ public class CAMRest extends ResourceConfig {
 
 	@POST
 	@Path("/assets/{assetName}/relationships")
-	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createRelationship(@PathParam("assetName") String assetName, RelationshipJSON relationship) {
 		try {
@@ -459,7 +431,6 @@ public class CAMRest extends ResourceConfig {
 
 	@PUT
 	@Path("/assets/{assetName}/relationships/{relationshipName}")
-	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateRelationship(@PathParam("assetName") String assetName,
 			@PathParam("relationshipName") String relationshipName, RelationshipJSON relationship) {
@@ -486,12 +457,11 @@ public class CAMRest extends ResourceConfig {
 
 	@DELETE
 	@Path("/assets/{assetName}/relationships/{relationshipName}")
-	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteRelationship(@PathParam("assetName") String assetName,
 			@PathParam("relationshipName") String relationshipName) {
 		try {
 			CAMRestImpl.removeProperty(SesameRepoInstance.getRepoInstance(getClass()), assetName, relationshipName);
-			return Response.ok("Relation with name '" + relationshipName + "'between '" + assetName
+			return Response.ok("Relation with name '" + relationshipName + "'with '" + assetName
 					+ "' was successfully deleted!").build();
 		} catch (Exception e) {
 			logger.error(e);
@@ -502,28 +472,6 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	// FINE ASSETS
-
-	// MODELS
-	// @GET
-	// @Path("/models")
-	// @Produces(MediaType.APPLICATION_JSON)
-	// public List<IndividualItem> getModels() {
-	// try {
-	// List<IndividualItem> individuals = CAMRestImpl
-	// .getIndividuals(SesameRepoInstance.getRepoInstance(getClass()));
-	//
-	// return individuals.stream().filter(indiv -> CAMRestImpl
-	// .isModel(SesameRepoInstance.getRepoInstance(getClass()),
-	// indiv.getIndividualName()))
-	// .collect(Collectors.toList());
-	//
-	// } catch (Exception e) {
-	// logger.error(e);
-	// throw new WebApplicationException(e.getMessage());
-	// } finally {
-	// SesameRepoInstance.releaseRepoDaoConn();
-	// }
-	// }
 
 	@GET
 	@Path("/models/{modelName}")
@@ -538,16 +486,6 @@ public class CAMRest extends ResourceConfig {
 					.filter(model -> model.getNormalizedName().equalsIgnoreCase(modelName) && CAMRestImpl
 							.isModel(SesameRepoInstance.getRepoInstance(getClass()), model.getIndividualName()))
 					.collect(Collectors.toList());
-			// List<IndividualItem> retval = new ArrayList<IndividualItem>();
-			// IndividualItem individualItem =
-			// CAMRestImpl.getIndividual(SesameRepoInstance.getRepoInstance(getClass()),
-			// modelName);
-			// if
-			// (CAMRestImpl.isModel(SesameRepoInstance.getRepoInstance(getClass()),
-			// individualItem.getIndividualName()))
-			// retval.add(individualItem);
-			//
-			// return retval;
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -578,7 +516,6 @@ public class CAMRest extends ResourceConfig {
 
 	@POST
 	@Path("/models")
-	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createAssetModel(AssetModelJSON model) {
 		try {
@@ -596,25 +533,25 @@ public class CAMRest extends ResourceConfig {
 
 	@PUT
 	@Path("/models/{modelName}")
-	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateAssetModel(@PathParam("modelName") String modelName, AssetModelJSON model) {
 		try {
-			List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()),
-					modelName);
+			List<PropertyValueItem> individualAttributes = CAMRestImpl
+					.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), modelName);
 			if (individualAttributes != null) {
-				try{
-				CAMRestImpl.deleteIndividual(SesameRepoInstance.getRepoInstance(getClass()), modelName);
+				try {
+					CAMRestImpl.deleteIndividual(SesameRepoInstance.getRepoInstance(getClass()), modelName);
 				} catch (Exception e) {
 					logger.error(e);
 					throw new WebApplicationException(e.getMessage());
 				} finally {
 					SesameRepoInstance.releaseRepoDaoConn();
-				}try{
-				CAMRestImpl.createAsset(SesameRepoInstance.getRepoInstance(getClass()), model.getName(),
-						model.getClassName(), model.getOwnerName());
-				return Response.ok("Model with name '" + model.getName() + "' for Model '" + model.getClassName()
-						+ "' for Owner '" + model.getOwnerName() + "' was successfully created!").build();
+				}
+				try {
+					CAMRestImpl.createAssetModel(SesameRepoInstance.getRepoInstance(getClass()), model.getName(),
+							model.getClassName(), model.getOwnerName());
+					return Response.ok("Model with name '" + model.getName() + "' for Model '" + model.getClassName()
+							+ "' for Owner '" + model.getOwnerName() + "' was successfully updated!").build();
 				} catch (Exception e) {
 					logger.error(e);
 					throw new WebApplicationException(e.getMessage());
@@ -800,8 +737,7 @@ public class CAMRest extends ResourceConfig {
 			List<PropertyValueItem> individualAttributes = CAMRestImpl
 					.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), modelName);
 			for (PropertyValueItem propertyValueItem : individualAttributes) {
-				if (propertyValueItem.getPropertyType().equals(OWL.OBJECTPROPERTY)
-						&& propertyValueItem.getNormalizedName().equalsIgnoreCase(relationshipName)) {
+				if (propertyValueItem.getNormalizedName().equalsIgnoreCase(relationshipName)) {
 					return propertyValueItem;
 				}
 			}
@@ -816,7 +752,6 @@ public class CAMRest extends ResourceConfig {
 
 	@POST
 	@Path("/models/{modelName}/relationships")
-	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createModelRelationship(@PathParam("modelName") String modelName, RelationshipJSON relationship) {
 		try {
@@ -834,7 +769,6 @@ public class CAMRest extends ResourceConfig {
 
 	@PUT
 	@Path("/models/{modelName}/relationships/{relationshipName}")
-	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateModelRelationship(@PathParam("modelName") String modelName,
 			@PathParam("relationshipName") String relationshipName, RelationshipJSON relationship) {
@@ -861,12 +795,11 @@ public class CAMRest extends ResourceConfig {
 
 	@DELETE
 	@Path("/models/{modelName}/relationships/{relationshipName}")
-	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteModelRelationship(@PathParam("modelName") String modelName,
 			@PathParam("relationshipName") String relationshipName) {
 		try {
 			CAMRestImpl.removeProperty(SesameRepoInstance.getRepoInstance(getClass()), modelName, relationshipName);
-			return Response.ok("Relation with name '" + relationshipName + "'between '" + modelName
+			return Response.ok("Relation with name '" + relationshipName + "'with '" + modelName
 					+ "' was successfully deleted!").build();
 		} catch (Exception e) {
 			logger.error(e);
@@ -875,18 +808,23 @@ public class CAMRest extends ResourceConfig {
 			SesameRepoInstance.releaseRepoDaoConn();
 		}
 	}
+	// FINE MODELS
 
-	@POST
-	@Path("/models")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createModel(AssetModelJSON assetModel) {
+	// OWNERS
+
+	@GET
+	@Path("/owners/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<OwnerJSON> getOwners() {
 		try {
-			CAMRestImpl.createAssetModel(SesameRepoInstance.getRepoInstance(getClass()), assetModel.getName(),
-					assetModel.getClassName(), assetModel.getOwnerName());
-			return Response
-					.ok("Asset Model with name '" + assetModel.getName() + "' for Class '" + assetModel.getClassName()
-							+ "' for Owner '" + assetModel.getOwnerName() + "' was successfully created!")
-					.build();
+			List<OwnerJSON> retval = new ArrayList<OwnerJSON>();
+			List<String> owners = CAMRestImpl.getOwners(SesameRepoInstance.getRepoInstance(getClass()));
+//			if (null == ownerName || "".equalsIgnoreCase(ownerName))
+				owners.forEach(item -> retval.add(new OwnerJSON(item)));
+//			else
+//				owners.stream().filter(owner -> owner.equalsIgnoreCase(ownerName)).collect(Collectors.toList())
+//						.forEach(item -> retval.add(new OwnerJSON(item)));
+			return retval;
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -894,35 +832,20 @@ public class CAMRest extends ResourceConfig {
 			SesameRepoInstance.releaseRepoDaoConn();
 		}
 	}
-
-	// FINE MODELS
-
-	// OWNERS
-
-	// @GET
-	// @Path("/owners")
-	// @Produces(MediaType.APPLICATION_JSON)
-	// public List<String> getOwners() {
-	// try {
-	// return
-	// CAMRestImpl.getOwners(SesameRepoInstance.getRepoInstance(getClass()));
-	// } catch (Exception e) {
-	// logger.error(e);
-	// throw new WebApplicationException(e.getMessage());
-	// } finally {
-	// SesameRepoInstance.releaseRepoDaoConn();
-	// }
-	// }
-
+	
 	@GET
 	@Path("/owners/{ownerName}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<String> getOwner(@PathParam("ownerName") String ownerName) {
+	public List<OwnerJSON> getOwner(@PathParam("ownerName") String ownerName) {
 		try {
+			List<OwnerJSON> retval = new ArrayList<OwnerJSON>();
 			List<String> owners = CAMRestImpl.getOwners(SesameRepoInstance.getRepoInstance(getClass()));
 			if (null == ownerName || "".equalsIgnoreCase(ownerName))
-				return owners;
-			return owners.stream().filter(owner -> owner.equalsIgnoreCase(ownerName)).collect(Collectors.toList());
+				owners.forEach(item -> retval.add(new OwnerJSON(item)));
+			else
+				owners.stream().filter(owner -> owner.equalsIgnoreCase(ownerName)).collect(Collectors.toList())
+						.forEach(item -> retval.add(new OwnerJSON(item)));
+			return retval;
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
