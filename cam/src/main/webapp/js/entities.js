@@ -5,7 +5,7 @@ var EntityManager = (function () {
     var $q;
 
     var getAssets = function (name) {
-        $http.get($scope.BACK_END_URL + '/classes/' + name)
+        $http.get($scope.BACK_END_URL + '/assets?className=' + name)
             .success(function (data) {
                $scope.assetList = formatAssetListTable(createAssets(data));
             })

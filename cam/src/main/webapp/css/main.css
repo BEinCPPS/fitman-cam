@@ -155,6 +155,13 @@ div[data-tree-model] li .selected {
 	float: right;
 	margin-top: 15px;
 	margin-right: 64px;
+    background: none;
+    border:none;
+}
+
+.cam-btn-add-container:active{
+    background: none;
+    border:none;
 }
 
 .DataTables_sort_icon.css_right {
@@ -178,4 +185,7 @@ div[data-tree-model] li .selected {
 }
 .ui-corner-left .ui-icon {
 	background-image: none !important;
+}
+.ngdialog-content{
+    background: none;
 }

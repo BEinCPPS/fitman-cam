@@ -45,8 +45,15 @@ $(document).ready(function(){
 				</thead>
 			</table>
 <!-- 			<div class="cam-btn-add-container"><input type="image" title="New Asset Model" src="img/plus.png"/></div> -->
-			<a href="#" data-toggle="tooltip" title="New Asset Model" class="cam-btn-add-container"><i class="fa fa-plus-circle"> New asset model</i></a>
-		</div>
+          <div id="newAssetModal" ></div>
+           <!--	<button type="button" data-toggle="tooltip" title="New Asset Model" class="cam-btn-add-container"><i class="fa fa-plus-circle" data-toggle="modal" data-target="#myModal"> New asset model</i></button>-->
+            
+            <button type="button" data-toggle="tooltip" title="New Asset Model" class="cam-btn-add-container"
+                    ng-click="openNewAssetPanel()">
+                <i class="fa fa-plus-circle" data-toggle="modal" data-target="#myModal"> New asset model</i>
+            </button>
+            		</div>
 	</div>
 	
 </div>
+

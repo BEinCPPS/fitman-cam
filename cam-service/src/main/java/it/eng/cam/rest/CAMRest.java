@@ -146,7 +146,7 @@ public class CAMRest extends ResourceConfig {
 	public List<IndividualItem> getAssetByName(@PathParam("assetName") String assetName) {
 		try {
 			List<IndividualItem> assets = CAMRestImpl.getIndividuals(SesameRepoInstance.getRepoInstance(getClass()));
-			if (null == assetName)
+			if (null == assetName || "".equals(assetName.trim()))
 				return assets;
 			return assets.stream().filter(asset -> asset.getNormalizedName().equalsIgnoreCase(assetName))
 					.collect(Collectors.toList());

@@ -3,7 +3,8 @@ camApp.controller('homeController', [
 		'$scope',
 		'$http',
         '$q',
-		function ($scope, $http,$q) {
+        'ngDialog',
+            function ($scope, $http,$q, $ngDialog) {
 
         $scope.columnDefs = [{
             "mDataProp": "asset",
@@ -57,7 +58,14 @@ camApp.controller('homeController', [
                 $scope.assetList = []
             }
         }
-
+        
+        $scope.openNewAssetPanel = function () {
+					$ngDialog.open({
+						template: 'pages/newAsset.htm',
+						controller: 'newAssetController'
+					});
+				};
+        
 		}]);
 
 camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$location', '$q',
@@ -135,4 +143,27 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
                 return data;
             };
 
+        } ]);
+
+camApp.controller('newAssetController', [
+		'$scope',
+		'$http',
+        '$q',
+	    'ngDialog',
+		function ($scope, $http,$q, $ngDialog) {
+            
+            $scope.newAsset = {
+                    name: "",
+                    created : new Date(),
+                    model: "",
+                    owner : "",
+                    class: ""
+                };
+            
+            $scope.closeNewAssetPanel = function () {  
+                $ngDialog.close();
+            }
+            $scope.saveNewAssetModel = function () {  
+               console.log('qui: '+$scope.newAsset.name);
+            }
         } ]);
