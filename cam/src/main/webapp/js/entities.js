@@ -7,47 +7,92 @@ var EntityManager = (function () {
     var getAssets = function (name) {
         $http.get($scope.BACK_END_URL + '/assets?className=' + name)
             .success(function (data) {
-               $scope.assetList = formatAssetListTable(createAssets(data));
+                fetchAssetList(data, function(res) {
+                    $scope.assetList = formatAssetListTable(res);
+                })
+                //var a = createAssets(data);
+                //$scope.assetList = formatAssetListTable(a);
             })
             .error(function (error) {
-                console.log("Error encountered :-(");
+                console.log("Error encountered :-( " + error);
             });
     }
 
-    var createAssets = function (data) {
-        var assets = [];
-        for (var i in data) {
-            /*var asset = {
-                asset: data[i].normalizedName,
-                class: data[i].className,
-                model: data[i].individualName,
-                owner: '',
-                created: '2016-06-01',
-                isModel: true,
-                action: 'x'
-            }
-      
-            assets.push(asset);*/
-        if(!isEmpty(data[i].normalizedName) && !isEmpty(data[i].className)){
-         
-            var promise = getAssetDetailForTable( data[i].normalizedName,  data[i].className);
-            promise.then(function(asset){
-                assets.push(asset);
-                console.log(asset);
-            });
-        }
-           
-        }
-        
-      
-        return assets;
-    }
-
+//    var createAssets = function (data) {
+//       
+//         var promises = [];
+//
+//        var assets = [];
+//       /* for (var i in data) {
+//            
+//        if(!isEmpty(data[i].normalizedName) && !isEmpty(data[i].className)){
+//         
+//            var promise = getAssetDetailForTable( data[i].normalizedName,  data[i].className);
+//            promise.then(function(asset){
+//                assets.push(asset);
+//                console.log(asset);
+//            });
+//        }
+//           
+//        }*/
+//        angular.forEach( data, function(value){
+//            promises.push(getAssetDetailForTable(value.normalizedName,  value.className, assets));
+//        });
+//
+//        $q.all(promises).then(function(){
+//            $scope.assetList = formatAssetListTable(assets);
+//            return assets;
+//        });
+//        
+//    }
     
-     var getAssetDetailForTable = function(name, clazz){
+    
+    function fetchAssetList(assetList, completeCallback) {
+        var result = [];
+        function fetchData() {
+            if (assetList.length == 0) {
+                completeCallback(result);
+            } else {
+              var cur= assetList.shift();    
+              $http.get($scope.BACK_END_URL + '/assets/' + cur.individualName+'/attributes')
+                .success(function (data) {
+                  var owned;
+                  var model;
+                  var created;
+                  for (var i =0; i< data.length; i++){
+                      if(data[i].normalizedName.indexOf('ownedBy')> 0)
+                          owned = data[i].propertyValue;
+                      if(data[i].normalizedName.indexOf('instanceOf')> 0)
+                          model = data[i].propertyValue;
+                      if(data[i].normalizedName.indexOf('createdOn')> 0)
+                          created = data[i].propertyValue;
+                  }
+                   var asset = {
+                        asset: cur.individualName,
+                        created : created,
+                        model: model || "",
+                        owner : owned,
+                        class: cur.className
+                    };
+                   result.push(asset);
+                })
+                .error(function (error) {
+                    console.log("Error encountered :-( " + error);
+                  
+                }).finally(function () {
+                  fetchData();
+              }); 
+            }
+        }
+        fetchData();    
+    }
+    
+    
+    
+    /* var getAssetDetailForTable = function(name, clazz, assets){
          var deferred = $q.defer();
          
-          $http.get($scope.BACK_END_URL + '/assets/' + name)
+          $http.get($scope.BACK_END_URL + '/assets/' + name+'/attributes')
             .success(function (data) {
               var owned;
               var model;
@@ -67,15 +112,19 @@ var EntityManager = (function () {
                     owner : owned,
                     class: clazz
                 };
-              deferred.resolve(asset);
+               assets.push(asset);
+               deferred.resolve(assets);
+            
             })
             .error(function (error) {
-                console.log("Error encountered :-(");
-                deferred.reject(error);
+                console.log("Error encountered :-( " + error);
+                //deferred.reject(error);
+              deferred.resolve(assets);
+               //return deferred.promise;
             });
-           return deferred.promise;
+             return deferred.promise;
     }
-    
+    */
 
     var formatAssetListTable = function (data) {
         if (!data)
@@ -98,7 +147,7 @@ var EntityManager = (function () {
                 $scope.classList = createClasses(data);
             })
             .error(function () {
-                console.log("Error encountered :-(");
+                console.log("Error encountered :-( " + error);
             });
 
     }
@@ -137,7 +186,7 @@ var EntityManager = (function () {
                 };
             })
             .error(function (error) {
-                console.log("Error encountered :-(");
+                console.log("Error encountered :-( " +error);
                 return null;
             });
     }
@@ -157,7 +206,7 @@ var EntityManager = (function () {
 
             })
             .error(function (error) {
-                console.log("Error encountered :-(");
+                console.log("Error encountered :-( " + error);
                 return null;
             });
     }

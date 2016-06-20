@@ -40,10 +40,12 @@ camApp.controller('homeController', [
             
         // $scope.BACK_END_URL = 'http://161.27.159.61:8080/CAMService'; //TODO Address config.JSON
         //$scope.BACK_END_URL = 'http://192.168.62.211:8080/CAMService';
+              //$scope.BACK_END_URL = 'http://192.168.62.200:8080/CAMService';
         $scope.BACK_END_URL = 'http://localhost:8080/CAMService';
         entityManager.init($scope, $http, $q);
         $scope.assetList = [];
         entityManager.getClasses();
+        $scope.newAssetVisible = false;
 
         //funzioni di utilità
         $scope.loadChildren = function () {
@@ -54,15 +56,18 @@ camApp.controller('homeController', [
             //				alert($scope.currentNode); //per recuperare il nodo da passare in input a servizio rest
             if ($scope.currentNode.className) {
                 entityManager.getAssets($scope.currentNode.className);
+                $scope.newAssetVisible = true;
             } else {
                 $scope.assetList = []
+                $scope.newAssetVisible = false;
             }
         }
         
-        $scope.openNewAssetPanel = function () {
+        $scope.openNewAssetModelPanel = function () {
 					$ngDialog.open({
-						template: 'pages/newAsset.htm',
-						controller: 'newAssetController'
+						template: 'pages/newAssetModel.htm',
+						controller: 'newAssetModelController',
+                        scope: $scope
 					});
 				};
         
@@ -77,6 +82,7 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
             // $scope.selectedAsset =
             // $scope.retrieveSelectedAsset();
        // $scope.BACK_END_URL = 'http://161.27.159.61:8080/CAMService'; //TODO Address config.JSON
+            //$scope.BACK_END_URL = 'http://192.168.62.200:8080/CAMService';
             $scope.BACK_END_URL = 'http://localhost:8080/CAMService';
         entityManager.init($scope, $http, $q);
             
@@ -145,25 +151,27 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
 
         } ]);
 
-camApp.controller('newAssetController', [
+camApp.controller('newAssetModelController', [
 		'$scope',
 		'$http',
         '$q',
 	    'ngDialog',
 		function ($scope, $http,$q, $ngDialog) {
-            
-            $scope.newAsset = {
-                    name: "",
-                    created : new Date(),
-                    model: "",
-                    owner : "",
-                    class: ""
+
+            $scope.newAssetModel = {
+                   name: "",
+                   className: $scope.currentNode.className,
+                   ownerName : ""
                 };
             
-            $scope.closeNewAssetPanel = function () {  
+            $scope.closeNewAssetModelPanel = function () {  
                 $ngDialog.close();
             }
             $scope.saveNewAssetModel = function () {  
-               console.log('qui: '+$scope.newAsset.name);
+              $http.post($scope.BACK_END_URL+'/models', $scope.newAssetModel).success(function(data, status) {
+                  $ngDialog.close();
+              }).error(function(err) {
+                   alert(err);
+                });
             }
         } ]);
