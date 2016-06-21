@@ -53,6 +53,8 @@ span {
 .cam-table-button {
 	margin-left: 4px;
 	margin-right: 13px;
+    background: none;
+    border: none;
 }
 
 a:link, a:visited, a:hover {

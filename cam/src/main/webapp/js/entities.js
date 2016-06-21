@@ -165,24 +165,28 @@ var EntityManager = (function () {
     }
     
     var getAssetDetail = function(name){
-          $http.get($scope.BACK_END_URL + '/assets/' + name)
+          $http.get($scope.BACK_END_URL + '/assets/' + name+'/attributes')
             .success(function (data) {
               var owned;
               var model;
               var created;
+              var attrs = [];
               for (var i =0; i< data.length; i++){
                   if(data[i].normalizedName.indexOf('ownedBy')> 0)
                       owned = data[i].propertyValue;
-                  if(data[i].normalizedName.indexOf('instanceOf')> 0)
+                  else if(data[i].normalizedName.indexOf('instanceOf')> 0)
                       model = data[i].propertyValue;
-                  if(data[i].normalizedName.indexOf('createdOn')> 0)
+                  else if(data[i].normalizedName.indexOf('createdOn')> 0)
                       created = data[i].propertyValue;
-              }
+                  else
+                     attrs.push($scope.formatAssetDetailTableRow(data[i]));
+                }
                 $scope.selectedAsset = {
                     name: name,
                     created : created,
                     model: model,
-                    owner : owned
+                    owner : owned,
+                    attributes : attrs
                 };
             })
             .error(function (error) {

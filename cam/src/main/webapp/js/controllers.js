@@ -73,30 +73,18 @@ camApp.controller('homeController', [
         
 		}]);
 
-camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$location', '$q',
-        function($scope, $http, $routeParams, $location,$q) {
+camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$location', '$q','ngDialog',
+        function($scope, $http, $routeParams, $location,$q, $ngDialog) {
         if(isEmpty($routeParams.selectedAssetName)){
             $location.path('/');
         }   
             $scope.selectedAssetName = $routeParams.selectedAssetName;
-            // $scope.selectedAsset =
-            // $scope.retrieveSelectedAsset();
-       // $scope.BACK_END_URL = 'http://161.27.159.61:8080/CAMService'; //TODO Address config.JSON
-            //$scope.BACK_END_URL = 'http://192.168.62.200:8080/CAMService';
+           
             $scope.BACK_END_URL = 'http://localhost:8080/CAMService';
-        entityManager.init($scope, $http, $q);
+            entityManager.init($scope, $http, $q);
             
-             entityManager.getAssetDetail($routeParams.selectedAssetName);
-            //$scope.assetDetailList = 
-            /*$http.get('resources/asset.json').then(function(response) {
-                $scope.assetList = response.data;
-                for (var i = 0; i < $scope.assetList.length; i++) {
-                    if ($scope.assetList[i].asset == $scope.selectedAssetName) {
-                        $scope.selectedAsset = $scope.assetList[i];
-                    }
-                }
-            });*/
-
+            entityManager.getAssetDetail($routeParams.selectedAssetName);
+            
             $scope.retrieveSelectedAsset = function() {
                 for (var i = 0; i < $scope.assetList.length; i++) {
                     if ($scope.assetList[i].asset == $scope.selectedAssetName) {
@@ -127,27 +115,56 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
                 "bLengthChange" : false,
                 "bFilter" : true,
                 "bInfo" : true,
-                "bDestroy" : true
-            };
-
-            // $scope.assetDetailList = loadAssetDetailTable($http, $scope); TODO qua
-
-            // funzioni di utilità
-            
-            $scope.formatAssetDetailListTable = function(data) {
-	           if (!data)
-		          return [];
-                for (var i = 0; i < data.length; i++) {
-                    data[i].action = '<div><i data-toggle="tooltip" title="Delete property" class="fa fa-remove cam-table-button"></i> <a class="cam-icon-a" href="#/detail/'
-                            + data[i].asset
-                            + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-search cam-table-button"></i> </a>';
-                    if(data[i].type == 'relationship')
-                        data[i].type = '<i data-toggle="tooltip" title="relationship" class="fa fa-link" ><i/>'
-                    else
-                        data[i].type = '<i data-toggle="tooltip" title="relationship" class="fa fa-font" ><i/>'
+                "bDestroy" : true,
+                "fnCreatedRow" :  function (nTd, sData, oData, iRow, iCol) {
+                    alert();
+                        $compile(nTd)($scope);
                 }
-                return data;
             };
+
+             // funzioni di utilità
+            
+            $scope.formatAssetDetailTableRow = function(data) {
+                var attribute = {};
+                attribute.name = data.normalizedName;
+                attribute.value = data.propertyValue;              ;
+	           attribute.action = '<div><i data-toggle="tooltip" title="Delete property" class="fa fa-remove cam-table-button"></i> <button class="cam-table-button" ng-click="openAttributeDetailPanel(\''
+                            + data.normalizedName+'\')'
+                            + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-search cam-table-button"></i> </button>';
+                    if(data.type == 'relationship')
+                        attribute.type = '<i data-toggle="tooltip" title="relationship" class="fa fa-link" ><i/>';
+                    else
+                        attribute.type = '<i data-toggle="tooltip" title="relationship" class="fa fa-font" ><i/>';
+                
+                return attribute;
+            };
+            
+              $scope.openNewAttributePanel = function () {
+					$ngDialog.open({
+						template: 'pages/newAttribute.htm',
+						controller: 'newAttributeController',
+                        scope: $scope
+					});
+				};
+            
+             $scope.openAttributeDetailPanel = function (attributeName) {
+                 $scope.attributeName = attributeName;
+					$ngDialog.open({
+						template: 'pages/newAttribute.htm',
+						controller: 'attributeDetailController',
+                        scope: $scope
+					});
+				};
+        
+             $scope.openNewRelationshipPanel = function () {
+					$ngDialog.open({
+						template: 'pages/newRelationship.htm',
+						controller: 'newRelationshipController',
+                        scope: $scope
+					});
+				};
+        
+		
 
         } ]);
 
@@ -169,7 +186,118 @@ camApp.controller('newAssetModelController', [
             }
             $scope.saveNewAssetModel = function () {  
               $http.post($scope.BACK_END_URL+'/models', $scope.newAssetModel).success(function(data, status) {
+                  $scope.loadChildren();
                   $ngDialog.close();
+              }).error(function(err) {
+                   alert(err);
+            });
+            }
+        } ]);
+
+camApp.controller('newAttributeController', [
+		'$scope',
+		'$http',
+        '$q',
+	    'ngDialog',
+		function ($scope, $http,$q, $ngDialog) {
+
+            $scope.newAttribute = {
+                   name: "",
+                   value: "",
+                   type : ""
+                };
+            
+            $scope.closeNewAttributePanel = function () {  
+                $ngDialog.close();
+            }
+            var urlFragment = '/assets/';
+            
+            if(isEmpty($scope.selectedAsset.model)){
+              $scope.isModel = true;
+            }else{
+              $scope.isModel = false;
+            }
+
+            if($scope.isModel)
+                 urlFragment = '/models/';
+            $scope.saveNewAttribute = function () {  
+              $http.post($scope.BACK_END_URL+urlFragment+$scope.selectedAssetName+'/attributes', $scope.newAttribute).success(function(data, status) {
+                  entityManager.getAssetDetail($scope.selectedAssetName);
+                 $ngDialog.close();
+              }).error(function(err) {
+                   alert(err);
+                });
+            }
+        } ]);
+
+camApp.controller('attributeDetailController', [
+		'$scope',
+		'$http',
+        '$q',
+	    'ngDialog',
+       	function ($scope, $http,$q, $ngDialog) {
+
+            if(isEmpty($scope.selectedAsset.model)){
+              $scope.isModel = true;
+            }else{
+              $scope.isModel = false;
+            }
+
+            if($scope.isModel)
+                 urlFragment = '/models/';
+             $http.get($scope.BACK_END_URL+urlFragment+$scope.selectedAssetName+'/attributes/'+$scope.attributeName)
+                 .success(function (data) {
+                $scope.newAttribute={
+                    name: data.normalizedName,
+                    value: data.propertyValue,
+                    type: data.propertyType
+                }
+                });
+            
+            $scope.closeNewAttributePanel = function () {  
+                $ngDialog.close();
+            }
+            var urlFragment = '/assets/';
+                    
+            $scope.saveNewAttribute = function () {  
+              $http.post($scope.BACK_END_URL+urlFragment+$scope.selectedAssetName+'/attributes', $scope.newAttribute).success(function(data, status) {
+                  entityManager.getAssetDetail($scope.selectedAssetName);
+                 $ngDialog.close();
+              }).error(function(err) {
+                   alert(err);
+                });
+            }
+        } ]);
+
+camApp.controller('newRelationshipController', [
+		'$scope',
+		'$http',
+        '$q',
+	    'ngDialog',
+		function ($scope, $http,$q, $ngDialog) {
+
+            $scope.newRelationship = {
+                   name: "",
+                   referredName: ""
+            };
+            
+            $scope.closeNewRelationshipPanel = function () {  
+                $ngDialog.close();
+            }
+            var urlFragment = '/assets/';
+            
+            if(isEmpty($scope.selectedAsset.model)){
+              $scope.isModel = true;
+            }else{
+              $scope.isModel = false;
+            }
+
+            if($scope.isModel)
+                 urlFragment = '/models/';
+            $scope.saveNewRelationship = function () {  
+              $http.post($scope.BACK_END_URL+urlFragment+$scope.selectedAssetName+'/relationships', $scope.newRelationship).success(function(data, status) {
+              entityManager.getAssetDetail($scope.selectedAssetName);
+              $ngDialog.close();
               }).error(function(err) {
                    alert(err);
                 });

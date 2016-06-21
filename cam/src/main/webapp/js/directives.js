@@ -1,5 +1,5 @@
 // DIRECTIVES
-camApp.directive('assetTable', function() {
+camApp.directive('assetTable',  ['$compile', function($compile){
     return function(scope, element, attrs) {
 
         // apply DataTable options, use defaults if none specified by user
@@ -35,11 +35,16 @@ camApp.directive('assetTable', function() {
         if (attrs.aoColumnDefs) {
             options["aoColumnDefs"] = scope.$eval(attrs.aoColumnDefs);
         }
-        
+               
 //        if (attrs.fnRowCallback) {
 //            options["fnRowCallback"] = scope.$eval(attrs.fnRowCallback);
 //        }
 
+        options["fnRowCallback"] = function(nRow){
+            $compile(nRow)(scope);
+            return nRow;
+        };
+        
         // apply the plugin
         var dataTable = element.dataTable(options);
 
@@ -54,4 +59,4 @@ camApp.directive('assetTable', function() {
             }
         });
     };
-});
+}]);

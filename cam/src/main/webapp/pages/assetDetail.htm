@@ -1,5 +1,5 @@
 <div id="asset-detail-container">
-	<a ng-href="#/exclass"><span>Home</span></a>/<span>{{selectedAssetName}}</span>
+	<a ng-href="#/"><span>Home</span></a>/<span>{{selectedAssetName}}</span>
 
 	<div id="asset-detail">
 		<fieldset class="asset-detail-fieldset">
@@ -10,7 +10,7 @@
 		</fieldset>
 		<div id="asset-detail-table" class="cam-asset-detail-table-container">
 		
-		<table asset-table="assetDetailOverrideOptions" aa-data="assetDetailList"
+		<table asset-table="assetDetailOverrideOptions" aa-data="selectedAsset.attributes"
 				ao-column-defs="assetDetailColumnDefs" class="cam-data-table table">
 				<thead>
 					<tr>
@@ -23,8 +23,16 @@
 			</table>
 <!-- 			<div class="cam-btn-add-container"><input type="image" title="New Asset Model" src="img/plus.png"/></div> -->
 			<div id="cam-asset-detail-btn-container" class="row-fluid">
-				<a href="#" data-toggle="tooltip" title="New Relationship" class="cam-btn-add-container"><i class="fa fa-plus-circle"> New relationship</i></a>
-				<a href="#" data-toggle="tooltip" title="New Asset Model" class="cam-btn-add-container"><i class="fa fa-plus-circle"> New attribute</i></a>
+				<button type="button" data-toggle="tooltip" title="New Attribute" class="cam-btn-add-container"
+                    ng-click="openNewAttributePanel()">
+                <i class="fa fa-plus-circle" data-toggle="modal" data-target="#newAttributeLabel"> New attribute</i>
+                </button>
+                
+                <button type="button" data-toggle="tooltip" title="New Relationship" class="cam-btn-add-container"
+                    ng-click="openNewRelationshipPanel()">
+                <i class="fa fa-plus-circle" data-toggle="modal" data-target="#newRelationshipLabel"> New             Relationship</i>
+                </button>
+                
 			</div>
 		</div>		
 		
