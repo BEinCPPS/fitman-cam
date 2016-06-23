@@ -71,7 +71,18 @@ camApp.controller('homeController', [
 					});
 				};
         
-		}]);
+        $scope.openRemoveAssetPanel=function(elementToDelete, typeToDelete){
+            $scope.elementToDelete = elementToDelete;
+            $scope.typeToDelete = typeToDelete;
+            $scope.resultCallback = '$scope.loadChildren';
+            $ngDialog.open({
+						template: 'pages/confirmDelete.htm',
+						controller: 'confirmDeleteController',
+                        scope: $scope
+					});
+        }
+}]);
+
 
 camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$location', '$q','ngDialog',
         function($scope, $http, $routeParams, $location,$q, $ngDialog) {
@@ -115,11 +126,7 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
                 "bLengthChange" : false,
                 "bFilter" : true,
                 "bInfo" : true,
-                "bDestroy" : true,
-                "fnCreatedRow" :  function (nTd, sData, oData, iRow, iCol) {
-                    alert();
-                        $compile(nTd)($scope);
-                }
+                "bDestroy" : true
             };
 
              // funzioni di utilità
@@ -127,8 +134,15 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
             $scope.formatAssetDetailTableRow = function(data) {
                 var attribute = {};
                 attribute.name = data.normalizedName;
-                attribute.value = data.propertyValue;              ;
-	           attribute.action = '<div><i data-toggle="tooltip" title="Delete property" class="fa fa-remove cam-table-button"></i> <button class="cam-table-button" ng-click="openAttributeDetailPanel(\''
+                attribute.value = data.propertyValue;
+                var elementType = 'attribute';
+                var individualName = data.propertyTarget;
+                 if(data.type == 'relationship')
+                     elementType='relationship'
+	           attribute.action = '<div><button class="cam-table-button" ng-click="openRemovePropertyPanel(\''
+                            + attribute.name+'\', \''+elementType+'\', \''+individualName+'\')'
+                            + '"> <i data-toggle="tooltip" title="Delete '+elementType+'" class="fa fa-remove cam-table-button"></i> </button>'
+                            +'<button class="cam-table-button" ng-click="openAttributeDetailPanel(\''
                             + data.normalizedName+'\')'
                             + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-search cam-table-button"></i> </button>';
                     if(data.type == 'relationship')
@@ -164,7 +178,18 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
 					});
 				};
         
-		
+		  $scope.openRemovePropertyPanel=function(elementToDelete, typeToDelete, individualName){
+            $scope.elementToDelete = elementToDelete;
+            $scope.typeToDelete = typeToDelete;
+            $scope.individualName = individualName;
+              $scope.param = individualName;
+              $scope.resultCallback =  'entityManager.getAssetDetail';
+            $ngDialog.open({
+						template: 'pages/confirmDelete.htm',
+						controller: 'confirmDeleteController',
+                        scope: $scope
+					});
+        }
 
         } ]);
 
@@ -301,5 +326,34 @@ camApp.controller('newRelationshipController', [
               }).error(function(err) {
                    alert(err);
                 });
+            }
+        } ]);
+
+camApp.controller('confirmDeleteController', [
+		'$scope',
+		'$http',
+        '$q',
+	    'ngDialog',
+		function ($scope, $http,$q, $ngDialog) {
+            //$scope.elementToDelete;
+            //$scope.typetoDelete;
+             $scope.closeConfirmDeletePanel = function () {  
+                $ngDialog.close();
+            }
+            var urlFragment = '/assets/';
+            if($scope.typeToDelete=='model')
+                urlFragment='/models/';
+            if($scope.typeToDelete=='attribute')
+                urlFragment='/assets/'+$scope.individualName+'/attributes/';
+            $scope.confirmDelete = function(){
+            $http.delete($scope.BACK_END_URL+urlFragment+$scope.elementToDelete).success(function(data, status) {
+                if($scope.param)
+                    $scope.resultCallback($scope.param);
+                else
+                $scope.resultCallback();
+              $ngDialog.close();
+            }).error(function(err) {
+                   alert(err);
+            });
             }
         } ]);

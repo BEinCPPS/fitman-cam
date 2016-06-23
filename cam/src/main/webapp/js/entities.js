@@ -59,11 +59,14 @@ var EntityManager = (function () {
                   var owned;
                   var model;
                   var created;
+                  var isModel = true;
                   for (var i =0; i< data.length; i++){
                       if(data[i].normalizedName.indexOf('ownedBy')> 0)
                           owned = data[i].propertyValue;
-                      if(data[i].normalizedName.indexOf('instanceOf')> 0)
+                      if(data[i].normalizedName.indexOf('instanceOf')> 0){
                           model = data[i].propertyValue;
+                          isModel = false;
+                        }
                       if(data[i].normalizedName.indexOf('createdOn')> 0)
                           created = data[i].propertyValue;
                   }
@@ -72,7 +75,8 @@ var EntityManager = (function () {
                         created : created,
                         model: model || "",
                         owner : owned,
-                        class: cur.className
+                        class: cur.className,
+                        isModel: isModel
                     };
                    result.push(asset);
                 })
@@ -130,13 +134,23 @@ var EntityManager = (function () {
         if (!data)
             return [];
         for (var i = 0; i < data.length; i++) {
-            data[i].action = '<div><i data-toggle="tooltip" title="Delete asset model" class="fa fa-remove cam-table-button"></i> <a class="cam-icon-a" href="#/detail/'
+            var elementType = 'asset';
+            if (data[i].isModel == true){
+                elementType = 'model';
+            }
+            data[i].action = '<div> <button class="cam-table-button" ng-click="openRemoveAssetPanel(\''
+                            + data[i].asset+'\', \''+elementType+'\')'
+                            + '"> <i data-toggle="tooltip" title="Delete asset model" class="fa fa-remove cam-table-button"></i> </button>'
+                
+                +'<a class="cam-icon-a" href="#/detail/'
 				+ data[i].asset
 				+ '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-search cam-table-button"></i> </a>';
-            if (data[i].isModel == 'true')
+            if (data[i].isModel == true){
                 data[i].action += '<i data-toggle="tooltip" title="Create new asset from this model" class="fa fa-plus cam-table-button"></i></div>';
+            }
         }
-        return data;
+        
+               return data;
     }
 
 
