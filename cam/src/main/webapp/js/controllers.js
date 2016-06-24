@@ -74,7 +74,6 @@ camApp.controller('homeController', [
         $scope.openRemoveAssetPanel=function(elementToDelete, typeToDelete){
             $scope.elementToDelete = elementToDelete;
             $scope.typeToDelete = typeToDelete;
-            $scope.resultCallback = '$scope.loadChildren';
             $ngDialog.open({
 						template: 'pages/confirmDelete.htm',
 						controller: 'confirmDeleteController',
@@ -182,8 +181,8 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
             $scope.elementToDelete = elementToDelete;
             $scope.typeToDelete = typeToDelete;
             $scope.individualName = individualName;
-              $scope.param = individualName;
-              $scope.resultCallback =  'entityManager.getAssetDetail';
+            $scope.detail = true;
+            $scope.entityManager = entityManager;
             $ngDialog.open({
 						template: 'pages/confirmDelete.htm',
 						controller: 'confirmDeleteController',
@@ -347,10 +346,10 @@ camApp.controller('confirmDeleteController', [
                 urlFragment='/assets/'+$scope.individualName+'/attributes/';
             $scope.confirmDelete = function(){
             $http.delete($scope.BACK_END_URL+urlFragment+$scope.elementToDelete).success(function(data, status) {
-                if($scope.param)
-                    $scope.resultCallback($scope.param);
+                if($scope.detail)
+                    $scope.entityManager.getAssetDetail($scope.individualName);
                 else
-                $scope.resultCallback();
+                    $scope.loadChildren();
               $ngDialog.close();
             }).error(function(err) {
                    alert(err);

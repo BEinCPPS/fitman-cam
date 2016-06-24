@@ -437,6 +437,47 @@ public class Test extends Assert {
 		assertFalse("Empty individuals list", individuals.isEmpty());
 	}
 
+	
+	@org.junit.Test()
+	public void renameClass() {
+		String className = "NewClass_" + getNextRandom();
+		String rootName = dao.getClassHierarchy().getClassName(); // Thing
+		try {
+			CAMRestImpl.createClass(dao, className, rootName);
+		} catch (Exception e) {
+			assertFalse(e.getMessage(), true);
+		}
+		String className2 = "NewClass_" + getNextRandom();
+//		try {
+//			CAMRestImpl.createClass(dao, className2, rootName);
+//		} catch (Exception e) {
+//			assertFalse(e.getMessage(), true);
+//		}
+		tearDown();
+		setUp();
+		try {
+			CAMRestImpl.renameClass(dao, className, className2);
+		} catch (Exception e) {
+			assertFalse(e.getMessage(), true);
+		}
+		List<ClassItem> subClasses = dao.getClassHierarchy().getSubClasses();
+		List<ClassItem> classInserted = subClasses.stream().filter(csi -> csi.getClassName().equals(className2))
+				.collect(Collectors.toList());
+		List<ClassItem> classInserted2 = null;
+
+		try {
+			classInserted2 = classInserted.get(0).getSubClasses().stream()
+					.filter(csi -> csi.getClassName().equals(className2)).collect(Collectors.toList());
+		} catch (Exception e) {
+			assertFalse(e.getMessage(), true);
+		}
+		assertNotNull("Move class: element moved (null) not retrieved for className: " + className, classInserted2);
+		assertFalse("Move class: element moved (empty) not retrieved for className: " + className,
+				classInserted2.isEmpty());
+		assertTrue("Move class: element moved found :-)", classInserted2.size() == 1);
+	}
+	
+	
 	private int getNextRandom() {
 		Random rand = new Random();
 		return Math.abs(rand.nextInt(Integer.MAX_VALUE));

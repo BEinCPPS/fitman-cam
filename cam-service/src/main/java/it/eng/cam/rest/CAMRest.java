@@ -69,9 +69,10 @@ public class CAMRest extends ResourceConfig {
 	@GET
 	@Path("/classes/{className}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<IndividualItem> getIndividuals(@PathParam("className") String className) {
+	public List<ClassItem> getIndividuals(@PathParam("className") String className) {
 		try {
-			return CAMRestImpl.getIndividuals(SesameRepoInstance.getRepoInstance(getClass()), className);
+			List<ClassItem> classes = CAMRestImpl.getClasses(SesameRepoInstance.getRepoInstance(getClass()));			
+			return classes.stream().filter(item -> item.getNormalizedName().equalsIgnoreCase(className)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -113,7 +114,7 @@ public class CAMRest extends ResourceConfig {
 				className = clazz.getName();
 			}
 			CAMRestImpl.moveClass(SesameRepoInstance.getRepoInstance(getClass()), className, clazz.getParentName());
-			return Response.ok("Class with name '" + className + "' has parent Class " + clazz.getParentName()).build();
+			return Response.ok("Class with name '" + className + "' successfully updated").build();
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -252,7 +253,8 @@ public class CAMRest extends ResourceConfig {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PropertyValueItem> getIndividualAttributes(@PathParam("assetName") String assetName) {
 		try {
-			return CAMRestImpl.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), assetName);
+			List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), assetName);
+			return individualAttributes.stream().filter(item -> item.getNormalizedName().contains("system") || !item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue())).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -373,15 +375,16 @@ public class CAMRest extends ResourceConfig {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PropertyValueItem> getRelationships(@PathParam("assetName") String assetName) {
 		try {
-			List<PropertyValueItem> retval = new ArrayList<PropertyValueItem>();
+//			List<PropertyValueItem> retval = new ArrayList<PropertyValueItem>();
 			List<PropertyValueItem> individualAttributes = CAMRestImpl
 					.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), assetName);
-			for (PropertyValueItem propertyValueItem : individualAttributes) {
-				if (propertyValueItem.getPropertyType().equals(OWL.OBJECTPROPERTY)) {
-					retval.add(propertyValueItem);
-				}
-			}
-			return retval;
+//			for (PropertyValueItem propertyValueItem : individualAttributes) {
+//				if (propertyValueItem.getPropertyType().equals(OWL.OBJECTPROPERTY)) {
+//					retval.add(propertyValueItem);
+//				}
+//			}
+//			return retval;
+			return individualAttributes.stream().filter(item -> item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue()) && !item.getNormalizedName().contains("system")).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -589,7 +592,8 @@ public class CAMRest extends ResourceConfig {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PropertyValueItem> getModelAttributes(@PathParam("modelName") String modelName) {
 		try {
-			return CAMRestImpl.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), modelName);
+			List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), modelName);
+			return individualAttributes.stream().filter(item -> item.getNormalizedName().contains("system") || !item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue())).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -711,15 +715,9 @@ public class CAMRest extends ResourceConfig {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PropertyValueItem> getModelRelationships(@PathParam("modelName") String modelName) {
 		try {
-			List<PropertyValueItem> retval = new ArrayList<PropertyValueItem>();
 			List<PropertyValueItem> individualAttributes = CAMRestImpl
 					.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), modelName);
-			for (PropertyValueItem propertyValueItem : individualAttributes) {
-				if (propertyValueItem.getPropertyType().equals(OWL.OBJECTPROPERTY)) {
-					retval.add(propertyValueItem);
-				}
-			}
-			return retval;
+			return individualAttributes.stream().filter(item -> !item.getNormalizedName().contains("system") && item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue())).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
