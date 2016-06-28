@@ -72,7 +72,13 @@ public class CAMRest extends ResourceConfig {
 	public List<ClassItem> getIndividuals(@PathParam("className") String className) {
 		try {
 			List<ClassItem> classes = CAMRestImpl.getClasses(SesameRepoInstance.getRepoInstance(getClass()));			
-			return classes.stream().filter(item -> item.getNormalizedName().equalsIgnoreCase(className)).collect(Collectors.toList());
+			classes = classes.stream().filter(item -> item.getNormalizedName().equalsIgnoreCase(className)).collect(Collectors.toList());
+			if(classes != null && classes.size()>0){
+			ClassItem superClass = classes.get(0);
+			return superClass.getSubClasses();
+			}else{
+				return new ArrayList<ClassItem>();
+			}
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -114,7 +120,7 @@ public class CAMRest extends ResourceConfig {
 				className = clazz.getName();
 			}
 			CAMRestImpl.moveClass(SesameRepoInstance.getRepoInstance(getClass()), className, clazz.getParentName());
-			return Response.ok("Class with name '" + className + "' successfully updated").build();
+			return Response.ok("Class with name '" + className + "' has parent Class " + clazz.getParentName()).build();
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -254,7 +260,7 @@ public class CAMRest extends ResourceConfig {
 	public List<PropertyValueItem> getIndividualAttributes(@PathParam("assetName") String assetName) {
 		try {
 			List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), assetName);
-			return individualAttributes.stream().filter(item -> item.getNormalizedName().contains("system") || !item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue())).collect(Collectors.toList());
+			return individualAttributes.stream().filter(item -> !item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue()) || item.getNormalizedName().contains("system")).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -487,7 +493,7 @@ public class CAMRest extends ResourceConfig {
 				return models;
 			return models.stream()
 					.filter(model -> model.getNormalizedName().equalsIgnoreCase(modelName) && CAMRestImpl
-							.isModel(SesameRepoInstance.getRepoInstance(getClass()), model.getIndividualName()))
+							.isModel(getClass(), model.getIndividualName()))
 					.collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
@@ -507,7 +513,7 @@ public class CAMRest extends ResourceConfig {
 			List<IndividualItem> individuals = CAMRestImpl
 					.getIndividuals(SesameRepoInstance.getRepoInstance(getClass()), className);
 			return individuals.stream().filter(indiv -> CAMRestImpl
-					.isModel(SesameRepoInstance.getRepoInstance(getClass()), indiv.getIndividualName()))
+					.isModel(getClass(), indiv.getIndividualName()))
 					.collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);

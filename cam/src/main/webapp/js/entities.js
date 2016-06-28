@@ -62,13 +62,20 @@ var EntityManager = (function () {
                   var isModel = true;
                   for (var i =0; i< data.length; i++){
                       if(data[i].normalizedName.indexOf('ownedBy')> 0)
-                          owned = data[i].propertyValue;
+                          owned = data[i].propertyValue.substring(data[i].propertyValue.lastIndexOf('#') +1);
                       if(data[i].normalizedName.indexOf('instanceOf')> 0){
                           model = data[i].propertyValue;
                           isModel = false;
                         }
-                      if(data[i].normalizedName.indexOf('createdOn')> 0)
-                          created = data[i].propertyValue;
+                      if(data[i].normalizedName.indexOf('createdOn')> 0){
+                          var myDate = new Date(data[i].propertyValue);
+                          var month = (myDate.getMonth() + 1).toString();
+                          while(month.length <2)
+                              month ='0'+month;
+                          created = myDate.getDate() + "/" + month + "/" + myDate.getFullYear();
+                          
+                          
+                      }
                   }
                    var asset = {
                         asset: cur.individualName,
@@ -146,7 +153,10 @@ var EntityManager = (function () {
 				+ data[i].asset
 				+ '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-search cam-table-button"></i> </a>';
             if (data[i].isModel == true){
-                data[i].action += '<i data-toggle="tooltip" title="Create new asset from this model" class="fa fa-plus cam-table-button"></i></div>';
+                data[i].action += '<button class="cam-table-button" ng-click="openNewAssetPanel(\''
+                            + data[i].asset+'\')'
+                            + '"> <i data-toggle="tooltip" title="Create new asset from this model" class="fa fa-plus cam-table-button"></i></div> </button>';
+                            
             }
         }
         
@@ -160,7 +170,7 @@ var EntityManager = (function () {
             .success(function (data) {
                 $scope.classList = createClasses(data);
             })
-            .error(function () {
+            .error(function (error) {
                 console.log("Error encountered :-( " + error);
             });
 
@@ -217,10 +227,11 @@ var EntityManager = (function () {
                     var classes = createClasses(dataNotMySelf);
                     $scope.currentNode.children = classes;
 
-                } else {
+                }
+            //else {
                     //alert("Assets for: " + className);
                     $scope.loadAsset();
-                }
+                //}
 
             })
             .error(function (error) {

@@ -70,6 +70,15 @@ camApp.controller('homeController', [
                         scope: $scope
 					});
 				};
+                
+        $scope.openNewAssetPanel = function (selectedModel) {
+             $scope.selectedModel = selectedModel;
+			$ngDialog.open({
+						template: 'pages/newAsset.htm',
+						controller: 'newAssetController',
+                        scope: $scope
+					});
+				};
         
         $scope.openRemoveAssetPanel=function(elementToDelete, typeToDelete){
             $scope.elementToDelete = elementToDelete;
@@ -356,3 +365,34 @@ camApp.controller('confirmDeleteController', [
             });
             }
         } ]);
+
+
+camApp.controller('newAssetController', [
+		'$scope',
+		'$http',
+        '$q',
+	    'ngDialog',
+		function ($scope, $http,$q, $ngDialog) {
+            //$scope.elementToDelete;
+            //$scope.typetoDelete;
+             $scope.closeNewAssetPanel = function () {  
+                $ngDialog.close();
+            }
+             
+              $scope.newAsset = {
+                   name: "",
+                   modelName: $scope.selectedModel,
+                   ownerName : ""
+                };
+            var urlFragment = '/assets/';
+           
+            $scope.saveNewAsset = function(){
+            $http.post($scope.BACK_END_URL+urlFragment,$scope.newAsset).success(function(data, status) {
+            $scope.loadChildren();
+              $ngDialog.close();
+            }).error(function(err) {
+                   alert(err);
+            });
+            }
+        } ]);
+

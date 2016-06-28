@@ -2,6 +2,7 @@ package it.eng.cam.rest;
 
 import java.util.List;
 
+import it.eng.cam.rest.sesame.SesameRepoInstance;
 import it.eng.ontorepo.ClassItem;
 import it.eng.ontorepo.IndividualItem;
 import it.eng.ontorepo.PropertyValueItem;
@@ -39,8 +40,8 @@ public class CAMRestImpl {
 	}
 
 	public static void createClass(RepositoryDAO dao, String name, String parentName) {
-		if (!isNormalized(parentName))
-			parentName = normalize(parentName);
+//		if (!isNormalized(parentName))
+//			parentName = normalize(parentName);
 		dao.createClass(name, parentName);
 	}
 
@@ -102,13 +103,13 @@ public class CAMRestImpl {
 	}
 	
 
-	public static boolean isModel(RepositoryDAO dao, String individualName){
-		List<PropertyValueItem> individualAttributes = dao.getIndividualAttributes(individualName);
+	public static boolean isModel(Class clazz, String individualName){
+		SesameRepoInstance.releaseRepoDaoConn();
+		List<PropertyValueItem> individualAttributes = SesameRepoInstance.getRepoInstance(clazz).getIndividualAttributes(individualName);
 		String model =null;
 		for (PropertyValueItem propertyValueItem : individualAttributes) {
 			if(propertyValueItem.getNormalizedName().equalsIgnoreCase("instanceOf"))
 				model = propertyValueItem.getNormalizedValue();
-				
 		}
 		if(null==model || "".equalsIgnoreCase(model.trim()))
 			return true;
