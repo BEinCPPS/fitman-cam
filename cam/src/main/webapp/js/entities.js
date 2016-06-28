@@ -195,7 +195,14 @@ var EntityManager = (function () {
               var model;
               var created;
               var attrs = [];
-              for (var i =0; i< data.length; i++){
+              var originalAttrs = data;
+              $http.get($scope.BACK_END_URL + '/assets/' + name+'/relationships')
+                  .success(function (data) {
+                  for (var i =0; i< data.length; i++){
+                      data[i].type = 'relationship';
+                  }
+                  data = data.concat(originalAttrs);
+                  for (var i =0; i< data.length; i++){
                   if(data[i].normalizedName.indexOf('ownedBy')> 0)
                       owned = data[i].propertyValue;
                   else if(data[i].normalizedName.indexOf('instanceOf')> 0)
@@ -204,14 +211,15 @@ var EntityManager = (function () {
                       created = data[i].propertyValue;
                   else
                      attrs.push($scope.formatAssetDetailTableRow(data[i]));
-                }
-                $scope.selectedAsset = {
-                    name: name,
-                    created : created,
-                    model: model,
-                    owner : owned,
-                    attributes : attrs
-                };
+                  }
+                    $scope.selectedAsset = {
+                        name: name,
+                        created : created,
+                        model: model,
+                        owner : owned,
+                        attributes : attrs
+                    };
+              })
             })
             .error(function (error) {
                 console.log("Error encountered :-( " +error);
