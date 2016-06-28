@@ -52,7 +52,7 @@ span {
 
 .cam-table-button {
 	margin-left: 4px;
-	margin-right: 13px;
+	margin-right: 6px;
     background: none;
     border: none;
 }
@@ -212,4 +212,12 @@ div[data-tree-model] li .selected {
     -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 
+}
+
+.inline-flex-item{
+      display: inline-flex;                  /* Opera 12.1, Firefox 20+ */
+}
+
+.cam-icon-a{
+	color: #000 !important;
 }

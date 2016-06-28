@@ -41,7 +41,8 @@ camApp.controller('homeController', [
         // $scope.BACK_END_URL = 'http://161.27.159.61:8080/CAMService'; //TODO Address config.JSON
         //$scope.BACK_END_URL = 'http://192.168.62.211:8080/CAMService';
               //$scope.BACK_END_URL = 'http://192.168.62.200:8080/CAMService';
-        $scope.BACK_END_URL = 'http://localhost:8080/CAMService';
+        //$scope.BACK_END_URL = 'http://localhost:8080/CAMService';
+            $scope.BACK_END_URL = 'http://192.168.62.207:8080/CAMService';
         entityManager.init($scope, $http, $q);
         $scope.assetList = [];
         entityManager.getClasses();
@@ -124,7 +125,8 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
         }   
             $scope.selectedAssetName = $routeParams.selectedAssetName;
            
-            $scope.BACK_END_URL = 'http://localhost:8080/CAMService';
+            //$scope.BACK_END_URL = 'http://localhost:8080/CAMService';
+            $scope.BACK_END_URL = 'http://192.168.62.207:8080/CAMService';
             entityManager.init($scope, $http, $q);
             
             entityManager.getAssetDetail($routeParams.selectedAssetName);
@@ -170,14 +172,20 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
                 attribute.value = data.propertyValue;
                 var elementType = 'attribute';
                 var individualName = data.propertyTarget;
+                
+                var btnDetailActionFunction = 'openAttributeDetailPanel';
+                
+                
                  if(data.type == 'relationship')
-                     elementType='relationship'
-	           attribute.action = '<div><button class="cam-table-button" ng-click="openRemovePropertyPanel(\''
+                     elementType='relationship';
+                     
+	           attribute.action = '<div class="inline-flex-item"><button class="cam-table-button" ng-click="openRemovePropertyPanel(\''
                             + attribute.name+'\', \''+elementType+'\', \''+individualName+'\')'
                             + '"> <i data-toggle="tooltip" title="Delete '+elementType+'" class="fa fa-remove cam-table-button"></i> </button>'
                             +'<button class="cam-table-button" ng-click="openAttributeDetailPanel(\''
-                            + data.normalizedName+'\')'
+                            + data.normalizedName+'\', \''+elementType+'\')'
                             + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-search cam-table-button"></i> </button>';
+                                
                     if(data.type == 'relationship')
                         attribute.type = '<i data-toggle="tooltip" title="relationship" class="fa fa-link" ><i/>';
                     else
@@ -194,22 +202,33 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
 					});
 				};
             
-             $scope.openAttributeDetailPanel = function (attributeName) {
+             $scope.openAttributeDetailPanel = function (attributeName, elementType) {
                  $scope.attributeName = attributeName;
+                 if('relationship'==elementType){
+                      $ngDialog.open({
+						  template: 'pages/newRelationship.htm',
+						  controller: 'newRelationshipController',
+                         scope: $scope
+					});
+                 }else{
 					$ngDialog.open({
 						template: 'pages/newAttribute.htm',
 						controller: 'attributeDetailController',
                         scope: $scope
 					});
+                 }
 				};
-        
+            
+           
              $scope.openNewRelationshipPanel = function () {
-					$ngDialog.open({
-						template: 'pages/newRelationship.htm',
-						controller: 'newRelationshipController',
-                        scope: $scope
+                 $scope.attributeName =null;
+                      $ngDialog.open({
+						  template: 'pages/newRelationship.htm',
+						  controller: 'newRelationshipController',
+                         scope: $scope
 					});
-				};
+                 
+				}
         
 		  $scope.openRemovePropertyPanel=function(elementToDelete, typeToDelete, individualName){
             $scope.elementToDelete = elementToDelete;
@@ -301,8 +320,10 @@ camApp.controller('attributeDetailController', [
               $scope.isModel = false;
             }
 
+           var urlFragment = 'assets';
             if($scope.isModel)
                  urlFragment = '/models/';
+             
              $http.get($scope.BACK_END_URL+urlFragment+$scope.selectedAssetName+'/attributes/'+$scope.attributeName)
                  .success(function (data) {
                 $scope.newAttribute={
@@ -311,12 +332,11 @@ camApp.controller('attributeDetailController', [
                     type: data.propertyType
                 }
                 });
-            
+                        
             $scope.closeNewAttributePanel = function () {  
                 $ngDialog.close();
             }
-            var urlFragment = '/assets/';
-                    
+                            
             $scope.saveNewAttribute = function () {  
               $http.post($scope.BACK_END_URL+urlFragment+$scope.selectedAssetName+'/attributes', $scope.newAttribute).success(function(data, status) {
                   entityManager.getAssetDetail($scope.selectedAssetName);
@@ -334,14 +354,54 @@ camApp.controller('newRelationshipController', [
 	    'ngDialog',
 		function ($scope, $http,$q, $ngDialog) {
 
-            $scope.newRelationship = {
+            
+            if(isEmpty($scope.selectedAsset.model)){
+              $scope.isModel = true;
+            }else{
+              $scope.isModel = false;
+            }
+
+           var urlFragment = 'assets';
+            if($scope.isModel)
+                 urlFragment = '/models/';
+            if($scope.attributeName){
+                 $http.get($scope.BACK_END_URL+urlFragment+$scope.selectedAssetName+'/relationships/'+$scope.attributeName)
+                 .success(function (data) {
+                    $scope.newRelationship = {
+                     name: data.normalizedName,
+                      referredName: data.propertyTarget
+                    };
+                });
+            }else{
+                  $scope.newRelationship = {
                    name: "",
                    referredName: ""
             };
-            
-            $scope.closeNewRelationshipPanel = function () {  
-                $ngDialog.close();
             }
+          
+            
+            
+            $scope.closeNewRelationshipPanel = function () { 
+                $scope.attributeName =null;
+                $ngDialog.close();
+            };
+            
+             $scope.select = {
+                 value: null,
+                 options: null
+             };
+            
+            /*$scope.loadReferredAssets = function(){
+                 $http.get($scope.BACK_END_URL + '/assets')
+                 .success(function (data) {
+                    return data;
+                     })
+                    .error(function (error) {
+                        console.log("Error encountered :-( " + error);
+                        return [];
+                    });
+                 	
+            };*/
             var urlFragment = '/assets/';
             
             if(isEmpty($scope.selectedAsset.model)){

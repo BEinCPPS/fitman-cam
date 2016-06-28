@@ -145,7 +145,7 @@ var EntityManager = (function () {
             if (data[i].isModel == true){
                 elementType = 'model';
             }
-            data[i].action = '<div> <button class="cam-table-button" ng-click="openRemoveAssetPanel(\''
+            data[i].action = '<div class="inline-flex-item"> <button class="cam-table-button" ng-click="openRemoveAssetPanel(\''
                             + data[i].asset+'\', \''+elementType+'\')'
                             + '"> <i data-toggle="tooltip" title="Delete asset model" class="fa fa-remove cam-table-button"></i> </button>'
                 
@@ -204,12 +204,16 @@ var EntityManager = (function () {
                   data = data.concat(originalAttrs);
                   for (var i =0; i< data.length; i++){
                   if(data[i].normalizedName.indexOf('ownedBy')> 0)
-                      owned = data[i].propertyValue;
+                      owned = data[i].propertyValue.substring(data[i].propertyValue.lastIndexOf('#') +1);
                   else if(data[i].normalizedName.indexOf('instanceOf')> 0)
                       model = data[i].propertyValue;
-                  else if(data[i].normalizedName.indexOf('createdOn')> 0)
-                      created = data[i].propertyValue;
-                  else
+                  else if(data[i].normalizedName.indexOf('createdOn')> 0){
+                         var myDate = new Date(data[i].propertyValue);
+                          var month = (myDate.getMonth() + 1).toString();
+                          while(month.length <2)
+                              month ='0'+month;
+                          created = myDate.getDate() + "/" + month + "/" + myDate.getFullYear();
+                  }else
                      attrs.push($scope.formatAssetDetailTableRow(data[i]));
                   }
                     $scope.selectedAsset = {
