@@ -3,7 +3,7 @@ var EntityManager = (function () {
     var $http;
     var $scope;
     var $q;
-
+   
     var getAssets = function (name) {
         $http.get($scope.BACK_END_URL + '/assets?className=' + name)
             .success(function (data) {
@@ -257,6 +257,20 @@ var EntityManager = (function () {
         }
         return classes;
     }
+    
+    var getOwnersList = function(){
+         $http.get($scope.BACK_END_URL + '/owners')
+            .success(function (data) {
+             $scope.ownersList = [];
+                for(var i =0; i<data.length; i++ ){
+                    $scope.ownersList.push(data[i].name);
+                }
+            })
+            .error(function (error) {
+                console.log("Error encountered :-( " + error);
+                $scope.ownersList= [];
+            });
+    }
 
 
     var reset = function () {
@@ -273,6 +287,7 @@ var EntityManager = (function () {
     var EntityManager = function () {
         reset();
     }
+    
 
     EntityManager.prototype = {
         //constructor
@@ -282,7 +297,8 @@ var EntityManager = (function () {
         getAssets: getAssets,
         getClasses: getClasses,
         getChildrenForClass: getChildrenForClass,
-        getAssetDetail: getAssetDetail
+        getAssetDetail: getAssetDetail,
+        getOwnersList : getOwnersList 
     }
     return EntityManager;
 })();

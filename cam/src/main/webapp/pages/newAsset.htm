@@ -6,7 +6,12 @@
       </div>
       <div class="modal-body">
           <div class="row-fluid"><label>Name:</label> <input class="form-control" type="text" ng-model="newAsset.name"></input></div>
-          <div class="row-fluid"><label>Owner:</label> <input class="form-control" type="text" ng-model="newAsset.ownerName"></input></div>
+          <div class="row-fluid"><label>Owner:</label> 
+              <!--<input class="form-control" type="text" ng-model="newAsset.ownerName"></input>-->
+          <select ng-model="newAsset.ownerName" class="form-control">
+                    <option ng-repeat="owner in ownersList" value="{{owner}}">{{owner}}</option>   
+              </select>
+         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-mini" ng-click="closeNewAssetPanel()">Close</button>

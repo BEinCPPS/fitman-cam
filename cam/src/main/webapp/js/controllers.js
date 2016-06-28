@@ -51,7 +51,7 @@ camApp.controller('homeController', [
         $scope.loadChildren = function () {
             entityManager.getChildrenForClass($scope.currentNode.className);
         }
-
+        
         $scope.loadAsset = function () {
             //				alert($scope.currentNode); //per recuperare il nodo da passare in input a servizio rest
             if ($scope.currentNode.className) {
@@ -64,21 +64,46 @@ camApp.controller('homeController', [
         }
         
         $scope.openNewAssetModelPanel = function () {
-					$ngDialog.open({
-						template: 'pages/newAssetModel.htm',
-						controller: 'newAssetModelController',
-                        scope: $scope
-					});
-				};
+             $http.get($scope.BACK_END_URL + '/owners')
+                 .success(function (data) {
+                     $scope.ownersList = [];
+                        for(var i =0; i<data.length; i++ ){
+                            $scope.ownersList.push(data[i].name);
+                        }
+                          $ngDialog.open({
+                                template: 'pages/newAssetModel.htm',
+                                controller: 'newAssetModelController',
+                                scope: $scope
+                            });
+                     })
+                .error(function (error) {
+                    console.log("Error encountered :-( " + error);
+                    $scope.ownersList= [];
+                });
+        }
                 
         $scope.openNewAssetPanel = function (selectedModel) {
              $scope.selectedModel = selectedModel;
-			$ngDialog.open({
-						template: 'pages/newAsset.htm',
-						controller: 'newAssetController',
-                        scope: $scope
-					});
-				};
+            
+            $http.get($scope.BACK_END_URL + '/owners')
+                 .success(function (data) {
+                     $scope.ownersList = [];
+                        for(var i =0; i<data.length; i++ ){
+                            $scope.ownersList.push(data[i].name);
+                        }
+                       	$ngDialog.open({
+						  template: 'pages/newAsset.htm',
+                          controller: 'newAssetController',
+                          scope: $scope
+					   });
+                })
+                .error(function (error) {
+                    console.log("Error encountered :-( " + error);
+                    $scope.ownersList= [];
+                });
+            
+		
+            }
         
         $scope.openRemoveAssetPanel=function(elementToDelete, typeToDelete){
             $scope.elementToDelete = elementToDelete;
