@@ -40,8 +40,8 @@ public class CAMRestImpl {
 	}
 
 	public static void createClass(RepositoryDAO dao, String name, String parentName) {
-//		if (!isNormalized(parentName))
-//			parentName = normalize(parentName);
+		if (null!=parentName && "Thing".equalsIgnoreCase(parentName.trim()) && !isNormalized(parentName))
+			parentName = normalize(parentName);
 		dao.createClass(name, parentName);
 	}
 

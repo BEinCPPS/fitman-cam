@@ -11,8 +11,8 @@
              <!--<select ng-model="newRelationship.referredName" class="form-control" ng-click="loadReferredAssets" ng-options="asset.normalizedName as asset.normalizedName for asset in referredAssetList">
               </select>    -->
               
-               <select ng-model="select.value" ng-options="o.normalizedName for o in select.options" lazy-load-options="" data-options="select.options" class="form-control">
-        <!-- <option value=""> - Select - </option> -->
+               <select ng-model="newRelationship.referredName" ng-options="o.normalizedName as o.normalizedName for o in select.options" lazy-load-options="" data-options="select.options" class="form-control">
+                   <option value=""> {{newRelationship.referredName}} </option>
     </select>
                
     </select>

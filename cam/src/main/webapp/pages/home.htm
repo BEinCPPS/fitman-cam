@@ -11,7 +11,12 @@
 <script>
 $(document).ready(function(){
 	$('[data-toggle="tooltip"]').tooltip();
+     
+    $('body').click(function () {
+                $('#contextMenu').hide();
+            });
 });
+   
 </script>
 
 <div class="row-fluid">
@@ -24,7 +29,18 @@ $(document).ready(function(){
 			data-node-id="classId" data-node-label="className"
 			data-node-children="children"></div>
 
+          <button type="button" data-toggle="tooltip" title="New Class" class="cam-btn-add-container float-left"
+                    ng-click="openNewClassPanel()">
+                <i class="fa fa-plus" > New Class</i>
+            </button>
 	</div>
+  <!-- <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
+        <li><a tabindex="-1" href="#">Create child</a></li>
+        <li><a tabindex="-1" href="#">Move</a></li>
+        <li><a tabindex="-1" href="#">Delete</a></li>      
+   </ul>-->
+    
+   
 	<div name="asset-table-container" style="width: 82%; float: right;">
 		<div style="border-left: 0.1em solid #CCC; padding-left: 10px;">
 		<div

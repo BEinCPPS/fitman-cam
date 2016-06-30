@@ -14,7 +14,7 @@ var EntityManager = (function () {
                 //$scope.assetList = formatAssetListTable(a);
             })
             .error(function (error) {
-                console.log("Error encountered :-( " + error);
+               openErrorPanel(error);
             });
     }
 
@@ -88,7 +88,7 @@ var EntityManager = (function () {
                    result.push(asset);
                 })
                 .error(function (error) {
-                    console.log("Error encountered :-( " + error);
+                    openErrorPanel(error);
                   
                 }).finally(function () {
                   fetchData();
@@ -171,7 +171,7 @@ var EntityManager = (function () {
                 $scope.classList = createClasses(data);
             })
             .error(function (error) {
-                console.log("Error encountered :-( " + error);
+                openErrorPanel(error);
             });
 
     }
@@ -226,7 +226,7 @@ var EntityManager = (function () {
               })
             })
             .error(function (error) {
-                console.log("Error encountered :-( " +error);
+               openErrorPanel(error);
                 return null;
             });
     }
@@ -247,7 +247,7 @@ var EntityManager = (function () {
 
             })
             .error(function (error) {
-                console.log("Error encountered :-( " + error);
+                openErrorPanel(error);
                 return null;
             });
     }
@@ -271,8 +271,8 @@ var EntityManager = (function () {
                 }
             })
             .error(function (error) {
-                console.log("Error encountered :-( " + error);
-                $scope.ownersList= [];
+                 $scope.ownersList= [];
+                openErrorPanel(error);
             });
     }
 

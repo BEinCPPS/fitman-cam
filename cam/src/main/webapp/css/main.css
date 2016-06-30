@@ -221,3 +221,58 @@ div[data-tree-model] li .selected {
 .cam-icon-a{
 	color: #000 !important;
 }
+/*.contextMenu{
+     position: absolute;
+    list-style: none;
+        background-color: white;
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 1%;
+}
+*/
+
+.float-left{
+    float: left !important;
+}
+
+.contextMenu button{
+    background: none;
+    border: none;
+}
+.contextMenu button:hover{
+    background: grey;
+    opacity: 1;
+    
+}
+
+
+ul.contextMenu {
+    position: absolute;
+    list-style-type: none;
+    background-color: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .15);
+    width: 150px;
+    border: 1px solid rgba(0, 0, 0, .15);
+    top: 0;
+    left: 0;
+}
+
+ul.contextMenu li.title {
+    padding: 5px 10px;
+    font-size: 11px;
+    color: rgba(0, 0, 0, .5);
+    border-bottom: 1px solid rgba(0, 0, 0, .15);
+    background: linear-gradient(to bottom, #ededed 0%, #dedede 100%);
+}
+
+ul.contextMenu li {
+    border-bottom: 1px solid rgba(0, 0, 0, .05);
+    margin: 0;
+    cursor: pointer;
+    position: relative;
+    transition: background-color .25s;
+    font-size: 12px;
+    font-family: Lato, Arial, Tahoma Helvetica, sans-serif;
+    overflow: hidden;
+}
+

@@ -78,8 +78,8 @@ camApp.controller('homeController', [
                             });
                      })
                 .error(function (error) {
-                    console.log("Error encountered :-( " + error);
-                    $scope.ownersList= [];
+                   $scope.ownersList= [];
+                  openErrorPanel(error);
                 });
         }
                 
@@ -99,8 +99,8 @@ camApp.controller('homeController', [
 					   });
                 })
                 .error(function (error) {
-                    console.log("Error encountered :-( " + error);
-                    $scope.ownersList= [];
+                   $scope.ownersList= [];
+                  openErrorPanel(error);
                 });
             
 		
@@ -115,6 +115,54 @@ camApp.controller('homeController', [
                         scope: $scope
 					});
         }
+        $scope.openConfirmDeleteClass = function(node){
+            $scope.elementToDelete = node.className;
+            $scope.typeToDelete = 'class';
+            $ngDialog.open({
+						template: 'pages/confirmDelete.htm',
+						controller: 'confirmDeleteController',
+                        scope: $scope
+					});
+        }
+        
+         $scope.openAddChildPanel = function(node){
+            $scope.className = node.className;
+            $scope.title = 'Add child class';
+            $ngDialog.open({
+						template: 'pages/newClass.htm',
+						controller: 'newChildClassController',
+                        scope: $scope
+					});
+        }
+         
+          $scope.openMoveClassPanel = function(node){
+            $scope.className = node.className;
+            $scope.title = 'Move class';
+            $ngDialog.open({
+						template: 'pages/newClass.htm',
+						controller: 'moveClassController',
+                        scope: $scope
+					});
+        }
+        
+           $scope.openNewClassPanel = function(){
+            $scope.title = 'Create class';
+            $ngDialog.open({
+						template: 'pages/newClass.htm',
+						controller: 'newClassController',
+                        scope: $scope
+					});
+        }
+        
+        $scope.openErrorPanel=function(err){
+            $scope.errorMsg = err;
+            $ngDialog.open({
+						template: 'pages/error.htm',
+						controller: 'openErrorController',
+                        scope: $scope
+					});
+        }
+                
 }]);
 
 
@@ -242,6 +290,16 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
                         scope: $scope
 					});
         }
+          
+           $scope.openErrorPanel=function(err){
+             $scope.errorMsg = err;
+            $ngDialog.open({
+						template: 'pages/error.htm',
+						controller: 'openErrorController',
+                        scope: $scope
+					});
+            
+        }
 
         } ]);
 
@@ -266,7 +324,7 @@ camApp.controller('newAssetModelController', [
                   $scope.loadChildren();
                   $ngDialog.close();
               }).error(function(err) {
-                   alert(err);
+                   openErrorPanel(err);
             });
             }
         } ]);
@@ -302,7 +360,7 @@ camApp.controller('newAttributeController', [
                   entityManager.getAssetDetail($scope.selectedAssetName);
                  $ngDialog.close();
               }).error(function(err) {
-                   alert(err);
+                   openErrorPanel(err);
                 });
             }
         } ]);
@@ -342,7 +400,7 @@ camApp.controller('attributeDetailController', [
                   entityManager.getAssetDetail($scope.selectedAssetName);
                  $ngDialog.close();
               }).error(function(err) {
-                   alert(err);
+                   openErrorPanel(err);
                 });
             }
         } ]);
@@ -369,7 +427,7 @@ camApp.controller('newRelationshipController', [
                  .success(function (data) {
                     $scope.newRelationship = {
                      name: data.normalizedName,
-                      referredName: data.propertyTarget
+                     referredName: data.propertyValue
                     };
                 });
             }else{
@@ -417,7 +475,7 @@ camApp.controller('newRelationshipController', [
               entityManager.getAssetDetail($scope.selectedAssetName);
               $ngDialog.close();
               }).error(function(err) {
-                   alert(err);
+                   $scope.openErrorPanel(err);
                 });
             }
         } ]);
@@ -438,15 +496,20 @@ camApp.controller('confirmDeleteController', [
                 urlFragment='/models/';
             if($scope.typeToDelete=='attribute')
                 urlFragment='/assets/'+$scope.individualName+'/attributes/';
+            if($scope.typeToDelete=='class')
+                urlFragment = '/classes/';
             $scope.confirmDelete = function(){
             $http.delete($scope.BACK_END_URL+urlFragment+$scope.elementToDelete).success(function(data, status) {
+                if($scope.typeToDelete=='class')
+                     window.location.reload();
                 if($scope.detail)
                     $scope.entityManager.getAssetDetail($scope.individualName);
                 else
                     $scope.loadChildren();
               $ngDialog.close();
             }).error(function(err) {
-                   alert(err);
+                $ngDialog.close();
+                $scope.openErrorPanel(err);
             });
             }
         } ]);
@@ -476,8 +539,130 @@ camApp.controller('newAssetController', [
             $scope.loadChildren();
               $ngDialog.close();
             }).error(function(err) {
-                   alert(err);
+                $ngDialog.close();
+                $scope.openErrorPanel(err);
             });
             }
         } ]);
 
+
+
+
+camApp.controller('newChildClassController', [
+		'$scope',
+		'$http',
+        '$q',
+	    'ngDialog',
+		function ($scope, $http,$q, $ngDialog) {
+              $scope.isNewClassReadonly = false;
+            $scope.isParentNameReadonly = true;
+            $scope.closeCreateClassPanel = function () { 
+                $scope.attributeName =null;
+                $ngDialog.close();
+            };
+            $scope.newClass = {
+                name:"",
+                parentName:$scope.className
+            }
+                
+             $scope.select = {
+                 value: null,
+                 options: null
+             };
+           
+            $scope.saveNewClass = function () {  
+              $http.post($scope.BACK_END_URL+'/classes', $scope.newClass).success(function(data, status) {
+              $ngDialog.close();
+                  window.location.reload();
+              }).error(function(err) {
+                  $ngDialog.close();
+                  $scope.openErrorPanel(err);
+                });
+            }
+        } ]);
+
+camApp.controller('moveClassController', [
+		'$scope',
+		'$http',
+        '$q',
+	    'ngDialog',
+		function ($scope, $http,$q, $ngDialog) {
+            $scope.isNewClassNameReadonly = true;
+             $scope.isParentNameReadonly = false;
+            $scope.closeCreateClassPanel = function () { 
+               
+                $ngDialog.close();
+            };
+            $scope.newClass = {
+                name:$scope.className,
+                parentName:""
+            }
+            
+                       
+             $scope.select = {
+                 value: null,
+                 options: null
+             };
+           
+            $scope.saveNewClass = function () {  
+              $http.put($scope.BACK_END_URL+'/classes/'+$scope.newClass.name, $scope.newClass).success(function(data, status) {
+              $ngDialog.close();
+                  window.location.reload();
+              }).error(function(err) {
+                  $ngDialog.close();
+                   $scope.openErrorPanel(err);
+                });
+            }
+        } ]);
+
+
+camApp.controller('newClassController', [
+		'$scope',
+		'$http',
+        '$q',
+	    'ngDialog',
+		function ($scope, $http,$q, $ngDialog) {
+              $scope.isNewClassReadonly = false;
+            $scope.isParentNameReadonly = false;
+            $scope.closeCreateClassPanel = function () { 
+                
+                $ngDialog.close();
+            };
+             $scope.newClass = {
+                name:"",
+                parentName:""
+            }
+                
+             $scope.select = {
+                 value: null,
+                 options: null
+             };
+           
+            $scope.saveNewClass = function () {  
+                if(isEmpty($scope.newClass.parentName)){
+                    $scope.newClass.parentName='Thing';
+                }
+              $http.post($scope.BACK_END_URL+'/classes', $scope.newClass).success(function(data, status) {
+              $ngDialog.close();
+                  window.location.reload();
+              }).error(function(err) {
+                   $ngDialog.close();
+                   $scope.openErrorPanel(err);
+                });
+            }
+            
+        } ]);
+
+camApp.controller('openErrorController', [
+		'$scope',
+		'$http',
+        '$q',
+	    'ngDialog',
+		function ($scope, $http,$q, $ngDialog) {
+              $scope.isError = true;
+              $scope.closeErrorPanel = function () { 
+              
+                $ngDialog.close();
+            };
+           
+        } ]);
