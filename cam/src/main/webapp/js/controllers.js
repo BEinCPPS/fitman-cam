@@ -329,13 +329,57 @@ camApp.controller('newAttributeController', [
         '$q',
 	    'ngDialog',
 		function ($scope, $http,$q, $ngDialog) {
-
+            $scope.isStringSelected=true;
+            $scope.isDateSelected=false;
+            $scope.isNumericSelected=false;
+            $scope.isBooleanSelected=false;
+             $scope.isDecimalSelected=false;
             $scope.newAttribute = {
                    name: "",
                    value: "",
                    type : ""
                 };
             
+           $scope.updateValueType = function(){
+                if(isEmpty($scope.newAttribute.type) || 'java.lang.String'== $scope.newAttribute.type){
+                    $scope.isStringSelected=true;
+                    $scope.isDateSelected=false;
+                    $scope.isNumericSelected=false;
+                      $scope.isDecimalSelected=false;
+                     $scope.isBooleanSelected=false;
+                }else if('java.util.Calendar'== $scope.newAttribute.type){
+                    $scope.isStringSelected=false;
+                    $scope.isDateSelected=true;
+                    $scope.isNumericSelected=false;
+                     $scope.isBooleanSelected=false;
+                     $scope.isDecimalSelected=false;
+                }else if('java.lang.Boolean'== $scope.newAttribute.type){
+                    $scope.isStringSelected=false;
+                    $scope.isDateSelected=false;
+                    $scope.isNumericSelected=false;
+                     $scope.isBooleanSelected=true;
+                     $scope.isDecimalSelected=false;
+                }else if('java.lang.Integer' == $scope.newAttribute.type){
+                    $scope.isStringSelected=false;
+                    $scope.isDateSelected=false;
+                    $scope.isNumericSelected=true;
+                     $scope.isBooleanSelected=false;
+                     $scope.isDecimalSelected=false;
+                    if(isEmpty($scope.newAttribute.value)){
+                        $scope.newAttribute.value =0;
+                    }
+                }else{
+                    $scope.isStringSelected=false;
+                    $scope.isDateSelected=false;
+                    $scope.isNumericSelected=false;
+                     $scope.isBooleanSelected=false;
+                     $scope.isDecimalSelected=true;
+                     if(isEmpty($scope.newAttribute.value) || 0 == $scope.newAttribute.value){
+                        $scope.newAttribute.value =0.0;
+                    }
+                }
+                    
+            }
             $scope.closeNewAttributePanel = function () {  
                 $ngDialog.close();
             }
@@ -366,7 +410,49 @@ camApp.controller('attributeDetailController', [
         '$q',
 	    'ngDialog',
        	function ($scope, $http,$q, $ngDialog) {
+           
 
+             $scope.updateValueType = function(){
+                if(isEmpty($scope.newAttribute.type) || 'java.lang.String'== $scope.newAttribute.type){
+                    $scope.isStringSelected=true;
+                    $scope.isDateSelected=false;
+                    $scope.isNumericSelected=false;
+                      $scope.isDecimalSelected=false;
+                     $scope.isBooleanSelected=false;
+                }else if('java.util.Calendar'== $scope.newAttribute.type){
+                    $scope.isStringSelected=false;
+                    $scope.isDateSelected=true;
+                    $scope.isNumericSelected=false;
+                     $scope.isBooleanSelected=false;
+                     $scope.isDecimalSelected=false;
+                }else if('java.lang.Boolean'== $scope.newAttribute.type){
+                    $scope.isStringSelected=false;
+                    $scope.isDateSelected=false;
+                    $scope.isNumericSelected=false;
+                     $scope.isBooleanSelected=true;
+                     $scope.isDecimalSelected=false;
+                }else if('java.lang.Integer' == $scope.newAttribute.type){
+                    $scope.isStringSelected=false;
+                    $scope.isDateSelected=false;
+                    $scope.isNumericSelected=true;
+                     $scope.isBooleanSelected=false;
+                     $scope.isDecimalSelected=false;
+                    if(isEmpty($scope.newAttribute.value)){
+                        $scope.newAttribute.value =0;
+                    }
+                }else{
+                    $scope.isStringSelected=false;
+                    $scope.isDateSelected=false;
+                    $scope.isNumericSelected=false;
+                     $scope.isBooleanSelected=false;
+                     $scope.isDecimalSelected=true;
+                    if(isEmpty($scope.newAttribute.value) || 0 == $scope.newAttribute.value){
+                        $scope.newAttribute.value =0.0;
+                    }
+                }
+                    
+            }
+            
             if(isEmpty($scope.selectedAsset.model)){
               $scope.isModel = true;
             }else{
@@ -376,16 +462,17 @@ camApp.controller('attributeDetailController', [
            var urlFragment = 'assets';
             if($scope.isModel)
                  urlFragment = '/models/';
-             
-             $http.get(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/attributes/'+$scope.attributeName)
+              $http.get(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/attributes/'+$scope.attributeName)
                  .success(function (data) {
                 $scope.newAttribute={
                     name: data.normalizedName,
                     value: data.propertyValue,
                     type: data.propertyType
                 }
+                $scope.updateValueType();
                 });
-                        
+                      
+             
             $scope.closeNewAttributePanel = function () {  
                 $ngDialog.close();
             }

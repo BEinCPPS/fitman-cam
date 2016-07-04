@@ -276,3 +276,15 @@ ul.contextMenu li {
     overflow: hidden;
 }
 
+
+.ui-datepicker a{
+	background:#FFF !important;
+	color:#000 !important;
+	border:none !important;
+	
+}
+
+.ui-state-hover a {
+	background:#CCC !important;
+		
+}
