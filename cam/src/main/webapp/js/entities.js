@@ -5,7 +5,7 @@ var EntityManager = (function () {
     var $q;
    
     var getAssets = function (name) {
-        $http.get($scope.BACK_END_URL + '/assets?className=' + name)
+        $http.get(BACK_END_URL_CONST + '/assets?className=' + name)
             .success(function (data) {
                 fetchAssetList(data, function(res) {
                     $scope.assetList = formatAssetListTable(res);
@@ -14,7 +14,7 @@ var EntityManager = (function () {
                 //$scope.assetList = formatAssetListTable(a);
             })
             .error(function (error) {
-               openErrorPanel(error);
+               $scope.openErrorPanel(error);
             });
     }
 
@@ -54,7 +54,7 @@ var EntityManager = (function () {
                 completeCallback(result);
             } else {
               var cur= assetList.shift();    
-              $http.get($scope.BACK_END_URL + '/assets/' + cur.individualName+'/attributes')
+              $http.get(BACK_END_URL_CONST + '/assets/' + cur.individualName+'/attributes')
                 .success(function (data) {
                   var owned;
                   var model;
@@ -70,9 +70,12 @@ var EntityManager = (function () {
                       if(data[i].normalizedName.indexOf('createdOn')> 0){
                           var myDate = new Date(data[i].propertyValue);
                           var month = (myDate.getMonth() + 1).toString();
+                          var day = new String(myDate.getDate());
                           while(month.length <2)
                               month ='0'+month;
-                          created = myDate.getDate() + "/" + month + "/" + myDate.getFullYear();
+                          while(day.length <2)
+                            day ='0'+day;
+                          created = day + "/" + month + "/" + myDate.getFullYear();
                           
                           
                       }
@@ -88,7 +91,7 @@ var EntityManager = (function () {
                    result.push(asset);
                 })
                 .error(function (error) {
-                    openErrorPanel(error);
+                    $scope.openErrorPanel(error);
                   
                 }).finally(function () {
                   fetchData();
@@ -103,7 +106,7 @@ var EntityManager = (function () {
     /* var getAssetDetailForTable = function(name, clazz, assets){
          var deferred = $q.defer();
          
-          $http.get($scope.BACK_END_URL + '/assets/' + name+'/attributes')
+          $http.get(BACK_END_URL_CONST + '/assets/' + name+'/attributes')
             .success(function (data) {
               var owned;
               var model;
@@ -165,13 +168,13 @@ var EntityManager = (function () {
 
 
     var getClasses = function () {
-        $http.get($scope.BACK_END_URL + '/classes') //http://localhost:8080/CAMService/assets
+        $http.get(BACK_END_URL_CONST + '/classes') //http://localhost:8080/CAMService/assets
             //TODO Address
             .success(function (data) {
                 $scope.classList = createClasses(data);
             })
             .error(function (error) {
-                openErrorPanel(error);
+                $scope.openErrorPanel(error);
             });
 
     }
@@ -189,14 +192,14 @@ var EntityManager = (function () {
     }
     
     var getAssetDetail = function(name){
-          $http.get($scope.BACK_END_URL + '/assets/' + name+'/attributes')
+          $http.get(BACK_END_URL_CONST + '/assets/' + name+'/attributes')
             .success(function (data) {
               var owned;
               var model;
               var created;
               var attrs = [];
               var originalAttrs = data;
-              $http.get($scope.BACK_END_URL + '/assets/' + name+'/relationships')
+              $http.get(BACK_END_URL_CONST + '/assets/' + name+'/relationships')
                   .success(function (data) {
                   for (var i =0; i< data.length; i++){
                       data[i].type = 'relationship';
@@ -208,11 +211,14 @@ var EntityManager = (function () {
                   else if(data[i].normalizedName.indexOf('instanceOf')> 0)
                       model = data[i].propertyValue;
                   else if(data[i].normalizedName.indexOf('createdOn')> 0){
-                         var myDate = new Date(data[i].propertyValue);
-                          var month = (myDate.getMonth() + 1).toString();
-                          while(month.length <2)
-                              month ='0'+month;
-                          created = myDate.getDate() + "/" + month + "/" + myDate.getFullYear();
+                      var myDate = new Date(data[i].propertyValue);
+                      var month = (myDate.getMonth() + 1).toString();
+                      var day = new String(myDate.getDate());
+                      while(month.length <2)
+                          month ='0'+month;
+                      while(day.length <2)
+                        day ='0'+day;
+                      created = day + "/" + month + "/" + myDate.getFullYear();
                   }else
                      attrs.push($scope.formatAssetDetailTableRow(data[i]));
                   }
@@ -226,13 +232,13 @@ var EntityManager = (function () {
               })
             })
             .error(function (error) {
-               openErrorPanel(error);
+               $scope.openErrorPanel(error);
                 return null;
             });
     }
 
     var getChildrenForClass = function (className) {
-        $http.get($scope.BACK_END_URL + '/classes/' + className)
+        $http.get(BACK_END_URL_CONST + '/classes/' + className)
             .success(function (data) {
                 var dataNotMySelf = removeClassMySelf(data, className);
                 if (!isEmpty(dataNotMySelf)) {
@@ -247,7 +253,7 @@ var EntityManager = (function () {
 
             })
             .error(function (error) {
-                openErrorPanel(error);
+                $scope.openErrorPanel(error);
                 return null;
             });
     }
@@ -263,7 +269,7 @@ var EntityManager = (function () {
     }
     
     var getOwnersList = function(){
-         $http.get($scope.BACK_END_URL + '/owners')
+         $http.get(BACK_END_URL_CONST + '/owners')
             .success(function (data) {
              $scope.ownersList = [];
                 for(var i =0; i<data.length; i++ ){
@@ -272,7 +278,7 @@ var EntityManager = (function () {
             })
             .error(function (error) {
                  $scope.ownersList= [];
-                openErrorPanel(error);
+                $scope.openErrorPanel(error);
             });
     }
 

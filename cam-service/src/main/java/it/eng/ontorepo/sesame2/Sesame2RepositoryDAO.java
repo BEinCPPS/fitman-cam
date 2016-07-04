@@ -433,6 +433,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 		for (BindingSet result : results) {
 			ClassItem cn = getClassItem(result);
 			// update temporary map: keep all sibling nodes together, indexed by their superclass name
+//			if(cn.getNamespace() ==null ||  cn.getNamespace().trim().equals("") || cn.getNamespace().equalsIgnoreCase(getImplicitNamespace()))
 			addToSiblings(cn, siblingsMap); 
 		}
 		

@@ -4,7 +4,7 @@ camApp.controller('homeController', [
 		'$http',
         '$q',
         'ngDialog',
-            function ($scope, $http,$q, $ngDialog) {
+         function ($scope, $http,$q, $ngDialog) {
 
         $scope.columnDefs = [{
             "mDataProp": "asset",
@@ -38,11 +38,6 @@ camApp.controller('homeController', [
             "bDestroy": true
         };
             
-        // $scope.BACK_END_URL = 'http://161.27.159.61:8080/CAMService'; //TODO Address config.JSON
-        //$scope.BACK_END_URL = 'http://192.168.62.211:8080/CAMService';
-              //$scope.BACK_END_URL = 'http://192.168.62.200:8080/CAMService';
-        //$scope.BACK_END_URL = 'http://localhost:8080/CAMService';
-            $scope.BACK_END_URL = 'http://192.168.62.207:8080/CAMService';
         entityManager.init($scope, $http, $q);
         $scope.assetList = [];
         entityManager.getClasses();
@@ -65,7 +60,7 @@ camApp.controller('homeController', [
         }
         
         $scope.openNewAssetModelPanel = function () {
-             $http.get($scope.BACK_END_URL + '/owners')
+             $http.get(BACK_END_URL_CONST + '/owners')
                  .success(function (data) {
                      $scope.ownersList = [];
                         for(var i =0; i<data.length; i++ ){
@@ -86,7 +81,7 @@ camApp.controller('homeController', [
         $scope.openNewAssetPanel = function (selectedModel) {
              $scope.selectedModel = selectedModel;
             
-            $http.get($scope.BACK_END_URL + '/owners')
+            $http.get(BACK_END_URL_CONST + '/owners')
                  .success(function (data) {
                      $scope.ownersList = [];
                         for(var i =0; i<data.length; i++ ){
@@ -173,8 +168,6 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
         }   
             $scope.selectedAssetName = $routeParams.selectedAssetName;
            
-            //$scope.BACK_END_URL = 'http://localhost:8080/CAMService';
-            $scope.BACK_END_URL = 'http://192.168.62.207:8080/CAMService';
             entityManager.init($scope, $http, $q);
             
             entityManager.getAssetDetail($routeParams.selectedAssetName);
@@ -320,11 +313,12 @@ camApp.controller('newAssetModelController', [
                 $ngDialog.close();
             }
             $scope.saveNewAssetModel = function () {  
-              $http.post($scope.BACK_END_URL+'/models', $scope.newAssetModel).success(function(data, status) {
+              $http.post(BACK_END_URL_CONST+'/models', $scope.newAssetModel).success(function(data, status) {
                   $scope.loadChildren();
                   $ngDialog.close();
               }).error(function(err) {
-                   openErrorPanel(err);
+                  $ngDialog.close();
+                   $scope.openErrorPanel(err);
             });
             }
         } ]);
@@ -356,11 +350,12 @@ camApp.controller('newAttributeController', [
             if($scope.isModel)
                  urlFragment = '/models/';
             $scope.saveNewAttribute = function () {  
-              $http.post($scope.BACK_END_URL+urlFragment+$scope.selectedAssetName+'/attributes', $scope.newAttribute).success(function(data, status) {
+              $http.post(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/attributes', $scope.newAttribute).success(function(data, status) {
                   entityManager.getAssetDetail($scope.selectedAssetName);
                  $ngDialog.close();
               }).error(function(err) {
-                   openErrorPanel(err);
+                  $ngDialog.close();
+                   $scope.openErrorPanel(err);
                 });
             }
         } ]);
@@ -382,7 +377,7 @@ camApp.controller('attributeDetailController', [
             if($scope.isModel)
                  urlFragment = '/models/';
              
-             $http.get($scope.BACK_END_URL+urlFragment+$scope.selectedAssetName+'/attributes/'+$scope.attributeName)
+             $http.get(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/attributes/'+$scope.attributeName)
                  .success(function (data) {
                 $scope.newAttribute={
                     name: data.normalizedName,
@@ -396,11 +391,12 @@ camApp.controller('attributeDetailController', [
             }
                             
             $scope.saveNewAttribute = function () {  
-              $http.post($scope.BACK_END_URL+urlFragment+$scope.selectedAssetName+'/attributes', $scope.newAttribute).success(function(data, status) {
+              $http.post(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/attributes', $scope.newAttribute).success(function(data, status) {
                   entityManager.getAssetDetail($scope.selectedAssetName);
                  $ngDialog.close();
               }).error(function(err) {
-                   openErrorPanel(err);
+                  $ngDialog.close();
+                   $scope.openErrorPanel(err);
                 });
             }
         } ]);
@@ -423,7 +419,7 @@ camApp.controller('newRelationshipController', [
             if($scope.isModel)
                  urlFragment = '/models/';
             if($scope.attributeName){
-                 $http.get($scope.BACK_END_URL+urlFragment+$scope.selectedAssetName+'/relationships/'+$scope.attributeName)
+                 $http.get(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/relationships/'+$scope.attributeName)
                  .success(function (data) {
                     $scope.newRelationship = {
                      name: data.normalizedName,
@@ -450,7 +446,7 @@ camApp.controller('newRelationshipController', [
              };
             
             /*$scope.loadReferredAssets = function(){
-                 $http.get($scope.BACK_END_URL + '/assets')
+                 $http.get(BACK_END_URL_CONST + '/assets')
                  .success(function (data) {
                     return data;
                      })
@@ -471,10 +467,11 @@ camApp.controller('newRelationshipController', [
             if($scope.isModel)
                  urlFragment = '/models/';
             $scope.saveNewRelationship = function () {  
-              $http.post($scope.BACK_END_URL+urlFragment+$scope.selectedAssetName+'/relationships', $scope.newRelationship).success(function(data, status) {
+              $http.post(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/relationships', $scope.newRelationship).success(function(data, status) {
               entityManager.getAssetDetail($scope.selectedAssetName);
               $ngDialog.close();
               }).error(function(err) {
+                  $ngDialog.close();
                    $scope.openErrorPanel(err);
                 });
             }
@@ -499,7 +496,7 @@ camApp.controller('confirmDeleteController', [
             if($scope.typeToDelete=='class')
                 urlFragment = '/classes/';
             $scope.confirmDelete = function(){
-            $http.delete($scope.BACK_END_URL+urlFragment+$scope.elementToDelete).success(function(data, status) {
+            $http.delete(BACK_END_URL_CONST+urlFragment+$scope.elementToDelete).success(function(data, status) {
                 if($scope.typeToDelete=='class')
                      window.location.reload();
                 if($scope.detail)
@@ -535,7 +532,7 @@ camApp.controller('newAssetController', [
             var urlFragment = '/assets/';
            
             $scope.saveNewAsset = function(){
-            $http.post($scope.BACK_END_URL+urlFragment,$scope.newAsset).success(function(data, status) {
+            $http.post(BACK_END_URL_CONST+urlFragment,$scope.newAsset).success(function(data, status) {
             $scope.loadChildren();
               $ngDialog.close();
             }).error(function(err) {
@@ -571,7 +568,7 @@ camApp.controller('newChildClassController', [
              };
            
             $scope.saveNewClass = function () {  
-              $http.post($scope.BACK_END_URL+'/classes', $scope.newClass).success(function(data, status) {
+              $http.post(BACK_END_URL_CONST+'/classes', $scope.newClass).success(function(data, status) {
               $ngDialog.close();
                   window.location.reload();
               }).error(function(err) {
@@ -605,7 +602,7 @@ camApp.controller('moveClassController', [
              };
            
             $scope.saveNewClass = function () {  
-              $http.put($scope.BACK_END_URL+'/classes/'+$scope.newClass.name, $scope.newClass).success(function(data, status) {
+              $http.put(BACK_END_URL_CONST+'/classes/'+$scope.newClass.name, $scope.newClass).success(function(data, status) {
               $ngDialog.close();
                   window.location.reload();
               }).error(function(err) {
@@ -642,7 +639,7 @@ camApp.controller('newClassController', [
                 if(isEmpty($scope.newClass.parentName)){
                     $scope.newClass.parentName='Thing';
                 }
-              $http.post($scope.BACK_END_URL+'/classes', $scope.newClass).success(function(data, status) {
+              $http.post(BACK_END_URL_CONST+'/classes', $scope.newClass).success(function(data, status) {
               $ngDialog.close();
                   window.location.reload();
               }).error(function(err) {

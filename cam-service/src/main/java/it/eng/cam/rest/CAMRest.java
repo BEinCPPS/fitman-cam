@@ -57,7 +57,7 @@ public class CAMRest extends ResourceConfig {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ClassItem> getClassHierarchy() {
 		try {
-			return CAMRestImpl.getClasses(SesameRepoInstance.getRepoInstance(getClass()));
+			return CAMRestImpl.getClasses(SesameRepoInstance.getRepoInstance(getClass()), true);
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -71,7 +71,7 @@ public class CAMRest extends ResourceConfig {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ClassItem> getIndividuals(@PathParam("className") String className) {
 		try {
-			List<ClassItem> classes = CAMRestImpl.getClasses(SesameRepoInstance.getRepoInstance(getClass()));			
+			List<ClassItem> classes = CAMRestImpl.getClasses(SesameRepoInstance.getRepoInstance(getClass()), false);			
 			classes = classes.stream().filter(item -> item.getNormalizedName().equalsIgnoreCase(className)).collect(Collectors.toList());
 			if(classes != null && classes.size()>0){
 			ClassItem superClass = classes.get(0);

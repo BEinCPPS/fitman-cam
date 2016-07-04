@@ -82,7 +82,7 @@ camApp.directive('lazyLoadOptions', ['$http', function($http) {
             $element.bind('mousedown', function() {
                              
                     if(!$scope.loaded) {
-                        $http.get('http://192.168.62.207:8080/CAMService/assets').success(function(data){
+                        $http.get(BACK_END_URL_CONST+'/assets').success(function(data){
                             $scope.options = data;
                         }).error(function(error){
                             alert(error);
@@ -126,7 +126,7 @@ camApp.directive('lazyLoadClassesOptions', ['$http', function($http) {
             $element.bind('mousedown', function() {
                              
                     if(!$scope.loaded) {
-                        $http.get('http://192.168.62.207:8080/CAMService/classes').success(function(data){
+                        $http.get(BACK_END_URL_CONST+'/classes').success(function(data){
                             $scope.options = data;
                         }).error(function(error){
                             alert(error);

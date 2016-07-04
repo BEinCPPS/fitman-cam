@@ -64,7 +64,7 @@ public class Test extends Assert {
 
 	@org.junit.Test
 	public void getClasses() {
-		List<ClassItem> classes = CAMRestImpl.getClasses(dao);
+		List<ClassItem> classes = CAMRestImpl.getClasses(dao, true);
 		assertNotNull("Null classes", classes);
 		assertFalse("Empty classes list", classes.isEmpty());
 	}

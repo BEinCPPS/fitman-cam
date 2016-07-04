@@ -7,6 +7,7 @@ import it.eng.ontorepo.ClassItem;
 import it.eng.ontorepo.IndividualItem;
 import it.eng.ontorepo.PropertyValueItem;
 import it.eng.ontorepo.RepositoryDAO;
+import it.eng.ontorepo.Util;
 
 public class CAMRestImpl {
 
@@ -16,9 +17,20 @@ public class CAMRestImpl {
 		return dao.getClassHierarchy();
 	}
 
-	public static List<ClassItem> getClasses(RepositoryDAO dao) {
+	public static List<ClassItem> getClasses(RepositoryDAO dao, boolean checkNormalizedName) {
 		ClassItem root = getClassHierarchy(dao);
-		return root.getSubClasses();
+		List<ClassItem> subClasses = root.getSubClasses();
+		if(!checkNormalizedName)
+			return subClasses;
+		for (ClassItem classItem : subClasses) {
+			if(classItem.getNormalizedName().contains("#")){
+				String normName = classItem.getNormalizedName();
+				if(null != normName && normName.contains("#") && !normName.contains("system"));
+					normName= normName.substring(normName.indexOf("#")+1);
+				classItem.setNormalizedName(normName);
+			}
+		}
+		return subClasses;
 	}
 
 	public static List<IndividualItem> getIndividuals(RepositoryDAO dao) {

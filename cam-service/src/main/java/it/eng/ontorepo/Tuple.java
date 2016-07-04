@@ -15,7 +15,7 @@ public class Tuple {
 
 	private final String namespace;
 	private final String name;
-	private final String normalizedName;
+	private String normalizedName;
 	private final String value;
 	private final String normalizedValue;
 	
@@ -82,5 +82,9 @@ public class Tuple {
 	 */
 	public String getNormalizedValue() {
 		return normalizedValue;
+	}
+	
+	public void setNormalizedName(String normName) {
+		this.normalizedName=normName;
 	}
 }
