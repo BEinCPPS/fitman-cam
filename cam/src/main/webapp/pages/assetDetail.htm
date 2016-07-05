@@ -1,6 +1,8 @@
 <div id="asset-detail-container">
-	<a ng-href="#/"><span>Home</span></a>/<span>{{selectedAssetName}}</span>
-
+    <div id="breadcrumb">
+	   <a ng-href="#/"><span><b>Home</b></span></a><span>{{selectedAssetName}}</span>
+    </div>
+   
 	<div id="asset-detail">
 		<fieldset class="asset-detail-fieldset">
 			<div class="row-fluid"><label>Name:</label> <span> {{selectedAsset.name}}</span></div>

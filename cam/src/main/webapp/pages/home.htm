@@ -20,10 +20,10 @@ $(document).ready(function(){
 </script>
 
 <div class="row-fluid">
-	<div style="width: 25%; float: left">
+	<div class="cam-tree-container">
 		<div
 			style="margin: 10px 10px 30px 0; padding: 10px; background-color: #EEEEEE; border-radius: 5px; font: 12px Tahoma;">
-			<span>Asset Classes</span>
+			<span><b>Asset Classes</b></span>
 		</div>
 		<div data-angular-treeview="true" data-tree-model="classList"
 			data-node-id="classId" data-node-label="className"
@@ -41,20 +41,20 @@ $(document).ready(function(){
    </ul>-->
     
    
-	<div name="asset-table-container" style="width: 75%; float: right;">
+	<div name="asset-table-container" class="cam-table-container">
 		<div style="border-left: 0.1em solid #CCC; padding-left: 10px;">
 		<div
 			style="margin: 10px 0 30px 0; padding: 10px; background-color: #EEEEEE; border-radius: 5px; font: 12px Tahoma;">
-			<span><b>Instances of class</b> : {{currentNode.className}}</span>
+			<span><b>Assets of class</b> : {{currentNode.className}}</span>
 		</div>
 			<table asset-table="overrideOptions" aa-data="assetList"
 				ao-column-defs="columnDefs" class="cam-data-table" class="table">
 				<thead>
 					<tr>
-						<th style="width: 150px">Asset</th>
-						<th style="width: 150px">Class</th>
-						<th style="width: 150px">Model</th>
-						<th style="width: 160px">Owner</th>
+						<th style="width: 170px">Asset</th>
+						<!--<th style="width: 150px">Class</th>-->
+						<th style="width: 170px">Model</th>
+						<th style="width: 175px">Owner</th>
 						<th style="width: 150px">Created</th>
 						<th style="width: 168px">Actions</th>
 					</tr>
@@ -66,7 +66,7 @@ $(document).ready(function(){
             
             <button type="button" data-toggle="tooltip" title="New Asset Model" class="cam-btn-add-container"
                     ng-click="openNewAssetModelPanel()" ng-show="newAssetVisible">
-                <i class="fa fa-plus" data-toggle="modal" data-target="#newAttributeLabel"> New asset model</i>
+                <i class="fa fa-plus" data-toggle="modal" data-target="#newAttributeLabel"> New Asset Model</i>
             </button>
             		</div>
 	</div>

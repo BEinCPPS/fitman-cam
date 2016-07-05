@@ -9,21 +9,23 @@ camApp.controller('homeController', [
         $scope.columnDefs = [{
             "mDataProp": "asset",
             "aTargets": [0]
-			}, {
+			},
+           /* {
             "mDataProp": "class",
             "aTargets": [1]
-			}, {
+			}, */
+            {
             "mDataProp": "model",
-            "aTargets": [2]
+            "aTargets": [1]
 			}, {
             "mDataProp": "owner",
-            "aTargets": [3]
+            "aTargets": [2]
 			}, {
             "mDataProp": "created",
-            "aTargets": [4]
+            "aTargets": [3]
 			}, {
             "mDataProp": "action",
-            "aTargets": [5]
+            "aTargets": [4]
 			}];
 
         $scope.overrideOptions = {
@@ -329,57 +331,12 @@ camApp.controller('newAttributeController', [
         '$q',
 	    'ngDialog',
 		function ($scope, $http,$q, $ngDialog) {
-            $scope.isStringSelected=true;
-            $scope.isDateSelected=false;
-            $scope.isNumericSelected=false;
-            $scope.isBooleanSelected=false;
-             $scope.isDecimalSelected=false;
-            $scope.newAttribute = {
+              $scope.newAttribute = {
                    name: "",
                    value: "",
                    type : ""
                 };
             
-           $scope.updateValueType = function(){
-                if(isEmpty($scope.newAttribute.type) || 'java.lang.String'== $scope.newAttribute.type){
-                    $scope.isStringSelected=true;
-                    $scope.isDateSelected=false;
-                    $scope.isNumericSelected=false;
-                      $scope.isDecimalSelected=false;
-                     $scope.isBooleanSelected=false;
-                }else if('java.util.Calendar'== $scope.newAttribute.type){
-                    $scope.isStringSelected=false;
-                    $scope.isDateSelected=true;
-                    $scope.isNumericSelected=false;
-                     $scope.isBooleanSelected=false;
-                     $scope.isDecimalSelected=false;
-                }else if('java.lang.Boolean'== $scope.newAttribute.type){
-                    $scope.isStringSelected=false;
-                    $scope.isDateSelected=false;
-                    $scope.isNumericSelected=false;
-                     $scope.isBooleanSelected=true;
-                     $scope.isDecimalSelected=false;
-                }else if('java.lang.Integer' == $scope.newAttribute.type){
-                    $scope.isStringSelected=false;
-                    $scope.isDateSelected=false;
-                    $scope.isNumericSelected=true;
-                     $scope.isBooleanSelected=false;
-                     $scope.isDecimalSelected=false;
-                    if(isEmpty($scope.newAttribute.value)){
-                        $scope.newAttribute.value =0;
-                    }
-                }else{
-                    $scope.isStringSelected=false;
-                    $scope.isDateSelected=false;
-                    $scope.isNumericSelected=false;
-                     $scope.isBooleanSelected=false;
-                     $scope.isDecimalSelected=true;
-                     if(isEmpty($scope.newAttribute.value) || 0 == $scope.newAttribute.value){
-                        $scope.newAttribute.value =0.0;
-                    }
-                }
-                    
-            }
             $scope.closeNewAttributePanel = function () {  
                 $ngDialog.close();
             }
@@ -411,48 +368,6 @@ camApp.controller('attributeDetailController', [
 	    'ngDialog',
        	function ($scope, $http,$q, $ngDialog) {
            
-
-             $scope.updateValueType = function(){
-                if(isEmpty($scope.newAttribute.type) || 'java.lang.String'== $scope.newAttribute.type){
-                    $scope.isStringSelected=true;
-                    $scope.isDateSelected=false;
-                    $scope.isNumericSelected=false;
-                      $scope.isDecimalSelected=false;
-                     $scope.isBooleanSelected=false;
-                }else if('java.util.Calendar'== $scope.newAttribute.type){
-                    $scope.isStringSelected=false;
-                    $scope.isDateSelected=true;
-                    $scope.isNumericSelected=false;
-                     $scope.isBooleanSelected=false;
-                     $scope.isDecimalSelected=false;
-                }else if('java.lang.Boolean'== $scope.newAttribute.type){
-                    $scope.isStringSelected=false;
-                    $scope.isDateSelected=false;
-                    $scope.isNumericSelected=false;
-                     $scope.isBooleanSelected=true;
-                     $scope.isDecimalSelected=false;
-                }else if('java.lang.Integer' == $scope.newAttribute.type){
-                    $scope.isStringSelected=false;
-                    $scope.isDateSelected=false;
-                    $scope.isNumericSelected=true;
-                     $scope.isBooleanSelected=false;
-                     $scope.isDecimalSelected=false;
-                    if(isEmpty($scope.newAttribute.value)){
-                        $scope.newAttribute.value =0;
-                    }
-                }else{
-                    $scope.isStringSelected=false;
-                    $scope.isDateSelected=false;
-                    $scope.isNumericSelected=false;
-                     $scope.isBooleanSelected=false;
-                     $scope.isDecimalSelected=true;
-                    if(isEmpty($scope.newAttribute.value) || 0 == $scope.newAttribute.value){
-                        $scope.newAttribute.value =0.0;
-                    }
-                }
-                    
-            }
-            
             if(isEmpty($scope.selectedAsset.model)){
               $scope.isModel = true;
             }else{
@@ -469,7 +384,7 @@ camApp.controller('attributeDetailController', [
                     value: data.propertyValue,
                     type: data.propertyType
                 }
-                $scope.updateValueType();
+               
                 });
                       
              
