@@ -5,7 +5,12 @@ camApp.controller('homeController', [
         '$q',
         'ngDialog',
          function ($scope, $http,$q, $ngDialog) {
-
+             
+             
+        $scope.regexPattern = REGEX_PATTERN;
+        $scope.invalidNameMsg = INVALID_NAME_MSG;
+        $scope.nameIsMandatory = NAME_IS_MANDATORY_MSG;
+        
         $scope.columnDefs = [{
             "mDataProp": "asset",
             "aTargets": [0]
@@ -165,10 +170,14 @@ camApp.controller('homeController', [
 
 camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$location', '$q','ngDialog',
         function($scope, $http, $routeParams, $location,$q, $ngDialog) {
-        if(isEmpty($routeParams.selectedAssetName)){
-            $location.path('/');
-        }   
+            if(isEmpty($routeParams.selectedAssetName)){
+                $location.path('/');
+            }   
             $scope.selectedAssetName = $routeParams.selectedAssetName;
+            $scope.regexPattern = REGEX_PATTERN;
+            $scope.invalidNameMsg = INVALID_NAME_MSG;
+            $scope.nameIsMandatory = NAME_IS_MANDATORY_MSG;
+        
            
             entityManager.init($scope, $http, $q);
             
