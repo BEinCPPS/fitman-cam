@@ -323,16 +323,23 @@ camApp.controller('newAssetModelController', [
             $scope.closeNewAssetModelPanel = function () {  
                 $ngDialog.close();
             }
+            
+            $scope.$watch('newAssetModel.name', function(){
+                if(!isEmpty($scope.newAssetModel.name)){
+                     $scope.invalidName = false;
+                }
+            });
+           
             $scope.saveNewAssetModel = function () { 
                 if(isEmpty($scope.newAssetModel.name)){
                     $scope.invalidName = true;
                     return;
                 }
-              $http.post(BACK_END_URL_CONST+'/models', $scope.newAssetModel).success(function(data, status) {
-                  $scope.loadChildren();
-                  $ngDialog.close();
-              }).error(function(err) {
-                  $ngDialog.close();
+                  $http.post(BACK_END_URL_CONST+'/models', $scope.newAssetModel).success(function(data, status) {
+                      $scope.loadChildren();
+                      $ngDialog.close();
+                  }).error(function(err) {
+                      $ngDialog.close();
                    $scope.openErrorPanel(err);
             });
             }
@@ -364,16 +371,23 @@ camApp.controller('newAttributeController', [
 
             if($scope.isModel)
                  urlFragment = '/models/';
+            
+            $scope.$watch('newAttribute.name', function(){
+                if(!isEmpty($scope.newAttribute.name)){
+                     $scope.invalidName = false;
+                }
+            });
+            
             $scope.saveNewAttribute = function () {  
                 if(isEmpty($scope.newAttribute.name)){
                     $scope.invalidName = true;
                     return;
                 }
-              $http.post(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/attributes', $scope.newAttribute).success(function(data, status) {
-                  entityManager.getAssetDetail($scope.selectedAssetName);
-                 $ngDialog.close();
-              }).error(function(err) {
-                  $ngDialog.close();
+                  $http.post(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/attributes', $scope.newAttribute).success(function(data, status) {
+                      entityManager.getAssetDetail($scope.selectedAssetName);
+                     $ngDialog.close();
+                  }).error(function(err) {
+                    $ngDialog.close();
                    $scope.openErrorPanel(err);
                 });
             }
@@ -409,17 +423,23 @@ camApp.controller('attributeDetailController', [
             $scope.closeNewAttributePanel = function () {  
                 $ngDialog.close();
             }
-                            
+                
+             $scope.$watch('newAttribute.name', function(){
+                if(!isEmpty($scope.newAttribute.name)){
+                     $scope.invalidName = false;
+                }
+            });
+            
             $scope.saveNewAttribute = function () {  
                 if(isEmpty($scope.newAttribute.name)){
                     $scope.invalidName = true;
                     return;
                 }
-              $http.put(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/attributes/'+$scope.newAttribute.name, $scope.newAttribute).success(function(data, status) {
-                  entityManager.getAssetDetail($scope.selectedAssetName);
-                 $ngDialog.close();
-              }).error(function(err) {
-                  $ngDialog.close();
+                  $http.put(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/attributes/'+$scope.newAttribute.name, $scope.newAttribute).success(function(data, status) {
+                      entityManager.getAssetDetail($scope.selectedAssetName);
+                     $ngDialog.close();
+                  }).error(function(err) {
+                      $ngDialog.close();
                    $scope.openErrorPanel(err);
                 });
             }
@@ -443,13 +463,12 @@ camApp.controller('newRelationshipController', [
             if($scope.isModel)
                  urlFragment = '/models/';
             if($scope.attributeName){
-                 $http.get(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/relationships/'+$scope.attributeName)
-                 .success(function (data) {
-                    $scope.newRelationship = {
-                     name: data.normalizedName,
-                     referredName: data.propertyValue
-                    };
-                });
+              $http.get(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/relationships/'+$scope.attributeName).success(function (data) {
+                                    $scope.newRelationship = {
+                                    name: data.normalizedName,
+                                    referredName: data.propertyValue
+                                };
+              });
             }else{
                   $scope.newRelationship = {
                    name: "",
@@ -457,7 +476,11 @@ camApp.controller('newRelationshipController', [
             };
             }
           
-            
+             $scope.$watch('newRelationship.name', function(){
+                if(!isEmpty($scope.newRelationship.name)){
+                     $scope.invalidName = false;
+                }
+            });
             
             $scope.closeNewRelationshipPanel = function () { 
                 $scope.attributeName =null;
@@ -494,27 +517,27 @@ camApp.controller('newRelationshipController', [
                 if(isEmpty($scope.newRelationship.name)){
                     $scope.invalidName = true;
                     return;
+                    }
+                if($scope.attributeName){
+                    $http.put(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/relationships/'
+                      +$scope.attributeName, $scope.newRelationship).success(function(data, status) {
+                      entityManager.getAssetDetail($scope.selectedAssetName);
+                      $ngDialog.close();
+
+                     }).error(function(err) {
+                      $ngDialog.close();
+                       $scope.openErrorPanel(err);
+                    });
+                }else{
+                    $http.post(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/relationships', $scope.newRelationship).success(function(data, status) {
+                    entityManager.getAssetDetail($scope.selectedAssetName);
+                    $ngDialog.close();
+
+                  }).error(function(err) {
+                      $ngDialog.close();
+                       $scope.openErrorPanel(err);
+                  });
                 }
-            if($scope.attributeName){
-             $http.put(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/relationships/'
-                  +$scope.attributeName, $scope.newRelationship).success(function(data, status) {
-              entityManager.getAssetDetail($scope.selectedAssetName);
-              $ngDialog.close();
-                    
-              }).error(function(err) {
-                  $ngDialog.close();
-                   $scope.openErrorPanel(err);
-                });
-            }else{
-              $http.post(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/relationships', $scope.newRelationship).success(function(data, status) {
-              entityManager.getAssetDetail($scope.selectedAssetName);
-              $ngDialog.close();
-                    
-              }).error(function(err) {
-                  $ngDialog.close();
-                   $scope.openErrorPanel(err);
-                });
-            }
         } 
         }]);
 
@@ -544,7 +567,7 @@ camApp.controller('confirmDeleteController', [
                     $scope.entityManager.getAssetDetail($scope.individualName);
                 else
                     $scope.loadChildren();
-              $ngDialog.close();
+                $ngDialog.close();
             }).error(function(err) {
                 $ngDialog.close();
                 $scope.openErrorPanel(err);
@@ -572,15 +595,21 @@ camApp.controller('newAssetController', [
                    ownerName : ""
                 };
             var urlFragment = '/assets/';
+            
+            $scope.$watch('newAsset.name', function(){
+                if(!isEmpty($scope.newAsset.name)){
+                     $scope.invalidName = false;
+                }
+            });
            
             $scope.saveNewAsset = function(){
                  if(isEmpty($scope.newAsset.name)){
                     $scope.invalidName = true;
                     return;
                 }
-            $http.post(BACK_END_URL_CONST+urlFragment,$scope.newAsset).success(function(data, status) {
-            $scope.loadChildren();
-              $ngDialog.close();
+                $http.post(BACK_END_URL_CONST+urlFragment,$scope.newAsset).success(function(data, status) {
+                $scope.loadChildren();
+                $ngDialog.close();
             }).error(function(err) {
                 $ngDialog.close();
                 $scope.openErrorPanel(err);
@@ -613,14 +642,21 @@ camApp.controller('newChildClassController', [
                  options: null
              };
             $scope.invalidName =false;
+            
+             $scope.$watch('newClass.name', function(){
+                if(!isEmpty($scope.newClass.name)){
+                     $scope.invalidName = false;
+                }
+            });
+            
             $scope.saveNewClass = function () {  
                 if(isEmpty($scope.newClass.name)){
                     $scope.invalidName = true;
                     return;
                 }
-              $http.post(BACK_END_URL_CONST+'/classes', $scope.newClass).success(function(data, status) {
-              $ngDialog.close();
-                  window.location.reload();
+                $http.post(BACK_END_URL_CONST+'/classes', $scope.newClass).success(function(data, status) {
+                $ngDialog.close();
+                window.location.reload();
               }).error(function(err) {
                   $ngDialog.close();
                   $scope.openErrorPanel(err);
@@ -650,7 +686,7 @@ camApp.controller('moveClassController', [
                  value: null,
                  options: null
              };
-           
+                      
             $scope.saveNewClass = function () {  
               $http.put(BACK_END_URL_CONST+'/classes/'+$scope.newClass.name, $scope.newClass).success(function(data, status) {
               $ngDialog.close();
@@ -685,6 +721,13 @@ camApp.controller('newClassController', [
                  options: null
              };
              $scope.invalidName = false;
+            
+             $scope.$watch('newClass.name', function(){
+                if(!isEmpty($scope.newClass.name)){
+                     $scope.invalidName = false;
+                }
+            });
+            
             $scope.saveNewClass = function () {  
                 if(isEmpty($scope.newClass.name)){
                     $scope.invalidName = true;
@@ -694,9 +737,9 @@ camApp.controller('newClassController', [
                     $scope.newClass.parentName='Thing';
                 }
                 
-              $http.post(BACK_END_URL_CONST+'/classes', $scope.newClass).success(function(data, status) {
-              $ngDialog.close();
-                  window.location.reload();
+                $http.post(BACK_END_URL_CONST+'/classes', $scope.newClass).success(function(data, status) {
+                $ngDialog.close();
+                window.location.reload();
               }).error(function(err) {
                    $ngDialog.close();
                    $scope.openErrorPanel(err);
