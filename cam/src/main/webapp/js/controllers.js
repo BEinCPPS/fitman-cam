@@ -304,8 +304,8 @@ camApp.controller('newAssetModelController', [
         '$q',
 	    'ngDialog',
 		function ($scope, $http,$q, $ngDialog) {
-
-            $scope.newAssetModel = {
+            $scope.invalidName = false;
+                $scope.newAssetModel = {
                    name: "",
                    className: $scope.currentNode.className,
                    ownerName : ""
@@ -314,7 +314,11 @@ camApp.controller('newAssetModelController', [
             $scope.closeNewAssetModelPanel = function () {  
                 $ngDialog.close();
             }
-            $scope.saveNewAssetModel = function () {  
+            $scope.saveNewAssetModel = function () { 
+                if(isEmpty($scope.newAssetModel.name)){
+                    $scope.invalidName = true;
+                    return;
+                }
               $http.post(BACK_END_URL_CONST+'/models', $scope.newAssetModel).success(function(data, status) {
                   $scope.loadChildren();
                   $ngDialog.close();
@@ -331,6 +335,7 @@ camApp.controller('newAttributeController', [
         '$q',
 	    'ngDialog',
 		function ($scope, $http,$q, $ngDialog) {
+            $scope.invalidName = false;
               $scope.newAttribute = {
                    name: "",
                    value: "",
@@ -351,6 +356,10 @@ camApp.controller('newAttributeController', [
             if($scope.isModel)
                  urlFragment = '/models/';
             $scope.saveNewAttribute = function () {  
+                if(isEmpty($scope.newAttribute.name)){
+                    $scope.invalidName = true;
+                    return;
+                }
               $http.post(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/attributes', $scope.newAttribute).success(function(data, status) {
                   entityManager.getAssetDetail($scope.selectedAssetName);
                  $ngDialog.close();
@@ -367,14 +376,14 @@ camApp.controller('attributeDetailController', [
         '$q',
 	    'ngDialog',
        	function ($scope, $http,$q, $ngDialog) {
-           
+           $scope.invalidName = false;
             if(isEmpty($scope.selectedAsset.model)){
               $scope.isModel = true;
             }else{
               $scope.isModel = false;
             }
 
-           var urlFragment = 'assets';
+           var urlFragment = '/assets/';
             if($scope.isModel)
                  urlFragment = '/models/';
               $http.get(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/attributes/'+$scope.attributeName)
@@ -393,7 +402,11 @@ camApp.controller('attributeDetailController', [
             }
                             
             $scope.saveNewAttribute = function () {  
-              $http.post(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/attributes', $scope.newAttribute).success(function(data, status) {
+                if(isEmpty($scope.newAttribute.name)){
+                    $scope.invalidName = true;
+                    return;
+                }
+              $http.put(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/attributes/'+$scope.newAttribute.name, $scope.newAttribute).success(function(data, status) {
                   entityManager.getAssetDetail($scope.selectedAssetName);
                  $ngDialog.close();
               }).error(function(err) {
@@ -410,14 +423,14 @@ camApp.controller('newRelationshipController', [
 	    'ngDialog',
 		function ($scope, $http,$q, $ngDialog) {
 
-            
+             $scope.invalidName =false;
             if(isEmpty($scope.selectedAsset.model)){
               $scope.isModel = true;
             }else{
               $scope.isModel = false;
             }
 
-           var urlFragment = 'assets';
+           var urlFragment = '/assets/';
             if($scope.isModel)
                  urlFragment = '/models/';
             if($scope.attributeName){
@@ -469,15 +482,32 @@ camApp.controller('newRelationshipController', [
             if($scope.isModel)
                  urlFragment = '/models/';
             $scope.saveNewRelationship = function () {  
+                if(isEmpty($scope.newRelationship.name)){
+                    $scope.invalidName = true;
+                    return;
+                }
+            if($scope.attributeName){
+             $http.put(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/relationships/'
+                  +$scope.attributeName, $scope.newRelationship).success(function(data, status) {
+              entityManager.getAssetDetail($scope.selectedAssetName);
+              $ngDialog.close();
+                    
+              }).error(function(err) {
+                  $ngDialog.close();
+                   $scope.openErrorPanel(err);
+                });
+            }else{
               $http.post(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/relationships', $scope.newRelationship).success(function(data, status) {
               entityManager.getAssetDetail($scope.selectedAssetName);
               $ngDialog.close();
+                    
               }).error(function(err) {
                   $ngDialog.close();
                    $scope.openErrorPanel(err);
                 });
             }
-        } ]);
+        } 
+        }]);
 
 camApp.controller('confirmDeleteController', [
 		'$scope',
@@ -522,6 +552,7 @@ camApp.controller('newAssetController', [
 		function ($scope, $http,$q, $ngDialog) {
             //$scope.elementToDelete;
             //$scope.typetoDelete;
+            $scope.invalidName = false;
              $scope.closeNewAssetPanel = function () {  
                 $ngDialog.close();
             }
@@ -534,6 +565,10 @@ camApp.controller('newAssetController', [
             var urlFragment = '/assets/';
            
             $scope.saveNewAsset = function(){
+                 if(isEmpty($scope.newAsset.name)){
+                    $scope.invalidName = true;
+                    return;
+                }
             $http.post(BACK_END_URL_CONST+urlFragment,$scope.newAsset).success(function(data, status) {
             $scope.loadChildren();
               $ngDialog.close();
@@ -568,8 +603,12 @@ camApp.controller('newChildClassController', [
                  value: null,
                  options: null
              };
-           
+            $scope.invalidName =false;
             $scope.saveNewClass = function () {  
+                if(isEmpty($scope.newClass.name)){
+                    $scope.invalidName = true;
+                    return;
+                }
               $http.post(BACK_END_URL_CONST+'/classes', $scope.newClass).success(function(data, status) {
               $ngDialog.close();
                   window.location.reload();
@@ -636,11 +675,16 @@ camApp.controller('newClassController', [
                  value: null,
                  options: null
              };
-           
+             $scope.invalidName = false;
             $scope.saveNewClass = function () {  
+                if(isEmpty($scope.newClass.name)){
+                    $scope.invalidName = true;
+                    return;
+                }
                 if(isEmpty($scope.newClass.parentName)){
                     $scope.newClass.parentName='Thing';
                 }
+                
               $http.post(BACK_END_URL_CONST+'/classes', $scope.newClass).success(function(data, status) {
               $ngDialog.close();
                   window.location.reload();

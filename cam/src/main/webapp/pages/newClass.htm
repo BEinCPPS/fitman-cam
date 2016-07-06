@@ -4,8 +4,11 @@
         <button type="button" class="close"  ng-click="closeCreateClassPanel()"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="newClassLabel">{{title}}</h4>
       </div>
+       <form name="newClassForm" ng-submit="" style="border:none;">
       <div class="modal-body">
-          <div class="row-fluid"><label>Class Name:</label> <input class="form-control" type="text" ng-model="newClass.name" ng-readonly="isNewClassNameReadonly"></input></div>
+          <div class="row-fluid"><label>Class Name:</label> <input class="form-control" type="text" ng-model="newClass.name" ng-readonly="isNewClassNameReadonly" name="name"  ng-pattern="/^d*[A-Za-z0-9_@./+-]*$/"></input>
+            <span  ng-show="newClassForm.name.$error.pattern">Not valid name!</span>    
+            <span  ng-show="invalidName">Name is mandatory!</span></div>
           <div class="row-fluid"><label>Parent Name:</label>
             <!--  <input class="form-control" type="text" ng-model="newRelationship.referredName"></input>-->
              <!--<select ng-model="newRelationship.referredName" class="form-control" ng-click="loadReferredAssets" ng-options="asset.normalizedName as asset.normalizedName for asset in referredAssetList">
@@ -21,7 +24,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-mini" ng-click="closeCreateClassPanel()">Cancel</button>
-        <button type="button" class="btn btn-mini-primary" ng-click="saveNewClass()">Save</button>
+        <button type="button" class="btn btn-mini" ng-click="saveNewClass()">Save</button>
       </div>
+    </form>
     </div>
 </div>
