@@ -11,3 +11,4 @@ var Routes = {
 		HOME_ASSET : "/:assetName",
 		DETAIL : "/:selectedAssetName"
 }
+

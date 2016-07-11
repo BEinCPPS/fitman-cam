@@ -120,8 +120,10 @@ public class CAMRestImpl {
 		List<PropertyValueItem> individualAttributes = SesameRepoInstance.getRepoInstance(clazz).getIndividualAttributes(individualName);
 		String model =null;
 		for (PropertyValueItem propertyValueItem : individualAttributes) {
-			if(propertyValueItem.getNormalizedName().equalsIgnoreCase("instanceOf"))
+			if(propertyValueItem.getNormalizedName().contains("instanceOf")){
 				model = propertyValueItem.getNormalizedValue();
+				break;
+			}
 		}
 		if(null==model || "".equalsIgnoreCase(model.trim()))
 			return true;

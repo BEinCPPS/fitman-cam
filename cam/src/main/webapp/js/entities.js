@@ -7,13 +7,19 @@ var EntityManager = (function () {
     var getAssets = function (name) {
         $http.get(BACK_END_URL_CONST + '/assets?className=' + name)
             .success(function (data) {
-                fetchAssetList(data, function(res) {
-                    $scope.assetList = formatAssetListTable(res);
-                })
+                  $http.get(BACK_END_URL_CONST + '/models?className=' + name)
+                  .success(function (modelData) {
+                    data = data.concat(modelData);
+                          
+                    fetchAssetList(data, function(res) {
+                        $scope.assetList = formatAssetListTable(res);
+                    });
+                  }).error(function (error) {
+                      $scope.openErrorPanel(error);
+                  });
                 //var a = createAssets(data);
                 //$scope.assetList = formatAssetListTable(a);
-            })
-            .error(function (error) {
+            }).error(function (error) {
                $scope.openErrorPanel(error);
             });
     }

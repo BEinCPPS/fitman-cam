@@ -154,7 +154,8 @@ public class CAMRest extends ResourceConfig {
 		try {
 			List<IndividualItem> assets = CAMRestImpl.getIndividuals(SesameRepoInstance.getRepoInstance(getClass()));
 			if (null == assetName || "".equals(assetName.trim()))
-				return assets;
+				return assets.stream()
+						.filter(asset -> !CAMRestImpl.isModel(getClass(), asset.getIndividualName())).collect(Collectors.toList());
 			return assets.stream().filter(asset -> asset.getNormalizedName().equalsIgnoreCase(assetName))
 					.collect(Collectors.toList());
 		} catch (Exception e) {
@@ -172,7 +173,8 @@ public class CAMRest extends ResourceConfig {
 		try {
 			if (null == className)
 				return getAssetByName(null);
-			return CAMRestImpl.getIndividuals(SesameRepoInstance.getRepoInstance(getClass()), className);
+			return CAMRestImpl.getIndividuals(SesameRepoInstance.getRepoInstance(getClass()), className).stream()
+					.filter(asset -> !CAMRestImpl.isModel(getClass(), asset.getIndividualName())).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());

@@ -108,6 +108,15 @@ camApp.controller('homeController', [
 		
             }
         
+        $scope.changeBackground= function(ev){
+            $('.ownselector').each(
+                function(){
+                    $(this).removeClass('selected');
+                    $(this).removeClass('ownselector');
+                });
+            ev.target.className += ' selected ownselector';
+        }
+        
         $scope.openRemoveAssetPanel=function(elementToDelete, typeToDelete){
             $scope.elementToDelete = elementToDelete;
             $scope.typeToDelete = typeToDelete;
