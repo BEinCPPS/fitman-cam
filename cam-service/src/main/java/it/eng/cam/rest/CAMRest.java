@@ -492,7 +492,8 @@ public class CAMRest extends ResourceConfig {
 
 			List<IndividualItem> models = CAMRestImpl.getIndividuals(SesameRepoInstance.getRepoInstance(getClass()));
 			if (null == modelName)
-				return models;
+				return models.stream()
+						.filter(asset -> CAMRestImpl.isModel(getClass(), asset.getIndividualName())).collect(Collectors.toList());
 			return models.stream()
 					.filter(model -> model.getNormalizedName().equalsIgnoreCase(modelName) && CAMRestImpl
 							.isModel(getClass(), model.getIndividualName()))
