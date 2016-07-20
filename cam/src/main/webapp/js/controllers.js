@@ -245,7 +245,7 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
                             + '"> <i data-toggle="tooltip" title="Delete '+elementType+'" class="fa fa-remove cam-table-button"></i> </button>'
                             +'<button class="cam-table-button" ng-click="openAttributeDetailPanel(\''
                             + data.normalizedName+'\', \''+elementType+'\')'
-                            + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-search cam-table-button"></i> </button>';
+                            + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-pencil cam-table-button"></i> </button>';
                                 
                     if(data.type == 'relationship')
                         attribute.type = '<i data-toggle="tooltip" title="relationship" class="fa fa-link" ><i/>';
@@ -360,6 +360,7 @@ camApp.controller('newAttributeController', [
         '$q',
 	    'ngDialog',
 		function ($scope, $http,$q, $ngDialog) {
+            $scope.attrPanelTitle="Add Attribute";
             $scope.invalidName = false;
               $scope.newAttribute = {
                    name: "",
@@ -408,6 +409,7 @@ camApp.controller('attributeDetailController', [
         '$q',
 	    'ngDialog',
        	function ($scope, $http,$q, $ngDialog) {
+            $scope.attrPanelTitle="Edit Attribute";
            $scope.invalidName = false;
             if(isEmpty($scope.selectedAsset.model)){
               $scope.isModel = true;
@@ -460,7 +462,7 @@ camApp.controller('newRelationshipController', [
         '$q',
 	    'ngDialog',
 		function ($scope, $http,$q, $ngDialog) {
-
+             $scope.relPanelTitle = "Add Relationship";
              $scope.invalidName =false;
             if(isEmpty($scope.selectedAsset.model)){
               $scope.isModel = true;
@@ -472,7 +474,7 @@ camApp.controller('newRelationshipController', [
             if($scope.isModel)
                  urlFragment = '/models/';
             if($scope.attributeName){
-              $http.get(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/relationships/'+$scope.attributeName).success(function (data) {
+             $scope.relPanelTitle = "Edit Relationship"; $http.get(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/relationships/'+$scope.attributeName).success(function (data) {
                                     $scope.newRelationship = {
                                     name: data.normalizedName,
                                     referredName: data.propertyValue
@@ -564,9 +566,11 @@ camApp.controller('confirmDeleteController', [
             var urlFragment = '/assets/';
             if($scope.typeToDelete=='model')
                 urlFragment='/models/';
-            if($scope.typeToDelete=='attribute')
+            else if($scope.typeToDelete=='attribute')
                 urlFragment='/assets/'+$scope.individualName+'/attributes/';
-            if($scope.typeToDelete=='class')
+            else if($scope.typeToDelete=='relationship')
+                urlFragment='/assets/'+$scope.individualName+'/relationships/';
+            else if($scope.typeToDelete=='class')
                 urlFragment = '/classes/';
             $scope.confirmDelete = function(){
             $http.delete(BACK_END_URL_CONST+urlFragment+$scope.elementToDelete).success(function(data, status) {
