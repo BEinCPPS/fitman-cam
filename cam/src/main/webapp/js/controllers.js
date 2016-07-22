@@ -195,7 +195,7 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
             $scope.retrieveSelectedAsset = function() {
                 for (var i = 0; i < $scope.assetList.length; i++) {
                     if ($scope.assetList[i].asset == $scope.selectedAssetName) {
-                        alert();
+                       return $scope.assetList[i];
                     }
                 }
             }
@@ -362,6 +362,7 @@ camApp.controller('newAttributeController', [
 		function ($scope, $http,$q, $ngDialog) {
             $scope.attrPanelTitle="Add Attribute";
             $scope.invalidName = false;
+            $scope.isEditing = false;
               $scope.newAttribute = {
                    name: "",
                    value: "",
@@ -411,6 +412,7 @@ camApp.controller('attributeDetailController', [
        	function ($scope, $http,$q, $ngDialog) {
             $scope.attrPanelTitle="Edit Attribute";
            $scope.invalidName = false;
+            $scope.isEditing = true;
             if(isEmpty($scope.selectedAsset.model)){
               $scope.isModel = true;
             }else{
@@ -464,6 +466,7 @@ camApp.controller('newRelationshipController', [
 		function ($scope, $http,$q, $ngDialog) {
              $scope.relPanelTitle = "Add Relationship";
              $scope.invalidName =false;
+            $scope.isEditing = false;
             if(isEmpty($scope.selectedAsset.model)){
               $scope.isModel = true;
             }else{
@@ -474,7 +477,8 @@ camApp.controller('newRelationshipController', [
             if($scope.isModel)
                  urlFragment = '/models/';
             if($scope.attributeName){
-             $scope.relPanelTitle = "Edit Relationship"; $http.get(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/relationships/'+$scope.attributeName).success(function (data) {
+             $scope.relPanelTitle = "Edit Relationship";
+               $scope.isEditing = true; $http.get(BACK_END_URL_CONST+urlFragment+$scope.selectedAssetName+'/relationships/'+$scope.attributeName).success(function (data) {
                                     $scope.newRelationship = {
                                     name: data.normalizedName,
                                     referredName: data.propertyValue

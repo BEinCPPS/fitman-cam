@@ -6,7 +6,7 @@
       </div>
           <form name="newRelForm" ng-submit="" style="border:none;">
       <div class="modal-body">
-          <div class="row-fluid"><label>Relationship Name:</label> <input class="form-control" type="text" ng-model="newRelationship.name" name="name"  ng-pattern="regexPattern"></input>
+          <div class="row-fluid"><label>Relationship Name:</label> <input class="form-control" type="text" ng-model="newRelationship.name" name="name"  ng-pattern="regexPattern" ng-readonly="isEditing"></input>
             <span  ng-show="newRelForm.name.$error.pattern">{{invalidNameMsg}}</span>    
             <span  ng-show="invalidName">{{nameIsMandatory}}</span></div>
           <div class="row-fluid"><label>Referred Asset:</label>

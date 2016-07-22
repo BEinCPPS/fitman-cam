@@ -233,7 +233,8 @@ var EntityManager = (function () {
                         created : created,
                         model: model,
                         owner : owned,
-                        attributes : attrs
+                        attributes : attrs,
+                        isModel: isEmpty(model)
                     };
               })
             })

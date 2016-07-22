@@ -31,7 +31,7 @@
                 </button>
                 
                 <button type="button" data-toggle="tooltip" title="New Relationship" class="cam-btn-add-container"
-                    ng-click="openNewRelationshipPanel()">
+                    ng-click="openNewRelationshipPanel()" ng-hide="selectedAsset.isModel">
                 <i class="fa fa-plus" data-toggle="modal" data-target="#newRelationshipLabel"> New             Relationship</i>
                 </button>
                 
