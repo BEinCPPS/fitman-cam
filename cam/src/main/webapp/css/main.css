@@ -368,3 +368,8 @@ div#asset-detail{
     float: left;
     margin-top: 15px;
 }
+
+.contextMenu button:hover {
+    background: #aaddff;
+    opacity: 1;
+}
