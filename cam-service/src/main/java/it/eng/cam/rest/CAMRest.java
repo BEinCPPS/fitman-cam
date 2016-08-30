@@ -41,6 +41,7 @@ import it.eng.cam.rest.sesame.SesameRepoInstance;
 import it.eng.ontorepo.ClassItem;
 import it.eng.ontorepo.IndividualItem;
 import it.eng.ontorepo.PropertyValueItem;
+import it.eng.ontorepo.Util;
 
 @Path("/")
 public class CAMRest extends ResourceConfig {
@@ -71,12 +72,13 @@ public class CAMRest extends ResourceConfig {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ClassItem> getIndividuals(@PathParam("className") String className) {
 		try {
-			List<ClassItem> classes = CAMRestImpl.getClasses(SesameRepoInstance.getRepoInstance(getClass()), false);			
-			classes = classes.stream().filter(item -> item.getNormalizedName().equalsIgnoreCase(className)).collect(Collectors.toList());
-			if(classes != null && classes.size()>0){
-			ClassItem superClass = classes.get(0);
-			return superClass.getSubClasses();
-			}else{
+			List<ClassItem> classes = CAMRestImpl.getClasses(SesameRepoInstance.getRepoInstance(getClass()), false);
+			classes = classes.stream().filter(item -> item.getNormalizedName().equalsIgnoreCase(className))
+					.collect(Collectors.toList());
+			if (classes != null && classes.size() > 0) {
+				ClassItem superClass = classes.get(0);
+				return superClass.getSubClasses();
+			} else {
 				return new ArrayList<ClassItem>();
 			}
 		} catch (Exception e) {
@@ -154,8 +156,8 @@ public class CAMRest extends ResourceConfig {
 		try {
 			List<IndividualItem> assets = CAMRestImpl.getIndividuals(SesameRepoInstance.getRepoInstance(getClass()));
 			if (null == assetName || "".equals(assetName.trim()))
-				return assets.stream()
-						.filter(asset -> !CAMRestImpl.isModel(getClass(), asset.getIndividualName())).collect(Collectors.toList());
+				return assets.stream().filter(asset -> !CAMRestImpl.isModel(getClass(), asset.getIndividualName()))
+						.collect(Collectors.toList());
 			return assets.stream().filter(asset -> asset.getNormalizedName().equalsIgnoreCase(assetName))
 					.collect(Collectors.toList());
 		} catch (Exception e) {
@@ -174,7 +176,8 @@ public class CAMRest extends ResourceConfig {
 			if (null == className)
 				return getAssetByName(null);
 			return CAMRestImpl.getIndividuals(SesameRepoInstance.getRepoInstance(getClass()), className).stream()
-					.filter(asset -> !CAMRestImpl.isModel(getClass(), asset.getIndividualName())).collect(Collectors.toList());
+					.filter(asset -> !CAMRestImpl.isModel(getClass(), asset.getIndividualName()))
+					.collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -246,6 +249,7 @@ public class CAMRest extends ResourceConfig {
 	@Path("/assets/{assetName}")
 	public Response deleteAsset(@PathParam("assetName") String assetName) {
 		try {
+			cleanProps(assetName);
 			CAMRestImpl.deleteIndividual(SesameRepoInstance.getRepoInstance(getClass()), assetName);
 			return Response.ok("Individual with name '" + assetName + "' was successfully deleted!").build();
 		} catch (Exception e) {
@@ -261,8 +265,12 @@ public class CAMRest extends ResourceConfig {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PropertyValueItem> getIndividualAttributes(@PathParam("assetName") String assetName) {
 		try {
-			List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), assetName);
-			return individualAttributes.stream().filter(item -> !item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue()) || item.getNormalizedName().contains("system")).collect(Collectors.toList());
+			List<PropertyValueItem> individualAttributes = CAMRestImpl
+					.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), assetName);
+			return individualAttributes.stream()
+					.filter(item -> !item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue())
+							|| item.getNormalizedName().contains("system"))
+					.collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -383,16 +391,23 @@ public class CAMRest extends ResourceConfig {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PropertyValueItem> getRelationships(@PathParam("assetName") String assetName) {
 		try {
-//			List<PropertyValueItem> retval = new ArrayList<PropertyValueItem>();
+			// List<PropertyValueItem> retval = new
+			// ArrayList<PropertyValueItem>();
 			List<PropertyValueItem> individualAttributes = CAMRestImpl
 					.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), assetName);
-//			for (PropertyValueItem propertyValueItem : individualAttributes) {
-//				if (propertyValueItem.getPropertyType().equals(OWL.OBJECTPROPERTY)) {
-//					retval.add(propertyValueItem);
-//				}
-//			}
-//			return retval;
-			return individualAttributes.stream().filter(item -> item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue()) && !item.getNormalizedName().contains("system")).collect(Collectors.toList());
+			// for (PropertyValueItem propertyValueItem : individualAttributes)
+			// {
+			// if
+			// (propertyValueItem.getPropertyType().equals(OWL.OBJECTPROPERTY))
+			// {
+			// retval.add(propertyValueItem);
+			// }
+			// }
+			// return retval;
+			return individualAttributes.stream()
+					.filter(item -> item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue())
+							&& !item.getNormalizedName().contains("system"))
+					.collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -472,8 +487,9 @@ public class CAMRest extends ResourceConfig {
 			@PathParam("relationshipName") String relationshipName) {
 		try {
 			CAMRestImpl.removeProperty(SesameRepoInstance.getRepoInstance(getClass()), assetName, relationshipName);
-			return Response.ok("Relation with name '" + relationshipName + "'with '" + assetName
-					+ "' was successfully deleted!").build();
+			return Response.ok(
+					"Relation with name '" + relationshipName + "'with '" + assetName + "' was successfully deleted!")
+					.build();
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -492,12 +508,10 @@ public class CAMRest extends ResourceConfig {
 
 			List<IndividualItem> models = CAMRestImpl.getIndividuals(SesameRepoInstance.getRepoInstance(getClass()));
 			if (null == modelName)
-				return models.stream()
-						.filter(asset -> CAMRestImpl.isModel(getClass(), asset.getIndividualName())).collect(Collectors.toList());
-			return models.stream()
-					.filter(model -> model.getNormalizedName().equalsIgnoreCase(modelName) && CAMRestImpl
-							.isModel(getClass(), model.getIndividualName()))
-					.collect(Collectors.toList());
+				return models.stream().filter(asset -> CAMRestImpl.isModel(getClass(), asset.getIndividualName()))
+						.collect(Collectors.toList());
+			return models.stream().filter(model -> model.getNormalizedName().equalsIgnoreCase(modelName)
+					&& CAMRestImpl.isModel(getClass(), model.getIndividualName())).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -515,8 +529,7 @@ public class CAMRest extends ResourceConfig {
 				return getModelByName(null);
 			List<IndividualItem> individuals = CAMRestImpl
 					.getIndividuals(SesameRepoInstance.getRepoInstance(getClass()), className);
-			return individuals.stream().filter(indiv -> CAMRestImpl
-					.isModel(getClass(), indiv.getIndividualName()))
+			return individuals.stream().filter(indiv -> CAMRestImpl.isModel(getClass(), indiv.getIndividualName()))
 					.collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
@@ -586,6 +599,7 @@ public class CAMRest extends ResourceConfig {
 	@Path("/models/{modelName}")
 	public Response deleteModel(@PathParam("modelName") String modelName) {
 		try {
+			cleanProps(modelName);
 			CAMRestImpl.deleteIndividual(SesameRepoInstance.getRepoInstance(getClass()), modelName);
 			return Response.ok("Model with name '" + modelName + "' was successfully deleted!").build();
 		} catch (Exception e) {
@@ -601,8 +615,12 @@ public class CAMRest extends ResourceConfig {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PropertyValueItem> getModelAttributes(@PathParam("modelName") String modelName) {
 		try {
-			List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), modelName);
-			return individualAttributes.stream().filter(item -> item.getNormalizedName().contains("system") || !item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue())).collect(Collectors.toList());
+			List<PropertyValueItem> individualAttributes = CAMRestImpl
+					.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), modelName);
+			return individualAttributes.stream()
+					.filter(item -> item.getNormalizedName().contains("system")
+							|| !item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue()))
+					.collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -726,7 +744,10 @@ public class CAMRest extends ResourceConfig {
 		try {
 			List<PropertyValueItem> individualAttributes = CAMRestImpl
 					.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), modelName);
-			return individualAttributes.stream().filter(item -> !item.getNormalizedName().contains("system") && item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue())).collect(Collectors.toList());
+			return individualAttributes.stream()
+					.filter(item -> !item.getNormalizedName().contains("system")
+							&& item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue()))
+					.collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -806,8 +827,9 @@ public class CAMRest extends ResourceConfig {
 			@PathParam("relationshipName") String relationshipName) {
 		try {
 			CAMRestImpl.removeProperty(SesameRepoInstance.getRepoInstance(getClass()), modelName, relationshipName);
-			return Response.ok("Relation with name '" + relationshipName + "'with '" + modelName
-					+ "' was successfully deleted!").build();
+			return Response.ok(
+					"Relation with name '" + relationshipName + "'with '" + modelName + "' was successfully deleted!")
+					.build();
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
@@ -826,11 +848,12 @@ public class CAMRest extends ResourceConfig {
 		try {
 			List<OwnerJSON> retval = new ArrayList<OwnerJSON>();
 			List<String> owners = CAMRestImpl.getOwners(SesameRepoInstance.getRepoInstance(getClass()));
-//			if (null == ownerName || "".equalsIgnoreCase(ownerName))
-				owners.forEach(item -> retval.add(new OwnerJSON(item)));
-//			else
-//				owners.stream().filter(owner -> owner.equalsIgnoreCase(ownerName)).collect(Collectors.toList())
-//						.forEach(item -> retval.add(new OwnerJSON(item)));
+			// if (null == ownerName || "".equalsIgnoreCase(ownerName))
+			owners.forEach(item -> retval.add(new OwnerJSON(item)));
+			// else
+			// owners.stream().filter(owner ->
+			// owner.equalsIgnoreCase(ownerName)).collect(Collectors.toList())
+			// .forEach(item -> retval.add(new OwnerJSON(item)));
 			return retval;
 		} catch (Exception e) {
 			logger.error(e);
@@ -839,7 +862,7 @@ public class CAMRest extends ResourceConfig {
 			SesameRepoInstance.releaseRepoDaoConn();
 		}
 	}
-	
+
 	@GET
 	@Path("/owners/{ownerName}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -950,4 +973,20 @@ public class CAMRest extends ResourceConfig {
 		return content;
 	}
 
+	private void cleanProps(String individualName) {
+		List<PropertyValueItem> individualAttributes = CAMRestImpl
+				.getIndividualAttributes(SesameRepoInstance.getRepoInstance(getClass()), individualName);
+		for (PropertyValueItem propertyValueItem : individualAttributes) {
+			try {
+				if (!propertyValueItem.getNormalizedName().contains("#"))
+					CAMRestImpl.removeProperty(SesameRepoInstance.getRepoInstance(getClass()), individualName,
+							propertyValueItem.getNormalizedName());
+			} catch (Exception e) {
+				logger.error(e);
+				throw new WebApplicationException(e.getMessage());
+			} finally {
+				SesameRepoInstance.releaseRepoDaoConn();
+			}
+		}
+	}
 }
