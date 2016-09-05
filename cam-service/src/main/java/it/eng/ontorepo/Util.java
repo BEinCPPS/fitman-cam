@@ -11,7 +11,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import it.eng.cam.rest.CAMRestImpl;
 import it.eng.cam.rest.dto.OwnerJSON;
-import it.eng.cam.rest.sesame.SesameRepoInstance;
+import it.eng.cam.rest.sesame.SesameRepoManager;
 
 /**
  * Collection of utility methods of general interest.

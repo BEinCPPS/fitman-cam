@@ -26,7 +26,7 @@ import org.junit.BeforeClass;
 import org.w3c.dom.Document;
 
 import it.eng.cam.rest.CAMRestImpl;
-import it.eng.cam.rest.sesame.SesameRepoInstance;
+import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.ClassItem;
 import it.eng.ontorepo.IndividualItem;
 import it.eng.ontorepo.RepositoryDAO;
@@ -47,12 +47,12 @@ public class Test extends Assert {
 
 	@Before
 	public void setUp() {
-		dao = SesameRepoInstance.getRepoInstanceInMemoryImpl(getClass());
+		dao = SesameRepoManager.getRepoInstanceInMemoryImpl(getClass());
 	}
 
 	@After
 	public void tearDown() {
-		SesameRepoInstance.releaseRepoDaoConn();
+		SesameRepoManager.releaseRepoDaoConn(dao);
 	}
 
 	@org.junit.Test
@@ -476,7 +476,7 @@ public class Test extends Assert {
 	}
 
 	public static void main(String[] args) {
-		CAMRestImpl.deleteIndividual(SesameRepoInstance.getRepoInstance(Test.class), "http://www.msee-ip.eu/ontology/system#MyService_002d001");
+		CAMRestImpl.deleteIndividual(SesameRepoManager.getRepoInstance(Test.class), "http://www.msee-ip.eu/ontology/system#MyService_002d001");
 	}
 	
 	
