@@ -11,9 +11,8 @@ import org.apache.log4j.Logger;
 import it.eng.ontorepo.RepositoryDAO;
 import it.eng.ontorepo.sesame2.Sesame2RepositoryDAO;
 
-public class SesameRepoInstance {
-	private static RepositoryDAO repoInstance;
-	private static final Logger logger = Logger.getLogger(SesameRepoInstance.class.getName());
+public class SesameRepoManager {
+	private static final Logger logger = Logger.getLogger(SesameRepoManager.class.getName());
 	public static ResourceBundle finder = null;
 
 	private static String SESAME_REPO_URL = null;
@@ -39,68 +38,45 @@ public class SesameRepoInstance {
 
 	// SINGLETON
 	public static RepositoryDAO getRepoInstance(Class<?> clazz) {
-		if (null != SESAME_REPO_TYPE && !SESAME_REPO_TYPE.isEmpty()) {
-			if (SesameRepoType.HTTP.name().equals(SESAME_REPO_TYPE))
-				repoInstance = getRepoInstanceImpl(clazz);
-			else if (SesameRepoType.MEMORY.name().equals(SESAME_REPO_TYPE))
-				repoInstance = getRepoInstanceInMemoryImpl(clazz);
-		} else
-			repoInstance = getRepoInstanceInMemoryImpl(clazz);
-		return repoInstance;
+		try {
+			if (null != SESAME_REPO_TYPE && !SESAME_REPO_TYPE.isEmpty()) {
+				if (SesameRepoType.HTTP.name().equals(SESAME_REPO_TYPE))
+					return getRepoInstanceImpl(clazz);
+				else if (SesameRepoType.MEMORY.name().equals(SESAME_REPO_TYPE))
+					return getRepoInstanceInMemoryImpl(clazz);
+			} else
+				return getRepoInstanceInMemoryImpl(clazz);
+		} catch (Exception e) {
+			logger.error(e);
+		}
+		return null;
 	}
 
 	public static RepositoryDAO getRepoInstanceImpl(Class<?> clazz) {
-		if (repoInstance == null) {
-			synchronized (SesameRepoInstance.class) {
-				if (repoInstance == null) {
-					repoInstance = new Sesame2RepositoryDAO(SESAME_REPO_URL, SESAME_REPO_NAME, SESAME_REPO_NAMESPACE);
-					addRdfFileToInstance(clazz, false);
-				}
-			}
-		}
+		RepositoryDAO repoInstance = new Sesame2RepositoryDAO(SESAME_REPO_URL, SESAME_REPO_NAME, SESAME_REPO_NAMESPACE);
+		addRdfFileToInstance(repoInstance, clazz, false);
 		return repoInstance;
 	}
-	
-	// SINGLETON IN MEMORY
+
 	// DON'T USE IN PRODUCTION
 	public static RepositoryDAO getRepoInstanceInMemoryImpl(Class<?> clazz) {
 		logger.warn("\nUsing in MEMORY Store Repo\nONLY For DEV Purpose!");
-		if (repoInstance == null) {
-			synchronized (SesameRepoInstance.class) {
-				if (repoInstance == null) {
-					URL url = clazz.getResource(SESAME_MEMORY_STORE_DATA_DIR);
-					File dataDir = null;
-					try {
-						dataDir = new File(url.toURI());
-					} catch (URISyntaxException e) {
-						logger.error(e);
-					}
-					repoInstance = new Sesame2RepositoryDAO(dataDir, SESAME_REPO_NAMESPACE);
-					addRdfFileToInstance(clazz, false);
-
-				}
-			}
+		RepositoryDAO repoInstance = null;
+		URL url = clazz.getResource(SESAME_MEMORY_STORE_DATA_DIR);
+		File dataDir = null;
+		try {
+			dataDir = new File(url.toURI());
+		} catch (URISyntaxException e) {
+			logger.error(e);
 		}
+		repoInstance = new Sesame2RepositoryDAO(dataDir, SESAME_REPO_NAMESPACE);
+		addRdfFileToInstance(repoInstance, clazz, false);
+
 		return repoInstance;
 	}
 
 
-	// SINGLETON
-	public static RepositoryDAO getRepoInstance(Class<?> clazz, String sesameRepoUrl, String sesameRepoName,
-			String sesameRepoNameSpace) {
-		if (repoInstance == null) {
-			synchronized (SesameRepoInstance.class) {
-				if (repoInstance == null) {
-					repoInstance = new Sesame2RepositoryDAO(sesameRepoUrl, sesameRepoName, sesameRepoNameSpace);
-					addRdfFileToInstance(clazz, false);
-				}
-			}
-		}
-		return repoInstance;
-	}
-
-
-	private static void addRdfFileToInstance(Class<?> clazz, boolean forceAdd) {
+	private static void addRdfFileToInstance(RepositoryDAO repoInstance, Class<?> clazz, boolean forceAdd) {
 		if (null == repoInstance)
 			logger.error("Impossible to get a Repository connection use getRepoInstance()");
 		try {
@@ -114,11 +90,12 @@ public class SesameRepoInstance {
 		}
 	}
 
-	public synchronized static void releaseRepoDaoConn() {
+	public static void releaseRepoDaoConn(RepositoryDAO repoInstance) {
 		if (repoInstance != null) {
 			Sesame2RepositoryDAO sRepo = (Sesame2RepositoryDAO) repoInstance;
 			sRepo.release();
 			repoInstance = null;
 		}
 	}
+
 }
