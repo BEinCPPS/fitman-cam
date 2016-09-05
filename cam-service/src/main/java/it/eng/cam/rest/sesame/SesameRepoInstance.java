@@ -121,4 +121,8 @@ public class SesameRepoInstance {
 			repoInstance = null;
 		}
 	}
+	
+	public static String getNamespace(){
+		return SESAME_REPO_NAMESPACE;
+	}
 }

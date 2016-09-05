@@ -12,7 +12,7 @@ var EntityManager = (function () {
                     data = data.concat(modelData);
                           
                     fetchAssetList(data, function(res) {
-                        $scope.assetList = formatAssetListTable(res);
+                        $scope.assetList = formatAssetListTable(res, name);
                     });
                   }).error(function (error) {
                       $scope.openErrorPanel(error);
@@ -146,7 +146,7 @@ var EntityManager = (function () {
     }
     */
 
-    var formatAssetListTable = function (data) {
+    var formatAssetListTable = function (data, clazzName) {
         if (!data)
             return [];
         for (var i = 0; i < data.length; i++) {
@@ -159,7 +159,7 @@ var EntityManager = (function () {
                             + '"> <i data-toggle="tooltip" title="Delete asset model" class="fa fa-remove cam-table-button"></i> </button>'
                 
                 +'<a class="cam-icon-a" href="#/detail/'
-				+ data[i].asset
+				+ data[i].asset+'/'+clazzName
 				+ '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-search cam-table-button"></i> </a>';
             if (data[i].isModel == true){
                 data[i].action += '<button class="cam-table-button" ng-click="openNewAssetPanel(\''

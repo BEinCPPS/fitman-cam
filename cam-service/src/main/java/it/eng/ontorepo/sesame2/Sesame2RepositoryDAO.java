@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.rdf4j.IsolationLevel;
 import org.eclipse.rdf4j.IsolationLevels;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Namespace;
@@ -236,6 +237,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 			if (null == namespace || namespace.isEmpty()) {
 				// no implicit namespace was provided, try to get the default one
 				con = repo.getConnection();
+				con.setIsolationLevel(IsolationLevels.SERIALIZABLE);
 				ns = con.getNamespace(null);
 				if (null == ns) {
 					throw new IllegalStateException("No default namespace is available");
@@ -963,7 +965,11 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 		String clazz = s.getValue("name").stringValue();
 		Value v = s.getValue("superclass");
 		String sclazz = null != v ? v.stringValue() : OWL.THING.stringValue();
-		return new ClassItem(getImplicitNamespace(), clazz, sclazz);
+		//return new ClassItem(getImplicitNamespace(), clazz, sclazz);
+		if(clazz.contains("#"))
+			return new ClassItem(clazz.substring(0, clazz.indexOf("#") +1), clazz, sclazz);
+		else 
+			return new ClassItem(getImplicitNamespace(), clazz, sclazz);
 	}
 	
 	/**

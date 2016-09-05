@@ -2,10 +2,19 @@
 camApp.controller('homeController', [
 		'$scope',
 		'$http',
+        '$routeParams',
         '$q',
         'ngDialog',
-         function ($scope, $http,$q, $ngDialog) {
-             
+         function ($scope, $http, $routeParams, $q, $ngDialog) {
+             if(!isEmpty($routeParams.className)){
+                setTimeout(function(){ //CHIAMATA ASINCRONA PER RICARICARE GLI ASSET DELLA CLASSE
+                    $scope.currentNode={};
+                    $scope.currentNode.className=$routeParams.className;
+                    entityManager.getAssets($routeParams.className);
+                    $scope.newAssetVisible = true;
+                },0);
+                $scope.newAssetVisible = true;
+            }
              
         $scope.regexPattern = REGEX_PATTERN;
         $scope.invalidNameMsg = INVALID_NAME_MSG;
@@ -181,7 +190,11 @@ camApp.controller('detailController', [ '$scope', '$http', '$routeParams', '$loc
         function($scope, $http, $routeParams, $location,$q, $ngDialog) {
             if(isEmpty($routeParams.selectedAssetName)){
                 $location.path('/');
-            }   
+            }  
+            
+            if(!isEmpty($routeParams.className)){
+                $scope.className = $routeParams.className;
+            }  
             $scope.selectedAssetName = $routeParams.selectedAssetName;
             $scope.regexPattern = REGEX_PATTERN;
             $scope.invalidNameMsg = INVALID_NAME_MSG;
