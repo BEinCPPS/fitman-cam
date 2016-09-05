@@ -86,8 +86,12 @@ public class CAMRestImpl {
 	}
 
 	public static void setRelationship(RepositoryDAO dao, String name, String individualName, String referredName) {
-		dao.setRelationship(name, individualName, referredName);
-
+		List<PropertyValueItem> individualAttributes = dao.getIndividualAttributes(individualName);
+		List<PropertyValueItem> relFound = individualAttributes.stream().filter(item -> item.getNormalizedName().equalsIgnoreCase(name)).collect(Collectors.toList());
+		if(null != relFound && !relFound.isEmpty()){
+			throw new RuntimeException("This individual already has the property "+ name);
+		}
+			dao.setRelationship(name, individualName, referredName);
 	}
 
 	public static void deleteIndividual(RepositoryDAO dao, String assetName) {
@@ -114,7 +118,7 @@ public class CAMRestImpl {
 		List<PropertyValueItem> individualAttributes = dao.getIndividualAttributes(individualName);
 		List<PropertyValueItem> attrFound = individualAttributes.stream().filter(item -> item.getNormalizedName().equalsIgnoreCase(name)).collect(Collectors.toList());
 		if(null != attrFound && !attrFound.isEmpty()){
-			throw new RuntimeException("attribute "+ name+ " already set for this Individual");
+			throw new RuntimeException("This individual already has the property "+ name);
 		}
 		dao.setAttribute(name, individualName, value, Class.forName(type));
 	}
