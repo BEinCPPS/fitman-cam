@@ -12,6 +12,7 @@ camApp.directive('assetTable',  ['$compile', function($compile){
                 "iCookieDuration": 2419200, /* 1 month */
                 "bJQueryUI": true,
                 "bPaginate": false,
+                "bSort": false,
                 "bLengthChange": false,
                 "bFilter": false,
                 "bInfo": false,
