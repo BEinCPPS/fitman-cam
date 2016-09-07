@@ -79,7 +79,7 @@ camApp.directive('lazyLoadOptions',['$http', function($http) {
             // Control var to prevent infinite loop
             $scope.loaded = false;
             
-            $element.bind('mousedown keydown', function() {
+            $element.bind('mousedown', function() {
                              
                     if(!$scope.loaded) {
                         $http.get(BACK_END_URL_CONST+'/assets').success(function(data){
@@ -123,7 +123,7 @@ camApp.directive('lazyLoadClassesOptions', ['$http', function($http) {
             
             // Control var to prevent infinite loop
             $scope.loaded = false;
-            $element.bind('mousedown keydown', function() {
+            $element.bind('mousedown', function() {
                              
                     if(!$scope.loaded) {
                         $http.get(BACK_END_URL_CONST+'/classes').success(function(data){
