@@ -474,11 +474,6 @@ camApp.controller('newRelationshipController', [
         '$q',
 	    'ngDialog',
 		function ($scope, $http, $q, $ngDialog) {
-        $scope.dialogMgr = {
-            open : $scope.openErrorPanel,
-            dialog : $ngDialog
-        };    
-            
         $scope.relPanelTitle = "Add Relationship";
         $scope.invalidName = false;
         $scope.isEditing = false;
