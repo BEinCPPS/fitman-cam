@@ -1,4 +1,5 @@
 <div class="modal-dialog">
+     <dialogMgr></dialogMgr>
      <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close"  ng-click="closeNewRelationshipPanel()"><span aria-hidden="true">&times;</span></button>
@@ -14,7 +15,7 @@
              <!--<select ng-model="newRelationship.referredName" class="form-control" ng-click="loadReferredAssets" ng-options="asset.normalizedName as asset.normalizedName for asset in referredAssetList">
               </select>    -->
               
-               <select ng-model="newRelationship.referredName" ng-options="o.normalizedName as o.normalizedName for o in select.options" lazy-load-options="" data-options="select.options" class="form-control">
+               <select ng-model="newRelationship.referredName" ng-options="o.normalizedName as o.normalizedName for o in select.options" lazy-load-options="newRelationship.dialogMgr" data-options="select.options" class="form-control">
                    <option value=""> {{newRelationship.referredName}} </option>
     </select>
                

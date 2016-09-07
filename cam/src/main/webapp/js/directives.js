@@ -62,12 +62,12 @@ camApp.directive('assetTable',  ['$compile', function($compile){
     };
 }]);
 
-camApp.directive('lazyLoadOptions', ['$http', function($http) {
+camApp.directive('lazyLoadOptions',['$http', function($http) {
     return {
         restrict: 'EA',
         require: 'ngModel',
         scope: {
-            options: '='
+            options: '=',
         },
         link: function($scope, $element, $attrs, $ngModel){
             // Ajax loading notification
@@ -76,17 +76,17 @@ camApp.directive('lazyLoadOptions', ['$http', function($http) {
                     normalizedName: "Loading..."
                 }
             ];
-            
             // Control var to prevent infinite loop
             $scope.loaded = false;
             
-            $element.bind('mousedown', function() {
+            $element.bind('mousedown keydown', function() {
                              
                     if(!$scope.loaded) {
                         $http.get(BACK_END_URL_CONST+'/assets').success(function(data){
                             $scope.options = data;
                         }).error(function(error){
-                            alert(error);
+                            $scope.$parent.closeNewRelationshipPanel();
+                            $scope.$parent.openErrorPanel(error);
                         })
                                                 
                         // Prevent the load from occurring again
@@ -123,14 +123,14 @@ camApp.directive('lazyLoadClassesOptions', ['$http', function($http) {
             
             // Control var to prevent infinite loop
             $scope.loaded = false;
-            
-            $element.bind('mousedown', function() {
+            $element.bind('mousedown keydown', function() {
                              
                     if(!$scope.loaded) {
                         $http.get(BACK_END_URL_CONST+'/classes').success(function(data){
                             $scope.options = data;
                         }).error(function(error){
-                            alert(error);
+                            $scope.$parent.closeCreateClassPanel();
+                            $scope.$parent.openErrorPanel(error);
                         })
                                                 
                         // Prevent the load from occurring again
