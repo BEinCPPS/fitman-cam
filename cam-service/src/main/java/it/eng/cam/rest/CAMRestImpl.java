@@ -20,17 +20,20 @@ public class CAMRestImpl {
 	public static List<ClassItem> getClasses(RepositoryDAO dao, boolean checkNormalizedName) {
 		ClassItem root = getClassHierarchy(dao);
 		List<ClassItem> subClasses = root.getSubClasses();
-		if(!checkNormalizedName)
+		if (!checkNormalizedName)
 			return subClasses;
 		for (ClassItem classItem : subClasses) {
-			if(classItem.getNormalizedName().contains("#")){
+			if (classItem.getNormalizedName().contains("#")) {
 				String normName = classItem.getNormalizedName();
-				if(null != normName && normName.contains("#") && !normName.contains("system"));
-					normName= normName.substring(normName.indexOf("#")+1);
+				if (null != normName && normName.contains("#") && !normName.contains("system"))
+					;
+				normName = normName.substring(normName.indexOf("#") + 1);
 				classItem.setNormalizedName(normName);
 			}
 		}
-		return subClasses.stream().filter(item -> (item.getNamespace()).equalsIgnoreCase(SesameRepoManager.getNamespace())).collect(Collectors.toList());
+		return subClasses.stream()
+				.filter(item -> (item.getNamespace()).equalsIgnoreCase(SesameRepoManager.getNamespace()))
+				.collect(Collectors.toList());
 	}
 
 	public static List<IndividualItem> getIndividuals(RepositoryDAO dao) {
@@ -52,17 +55,17 @@ public class CAMRestImpl {
 	}
 
 	public static void createClass(RepositoryDAO dao, String name, String parentName) {
-		if (null!=parentName && "Thing".equalsIgnoreCase(parentName.trim()) && !isNormalized(parentName))
+		if (null != parentName && "Thing".equalsIgnoreCase(parentName.trim()) && !isNormalized(parentName))
 			parentName = normalize(parentName);
 		dao.createClass(name, parentName);
 	}
 
 	public static void moveClass(RepositoryDAO dao, String name, String parentName) {
-//		if (!isNormalized(parentName))
-//			parentName = normalize(parentName);
+		// if (!isNormalized(parentName))
+		// parentName = normalize(parentName);
 		dao.moveClass(name, parentName);
 	}
-	
+
 	public static void renameClass(RepositoryDAO dao, String oldName, String newName) {
 		dao.renameClass(oldName, newName);
 	}
@@ -87,11 +90,12 @@ public class CAMRestImpl {
 
 	public static void setRelationship(RepositoryDAO dao, String name, String individualName, String referredName) {
 		List<PropertyValueItem> individualAttributes = dao.getIndividualAttributes(individualName);
-		List<PropertyValueItem> relFound = individualAttributes.stream().filter(item -> item.getNormalizedName().equalsIgnoreCase(name)).collect(Collectors.toList());
-		if(null != relFound && !relFound.isEmpty()){
-			throw new RuntimeException("This individual already has the property "+ name);
+		List<PropertyValueItem> relFound = individualAttributes.stream()
+				.filter(item -> item.getNormalizedName().equalsIgnoreCase(name)).collect(Collectors.toList());
+		if (null != relFound && !relFound.isEmpty()) {
+			throw new RuntimeException("This individual already has the property " + name);
 		}
-			dao.setRelationship(name, individualName, referredName);
+		dao.setRelationship(name, individualName, referredName);
 	}
 
 	public static void deleteIndividual(RepositoryDAO dao, String assetName) {
@@ -116,13 +120,13 @@ public class CAMRestImpl {
 	public static void setAttribute(RepositoryDAO dao, String name, String individualName, String value, String type)
 			throws IllegalArgumentException, ClassNotFoundException, RuntimeException {
 		List<PropertyValueItem> individualAttributes = dao.getIndividualAttributes(individualName);
-		List<PropertyValueItem> attrFound = individualAttributes.stream().filter(item -> item.getNormalizedName().equalsIgnoreCase(name)).collect(Collectors.toList());
-		if(null != attrFound && !attrFound.isEmpty()){
-			throw new RuntimeException("This individual already has the property "+ name);
+		List<PropertyValueItem> attrFound = individualAttributes.stream()
+				.filter(item -> item.getNormalizedName().equalsIgnoreCase(name)).collect(Collectors.toList());
+		if (null != attrFound && !attrFound.isEmpty()) {
+			throw new RuntimeException("This individual already has the property " + name);
 		}
 		dao.setAttribute(name, individualName, value, Class.forName(type));
 	}
-	
 
 	public static boolean isModel(RepositoryDAO dao, Class clazz, String individualName) {
 		SesameRepoManager.releaseRepoDaoConn(dao);
@@ -139,6 +143,7 @@ public class CAMRestImpl {
 			return true;
 		return false;
 	}
+
 	/**
 	 * A name is normalized if contains the prefix
 	 * http://www.w3.org/2002/07/owl#
@@ -161,4 +166,18 @@ public class CAMRestImpl {
 		return normalizedName;
 	}
 
+	public static ClassItem deepSearchClasses(List<ClassItem> items, String className) {
+		ClassItem retval = null;
+		for (ClassItem classItem : items) {
+			if (classItem.getNormalizedName().equalsIgnoreCase(className)) {
+				return classItem;
+			}
+		}
+		for (ClassItem classItem : items) {
+			retval = deepSearchClasses(classItem.getSubClasses(), className);
+			if(retval!=null)
+				return retval;
+		}
+		return null;
+	}
 }

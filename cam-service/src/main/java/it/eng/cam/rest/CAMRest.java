@@ -77,14 +77,10 @@ public class CAMRest extends ResourceConfig {
 		try {
 			repoInstance = SesameRepoManager.getRepoInstance(getClass());
 			List<ClassItem> classes = CAMRestImpl.getClasses(repoInstance, false);
-			classes = classes.stream().filter(item -> item.getNormalizedName().equalsIgnoreCase(className))
-					.collect(Collectors.toList());
-			if (classes != null && classes.size() > 0) {
-				ClassItem superClass = classes.get(0);
-				return superClass.getSubClasses();
-			} else {
-				return new ArrayList<ClassItem>();
-			}
+				ClassItem deepSearchClass = CAMRestImpl.deepSearchClasses(classes, className);
+				if(deepSearchClass == null)
+					return new ArrayList<ClassItem>();
+				return deepSearchClass.getSubClasses();
 		} catch (Exception e) {
 			logger.error(e);
 			throw new WebApplicationException(e.getMessage());
