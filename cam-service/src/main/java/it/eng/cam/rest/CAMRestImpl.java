@@ -1,7 +1,15 @@
 package it.eng.cam.rest;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.ws.rs.WebApplicationException;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.ClassItem;
@@ -10,7 +18,7 @@ import it.eng.ontorepo.PropertyValueItem;
 import it.eng.ontorepo.RepositoryDAO;
 
 public class CAMRestImpl {
-
+	private static final Logger logger = LogManager.getLogger(CAMRestImpl.class.getName());
 	public static final String PREFIX = "http://www.w3.org/2002/07/owl#";
 
 	public static ClassItem getClassHierarchy(RepositoryDAO dao) {
@@ -179,5 +187,31 @@ public class CAMRestImpl {
 				return retval;
 		}
 		return null;
+	}
+	public static List<String> getTreePath(String className){
+		RepositoryDAO repoInstance = null;
+		try {
+			List<String> hierarchy = new ArrayList<String>(); 
+			hierarchy.add(className); //add input class as a first element
+			repoInstance = SesameRepoManager.getRepoInstance(CAMRestImpl.class);
+			List<ClassItem> classes = CAMRestImpl.getClasses(repoInstance, false);
+			ClassItem clazz = CAMRestImpl.deepSearchClasses(classes, className);
+			while(null!=clazz.getSuperClass() && !clazz.getSuperClass().getNormalizedName().contains("Thing")){
+				// Add recursively ancestors of any class to build path
+				String parentName = clazz.getSuperClass().getNormalizedName();
+				hierarchy.add(parentName);
+				clazz = CAMRestImpl.deepSearchClasses(classes, parentName);
+			}
+			List<String> retval = new ArrayList<String>();
+			for(int i = hierarchy.size()-1; i>=0; i--){//Invert order to find father in the first position
+				retval.add(hierarchy.get(i));
+			}
+			return retval;
+		} catch (Exception e) {
+			logger.error(e);
+			throw new WebApplicationException(e.getMessage());
+		} finally {
+			SesameRepoManager.releaseRepoDaoConn(repoInstance);
+		}
 	}
 }

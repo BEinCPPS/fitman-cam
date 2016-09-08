@@ -1003,6 +1003,15 @@ public class CAMRest extends ResourceConfig {
 	}
 
 	// FINE OWNERS
+	
+	//REST Utilities
+	
+	@GET
+	@Path("/classes/ancestors/{className}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<String> getTreePath(@PathParam("className") String className) {
+		return CAMRestImpl.getTreePath(className);
+	}
 
 	@GET
 	@Produces("text/html")
