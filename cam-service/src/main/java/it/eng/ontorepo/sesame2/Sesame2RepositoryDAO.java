@@ -1018,6 +1018,8 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 	private IndividualItem getIndividualItem(BindingSet s, String className) {
 		String name = s.getValue("name").stringValue();
 		String clazz = null != className ? className : s.getValue("class").stringValue();
+		if(name.contains("#"))
+			return new IndividualItem(name.substring(0, name.indexOf("#") +1), name, clazz);
 		return new IndividualItem(getImplicitNamespace(), name, clazz);
 	}
 	

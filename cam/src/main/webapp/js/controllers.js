@@ -293,6 +293,7 @@ camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$loca
 
         $scope.openNewRelationshipPanel = function () {
             $scope.attributeName = null;
+            $scope.assetToFilter =$scope.selectedAsset.name;
             $ngDialog.open({
                 template: 'pages/newRelationship.htm',
                 controller: 'newRelationshipController',

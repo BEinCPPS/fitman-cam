@@ -167,7 +167,7 @@ public class CAMRest extends ResourceConfig {
 			List<IndividualItem> assets = CAMRestImpl.getIndividuals(repoInstance);
 			if (null == assetName || "".equals(assetName.trim()))
 				return assets.stream()
-						.filter(asset -> !CAMRestImpl.isModel(repoInstance, getClass(), asset.getIndividualName()))
+						.filter(asset -> !CAMRestImpl.isModel(repoInstance, getClass(), asset.getIndividualName()) && asset.getNamespace().equalsIgnoreCase(SesameRepoManager.getNamespace()))
 						.collect(Collectors.toList());
 			return assets.stream().filter(asset -> asset.getNormalizedName().equalsIgnoreCase(assetName))
 					.collect(Collectors.toList());

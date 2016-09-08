@@ -84,6 +84,15 @@ camApp.directive('lazyLoadOptions', ['$http', function($http) {
                              
                     if(!$scope.loaded) {
                         $http.get(BACK_END_URL_CONST+'/assets').success(function(data){
+                            if(isEmpty(data)){
+                                $scope.options = data;
+                                return;
+                            }
+                            for(var i =0; i<data.length; i++){
+                                if(data[i].individualName==$scope.$parent.assetToFilter){
+                                    data.splice(i,1);
+                                }
+                            }
                             $scope.options = data;
                         }).error(function(error){
                             alert(error);
