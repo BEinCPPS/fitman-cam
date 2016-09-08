@@ -1010,6 +1010,8 @@ public class CAMRest extends ResourceConfig {
 	@Path("/classes/ancestors/{className}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<String> getTreePath(@PathParam("className") String className) {
+		if(null==className || "".equalsIgnoreCase(className.trim()))
+			return new ArrayList<String>();
 		return CAMRestImpl.getTreePath(className);
 	}
 
