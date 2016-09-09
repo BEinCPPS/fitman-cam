@@ -1037,8 +1037,19 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 		name = Util.getGlobalName(ns, name);
 		IndividualItem indiv = getIndividualDeclaration(name);
 		if (indiv != null) {
-			if (getDependencyCount(name) > 0) {
-				throw new IllegalStateException("Individual " + name + " cannot be deleted as it is referenced somewhere else");
+			List<BindingSet> dependencies = getDependencies(name);
+			if (dependencies.size() > 0) {
+				String msg = "Individual " + name + " cannot be deleted as it is referenced by: ";
+				for (BindingSet bindingSet : dependencies) {
+					String depName = bindingSet.getValue("name").stringValue();
+					if (depName.contains("#")){
+						depName=depName.substring(name.indexOf("#") +1);
+					}
+					msg+=depName+", ";
+				}
+				msg = msg.substring(0, msg.lastIndexOf(","));
+				
+				throw new IllegalStateException(msg);
 			}
 			
 			// when an individual is deleted, all its property assignments are deleted too:
@@ -1157,8 +1168,12 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 	private int getDependencyCount(String name)
 			throws RuntimeException {
 		// assuming arguments is an absolute URI
+	//	String qs = QUERY_DEPENDENCIES.replace(VARTAG, name);
+		return getDependencies(name).size();
+	}
+	private List<BindingSet> getDependencies(String name){
 		String qs = QUERY_DEPENDENCIES.replace(VARTAG, name);
-		return executeSelect(qs).size();
+		return executeSelect(qs);
 	}
 	
 	private void setProperty(String name, String individualName, String value, Class<?> type, boolean dataProp)
