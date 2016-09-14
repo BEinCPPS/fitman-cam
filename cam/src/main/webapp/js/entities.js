@@ -101,7 +101,7 @@ var EntityManager = (function () {
         }
 
         data.sort(function (a, b) {
-            return new Date(b.originalDate) - new  Date(a.originalDate);
+            return new Date(b.originalDate) - new Date(a.originalDate);
         });
 
         return data;
@@ -224,6 +224,22 @@ var EntityManager = (function () {
             });
     }
 
+    var getAncestorsList = function (className) {
+        if (!className) return;
+        $http.get(BACK_END_URL_CONST + '/classes/ancestors/' + className)
+            .success(function (data) {
+                $scope.ancestorsList = data;
+               
+
+            })
+            .error(function (error) {
+                $scope.ancestorsList = [];
+                $scope.openErrorPanel(error);
+               
+            });
+        
+    }
+
 
     var reset = function () {
         $scope = null;
@@ -250,7 +266,8 @@ var EntityManager = (function () {
         getClasses: getClasses,
         getChildrenForClass: getChildrenForClass,
         getAssetDetail: getAssetDetail,
-        getOwnersList: getOwnersList
+        getOwnersList: getOwnersList,
+        getAncestorsList: getAncestorsList
     }
     return EntityManager;
 })();

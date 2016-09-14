@@ -6,11 +6,42 @@ camApp.controller('homeController', [
         '$q',
         'ngDialog',
          function ($scope, $http, $routeParams, $q, $ngDialog) {
+        entityManager.init($scope, $http, $q);
+
+        function init() {
+            console.log($routeParams.className);
+            var classHistory = $scope.ancestorsList;
+            var htmlNodeList = angular.element.find('.ng-pristine')
+            for (var i in classHistory) {
+                var classItemSelected = classHistory[i];
+                simulateClick(htmlNodeList, classItemSelected);
+            }
+
+            function simulateClick(htmlNodeList, classItemSelected) {
+                for (var j in htmlNodeList) {
+                    var htmlNode = htmlNodeList[j];
+                    if (classItemSelected == htmlNode.textContent) {
+                        htmlNode.click();
+                        setTimeout(function () {
+                            var htmlNodeListNew = angular.element.find('.ng-pristine');
+                            if (htmlNodeList.length !== htmlNodeListNew.length)
+                                simulateClick(htmlNodeListNew, classHistory[i++]);
+                            else
+                                return;
+                        }, 100);
+                    }
+                } //end for j 
+            }
+        };
+
+        setTimeout(init, 1000); //TODO 
+
         if (!isEmpty($routeParams.className)) {
             setTimeout(function () { //CHIAMATA ASINCRONA PER RICARICARE GLI ASSET DELLA CLASSE
                 $scope.currentNode = {};
                 $scope.currentNode.className = $routeParams.className;
                 entityManager.getAssets($routeParams.className);
+                entityManager.getAncestorsList($routeParams.className);
                 $scope.newAssetVisible = true;
             }, 0);
             $scope.newAssetVisible = true;
@@ -55,10 +86,11 @@ camApp.controller('homeController', [
             "bDestroy": true
         };
 
-        entityManager.init($scope, $http, $q);
+
         $scope.assetList = [];
         entityManager.getClasses();
         $scope.newAssetVisible = false;
+
 
         //funzioni di utilità
         $scope.loadChildren = function () {
@@ -69,6 +101,7 @@ camApp.controller('homeController', [
             //				alert($scope.currentNode); //per recuperare il nodo da passare in input a servizio rest
             if ($scope.currentNode.className) {
                 entityManager.getAssets($scope.currentNode.className);
+
                 $scope.newAssetVisible = true;
             } else {
                 $scope.assetList = [];
@@ -293,7 +326,7 @@ camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$loca
 
         $scope.openNewRelationshipPanel = function () {
             $scope.attributeName = null;
-            $scope.assetToFilter =$scope.selectedAsset.name;
+            $scope.assetToFilter = $scope.selectedAsset.name;
             $ngDialog.open({
                 template: 'pages/newRelationship.htm',
                 controller: 'newRelationshipController',
