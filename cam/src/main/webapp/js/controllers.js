@@ -277,7 +277,7 @@ camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$loca
             "bInfo": true,
             "bDestroy": true,
             "oLanguage": {
-                "sSearch": "Filter: "
+                "sSearch": "Filter by "
                 }
         };
 
