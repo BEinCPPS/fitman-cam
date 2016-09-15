@@ -224,32 +224,38 @@ var EntityManager = (function () {
             });
     }
 
-    var getAncestorsList = function (className) {
+    var getAncestorsList = function (className, deferred) {
         if (!className) return;
         $http.get(BACK_END_URL_CONST + '/classes/ancestors/' + className)
             .success(function (data) {
                 $scope.ancestorsList = data;
-               
+                if (deferred)
+                    deferred.resolve(data);
+
 
             })
             .error(function (error) {
                 $scope.ancestorsList = [];
                 $scope.openErrorPanel(error);
-               
+                if (deferred)
+                    deferred.reject(error);
+
             });
-        
+
     }
 
 
     var reset = function () {
         $scope = null;
         $http = null;
+
     }
 
     var init = function ($scopeExt, $httpExt, $qExt) {
             $scope = $scopeExt;
             $http = $httpExt;
             $q = $qExt;
+
         }
         //Costructor
     var EntityManager = function () {
