@@ -70,7 +70,8 @@ camApp.controller('homeController', [
                 "aTargets": [3]
 			}, {
                 "mDataProp": "action",
-                "aTargets": [4]
+                "aTargets": [4],
+                 "bSortable": false
 			}];
 
         $scope.overrideOptions = {
@@ -79,11 +80,14 @@ camApp.controller('homeController', [
             /* 1 month */
             "bJQueryUI": true,
             "bPaginate": true,
-            "bSort": false,
+            "bSort": true,
             "bLengthChange": false,
             "bFilter": true,
             "bInfo": true,
-            "bDestroy": true
+            "bDestroy": true,
+            "oLanguage": {
+                "sSearch": "Filter: "
+                }
         };
 
 
@@ -258,7 +262,8 @@ camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$loca
             "aTargets": [2]
             }, {
             "mDataProp": "action",
-            "aTargets": [3]
+            "aTargets": [3],
+            "bSortable": false
             }];
 
         $scope.assetDetailOverrideOptions = {
@@ -270,7 +275,10 @@ camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$loca
             "bLengthChange": false,
             "bFilter": true,
             "bInfo": true,
-            "bDestroy": true
+            "bDestroy": true,
+            "oLanguage": {
+                "sSearch": "Filter: "
+                }
         };
 
         // funzioni di utilità

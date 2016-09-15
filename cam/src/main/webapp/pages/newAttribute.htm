@@ -6,10 +6,10 @@
       </div>
         <form name="newAttributeForm" ng-submit="" style="border:none;">
       <div class="modal-body">
-          <div class="row-fluid"><label>Name:</label> <input class="form-control" type="text" ng-model="newAttribute.name" name="name"  ng-pattern="regexPattern" ng-readonly="isEditing"></input>
+          <div class="row-fluid"><label>Property Name</label> <input class="form-control" type="text" ng-model="newAttribute.name" name="name"  ng-pattern="regexPattern" ng-readonly="isEditing"></input>
             <span  ng-show="newAttributeForm.name.$error.pattern">{{invalidNameMsg}}</span>    
             <span  ng-show="invalidName">{{nameIsMandatory}}</span> </div>
-         <div class="row-fluid"><label>Type:</label>
+         <div class="row-fluid"><label>Data Type</label>
         <select ng-model="newAttribute.type" class="form-control" ng-change="updateValueType()">
           <option value="java.lang.String">String</option>
           <option value="java.lang.Boolean">Boolean</option>
@@ -19,7 +19,7 @@
         </select>
         </div>
          
-       <div class="row-fluid"><label>Value:</label> 
+       <div class="row-fluid"><label>Value</label> 
         <div ng-switch="newAttribute.type">
            <input ng-switch-when="java.lang.String"  class="form-control" type="text" ng-model="newAttribute.value"></input>
 
