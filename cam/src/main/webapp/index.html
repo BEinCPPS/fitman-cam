@@ -6,14 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta charset="UTF-8">
 
-    <!-- load bootstrap and fontawesome via CDN -->
-    <!-- <link rel="stylesheet" -->
-    <!-- 	href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" /> -->
-
-    <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/themes/redmond/jquery-ui.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.8.2/css/jquery.dataTables.css">
+    <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/themes/redmond/jquery-ui.css"
+          rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css"
+          href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.8.2/css/jquery.dataTables.css">
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="css/lib/ngDialog.min.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
 
@@ -21,11 +20,14 @@
     <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>-->
     <script type="text/javascript" src=" https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 
-    <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.8.2/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+            src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.8.2/jquery.dataTables.min.js"></script>
     <script src="https://code.angularjs.org/1.5.3/angular.min.js"></script>
     <script src="https://code.angularjs.org/1.5.3/angular-route.min.js"></script>
     <script src="https://code.angularjs.org/1.5.3/angular-resource.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+            crossorigin="anonymous"></script>
     <script src="js/lib/ngDialog.min.js"></script>
     <script src="js/lib/ng-contextmenu.min.js"></script>
     <script src="js/constants.js"></script>
@@ -52,8 +54,8 @@
     <script src="js/directives/lazyLoadClassesOptions.js"></script>
     <script src="js/directives/lazyLoadOptions.js"></script>
     <script src="js/directives/ngRightClick.js"></script>
+    <script src="js/directives/treeview.js"></script>
     <!--DIRECTIVES-->
-    <script src="js/modules/treeview.js"></script>
     <script src="js/entities.js"></script>
     <script src="js/utils.js"></script>
 
@@ -61,22 +63,15 @@
 
 <body>
 
-    <header>
-        <!-- 		<nav class="navbar navbar-default"> -->
-        <!-- 			<div class="container"> -->
-        <!-- 				<ul class="nav navbar-nav navbar-right"> -->
-        <!-- 					<li><a href="#"><i class="fa fa-home"></i> Home</a></li> -->
-        <!-- 				</ul> -->
-        <!-- 			</div> -->
-        <!-- 		</nav> -->
-        <img id="cam-header" alt="" src="img/header.jpeg">
-    </header>
+<header>
+    <img id="cam-header" alt="" src="img/header.jpeg">
+</header>
 
-    <div class="container">
+<div class="container">
 
-        <div ng-view></div>
+    <div ng-view></div>
 
-    </div>
+</div>
 
 </body>
 
