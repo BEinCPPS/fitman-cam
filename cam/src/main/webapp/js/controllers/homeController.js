@@ -1,13 +1,13 @@
 camApp.controller('homeController', [
-		'$scope',
-        'Scopes',
-		'$http',
-        '$routeParams',
-        '$route',
-        '$q',
-        'ngDialog',
-        '$timeout',
-         function ($scope, Scopes, $http, $routeParams, $route, $q, $ngDialog, $timeout) {
+    '$scope',
+    'Scopes',
+    '$http',
+    '$routeParams',
+    '$route',
+    '$q',
+    'ngDialog',
+    '$timeout',
+    function ($scope, Scopes, $http, $routeParams, $route, $q, $ngDialog, $timeout) {
 
         Scopes.store('homeController', $scope);
         entityManager.init($scope, $http, $q);
@@ -52,26 +52,26 @@ camApp.controller('homeController', [
         $scope.regexPattern = REGEX_PATTERN;
         $scope.invalidNameMsg = INVALID_NAME_MSG;
         $scope.nameIsMandatory = NAME_IS_MANDATORY_MSG;
-   
+
 
         $scope.columnDefs = [{
 
-                "mDataProp": "asset",
-                "aTargets": [0]
-			},
+            "mDataProp": "asset",
+            "aTargets": [0]
+        },
             {
                 "mDataProp": "model",
                 "aTargets": [1]
-			}, {
+            }, {
                 "mDataProp": "owner",
                 "aTargets": [2]
-			}, {
+            }, {
                 "mDataProp": "created",
                 "aTargets": [3]
-			}, {
+            }, {
                 "mDataProp": "action",
                 "aTargets": [4]
-			}];
+            }];
 
         $scope.overrideOptions = {
             "bStateSave": true,
@@ -231,4 +231,40 @@ camApp.controller('homeController', [
 
         }
 
-}]);
+        $scope.collapseAllTreeNodes = function () {
+            $scope.classList.forEach(function (elem) {
+                elem.collapsed = true;
+            });
+        }
+
+        $scope.expandAllTreeNodes = function () {
+            $scope.classList.forEach(function (elem) {
+                elem.collapsed = false;
+            })
+        }
+
+        $scope.expandAncestors = function (elem) {
+            function search(array, name) {
+                for (var i in array) {
+                    if(array[i].className === elem)
+                        array[i].collapsed = false;
+                }
+            }
+
+            var deferred = $q.defer();
+            entityManager.getAncestorsList(elem, deferred);
+            var promise = deferred.promise;
+            promise.then(function (data) {
+                var dataStr = data + '';
+                var ancestors = dataStr.split(',');
+                for (var i = 0; i < ancestors.length - 2; i++) {
+                    search($scope.classList, ancestors[i]);
+                }
+            }, function (error) {
+                console.log(error);
+            });
+
+
+        }
+
+    }]);

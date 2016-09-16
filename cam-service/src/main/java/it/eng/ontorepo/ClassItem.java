@@ -94,7 +94,12 @@ public class ClassItem extends Tuple {
 	 * Reference Ontology. 
 	 * @return
 	 */
-	@JsonIgnore 
+	/**
+	 * @author ascatox 15/09/2016
+	 * It's really useful to obtain all classes and subclasses to create a Tree View
+	 *
+	 */
+	//@JsonIgnore
 	public List<ClassItem> getSubClasses() {
 		return children;
 	}

@@ -125,7 +125,9 @@ var EntityManager = (function () {
         for (var i in data) {
             var classItem = {
                 className: data[i].normalizedName,
-                classId: data[i].normalizedName
+                classId: data[i].normalizedName,
+                children: data[i].subClasses,
+                collapsed: true,
             }
             classes.push(classItem);
         }

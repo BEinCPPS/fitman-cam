@@ -489,7 +489,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 		}
 		List<PropertyValueItem> items = new ArrayList<PropertyValueItem>();
 		name = Util.getGlobalName(getImplicitNamespace(), name);
-		System.out.println("VARTAG: "+name);
+		//System.out.println("VARTAG: "+name);
 		String qs = QUERY_PROPS_FOR_INDIVIDUAL.replace(VARTAG, name);
 		String lastName = null;
 		List<BindingSet> results = executeSelect(qs);
