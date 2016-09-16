@@ -243,30 +243,23 @@ camApp.controller('homeController', [
         }
 
         $scope.expandAllTreeNodes = function (classes) {
-            if(!classes)
+            if (!classes)
                 classes = $scope.classList;
             for (var i in classes) {
                 var elem = classes[i];
                 elem.collapsed = false;
-                /*$scope.currentNode = elem;
-                var deferred = $q.defer();
-                entityManager.getChildrenForClass($scope.currentNode.className, deferred, true);
-                var promise = deferred.promise;
-                promise.then(function (data) {
-                    if ($scope.currentNode.children && $scope.currentNode.children.length > 0) {
-                        $scope.expandAllTreeNodes($scope.currentNode.children);
-                    }
-                });*/
+                if (elem.children && elem.children.length > 0)
+                    $scope.expandAllTreeNodes(elem.children);
             }
         }
 
         $scope.expandAncestors = function (elem) {
-            function search(array, name) {
+            function search(array, name, isLeaf) {
                 for (var i in array) {
                     if (array[i].className === name) {
                         array[i].collapsed = false;
-                        array[i].selected = 'selected';
-                        console.log(array[i].className);
+                        if (isLeaf)
+                            array[i].selected = 'selected';
                         return;
                     }
                     search(array[i].children, name);
@@ -280,7 +273,8 @@ camApp.controller('homeController', [
                 var dataStr = data + '';
                 var ancestors = dataStr.split(',');
                 for (var i = 0; i < ancestors.length; i++) {
-                    search($scope.classList, ancestors[i]);
+                    var isLeaf = ancestors.length - 1 === i;
+                    search($scope.classList, ancestors[i], isLeaf);
                 }
             }, function (error) {
                 console.log(error);

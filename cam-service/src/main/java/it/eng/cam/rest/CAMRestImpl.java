@@ -41,25 +41,6 @@ public class CAMRestImpl {
                 .collect(Collectors.toList());
     }
 
-    public static List<ClassItem> extractAllClasses(RepositoryDAO dao, boolean checkNormalizedName) {
-        List<ClassItem> classes = getClasses(dao, true);
-
-
-        return null;
-    }
-
-    public static void extractAllSubClasses(RepositoryDAO dao, List<ClassItem> classes) {
-        for (ClassItem clazz : classes) {
-            if (!clazz.getSubClasses().isEmpty()) { //Got SubClasses
-                extractAllSubClasses(dao, clazz.getSubClasses());
-            } else { // No SubClasses
-
-            }
-
-        }
-    }
-
-
     public static List<IndividualItem> getIndividuals(RepositoryDAO dao) {
         return dao.getIndividuals();
     }

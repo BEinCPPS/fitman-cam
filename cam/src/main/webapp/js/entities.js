@@ -92,7 +92,7 @@ var EntityManager = (function () {
             if (data[i].isModel == true) {
                 elementType = 'model';
             }
-            data[i].action = '<div class="inline-flex-item"> <button class="cam-table-button" ng-click="openRemoveAssetPanel(\'' + data[i].asset + '\', \'' + elementType + '\')' + '"> <i data-toggle="tooltip" title="Delete asset model" class="fa fa-remove cam-table-button"></i> </button>'
+            data[i].action = '<div class="inline-flex-item"> <button class="cam-table-button" ng-click="openRemoveAssetPanel(\'' + data[i].asset + '\', \'' + elementType + '\')' + '"> <i data-toggle="tooltip" title="Delete asset model" class="fa fa-trash cam-table-button"></i> </button>'
 
                 + '<a class="cam-icon-a" href="#/detail/' + data[i].asset + '/' + clazzName + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-search cam-table-button"></i> </a>';
 
@@ -115,6 +115,7 @@ var EntityManager = (function () {
         //TODO Address
             .success(function (data) {
                 $scope.classList = createClasses(data);
+                console.log($scope.classList);
                 if (deferred)
                     deferred.resolve(data);
 
@@ -133,13 +134,14 @@ var EntityManager = (function () {
             var classItem = {
                 className: data[i].normalizedName,
                 classId: data[i].normalizedName,
-                children: data[i].subClasses,
+                children: createClasses(data[i].subClasses),
                 collapsed: true,
             }
             classes.push(classItem);
         }
         return classes;
     }
+
 
     var getAssetDetail = function (name) {
         $http.get(BACK_END_URL_CONST + '/assets/' + name + '/attributes')
@@ -188,23 +190,18 @@ var EntityManager = (function () {
             });
     }
 
-    var getChildrenForClass = function (className, deferred, assetPresent) {
+    var getChildrenForClass = function (className) {
         $http.get(BACK_END_URL_CONST + '/classes/' + className)
             .success(function (data) {
                 var dataNotMySelf = removeClassMySelf(data, className);
                 if (!isEmpty(dataNotMySelf)) {
                     var classes = createClasses(dataNotMySelf);
                     $scope.currentNode.children = classes;
-                    if (deferred)
-                        deferred.resolve(classes);
                 }
-                if (!assetPresent)
-                    $scope.loadAsset();
+                $scope.loadAsset();
             })
             .error(function (error) {
                 $scope.openErrorPanel(error);
-                if (deferred)
-                    deferred.reject(error);
                 return null;
             });
     }
