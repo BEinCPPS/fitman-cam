@@ -26,7 +26,7 @@ camApp.controller('moveClassController', [
             $http.put(BACK_END_URL_CONST + '/classes/' + $scope.newClass.name, $scope.newClass)
                 .success(function (data, status) {
                     $ngDialog.close();
-                    Scopes.get('homeController').backToHomeWithAncestors($scope.newClass.parentName);
+                    Scopes.get('homeController').expandAncestors($scope.newClass.parentName);
                 }).error(function (err) {
                     $ngDialog.close();
                     $scope.openErrorPanel(err);

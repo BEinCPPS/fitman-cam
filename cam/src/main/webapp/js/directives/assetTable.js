@@ -16,7 +16,10 @@ camApp.directive('assetTable', ['$compile', function ($compile) {
                 "bLengthChange": false,
                 "bFilter": false,
                 "bInfo": false,
-                "bDestroy": true
+                "bDestroy": true,
+                "oLanguage": {
+                    "sSearch": "Filter:"
+                }
             };
         }
 

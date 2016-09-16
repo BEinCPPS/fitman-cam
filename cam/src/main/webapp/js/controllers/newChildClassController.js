@@ -36,7 +36,7 @@ camApp.controller('newChildClassController', [
             $http.post(BACK_END_URL_CONST + '/classes', $scope.newClass).success(function (data, status) {
                 $ngDialog.close();
                 //window.location.reload();
-                Scopes.get('homeController').backToHomeWithExpandedTree($scope.className);
+                Scopes.get('homeController').expandAncestors($scope.className);
 
             }).error(function (err) {
                 $ngDialog.close();

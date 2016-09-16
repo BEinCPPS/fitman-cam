@@ -94,10 +94,11 @@ var EntityManager = (function () {
             data[i].action = '<div class="inline-flex-item"> <button class="cam-table-button" ng-click="openRemoveAssetPanel(\'' + data[i].asset + '\', \'' + elementType + '\')' + '"> <i data-toggle="tooltip" title="Delete asset model" class="fa fa-remove cam-table-button"></i> </button>'
 
             + '<a class="cam-icon-a" href="#/detail/' + data[i].asset + '/' + clazzName + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-search cam-table-button"></i> </a>';
-            if (data[i].isModel == true) {
+
+
                 data[i].action += '<button class="cam-table-button" ng-click="openNewAssetPanel(\'' + data[i].asset + '\')' + '"> <i data-toggle="tooltip" title="Create new asset from this model" class="fa fa-plus cam-table-button"></i></div> </button>';
 
-            }
+
         }
 
         data.sort(function (a, b) {
@@ -108,7 +109,7 @@ var EntityManager = (function () {
     }
 
 
-    var getClasses = function () {
+    var getClasses = function (deferred) {
         $http.get(BACK_END_URL_CONST + '/classes') //http://localhost:8080/CAMService/assets
             //TODO Address
             .success(function (data) {

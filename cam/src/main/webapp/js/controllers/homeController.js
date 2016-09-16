@@ -12,38 +12,39 @@ camApp.controller('homeController', [
         Scopes.store('homeController', $scope);
         entityManager.init($scope, $http, $q);
 
-        $scope.init = function () {
-            var classHistory = $scope.ancestorsList;
-            var htmlNodeList = angular.element.find('.ng-pristine')
-            for (var i in classHistory) {
-                var classItemSelected = classHistory[i];
-                simulateClick(htmlNodeList, classItemSelected);
-            }
-
-            function simulateClick(htmlNodeList, classItemSelected) {
-                for (var j in htmlNodeList) {
-                    var htmlNode = htmlNodeList[j];
-                    if (classItemSelected == htmlNode.textContent) {
-                        htmlNode.click();
-                        $timeout(function () {
-                            var htmlNodeListNew = angular.element.find('.ng-pristine');
-                            if (htmlNodeList.length !== htmlNodeListNew.length)
-                                simulateClick(htmlNodeListNew, classHistory[i++]);
-                            else
-                                return;
-                        }, 100);
-                    }
-                }
-            }
-        }
-        $timeout($scope.init, 1000); //TODO 
+        // $scope.init = function () {
+        //     var classHistory = $scope.ancestorsList;
+        //     var htmlNodeList = angular.element.find('.ng-pristine')
+        //     for (var i in classHistory) {
+        //         var classItemSelected = classHistory[i];
+        //         simulateClick(htmlNodeList, classItemSelected);
+        //     }
+        //
+        //     function simulateClick(htmlNodeList, classItemSelected) {
+        //         for (var j in htmlNodeList) {
+        //             var htmlNode = htmlNodeList[j];
+        //             if (classItemSelected == htmlNode.textContent) {
+        //                 htmlNode.click();
+        //                 $timeout(function () {
+        //                     var htmlNodeListNew = angular.element.find('.ng-pristine');
+        //                     if (htmlNodeList.length !== htmlNodeListNew.length)
+        //                         simulateClick(htmlNodeListNew, classHistory[i++]);
+        //                     else
+        //                         return;
+        //                 }, 100);
+        //             }
+        //         }
+        //     }
+        // }
+        // $timeout($scope.init, 1000); //TODO
 
         if (!isEmpty($routeParams.className)) {
             setTimeout(function () { //CHIAMATA ASINCRONA PER RICARICARE GLI ASSET DELLA CLASSE
                 $scope.currentNode = {};
                 $scope.currentNode.className = $routeParams.className;
                 entityManager.getAssets($routeParams.className);
-                entityManager.getAncestorsList($routeParams.className);
+                //entityManager.getAncestorsList($routeParams.className);
+                $scope.expandAncestors($routeParams.className);
                 $scope.newAssetVisible = true;
             }, 0);
             $scope.newAssetVisible = true;
@@ -70,7 +71,8 @@ camApp.controller('homeController', [
                 "aTargets": [3]
             }, {
                 "mDataProp": "action",
-                "aTargets": [4]
+                "aTargets": [4],
+                "bSortable": false
             }];
 
         $scope.overrideOptions = {
@@ -79,11 +81,14 @@ camApp.controller('homeController', [
             /* 1 month */
             "bJQueryUI": true,
             "bPaginate": true,
-            "bSort": false,
+            "bSort": true,
             "bLengthChange": false,
             "bFilter": true,
             "bInfo": true,
-            "bDestroy": true
+            "bDestroy": true,
+            "oLanguage": {
+                "sSearch": "Filter: "
+            }
         };
 
 
@@ -246,9 +251,14 @@ camApp.controller('homeController', [
         $scope.expandAncestors = function (elem) {
             function search(array, name) {
                 for (var i in array) {
-                    if(array[i].className === elem)
+                    if (array[i].className === name) {
                         array[i].collapsed = false;
+                        console.log(array[i].className);
+                        return;
+                    }
+                    search(array[i].children, name);
                 }
+
             }
 
             var deferred = $q.defer();
@@ -257,14 +267,16 @@ camApp.controller('homeController', [
             promise.then(function (data) {
                 var dataStr = data + '';
                 var ancestors = dataStr.split(',');
-                for (var i = 0; i < ancestors.length - 2; i++) {
+                for (var i = 0; i < ancestors.length; i++) {
                     search($scope.classList, ancestors[i]);
                 }
             }, function (error) {
                 console.log(error);
             });
+        }
 
-
+        $scope.rebuildTree = function(){
+            entityManager.getClasses();
         }
 
     }]);

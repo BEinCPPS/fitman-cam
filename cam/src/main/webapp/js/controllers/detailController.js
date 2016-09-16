@@ -36,7 +36,8 @@ camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$loca
             "aTargets": [2]
             }, {
             "mDataProp": "action",
-            "aTargets": [3]
+            "aTargets": [3],
+            "bSortable": false
             }];
 
         $scope.assetDetailOverrideOptions = {
@@ -48,7 +49,11 @@ camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$loca
             "bLengthChange": false,
             "bFilter": true,
             "bInfo": true,
-            "bDestroy": true
+            "bDestroy": true,
+            "oLanguage": {
+                "sSearch": "Filter by "
+            }
+
         };
 
         // funzioni di utilità

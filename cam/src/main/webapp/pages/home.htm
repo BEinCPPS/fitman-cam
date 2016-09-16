@@ -15,62 +15,64 @@
 </script>
 
 <div class="row-fluid">
-
-
     <div class="cam-tree-container">
         <div
                 style="margin: 10px 10px 30px 0; padding: 10px; background-color: #EEEEEE; border-radius: 5px; font: 12px Tahoma;">
             <span><b>Asset Classes</b></span>
         </div>
+        <div id="newClass" style="margin: -30px 10px 40px 0; padding: 10px;  border-radius: 5px;">
 
-        <button type="button" data-toggle="tooltip" title="Expand All" ng-click="expandAllTreeNodes()">
-            <i class="fa fa-plus">Expand All</i>
-        </button>
+            <button type="button" data-toggle="tooltip" title="New Class" class="cam-btn-add-container float-left"
+                    ng-click="openNewClassPanel()">
+                <i class="fa fa-plus"> New Class</i>
+            </button>
 
-        <button type="button" data-toggle="tooltip" title="Collapse All" ng-click="collapseAllTreeNodes()">
-            <i class="fa fa-plus"> CollapseAll</i>
-        </button>
-        <div data-angular-treeview="true"
-             data-tree-model="classList"
-             data-node-id="classId"
-             data-node-label="className"
-             data-node-children="children">
         </div>
 
-        <button type="button" data-toggle="tooltip" title="New Class" class="cam-btn-add-container float-left"
-                ng-click="openNewClassPanel()">
-            <i class="fa fa-plus"> New Class</i>
-        </button>
-    </div>
+        <div id="button-tree-controllers">
+            <button type="button" class="btn-mini" data-toggle="tooltip" title="Expand" ng-click="expandAllTreeNodes()">
+                <i class="fa fa-chevron-down" aria-hidden="true"></i>
+            </button>
 
+            <button type="button" class="btn-mini" data-toggle="tooltip" title="Collapse" ng-click="collapseAllTreeNodes()">
+                <i class="fa fa-chevron-up" aria-hidden="true"></i>
+            </button>
+
+        </div>
+        <div data-angular-treeview="true" data-tree-model="classList"
+             data-node-id="classId" data-node-label="className"
+             data-node-children="children"></div>
+
+
+    </div>
 
     <div name="asset-table-container" class="cam-table-container">
         <div style="border-left: 0.1em solid #CCC; padding-left: 10px;">
             <div
-                    style="margin: 10px 0 30px 0; padding: 10px; background-color: #EEEEEE; border-radius: 5px; font: 12px Tahoma;">
-                <span><b>Assets of class</b> : {{currentNode.className}}</span>
+                    style="margin: 10px 10px 30px 0; padding: 10px; background-color: #EEEEEE; border-radius: 5px; font: 12px Tahoma;">
+                <span><b>Class</b> : {{currentNode.className}}</span>
+            </div>
+
+            <div id="newAssetModal" style="margin: -30px 10px 40px 0; padding: 10px;  border-radius: 5px;">
+
+                <button type="button" data-toggle="tooltip" title="New Asset" class="cam-btn-add-container  float-left"
+                        ng-click="openNewAssetModelPanel()" ng-show="newAssetVisible">
+                    <i class="fa fa-plus" data-toggle="modal" data-target="#newAttributeLabel"> New Asset</i>
+                </button>
             </div>
             <table asset-table="overrideOptions" aa-data="assetList"
                    ao-column-defs="columnDefs" class="cam-data-table" class="table">
                 <thead>
                 <tr>
                     <th style="width: 170px">Asset</th>
-                    <!--<th style="width: 150px">Class</th>-->
                     <th style="width: 170px">Model</th>
                     <th style="width: 175px">Owner</th>
                     <th style="width: 150px">Created</th>
-                    <th style="width: 168px">Actions</th>
+                    <th style="width: 168px">Action</th>
                 </tr>
                 </thead>
             </table>
-            <!-- 			<div class="cam-btn-add-container"><input type="image" title="New Asset Model" src="img/plus.png"/></div> -->
-            <div id="newAssetModal"></div>
-            <!--	<button type="button" data-toggle="tooltip" title="New Asset Model" class="cam-btn-add-container"><i class="fa fa-plus-circle" data-toggle="modal" data-target="#myModal"> New asset model</i></button>-->
 
-            <button type="button" data-toggle="tooltip" title="New Asset Model" class="cam-btn-add-container"
-                    ng-click="openNewAssetModelPanel()" ng-show="newAssetVisible">
-                <i class="fa fa-plus" data-toggle="modal" data-target="#newAttributeLabel"> New Asset Model</i>
-            </button>
         </div>
     </div>
 

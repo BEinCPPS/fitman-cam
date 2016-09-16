@@ -30,7 +30,7 @@ camApp.controller('confirmDeleteController', [
                     var dataStr = datas + "";
                     var ancestors = dataStr.split(',');
                     $http.delete(BACK_END_URL_CONST + urlFragment + $scope.elementToDelete).success(function (data, status) {
-                        Scopes.get('homeController').backToHomeWithExpandedTree(ancestors[ancestors.length - 2]);
+                        Scopes.get('homeController').expandAncestors(ancestors[ancestors.length - 2]);
                         $ngDialog.close();
                     }).error(function (err) {
                         $ngDialog.close();
