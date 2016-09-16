@@ -242,10 +242,22 @@ camApp.controller('homeController', [
             });
         }
 
-        $scope.expandAllTreeNodes = function () {
-            $scope.classList.forEach(function (elem) {
+        $scope.expandAllTreeNodes = function (classes) {
+            if(!classes)
+                classes = $scope.classList;
+            for (var i in classes) {
+                var elem = classes[i];
                 elem.collapsed = false;
-            })
+                /*$scope.currentNode = elem;
+                var deferred = $q.defer();
+                entityManager.getChildrenForClass($scope.currentNode.className, deferred, true);
+                var promise = deferred.promise;
+                promise.then(function (data) {
+                    if ($scope.currentNode.children && $scope.currentNode.children.length > 0) {
+                        $scope.expandAllTreeNodes($scope.currentNode.children);
+                    }
+                });*/
+            }
         }
 
         $scope.expandAncestors = function (elem) {
@@ -253,12 +265,12 @@ camApp.controller('homeController', [
                 for (var i in array) {
                     if (array[i].className === name) {
                         array[i].collapsed = false;
+                        array[i].selected = 'selected';
                         console.log(array[i].className);
                         return;
                     }
                     search(array[i].children, name);
                 }
-
             }
 
             var deferred = $q.defer();
@@ -274,9 +286,4 @@ camApp.controller('homeController', [
                 console.log(error);
             });
         }
-
-        $scope.rebuildTree = function(){
-            entityManager.getClasses();
-        }
-
     }]);

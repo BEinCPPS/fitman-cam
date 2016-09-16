@@ -15,13 +15,13 @@ var EntityManager = (function () {
                             $scope.assetList = formatAssetListTable(res, name);
                         });
                     }).error(function (error) {
-                        $scope.openErrorPanel(error);
-                    });
+                    $scope.openErrorPanel(error);
+                });
                 //var a = createAssets(data);
                 //$scope.assetList = formatAssetListTable(a);
             }).error(function (error) {
-                $scope.openErrorPanel(error);
-            });
+            $scope.openErrorPanel(error);
+        });
     }
 
 
@@ -76,10 +76,11 @@ var EntityManager = (function () {
                         $scope.openErrorPanel(error);
 
                     }).finally(function () {
-                        fetchData();
-                    });
+                    fetchData();
+                });
             }
         }
+
         fetchData();
     }
 
@@ -93,10 +94,10 @@ var EntityManager = (function () {
             }
             data[i].action = '<div class="inline-flex-item"> <button class="cam-table-button" ng-click="openRemoveAssetPanel(\'' + data[i].asset + '\', \'' + elementType + '\')' + '"> <i data-toggle="tooltip" title="Delete asset model" class="fa fa-remove cam-table-button"></i> </button>'
 
-            + '<a class="cam-icon-a" href="#/detail/' + data[i].asset + '/' + clazzName + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-search cam-table-button"></i> </a>';
+                + '<a class="cam-icon-a" href="#/detail/' + data[i].asset + '/' + clazzName + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-search cam-table-button"></i> </a>';
 
 
-                data[i].action += '<button class="cam-table-button" ng-click="openNewAssetPanel(\'' + data[i].asset + '\')' + '"> <i data-toggle="tooltip" title="Create new asset from this model" class="fa fa-plus cam-table-button"></i></div> </button>';
+            data[i].action += '<button class="cam-table-button" ng-click="openNewAssetPanel(\'' + data[i].asset + '\')' + '"> <i data-toggle="tooltip" title="Create new asset from this model" class="fa fa-plus cam-table-button"></i></div> </button>';
 
 
         }
@@ -111,12 +112,17 @@ var EntityManager = (function () {
 
     var getClasses = function (deferred) {
         $http.get(BACK_END_URL_CONST + '/classes') //http://localhost:8080/CAMService/assets
-            //TODO Address
+        //TODO Address
             .success(function (data) {
                 $scope.classList = createClasses(data);
+                if (deferred)
+                    deferred.resolve(data);
+
             })
             .error(function (error) {
                 $scope.openErrorPanel(error);
+                if (deferred)
+                    deferred.reject(error);
             });
 
     }
@@ -182,23 +188,23 @@ var EntityManager = (function () {
             });
     }
 
-    var getChildrenForClass = function (className) {
+    var getChildrenForClass = function (className, deferred, assetPresent) {
         $http.get(BACK_END_URL_CONST + '/classes/' + className)
             .success(function (data) {
                 var dataNotMySelf = removeClassMySelf(data, className);
                 if (!isEmpty(dataNotMySelf)) {
                     var classes = createClasses(dataNotMySelf);
                     $scope.currentNode.children = classes;
-
+                    if (deferred)
+                        deferred.resolve(classes);
                 }
-                //else {
-                //alert("Assets for: " + className);
-                $scope.loadAsset();
-                //}
-
+                if (!assetPresent)
+                    $scope.loadAsset();
             })
             .error(function (error) {
                 $scope.openErrorPanel(error);
+                if (deferred)
+                    deferred.reject(error);
                 return null;
             });
     }
@@ -255,12 +261,12 @@ var EntityManager = (function () {
     }
 
     var init = function ($scopeExt, $httpExt, $qExt) {
-            $scope = $scopeExt;
-            $http = $httpExt;
-            $q = $qExt;
+        $scope = $scopeExt;
+        $http = $httpExt;
+        $q = $qExt;
 
-        }
-        //Costructor
+    }
+    //Costructor
     var EntityManager = function () {
         reset();
     }
