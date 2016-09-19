@@ -1,10 +1,11 @@
 camApp.controller('moveClassController', [
-		'$scope',
-        'Scopes',
-		'$http',
-        '$q',
-	    'ngDialog',
-		function ($scope, Scopes, $http, $q, $ngDialog) {
+    '$scope',
+    'Scopes',
+    '$http',
+    '$q',
+    'ngDialog',
+    '$timeout'
+    function ($scope, Scopes, $http, $q, $ngDialog, $timeout) {
         $scope.isNewClassNameReadonly = true;
         $scope.isParentNameReadonly = false;
         $scope.closeCreateClassPanel = function () {
@@ -26,10 +27,13 @@ camApp.controller('moveClassController', [
             $http.put(BACK_END_URL_CONST + '/classes/' + $scope.newClass.name, $scope.newClass)
                 .success(function (data, status) {
                     $ngDialog.close();
-                    Scopes.get('homeController').expandAncestors($scope.newClass.parentName);
+                    $route.reload();
+                    $timeout(function () {
+                        Scopes.get('homeController').expandAncestors($scope.newClass.parentName);
+                    }, 1000);
                 }).error(function (err) {
-                    $ngDialog.close();
-                    $scope.openErrorPanel(err);
-                });
+                $ngDialog.close();
+                $scope.openErrorPanel(err);
+            });
         }
-        }]);
+    }]);

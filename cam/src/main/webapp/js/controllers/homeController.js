@@ -254,7 +254,7 @@ camApp.controller('homeController', [
         }
 
         $scope.expandAncestors = function (elem) {
-            function search(array, name, isLeaf) {
+            function search(array, name) {
                 for (var i in array) {
                     if (array[i].className === name) {
                         array[i].collapsed = false;
@@ -265,16 +265,16 @@ camApp.controller('homeController', [
                     search(array[i].children, name);
                 }
             }
-
             var deferred = $q.defer();
             entityManager.getAncestorsList(elem, deferred);
             var promise = deferred.promise;
+            var isLeaf = false
             promise.then(function (data) {
                 var dataStr = data + '';
                 var ancestors = dataStr.split(',');
                 for (var i = 0; i < ancestors.length; i++) {
-                    var isLeaf = ancestors.length - 1 === i;
-                    search($scope.classList, ancestors[i], isLeaf);
+                    isLeaf = ancestors.length - 1 == i ;
+                    search($scope.classList, ancestors[i]);
                 }
             }, function (error) {
                 console.log(error);

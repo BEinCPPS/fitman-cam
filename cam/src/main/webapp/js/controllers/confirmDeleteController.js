@@ -1,10 +1,12 @@
 camApp.controller('confirmDeleteController', [
-		'$scope',
-        'Scopes',
-		'$http',
-        '$q',
-	    'ngDialog',
-		function ($scope, Scopes, $http, $q, $ngDialog) {
+    '$scope',
+    'Scopes',
+    '$http',
+    '$q',
+    'ngDialog',
+    '$route',
+    '$timeout',
+    function ($scope, Scopes, $http, $q, $ngDialog, $route, $timeout) {
         //$scope.elementToDelete;
         //$scope.typetoDelete;
         $scope.closeConfirmDeletePanel = function () {
@@ -30,8 +32,11 @@ camApp.controller('confirmDeleteController', [
                     var dataStr = datas + "";
                     var ancestors = dataStr.split(',');
                     $http.delete(BACK_END_URL_CONST + urlFragment + $scope.elementToDelete).success(function (data, status) {
-                        Scopes.get('homeController').expandAncestors(ancestors[ancestors.length - 2]);
                         $ngDialog.close();
+                        $route.reload();
+                        $timeout(function () {
+                            Scopes.get('homeController').expandAncestors(ancestors[ancestors.length - 2]);
+                        }, 1000);
                     }).error(function (err) {
                         $ngDialog.close();
                         $scope.openErrorPanel(err);
@@ -42,8 +47,10 @@ camApp.controller('confirmDeleteController', [
                 });
             } else
                 $http.delete(BACK_END_URL_CONST + urlFragment + $scope.elementToDelete).success(function (data, status) {
-                    if ($scope.detail)
+                    if ($scope.detail) {
+                        $roue.reload();
                         $scope.entityManager.getAssetDetail($scope.individualName);
+                    }
                     else
                         $scope.loadChildren();
                     $ngDialog.close();
@@ -53,4 +60,4 @@ camApp.controller('confirmDeleteController', [
                 });
 
         }
-}]);
+    }]);

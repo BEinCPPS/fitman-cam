@@ -4,7 +4,9 @@ camApp.controller('newChildClassController', [
 		'$http',
         '$q',
 	    'ngDialog',
-		function ($scope, Scopes, $http, $q, $ngDialog) {
+        '$route',
+        '$timeout',
+		function ($scope, Scopes, $http, $q, $ngDialog, $route, $timeout) {
         $scope.isNewClassReadonly = false;
         $scope.isParentNameReadonly = true;
         $scope.closeCreateClassPanel = function () {
@@ -35,8 +37,10 @@ camApp.controller('newChildClassController', [
             }
             $http.post(BACK_END_URL_CONST + '/classes', $scope.newClass).success(function (data, status) {
                 $ngDialog.close();
-                //window.location.reload();
-                Scopes.get('homeController').expandAncestors($scope.className);
+                $route.reload();
+                $timeout(function () {
+                    Scopes.get('homeController').expandAncestors($scope.className);
+                },1000);
 
             }).error(function (err) {
                 $ngDialog.close();
