@@ -12,38 +12,11 @@ camApp.controller('homeController', [
         Scopes.store('homeController', $scope);
         entityManager.init($scope, $http, $q);
 
-        // $scope.init = function () {
-        //     var classHistory = $scope.ancestorsList;
-        //     var htmlNodeList = angular.element.find('.ng-pristine')
-        //     for (var i in classHistory) {
-        //         var classItemSelected = classHistory[i];
-        //         simulateClick(htmlNodeList, classItemSelected);
-        //     }
-        //
-        //     function simulateClick(htmlNodeList, classItemSelected) {
-        //         for (var j in htmlNodeList) {
-        //             var htmlNode = htmlNodeList[j];
-        //             if (classItemSelected == htmlNode.textContent) {
-        //                 htmlNode.click();
-        //                 $timeout(function () {
-        //                     var htmlNodeListNew = angular.element.find('.ng-pristine');
-        //                     if (htmlNodeList.length !== htmlNodeListNew.length)
-        //                         simulateClick(htmlNodeListNew, classHistory[i++]);
-        //                     else
-        //                         return;
-        //                 }, 100);
-        //             }
-        //         }
-        //     }
-        // }
-        // $timeout($scope.init, 1000); //TODO
-
         if (!isEmpty($routeParams.className)) {
             setTimeout(function () { //CHIAMATA ASINCRONA PER RICARICARE GLI ASSET DELLA CLASSE
                 $scope.currentNode = {};
                 $scope.currentNode.className = $routeParams.className;
                 entityManager.getAssets($routeParams.className);
-                //entityManager.getAncestorsList($routeParams.className);
                 $scope.expandAncestors($routeParams.className);
                 $scope.newAssetVisible = true;
             }, 0);
@@ -55,11 +28,12 @@ camApp.controller('homeController', [
         $scope.nameIsMandatory = NAME_IS_MANDATORY_MSG;
 
 
-        $scope.columnDefs = [{
+        $scope.columnDefs = [
 
-            "mDataProp": "asset",
-            "aTargets": [0]
-        },
+            {
+                "mDataProp": "asset",
+                "aTargets": [0],
+            },
             {
                 "mDataProp": "model",
                 "aTargets": [1]
@@ -88,6 +62,9 @@ camApp.controller('homeController', [
             "bDestroy": true,
             "oLanguage": {
                 "sSearch": "Filter: "
+            },
+            "fnDrawCallback": function () {
+                $scope.addTooltipToAssetModel();
             }
         };
 
@@ -253,6 +230,28 @@ camApp.controller('homeController', [
             }
         }
 
+        $scope.addTooltipToAssetModel = function () {
+
+            function addTooltip(htmlObj) {
+                var value = htmlObj.text();
+                htmlObj.attr('data-toggle', 'tooltip');
+                htmlObj.attr('data-container', 'body');
+                htmlObj.attr('title', value);
+                if (value && value.length > 20) {
+                    value = value.substring(0, 20).concat('...');
+                    htmlObj.text(value);
+                }
+            }
+
+            var tableAssetElems = angular.element('.sorting_1');
+            angular.forEach(tableAssetElems, function (value, key) {
+                addTooltip(angular.element(value));
+                addTooltip(angular.element(value).next())
+            });
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+
+
         $scope.expandAncestors = function (elem) {
             function search(array, name) {
                 for (var i in array) {
@@ -265,6 +264,7 @@ camApp.controller('homeController', [
                     search(array[i].children, name);
                 }
             }
+
             var deferred = $q.defer();
             entityManager.getAncestorsList(elem, deferred);
             var promise = deferred.promise;
@@ -273,11 +273,13 @@ camApp.controller('homeController', [
                 var dataStr = data + '';
                 var ancestors = dataStr.split(',');
                 for (var i = 0; i < ancestors.length; i++) {
-                    isLeaf = ancestors.length - 1 == i ;
+                    isLeaf = ancestors.length - 1 == i;
                     search($scope.classList, ancestors[i]);
                 }
             }, function (error) {
                 console.log(error);
             });
+
         }
-    }]);
+    }])
+;

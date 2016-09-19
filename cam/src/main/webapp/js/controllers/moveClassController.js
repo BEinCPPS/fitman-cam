@@ -4,7 +4,7 @@ camApp.controller('moveClassController', [
     '$http',
     '$q',
     'ngDialog',
-    '$timeout'
+    '$timeout',
     function ($scope, Scopes, $http, $q, $ngDialog, $timeout) {
         $scope.isNewClassNameReadonly = true;
         $scope.isParentNameReadonly = false;

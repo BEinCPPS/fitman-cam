@@ -28,8 +28,7 @@
                                 a.currentNode && a.currentNode.selected && (a.currentNode.selected = void 0);
                                 c.selected = "selected";
                                 a.currentNode = c;
-                               a.assetList = a.loadChildren(); //TODO
-
+                                a.assetList = a.loadChildren(); //TODO
                             },
                         a.classRightClicked = function (event) {
                             a.changeBackground(event);

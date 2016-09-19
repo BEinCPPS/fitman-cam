@@ -61,6 +61,7 @@ var EntityManager = (function () {
 
                             }
                         }
+
                         var asset = {
                             asset: cur.individualName,
                             created: created,
@@ -68,7 +69,8 @@ var EntityManager = (function () {
                             model: model || "",
                             owner: owned,
                             class: cur.className,
-                            isModel: isModel
+                            isModel: isModel,
+                            index : i,
                         };
                         result.push(asset);
                     })
