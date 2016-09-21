@@ -21,14 +21,14 @@ camApp.controller('newAttributeController', [
             type: ""
         };
 
-        $scope.changeName = function (){
+        $scope.changeName = function () {
             $scope.isAutocomplete = false;
         }
 
         $scope.updateValueType = function ($item, $model, $label) {
             $scope.newAttribute.value = '';
             if ($item) {
-                 $scope.newAttribute.name = $item.normalizedName;
+                $scope.newAttribute.name = $item.normalizedName;
                 $scope.newAttribute.type = $item.propertyType;
                 $scope.isAutocomplete = true;
             } else
