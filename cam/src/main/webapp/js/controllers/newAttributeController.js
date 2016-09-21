@@ -82,6 +82,7 @@ camApp.controller('newAttributeController', [
             }
             $http.post(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/attributes', $scope.newAttribute).success(function (data, status) {
                 entityManager.getAssetDetail($scope.selectedAssetName);
+                entityManager.getAttributes();
                 $ngDialog.close();
             }).error(function (err) {
                 $ngDialog.close();
