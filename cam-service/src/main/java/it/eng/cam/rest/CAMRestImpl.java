@@ -187,7 +187,8 @@ public class CAMRestImpl {
     public static List<PropertyDeclarationItem> getAttributes(RepositoryDAO dao) {
         List<PropertyDeclarationItem> attributes = dao.getAttributes();
         List<PropertyDeclarationItem> collectedAttributes = attributes.stream()
-                .filter(attr -> attr.getNamespace().equalsIgnoreCase(SesameRepoManager.getNamespace()))
+                .filter(attr -> (attr.getNamespace().equalsIgnoreCase(SesameRepoManager.getNamespace())
+                        && !isURI(attr.getNormalizedName())))
                 .collect(Collectors.toList());
         return collectedAttributes;
     }
@@ -224,6 +225,12 @@ public class CAMRestImpl {
         if (null != normName && normName.contains("#") && !normName.contains("system"))
             return normName.substring(normName.indexOf("#") + 1);
         return normName;
+    }
+
+    private static boolean isURI(String normName) {
+        if (null != normName && normName.contains("#"))
+            return true;
+        return false;
     }
 
 

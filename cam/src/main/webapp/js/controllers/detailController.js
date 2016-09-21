@@ -1,5 +1,6 @@
-camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$location', '$q', 'ngDialog',
-        function ($scope, $http, $routeParams, $location, $q, $ngDialog) {
+camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$location', '$q', 'ngDialog', 'Scopes','ngNotifier',
+    function ($scope, $http, $routeParams, $location, $q, $ngDialog, Scopes, ngNotifier) {
+        Scopes.store('detailController', $scope);
         if (isEmpty($routeParams.selectedAssetName)) {
             $location.path('/');
         }
@@ -28,17 +29,17 @@ camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$loca
         $scope.assetDetailColumnDefs = [{
             "mDataProp": "type",
             "aTargets": [0]
-            }, {
+        }, {
             "mDataProp": "name",
             "aTargets": [1]
-            }, {
+        }, {
             "mDataProp": "value",
             "aTargets": [2]
-            }, {
+        }, {
             "mDataProp": "action",
             "aTargets": [3],
             "bSortable": false
-            }];
+        }];
 
         $scope.assetDetailOverrideOptions = {
             "bStateSave": true,
@@ -55,6 +56,8 @@ camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$loca
             }
 
         };
+
+        entityManager.getAttributes();
 
         // funzioni di utilità
 
@@ -116,7 +119,7 @@ camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$loca
                 scope: $scope
             });
 
-        }
+        };
 
         $scope.openRemovePropertyPanel = function (elementToDelete, typeToDelete, individualName) {
             $scope.elementToDelete = elementToDelete;
@@ -129,7 +132,7 @@ camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$loca
                 controller: 'confirmDeleteController',
                 scope: $scope
             });
-        }
+        };
 
         $scope.openErrorPanel = function (err) {
             $scope.errorMsg = err;
@@ -138,7 +141,8 @@ camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$loca
                 controller: 'openErrorController',
                 scope: $scope
             });
+            ngNotifier.notifyError($scope.errorMsg);
 
-        }
+        };
 
-        }]);
+    }]);

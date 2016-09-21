@@ -14,15 +14,21 @@ camApp.controller('newAttributeController', [
         $scope.valueIsMandatory = false;
         $scope.typeIsMandatory = false;
         $scope.isEditing = false;
+        $scope.isAutocomplete = false;
         $scope.newAttribute = {
             name: "",
             value: "",
             type: ""
         };
 
-        $scope.updateValueType = function () {
-
+        $scope.updateValueType = function ($item, $model, $label) {
             $scope.newAttribute.value = '';
+            if ($item) {
+                $scope.newAttribute.name = $item.normalizedName;
+                $scope.newAttribute.type = $item.propertyType;
+                $scope.isAutocomplete = true;
+            } else
+                $scope.isAutocomplete = false;
         }
 
         $scope.closeNewAttributePanel = function () {
@@ -77,11 +83,10 @@ camApp.controller('newAttributeController', [
                 $ngDialog.close();
                 $scope.openErrorPanel(err);
             });
-        }
+        };
 
-        $scope.attributes = function () {
-            entityManager.getAttributes();
-        }
+        $scope.attributes = Scopes.get('detailController').attributes;
+
     }]);
 
 
