@@ -67,7 +67,7 @@ var EntityManager = (function () {
                             created: created,
                             originalDate: myDate,
                             model: model || "",
-                            owner: owned,
+                            owner: owned || "",
                             class: cur.className,
                             isModel: isModel,
                             index: i,

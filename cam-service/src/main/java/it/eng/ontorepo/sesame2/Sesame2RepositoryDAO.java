@@ -831,7 +831,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         Literal createdValue = vf.createLiteral(new Date());
         statements.add(vf.createStatement(assetUri, createdUri, createdValue));
 
-        if (null != ownerName) {
+        if (null != ownerName && !ownerName.isEmpty()) {
             if (!Util.isLocalName(ownerName)) {
                 throw new IllegalArgumentException("Owner must not be qualified by a namespace: " + ownerName);
             }
@@ -895,7 +895,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         URI modelUri = vf.createURI(modelName);
         statements.add(vf.createStatement(assetUri, instanceUri, modelUri));
 
-        if (null != ownerName) {
+        if (null != ownerName && !ownerName.isEmpty()) {
             if (!Util.isLocalName(ownerName)) {
                 throw new IllegalArgumentException("Owner must not be qualified by a namespace: " + ownerName);
             }
