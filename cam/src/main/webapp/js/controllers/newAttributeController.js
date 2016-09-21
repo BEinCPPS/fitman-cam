@@ -1,10 +1,10 @@
 camApp.controller('newAttributeController', [
-		'$scope',
-        'Scopes',
-		'$http',
-        '$q',
-	    'ngDialog',
-		function ($scope, Scopes, $http, $q, $ngDialog) {
+    '$scope',
+    'Scopes',
+    '$http',
+    '$q',
+    'ngDialog',
+    function ($scope, Scopes, $http, $q, $ngDialog) {
 
         $scope.typeIsMandatoryMsg = "Type is mandatory";
         $scope.valueIsMandatoryMsg = "Value is mandatory";
@@ -78,4 +78,11 @@ camApp.controller('newAttributeController', [
                 $scope.openErrorPanel(err);
             });
         }
-        }]);
+
+        $scope.attributes = function () {
+            entityManager.getAttributes();
+        }
+    }]);
+
+
+

@@ -70,7 +70,7 @@ var EntityManager = (function () {
                             owner: owned,
                             class: cur.className,
                             isModel: isModel,
-                            index : i,
+                            index: i,
                         };
                         result.push(asset);
                     })
@@ -252,6 +252,22 @@ var EntityManager = (function () {
 
     }
 
+    var getAttributes = function (deferred) {
+        $http.get(BACK_END_URL_CONST + '/attributes')
+            .success(function (data) {
+                $scope.attributes = data;
+                if (deferred)
+                    deferred.resolve(data);
+            })
+            .error(function (error) {
+                $scope.attributes = [];
+                $scope.openErrorPanel(error);
+                if (deferred)
+                    deferred.reject(error);
+
+            });
+    }
+
 
     var reset = function () {
         $scope = null;
@@ -281,7 +297,8 @@ var EntityManager = (function () {
         getChildrenForClass: getChildrenForClass,
         getAssetDetail: getAssetDetail,
         getOwnersList: getOwnersList,
-        getAncestorsList: getAncestorsList
+        getAncestorsList: getAncestorsList,
+        getAttributes: getAttributes
     }
     return EntityManager;
 })();

@@ -7,7 +7,8 @@ camApp.controller('homeController', [
     '$q',
     'ngDialog',
     '$timeout',
-    function ($scope, Scopes, $http, $routeParams, $route, $q, $ngDialog, $timeout) {
+    'ngNotifier',
+    function ($scope, Scopes, $http, $routeParams, $route, $q, $ngDialog, $timeout, ngNotifier) {
 
         Scopes.store('homeController', $scope);
         entityManager.init($scope, $http, $q);
@@ -197,6 +198,8 @@ camApp.controller('homeController', [
                 controller: 'openErrorController',
                 scope: $scope
             });
+            ngNotifier.notifyError($scope.errorMsg);
+
         }
 
         $scope.backToHomeWithExpandedTree = function (className) {
@@ -231,7 +234,6 @@ camApp.controller('homeController', [
         }
 
         $scope.addTooltipToAssetModel = function () {
-
             function addTooltip(htmlObj) {
                 var value = htmlObj.text();
                 htmlObj.attr('data-toggle', 'tooltip');

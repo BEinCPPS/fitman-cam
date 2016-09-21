@@ -1,5 +1,6 @@
 // MODULE
-var camApp = angular.module('camApp', ['ngRoute', 'ngResource', 'angularTreeview', 'ngDialog', 'ngContextMenu']);
+var camApp = angular.module('camApp', ['ngRoute', 'ngResource', 'angularTreeview', 'ngDialog', 'ngContextMenu',
+    'toaster', 'ngAnimate','ui.bootstrap']);
 
 camApp.config(['ngDialogProvider', function (ngDialogProvider) {
     ngDialogProvider.setDefaults({
@@ -8,7 +9,7 @@ camApp.config(['ngDialogProvider', function (ngDialogProvider) {
         closeByDocument: false,
         closeByEscape: true
     });
- }]);
+}]);
 
 /**author @ascatox**/
 //Timeout Management
@@ -49,4 +50,19 @@ camApp.factory('Scopes', function ($rootScope) {
             mem = {};
         }
     };
+});
+
+
+camApp.factory('ngNotifier', function (toaster) {
+    return {
+        notify: function (msg) {
+            toaster.success(msg);
+        },
+        notifyError: function (msg) {
+            toaster.error(msg);
+        },
+        notifyInfo: function (msg) {
+            toaster.info(msg);
+        }
+    }
 });

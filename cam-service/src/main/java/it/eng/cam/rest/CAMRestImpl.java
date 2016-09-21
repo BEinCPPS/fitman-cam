@@ -4,18 +4,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.WebApplicationException;
 
+import it.eng.ontorepo.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import it.eng.cam.rest.sesame.SesameRepoManager;
-import it.eng.ontorepo.ClassItem;
-import it.eng.ontorepo.IndividualItem;
-import it.eng.ontorepo.PropertyValueItem;
-import it.eng.ontorepo.RepositoryDAO;
 
 public class CAMRestImpl {
     private static final Logger logger = LogManager.getLogger(CAMRestImpl.class.getName());
@@ -184,6 +182,14 @@ public class CAMRestImpl {
                 return retval;
         }
         return null;
+    }
+
+    public static List<PropertyDeclarationItem> getAttributes(RepositoryDAO dao) {
+        List<PropertyDeclarationItem> attributes = dao.getAttributes();
+        List<PropertyDeclarationItem> collectedAttributes = attributes.stream()
+                .filter(attr -> attr.getNamespace().equalsIgnoreCase(SesameRepoManager.getNamespace()))
+                .collect(Collectors.toList());
+        return collectedAttributes;
     }
 
     public static List<String> getTreePath(String className) {
