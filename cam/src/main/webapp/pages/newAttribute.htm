@@ -14,13 +14,15 @@
                            ng-readonly="isEditing"
                            uib-typeahead="attribute as attribute.normalizedName for attribute in attributes
                             | filter:$viewValue | limitTo:8"
-                            typeahead-on-select= "updateValueType($item, $model, $label)">
+                            typeahead-on-select= "updateValueType($item, $model, $label)"
+                            ng-change="changeName()"
+                    >
 
                     </input>
                     <span ng-show="newAttributeForm.name.$error.pattern">{{invalidNameMsg}}</span>
                     <span ng-show="invalidName">{{nameIsMandatory}}</span></div>
                 <div class="row-fluid"><label>Data Type</label>
-                    <select ng-model="newAttribute.type" class="form-control"  ng-readonly="isAutocomplete" ng-change="updateValueType()">
+                    <select ng-model="newAttribute.type" class="form-control"  ng-disabled="isAutocomplete" ng-change="updateValueType()">
                         <option value="java.lang.String">String</option>
                         <option value="java.lang.Boolean">Boolean</option>
                         <option value="java.util.Calendar">Date</option>
@@ -33,7 +35,6 @@
                     <div ng-switch="newAttribute.type">
                         <input ng-switch-when="java.lang.String" class="form-control" type="text"
                                ng-model="newAttribute.value">
-
                         </input>
 
                         <input class="form-control" ng-switch-when="java.util.Calendar" type="text"
@@ -42,7 +43,7 @@
                         <input class="form-control" ng-switch-when="java.lang.Integer" type="number"
                                ng-model="newAttribute.value"/>
 
-                        <input class="form-control" ng-switch-when="java.lang.Float" type="number" step="any"
+                        <input class="form-control" ng-switch-when="java.lang.Float" type="number"
                                ng-model="newAttribute.value"/>
 
                         <select ng-model="newAttribute.value" class="form-control" ng-switch-when="java.lang.Boolean">
