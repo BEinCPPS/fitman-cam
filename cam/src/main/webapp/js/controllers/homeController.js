@@ -245,10 +245,11 @@ camApp.controller('homeController', [
                 }
             }
 
-            var tableAssetElems = angular.element('.sorting_1');
+            var tableAssetElems = angular.element('tr.ng-scope');
             angular.forEach(tableAssetElems, function (value, key) {
-                addTooltip(angular.element(value));
-                addTooltip(angular.element(value).next())
+                var children = angular.element(value).children();
+                addTooltip(angular.element(children[0]));
+                addTooltip(angular.element(children[1]));
             });
             $('[data-toggle="tooltip"]').tooltip();
         }
