@@ -48,12 +48,12 @@ camApp.controller('confirmDeleteController', [
             } else
                 $http.delete(BACK_END_URL_CONST + urlFragment + $scope.elementToDelete).success(function (data, status) {
                     if ($scope.detail) {
-                        $roue.reload();
+                        $route.reload();
                         $scope.entityManager.getAssetDetail($scope.individualName);
                     }
                     else
                         $scope.loadChildren();
-                    $ngDialog.close();
+                    $ngDialog.closeAll();
                 }).error(function (err) {
                     $ngDialog.close();
                     $scope.openErrorPanel(err);
