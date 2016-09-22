@@ -148,9 +148,10 @@ public class CAMRest extends ResourceConfig {
     }
 
     // FINE CLASSES
-
     // ASSETS
 
+    //Modified in 2016-09-22 by ascatox
+    //Models as template of assets doesn't exist anymore.
     @GET
     @Path("/assets/{assetName}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -160,8 +161,10 @@ public class CAMRest extends ResourceConfig {
             List<IndividualItem> assets = CAMRestImpl.getIndividuals(repoInstance);
             if (null == assetName || "".equals(assetName.trim()))
                 return assets.stream()
-                        .filter(asset -> !CAMRestImpl.isModel(repoInstance, getClass(), asset.getIndividualName())
-                                && asset.getNamespace().equalsIgnoreCase(SesameRepoManager.getNamespace()))
+                        .filter(asset ->
+                                //!CAMRestImpl.isModel(repoInstance, getClass(), asset.getIndividualName())
+                                //&&
+                                asset.getNamespace().equalsIgnoreCase(SesameRepoManager.getNamespace()))
                         .collect(Collectors.toList());
             return assets.stream().filter(asset -> asset.getNormalizedName().equalsIgnoreCase(assetName))
                     .collect(Collectors.toList());
@@ -181,9 +184,10 @@ public class CAMRest extends ResourceConfig {
         try {
             if (null == className)
                 return getAssetByName(null);
-            return CAMRestImpl.getIndividuals(repoInstance, className).stream()
-                    .filter(asset -> !CAMRestImpl.isModel(repoInstance, getClass(), asset.getIndividualName()))
-                    .collect(Collectors.toList());
+            return CAMRestImpl.getIndividuals(repoInstance, className);
+            //.stream()
+            //.filter(asset -> !CAMRestImpl.isModel(repoInstance, getClass(), asset.getIndividualName()))
+            //.collect(Collectors.toList());
         } catch (Exception e) {
             logger.error(e);
             throw new WebApplicationException(e.getMessage());
@@ -522,7 +526,7 @@ public class CAMRest extends ResourceConfig {
     public List<PropertyDeclarationItem> getAttributes() {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
         try {
-             return CAMRestImpl.getAttributes(repoInstance);
+            return CAMRestImpl.getAttributes(repoInstance);
         } catch (Exception e) {
             logger.error(e);
             throw new WebApplicationException(e.getMessage());

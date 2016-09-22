@@ -4,29 +4,25 @@ camApp.controller('newRelationshipController', [
     '$http',
     '$q',
     'ngDialog',
-    function ($scope, Scopes,  $http, $q, $ngDialog) {
+    function ($scope, Scopes, $http, $q, $ngDialog) {
         Scopes.store('newRelationshipController', $scope);
         $scope.relPanelTitle = "Add Relationship";
+        $scope.valueIsMandatoryMsg = "Referred name is mandatory";
         $scope.invalidName = false;
+        $scope.valueIsMandatory = false;
         $scope.isEditing = false;
-        if (isEmpty($scope.selectedAsset.model)) {
-            $scope.isModel = true;
-        } else {
-            $scope.isModel = false;
-        }
 
         var urlFragment = '/assets/';
-        if ($scope.isModel)
-            urlFragment = '/models/';
         if ($scope.attributeName) {
             $scope.relPanelTitle = "Edit Relationship";
             $scope.isEditing = true;
-            $http.get(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/relationships/' + $scope.attributeName).success(function (data) {
-                $scope.newRelationship = {
-                    name: data.normalizedName,
-                    referredName: data.propertyValue
-                };
-            });
+            $http.get(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/relationships/' + $scope.attributeName)
+                .success(function (data) {
+                    $scope.newRelationship = {
+                        name: data.normalizedName,
+                        referredName: data.propertyValue
+                    };
+                });
         } else {
             $scope.newRelationship = {
                 name: "",
@@ -50,16 +46,6 @@ camApp.controller('newRelationshipController', [
             options: null
         };
 
-        var urlFragment = '/assets/';
-
-        if (isEmpty($scope.selectedAsset.model)) {
-            $scope.isModel = true;
-        } else {
-            $scope.isModel = false;
-        }
-
-        if ($scope.isModel)
-            urlFragment = '/models/';
         $scope.saveNewRelationship = function () {
             if ($scope.attributeName) {
                 $http.put(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/relationships/' + $scope.attributeName, $scope.newRelationship).success(function (data, status) {
@@ -85,6 +71,10 @@ camApp.controller('newRelationshipController', [
         $scope.openConfirmOperationPanel = function () {
             if (isEmpty($scope.newRelationship.name)) {
                 $scope.invalidName = true;
+                return;
+            }
+            if (isEmpty($scope.newRelationship.referredName)) {
+                $scope.valueIsMandatory = true;
                 return;
             }
             $scope.typeToAdd = 'relationship';
