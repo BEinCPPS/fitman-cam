@@ -15,20 +15,21 @@
                            uib-typeahead="attribute as attribute.normalizedName for attribute in attributes
                             | filter:$viewValue | limitTo:8"
                             typeahead-on-select= "updateValueType($item, $model, $label)"
-                            ng-change="changeName()"
-                    >
+                            ng-change="changeName()">
 
                     </input>
                     <span ng-show="newAttributeForm.name.$error.pattern">{{invalidNameMsg}}</span>
                     <span ng-show="invalidName">{{nameIsMandatory}}</span></div>
                 <div class="row-fluid"><label>Data Type</label>
-                    <select ng-model="newAttribute.type" class="form-control"  ng-disabled="isAutocomplete" ng-change="updateValueType()">
+                    <select ng-model="newAttribute.type" class="form-control"
+                            ng-disabled="isAutocomplete" ng-change="updateValueType()">
                         <option value="java.lang.String">String</option>
                         <option value="java.lang.Boolean">Boolean</option>
                         <option value="java.util.Calendar">Date</option>
                         <option value="java.lang.Integer">Integer</option>
                         <option value="java.lang.Float">Float</option>
                     </select>
+                    <span ng-show="typeIsMandatory">{{typeIsMandatoryMsg}}</span>
                 </div>
 
                 <div class="row-fluid"><label>Value</label>
@@ -51,12 +52,12 @@
                             <option value="false">False</option>
 
                         </select>
-
-                        <input ng-switch-default class="form-control" type="text" ng-model="newAttribute.value"></input>
+                        <input ng-switch-default class="form-control" type="text" ng-model="newAttribute.value"
+                               ng-required="newAttribute.type">
+                        </input>
+                        <span ng-show="valueIsMandatory">{{valueIsMandatoryMsg}}</span>
                     </div>
-
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="fa fa-close btn btn-mini" ng-click="closeNewAttributePanel()"> Cancel</button>

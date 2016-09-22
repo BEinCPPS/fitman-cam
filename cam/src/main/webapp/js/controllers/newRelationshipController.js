@@ -61,10 +61,6 @@ camApp.controller('newRelationshipController', [
         if ($scope.isModel)
             urlFragment = '/models/';
         $scope.saveNewRelationship = function () {
-            if (isEmpty($scope.newRelationship.name)) {
-                $scope.invalidName = true;
-                return;
-            }
             if ($scope.attributeName) {
                 $http.put(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/relationships/' + $scope.attributeName, $scope.newRelationship).success(function (data, status) {
                     entityManager.getAssetDetail($scope.selectedAssetName);
@@ -87,6 +83,10 @@ camApp.controller('newRelationshipController', [
         };
 
         $scope.openConfirmOperationPanel = function () {
+            if (isEmpty($scope.newRelationship.name)) {
+                $scope.invalidName = true;
+                return;
+            }
             $scope.typeToAdd = 'relationship';
             $ngDialog.open({
                 template: 'pages/confirmNewOperation.htm',

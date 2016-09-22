@@ -73,18 +73,6 @@ camApp.controller('newAttributeController', [
         };
 
         $scope.saveNewAttribute = function () {
-            if (isEmpty($scope.newAttribute.name)) {
-                $scope.invalidName = true;
-                return;
-            }
-            if (isEmpty($scope.newAttribute.type)) {
-                $scope.typeIsMandatory = true;
-                return;
-            }
-            if (isEmpty($scope.newAttribute.value)) {
-                $scope.valueIsMandatory = true;
-                return;
-            }
             $http.post(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/attributes',
                 $scope.newAttribute).success(function (data, status) {
                 entityManager.getAssetDetail($scope.selectedAssetName);
@@ -99,6 +87,18 @@ camApp.controller('newAttributeController', [
         $scope.attributes = detailController.attributes;
 
         $scope.openConfirmOperationPanel = function () {
+            if (isEmpty($scope.newAttribute.name)) {
+                $scope.invalidName = true;
+                return;
+            }
+            if (isEmpty($scope.newAttribute.type)) {
+                $scope.typeIsMandatory = true;
+                return;
+            }
+            if (isEmpty($scope.newAttribute.value)) {
+                $scope.valueIsMandatory = true;
+                return;
+            }
             $scope.typeToAdd = 'attribute';
             $ngDialog.open({
                 template: 'pages/confirmNewOperation.htm',
