@@ -4,8 +4,9 @@ camApp.controller('newAttributeController', [
     '$http',
     '$q',
     'ngDialog',
-    function ($scope, Scopes, $http, $q, $ngDialog) {
-
+    '$timeout',
+    function ($scope, Scopes, $http, $q, $ngDialog, $timeout) {
+        Scopes.store('newAttributeController', $scope);
         $scope.typeIsMandatoryMsg = "Type is mandatory";
         $scope.valueIsMandatoryMsg = "Value is mandatory";
 
@@ -36,7 +37,7 @@ camApp.controller('newAttributeController', [
         }
 
         $scope.closeNewAttributePanel = function () {
-            $ngDialog.close();
+            $ngDialog.closeAll();
         }
         var urlFragment = '/assets/';
 
@@ -67,6 +68,10 @@ camApp.controller('newAttributeController', [
             }
         });
 
+        $scope.addNew = function () {
+            $scope.saveNewAttribute();
+        };
+
         $scope.saveNewAttribute = function () {
             if (isEmpty($scope.newAttribute.name)) {
                 $scope.invalidName = true;
@@ -80,7 +85,8 @@ camApp.controller('newAttributeController', [
                 $scope.valueIsMandatory = true;
                 return;
             }
-            $http.post(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/attributes', $scope.newAttribute).success(function (data, status) {
+            $http.post(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/attributes',
+                $scope.newAttribute).success(function (data, status) {
                 entityManager.getAssetDetail($scope.selectedAssetName);
                 entityManager.getAttributes();
                 $ngDialog.close();
@@ -89,8 +95,17 @@ camApp.controller('newAttributeController', [
                 $scope.openErrorPanel(err);
             });
         };
+        var detailController = Scopes.get('detailController');
+        $scope.attributes = detailController.attributes;
 
-        $scope.attributes = Scopes.get('detailController').attributes;
+        $scope.openConfirmOperationPanel = function () {
+            $scope.typeToAdd = 'attribute';
+            $ngDialog.open({
+                template: 'pages/confirmNewOperation.htm',
+                controller: 'confirmNewOperationController',
+                scope: $scope
+            });
+        };
 
     }]);
 

@@ -1,4 +1,4 @@
-camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$location', '$q', 'ngDialog', 'Scopes','ngNotifier',
+camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$location', '$q', 'ngDialog', 'Scopes', 'ngNotifier',
     function ($scope, $http, $routeParams, $location, $q, $ngDialog, Scopes, ngNotifier) {
         Scopes.store('detailController', $scope);
         if (isEmpty($routeParams.selectedAssetName)) {
@@ -84,6 +84,7 @@ camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$loca
             return attribute;
         };
 
+
         $scope.openNewAttributePanel = function () {
             $ngDialog.open({
                 template: 'pages/newAttribute.htm',
@@ -144,5 +145,6 @@ camApp.controller('detailController', ['$scope', '$http', '$routeParams', '$loca
             ngNotifier.notifyError($scope.errorMsg);
 
         };
+
 
     }]);

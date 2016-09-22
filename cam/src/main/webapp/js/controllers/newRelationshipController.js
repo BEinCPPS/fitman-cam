@@ -1,9 +1,11 @@
 camApp.controller('newRelationshipController', [
-		'$scope',
-		'$http',
-        '$q',
-	    'ngDialog',
-		function ($scope, $http, $q, $ngDialog) {
+    '$scope',
+    'Scopes',
+    '$http',
+    '$q',
+    'ngDialog',
+    function ($scope, Scopes,  $http, $q, $ngDialog) {
+        Scopes.store('newRelationshipController', $scope);
         $scope.relPanelTitle = "Add Relationship";
         $scope.invalidName = false;
         $scope.isEditing = false;
@@ -48,17 +50,6 @@ camApp.controller('newRelationshipController', [
             options: null
         };
 
-        /*$scope.loadReferredAssets = function(){
-             $http.get(BACK_END_URL_CONST + '/assets')
-             .success(function (data) {
-                return data;
-                 })
-                .error(function (error) {
-                    console.log("Error encountered :-( " + error);
-                    return [];
-                });
-             	
-        };*/
         var urlFragment = '/assets/';
 
         if (isEmpty($scope.selectedAsset.model)) {
@@ -93,5 +84,15 @@ camApp.controller('newRelationshipController', [
                     $scope.openErrorPanel(err);
                 });
             }
-        }
-        }]);
+        };
+
+        $scope.openConfirmOperationPanel = function () {
+            $scope.typeToAdd = 'relationship';
+            $ngDialog.open({
+                template: 'pages/confirmNewOperation.htm',
+                controller: 'confirmNewOperationController',
+                scope: $scope
+            });
+        };
+
+    }]);
