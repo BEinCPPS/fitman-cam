@@ -208,11 +208,11 @@ public class CAMRestImpl {
                 return classItem;
             }
         }
-//        for (ClassItem classItem : items) {
-//            retval = deepSearchClasses(classItem.getSubClasses(), className);
-//            if (retval != null)
-//                return retval;
-//        }
+        for (ClassItem classItem : items) {
+            retval = deepSearchClasses(classItem.getSubClasses(), className);
+            if (retval != null)
+                return retval;
+        }
         return null;
     }
 
