@@ -33,7 +33,6 @@
                             ng-click="openNewClassPanel()">
                         <i class="fa fa-plus"/> New Class
                     </button>
-
                 </div>
 
                 <div id="button-tree-controllers">
@@ -74,6 +73,12 @@
                                 ng-click="openNewAssetModelPanel()" ng-show="newAssetVisible">
                             <i class="fa fa-plus" data-toggle="modal" data-target="#newAttributeLabel"/> New Asset
                         </button>
+                        <button type="button" data-toggle="tooltip" title="Owners"
+                                class="cam-btn-add-container float-left"
+                                ng-click="">
+                            <i class="fa fa-user"/> Owners
+                        </button>
+
                     </div>
                     <table asset-table="overrideOptions" aa-data="assetList"
                            ao-column-defs="columnDefs" class="cam-data-table" class="table">
