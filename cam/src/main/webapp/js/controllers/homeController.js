@@ -193,11 +193,11 @@ camApp.controller('homeController', [
 
         $scope.openErrorPanel = function (err) {
             $scope.errorMsg = err;
-            $ngDialog.open({
-                template: 'pages/error.htm',
-                controller: 'openErrorController',
-                scope: $scope
-            });
+            // $ngDialog.open({
+            //     template: 'pages/error.htm',
+            //     controller: 'openErrorController',
+            //     scope: $scope
+            // });
             ngNotifier.notifyError($scope.errorMsg);
 
         }
