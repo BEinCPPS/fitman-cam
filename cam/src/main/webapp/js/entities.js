@@ -4,21 +4,15 @@ var EntityManager = (function () {
     var $scope;
     var $q;
 
-    var getAssets = function (name) {
-        $http.get(BACK_END_URL_CONST + '/assets?className=' + name)
+    var getAssets = function (name, retrieveForChildren) {
+        var assetsForChildren = '';
+        if (retrieveForChildren)
+            assetsForChildren = '&&retrieveForChildren=true';
+        $http.get(BACK_END_URL_CONST + '/assets?className=' + name + assetsForChildren)
             .success(function (data) {
-                $http.get(BACK_END_URL_CONST + '/models?className=' + name)
-                    .success(function (modelData) {
-                        data = data.concat(modelData);
-
-                        fetchAssetList(data, function (res) {
-                            $scope.assetList = formatAssetListTable(res, name);
-                        });
-                    }).error(function (error) {
-                    $scope.openErrorPanel(error);
+                fetchAssetList(data, function (res) {
+                    $scope.assetList = formatAssetListTable(res, name);
                 });
-                //var a = createAssets(data);
-                //$scope.assetList = formatAssetListTable(a);
             }).error(function (error) {
             $scope.openErrorPanel(error);
         });
@@ -91,9 +85,9 @@ var EntityManager = (function () {
             return [];
         for (var i = 0; i < data.length; i++) {
             var elementType = 'asset';
-            if (data[i].isModel == true) {
+            /*if (data[i].isModel == true) {
                 elementType = 'model';
-            }
+            }*/
             data[i].action = '<div class="inline-flex-item"> <button class="cam-table-button" ng-click="openRemoveAssetPanel(\'' + data[i].asset + '\', \'' + elementType + '\')' + '"> <i data-toggle="tooltip" title="Delete asset model" class="fa fa-trash cam-table-button"></i> </button>'
 
                 + '<a class="cam-icon-a" href="#/detail/' + data[i].asset + '/' + clazzName + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-arrow-circle-right cam-table-button"></i> </a>';

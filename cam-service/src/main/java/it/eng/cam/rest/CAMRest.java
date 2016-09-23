@@ -162,8 +162,6 @@ public class CAMRest extends ResourceConfig {
             if (null == assetName || "".equals(assetName.trim()))
                 return assets.stream()
                         .filter(asset ->
-                                //!CAMRestImpl.isModel(repoInstance, getClass(), asset.getIndividualName())
-                                //&&
                                 asset.getNamespace().equalsIgnoreCase(SesameRepoManager.getNamespace()))
                         .collect(Collectors.toList());
             return assets.stream().filter(asset -> asset.getNormalizedName().equalsIgnoreCase(assetName))
@@ -179,15 +177,15 @@ public class CAMRest extends ResourceConfig {
     @GET
     @Path("/assets")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<IndividualItem> getAssetsForClass(@QueryParam("className") String className) {
+    public List<IndividualItem> getAssetsForClass(@QueryParam("className") String className,
+                                                  @QueryParam("retrieveForChildren") boolean retrieveForChildren) {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
         try {
             if (null == className)
                 return getAssetByName(null);
+            if (retrieveForChildren)
+                return CAMRestImpl.getIndividualsForChildren(repoInstance, className);
             return CAMRestImpl.getIndividuals(repoInstance, className);
-            //.stream()
-            //.filter(asset -> !CAMRestImpl.isModel(repoInstance, getClass(), asset.getIndividualName()))
-            //.collect(Collectors.toList());
         } catch (Exception e) {
             logger.error(e);
             throw new WebApplicationException(e.getMessage());

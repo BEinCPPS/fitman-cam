@@ -51,6 +51,27 @@ public class CAMRestImpl {
         return dao.getIndividuals(className);
     }
 
+
+    public static List<IndividualItem> getIndividualsForChildren(RepositoryDAO dao, String className) {
+        List<IndividualItem> results = new ArrayList<>();
+        //Add assets for class Father
+        results.addAll(dao.getIndividuals(className));
+        //Add assets for children. nephews etc....
+        List<ClassItem> classes = CAMRestImpl.getClasses(dao, false);
+        ClassItem fatherClass = CAMRestImpl.deepSearchClasses(classes, className);
+        retrieveAssetsForChildren(dao, fatherClass, results);
+        return results;
+    }
+
+    private static void retrieveAssetsForChildren(RepositoryDAO dao, ClassItem clazz, List<IndividualItem> results) {
+        if (clazz == null || clazz.getSubClasses() == null) return;
+        for (ClassItem childClazz : clazz.getSubClasses()) {
+            String childClassName = childClazz.getNormalizedName();
+            results.addAll(dao.getIndividuals(childClassName));
+            retrieveAssetsForChildren(dao, childClazz, results);
+        }
+    }
+
     public static IndividualItem getIndividual(RepositoryDAO dao, String className) {
         if (!isNormalized(className))
             className = normalize(className);

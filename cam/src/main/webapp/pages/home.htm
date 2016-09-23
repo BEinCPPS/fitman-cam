@@ -1,20 +1,22 @@
 <script>
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-
-        $('body').click(function () {
-            $('.ownselector').each(
-                    function () {
-                        $(this).removeClass('selected');
-                        $(this).removeClass('ownselector');
-                    });
-            $('#contextMenu').hide();
-        });
-    });
-
+//    $(document).ready(function () {
+//        $('[data-toggle="tooltip"]').tooltip();
+//
+//        $('body').click(function () {
+//            $('.ownselector').each(
+//                    function () {
+//                        $(this).removeClass('selected');
+//                        $(this).removeClass('ownselector');
+//                    });
+//            $('#contextMenu').hide();
+//        });
+//    });
 </script>
+
 <div id="toaster-info">
-    <toaster-container></toaster-container>
+    <toaster-container toaster-options="
+    {'time-out':{ 'toast-warning': 10, 'toast-error': 0 } }">
+    </toaster-container>
 </div>
 <div id="panel-container" class="panel panel-default">
     <div class="panel-body">
@@ -78,7 +80,7 @@
                         <thead>
                         <tr>
                             <th style="width: 170px">Asset</th>
-                            <th style="width: 170px">Model</th>
+                            <th style="width: 170px">Class</th>
                             <th style="width: 175px">Owner</th>
                             <th style="width: 150px">Created</th>
                             <th style="width: 168px">Action</th>

@@ -17,7 +17,7 @@ camApp.controller('homeController', [
             setTimeout(function () { //CHIAMATA ASINCRONA PER RICARICARE GLI ASSET DELLA CLASSE
                 $scope.currentNode = {};
                 $scope.currentNode.className = $routeParams.className;
-                entityManager.getAssets($routeParams.className);
+                entityManager.getAssets($routeParams.className, true);
                 $scope.expandAncestors($routeParams.className);
                 $scope.newAssetVisible = true;
             }, 0);
@@ -36,7 +36,7 @@ camApp.controller('homeController', [
                 "aTargets": [0],
             },
             {
-                "mDataProp": "model",
+                "mDataProp": "class",
                 "aTargets": [1]
             }, {
                 "mDataProp": "owner",
@@ -83,7 +83,7 @@ camApp.controller('homeController', [
         $scope.loadAsset = function () {
             //				alert($scope.currentNode); //per recuperare il nodo da passare in input a servizio rest
             if ($scope.currentNode.className) {
-                entityManager.getAssets($scope.currentNode.className);
+                entityManager.getAssets($scope.currentNode.className, true);
 
                 $scope.newAssetVisible = true;
             } else {
