@@ -1,15 +1,13 @@
 package it.eng.cam.rest;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.WebApplicationException;
 
 import it.eng.ontorepo.*;
+import it.eng.ontorepo.sesame2.Sesame2RepositoryDAO;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -64,11 +62,24 @@ public class CAMRestImpl {
     }
 
     private static void retrieveAssetsForChildren(RepositoryDAO dao, ClassItem clazz, List<IndividualItem> results) {
-        if (clazz == null || clazz.getSubClasses() == null) return;
-        for (ClassItem childClazz : clazz.getSubClasses()) {
-            String childClassName = childClazz.getNormalizedName();
-            results.addAll(dao.getIndividuals(childClassName));
-            retrieveAssetsForChildren(dao, childClazz, results);
+        try {
+            if (clazz == null || clazz.getSubClasses() == null || clazz.getSubClasses().size() == 0) return;
+            int i = 0;
+            for (ClassItem childClazz : clazz.getSubClasses()) {
+                // ascatox 23-09-2016
+                // This is needed to solve an issue present in rdf4j after 4 query it blocks!!!
+                if (i >= 3) {
+                    SesameRepoManager.releaseRepoDaoConn(dao);
+                    dao = SesameRepoManager.getRepoInstance(null);
+                    i = 0;
+                }
+                String childClassName = childClazz.getNormalizedName();
+                results.addAll(dao.getIndividuals(childClassName));
+                retrieveAssetsForChildren(dao, childClazz, results);
+                i++;
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
         }
     }
 
@@ -197,11 +208,11 @@ public class CAMRestImpl {
                 return classItem;
             }
         }
-        for (ClassItem classItem : items) {
-            retval = deepSearchClasses(classItem.getSubClasses(), className);
-            if (retval != null)
-                return retval;
-        }
+//        for (ClassItem classItem : items) {
+//            retval = deepSearchClasses(classItem.getSubClasses(), className);
+//            if (retval != null)
+//                return retval;
+//        }
         return null;
     }
 

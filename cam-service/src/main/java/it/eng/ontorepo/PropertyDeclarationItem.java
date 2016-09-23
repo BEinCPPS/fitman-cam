@@ -155,8 +155,6 @@ public class PropertyDeclarationItem extends Tuple {
                     /** author ascatox
                      * modified at 2016-09-20
                      */
-                    System.out.println("Unsupported range: " + range);
-                    System.out.println("Use default one" );
                     this.type = String.class;
                     //throw new IllegalArgumentException("Unsupported range: " + range);
                 }

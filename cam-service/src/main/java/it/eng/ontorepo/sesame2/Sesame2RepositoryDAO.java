@@ -1348,11 +1348,15 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             throw new RuntimeException(e);
         } catch (QueryEvaluationException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         } finally {
             if (null != con) {
                 try {
                     con.close();
                 } catch (RepositoryException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
