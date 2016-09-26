@@ -14,25 +14,34 @@
                                                                          name="name" ng-pattern="regexPattern"></input>
                     <span ng-show="newClassForm.name.$error.pattern">{{invalidNameMsg}}</span>
                     <span ng-show="invalidName">{{nameIsMandatory}}</span></div>
-                <div class="row-fluid"><label>Parent Name:</label>
-                    <!--  <input class="form-control" type="text" ng-model="newRelationship.referredName"></input>-->
-                    <!--<select ng-model="newRelationship.referredName" class="form-control" ng-click="loadReferredAssets" ng-options="asset.normalizedName as asset.normalizedName for asset in referredAssetList">
-                     </select>    -->
 
-                    <select ng-model="newClass.parentName"
-                            ng-options="o.className as o.className for o in select.options" lazy-load-classes-options=""
-                            data-options="select.options" class="form-control"
-                            ng-disabled="isParentNameReadonly">
-                        <option value=""> {{newClass.parentName}}</option>
-                    </select>
-
-                    </select>
+                <div ng-switch on="isNewRootClass">
+                    <div ng-switch-when="true">
+                        <div class="row-fluid"><label>Parent Name:</label>
+                            <input class="form-control" type="text"
+                                   ng-model="newClass.parentName "
+                                   ng-disabled="true">
+                            </input>
+                        </div>
+                    </div>
+                    <div ng-switch-when="false">
+                        <div class="row-fluid"><label>Parent Name:</label>
+                            <select ng-model="newClass.parentName"
+                                    ng-options="o.className as o.className for o in select.options"
+                                    lazy-load-classes-options=""
+                                    data-options="select.options" class="form-control"
+                                    ng-disabled="isParentNameReadonly">
+                                <option value=""> {{newClass.parentName}}</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="fa fa-close btn btn-mini" ng-click="closeCreateClassPanel()"> Cancel</button>
-                <button type="button" class="fa fa-check btn btn-mini btn-primary" ng-click="saveNewClass()"> Save</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="fa fa-close btn btn-mini" ng-click="closeCreateClassPanel()"> Cancel
+                    </button>
+                    <button type="button" class="fa fa-check btn btn-mini btn-primary" ng-click="saveNewClass()"> Save
+                    </button>
+                </div>
         </form>
     </div>
 </div>

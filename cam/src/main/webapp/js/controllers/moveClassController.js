@@ -5,9 +5,11 @@ camApp.controller('moveClassController', [
     '$q',
     'ngDialog',
     '$timeout',
-    function ($scope, Scopes, $http, $q, $ngDialog, $timeout) {
+    '$route',
+    function ($scope, Scopes, $http, $q, $ngDialog, $timeout, $route) {
         $scope.isNewClassNameReadonly = true;
         $scope.isParentNameReadonly = false;
+        $scope.isNewRootClass = false;
         $scope.closeCreateClassPanel = function () {
 
             $ngDialog.close();

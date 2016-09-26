@@ -107,11 +107,10 @@ public class CAMRest extends ResourceConfig {
     @Path("/classes/{className}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateClass(@PathParam("className") String className, ClassJSON clazz) {
-        RepositoryDAO repoInstance = null;
+        RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
         try {
             if (!className.equalsIgnoreCase(clazz.getName())) {
                 try {
-                    repoInstance = SesameRepoManager.getRepoInstance(getClass());
                     CAMRestImpl.renameClass(repoInstance, className, clazz.getName());
                 } catch (Exception e) {
                     logger.error(e);
@@ -125,7 +124,7 @@ public class CAMRest extends ResourceConfig {
             return Response.ok("Class with name '" + className + "' has parent Class " + clazz.getParentName()).build();
         } catch (Exception e) {
             logger.error(e);
-            return Response.status(404).entity(e.getMessage()).type("text/plain").build();
+            return createResponseError(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }

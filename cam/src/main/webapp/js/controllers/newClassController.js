@@ -1,18 +1,19 @@
 camApp.controller('newClassController', [
-		'$scope',
-		'$http',
-        '$q',
-	    'ngDialog',
-		function ($scope, $http, $q, $ngDialog) {
+    '$scope',
+    '$http',
+    '$q',
+    'ngDialog',
+    function ($scope, $http, $q, $ngDialog) {
         $scope.isNewClassReadonly = false;
         $scope.isParentNameReadonly = false;
+        $scope.isNewRootClass = true;
         $scope.closeCreateClassPanel = function () {
 
             $ngDialog.close();
         };
         $scope.newClass = {
             name: "",
-            parentName: ""
+            parentName: "Thing"
         }
 
         $scope.select = {
@@ -32,9 +33,6 @@ camApp.controller('newClassController', [
                 $scope.invalidName = true;
                 return;
             }
-            if (isEmpty($scope.newClass.parentName)) {
-                $scope.newClass.parentName = 'Thing';
-            }
 
             $http.post(BACK_END_URL_CONST + '/classes', $scope.newClass).success(function (data, status) {
                 $ngDialog.close();
@@ -45,4 +43,4 @@ camApp.controller('newClassController', [
             });
         }
 
-        }]);
+    }]);
