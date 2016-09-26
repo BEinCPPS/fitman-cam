@@ -1,6 +1,6 @@
 // MODULE
 var camApp = angular.module('camApp', ['ngRoute', 'ngResource', 'angularTreeview', 'ngDialog', 'ngContextMenu',
-    'toaster', 'ngAnimate','ui.bootstrap']);
+    'toaster', 'ngAnimate','ui.bootstrap','ngScrollTo']);
 
 camApp.config(['ngDialogProvider', function (ngDialogProvider) {
     ngDialogProvider.setDefaults({
@@ -11,7 +11,7 @@ camApp.config(['ngDialogProvider', function (ngDialogProvider) {
     });
 }]);
 
-/**author @ascatox**/
+/** author @ascatox **/
 //Timeout Management
 // loading for each http request
 camApp.config(function ($httpProvider) {
@@ -66,3 +66,4 @@ camApp.factory('ngNotifier', function (toaster) {
         }
     }
 });
+

@@ -1,9 +1,9 @@
 camApp.controller('newAssetController', [
-		'$scope',
-		'$http',
-        '$q',
-	    'ngDialog',
-		function ($scope, $http, $q, $ngDialog) {
+    '$scope',
+    '$http',
+    '$q',
+    'ngDialog',
+    function ($scope, $http, $q, $ngDialog) {
         //$scope.elementToDelete;
         //$scope.typetoDelete;
         $scope.invalidName = false;
@@ -37,7 +37,7 @@ camApp.controller('newAssetController', [
                 $scope.openErrorPanel(err);
             });
         }
-        }]);
+    }]);
 
 
 

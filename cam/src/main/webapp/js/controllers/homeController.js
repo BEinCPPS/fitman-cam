@@ -8,8 +8,7 @@ camApp.controller('homeController', [
     'ngDialog',
     '$timeout',
     'ngNotifier',
-    function ($scope, Scopes, $http, $routeParams, $route, $q, $ngDialog, $timeout, ngNotifier) {
-
+    function ($scope, Scopes, $http, $routeParams, $route, $q, $ngDialog, $timeout, ngNotifier ){
         Scopes.store('homeController', $scope);
         entityManager.init($scope, $http, $q);
 
@@ -96,6 +95,7 @@ camApp.controller('homeController', [
             $http.get(BACK_END_URL_CONST + '/owners')
                 .success(function (data) {
                     $scope.ownersList = [];
+                    $scope.ownersList.push('');
                     for (var i = 0; i < data.length; i++) {
                         $scope.ownersList.push(data[i].name);
                     }

@@ -10,6 +10,17 @@
                 <div class="row-fluid"><label>Created:</label> <span> {{selectedAsset.created}}</span></div>
                 <div class="row-fluid"><label>Owner:</label> <span> {{selectedAsset.owner}}</span></div>
             </fieldset>
+            <div id="cam-asset-detail-btn-container" class="row-fluid">
+                <button type="button" data-toggle="tooltip" title="New Attribute" class="cam-btn-add-container"
+                        ng-click="openNewAttributePanel()">
+                    <i class="fa fa-plus" data-toggle="modal" data-target="#newAttributeLabel"/> New Attribute
+                </button>
+
+                <button type="button" data-toggle="tooltip" title="New Relationship" class="cam-btn-add-container"
+                        ng-click="openNewRelationshipPanel()">
+                    <i class="fa fa-plus" data-toggle="modal" data-target="#newRelationshipLabel"/> New Relationship
+                </button>
+            </div>
             <div id="asset-detail-table" class="cam-asset-detail-table-container">
                 <table asset-table="assetDetailOverrideOptions" aa-data="selectedAsset.attributes"
                        ao-column-defs="assetDetailColumnDefs" class="cam-data-table table">
@@ -23,17 +34,7 @@
                     </thead>
                 </table>
                 <!-- 			<div class="cam-btn-add-container"><input type="image" title="New Asset Model" src="img/plus.png"/></div> -->
-                <div id="cam-asset-detail-btn-container" class="row-fluid">
-                    <button type="button" data-toggle="tooltip" title="New Attribute" class="cam-btn-add-container"
-                            ng-click="openNewAttributePanel()">
-                        <i class="fa fa-plus" data-toggle="modal" data-target="#newAttributeLabel"/> New Attribute
-                    </button>
 
-                    <button type="button" data-toggle="tooltip" title="New Relationship" class="cam-btn-add-container"
-                            ng-click="openNewRelationshipPanel()">
-                        <i class="fa fa-plus" data-toggle="modal" data-target="#newRelationshipLabel"/> New Relationship
-                    </button>
-                </div>
             </div>
         </div>
 
