@@ -49,38 +49,51 @@ public class CAMRestImpl {
         return dao.getIndividuals(className);
     }
 
+    /**
+     * author ascatoz 2016-09-26 Depth First SEARCH Algorithm Recursive
+     * @param dao
+     * @param visited
+     * @param clazz
+     *
+     */
+    private static void dfs_rec(RepositoryDAO dao, Map<String,
+            Boolean> visited, ClassItem clazz, List<IndividualItem> results) {
+        visited.put(clazz.getNormalizedName(), true);
+        int i = 0;
+        for (ClassItem cls : clazz.getSubClasses()) {
+            if (i >= 3) {
+                SesameRepoManager.releaseRepoDaoConn(dao);
+                dao = SesameRepoManager.getRepoInstance(null);
+                i = 0;
+            }
+            if (null == visited.get(cls.getNormalizedName()) || !visited.get(cls.getNormalizedName())) {
+                results.addAll(dao.getIndividuals(cls.getNormalizedName()));
+                dfs_rec(dao, visited, cls, results);
+            }
+            i++;
+        }
+    }
 
-    public static List<IndividualItem> getIndividualsForChildren(RepositoryDAO dao, String className) {
+    /**
+     * author ascatoz 2016-09-26 Depth First SEARCH Algorithm Recursive
+     * @param dao
+     * @param clazz
+     * @return a List of Individual Items
+     */
+
+    private static List<IndividualItem> dfs(RepositoryDAO dao, ClassItem clazz) {
         List<IndividualItem> results = new ArrayList<>();
-        //Add assets for class Father
-        results.addAll(dao.getIndividuals(className));
-        //Add assets for children. nephews etc....
-        List<ClassItem> classes = CAMRestImpl.getClasses(dao, false);
-        ClassItem fatherClass = CAMRestImpl.deepSearchClasses(classes, className);
-        retrieveAssetsForChildren(dao, fatherClass, results);
+        Map<String, Boolean> visited = new HashMap<>(); //null
+        results.addAll(dao.getIndividuals(clazz.getNormalizedName()));
+        dfs_rec(dao, visited, clazz, results);
         return results;
     }
 
-    private static void retrieveAssetsForChildren(RepositoryDAO dao, ClassItem clazz, List<IndividualItem> results) {
-        try {
-            if (clazz == null || clazz.getSubClasses() == null || clazz.getSubClasses().size() == 0) return;
-            int i = 0;
-            for (ClassItem childClazz : clazz.getSubClasses()) {
-                // ascatox 23-09-2016
-                // This is needed to solve an issue present in rdf4j after 4 query it blocks!!!
-                if (i >= 3) {
-                    SesameRepoManager.releaseRepoDaoConn(dao);
-                    dao = SesameRepoManager.getRepoInstance(null);
-                    i = 0;
-                }
-                String childClassName = childClazz.getNormalizedName();
-                results.addAll(dao.getIndividuals(childClassName));
-                retrieveAssetsForChildren(dao, childClazz, results);
-                i++;
-            }
-        } catch (Exception ex) {
-            logger.error(ex);
-        }
+
+    public static List<IndividualItem> getIndividualsForChildren(RepositoryDAO dao, String className) {
+        List<ClassItem> classes = CAMRestImpl.getClasses(dao, false);
+        ClassItem fatherClass = CAMRestImpl.deepSearchClasses(classes, className);
+        return dfs(dao, fatherClass);
     }
 
     public static IndividualItem getIndividual(RepositoryDAO dao, String className) {

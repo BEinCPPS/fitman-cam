@@ -2,41 +2,42 @@
     <div id="breadcrumb">
         <a ng-href="#/"><span><b>Home</b></span></a><a ng-href="#/{{className}}"><span>{{className}}</span></a>
     </div>
+    <div id="panel-container" class="panel panel-default panel-height">
+        <div id="asset-detail">
+            <fieldset class="asset-detail-fieldset">
+                <div class="row-fluid"><label>Name:</label> <span> {{selectedAsset.name}}</span></div>
+                <div class="row-fluid"><label>Model:</label> <span> {{selectedAsset.model}}</span></div>
+                <div class="row-fluid"><label>Created:</label> <span> {{selectedAsset.created}}</span></div>
+                <div class="row-fluid"><label>Owner:</label> <span> {{selectedAsset.owner}}</span></div>
+            </fieldset>
+            <div id="asset-detail-table" class="cam-asset-detail-table-container">
+                <table asset-table="assetDetailOverrideOptions" aa-data="selectedAsset.attributes"
+                       ao-column-defs="assetDetailColumnDefs" class="cam-data-table table">
+                    <thead>
+                    <tr>
+                        <th style="width: 50px"></th>
+                        <th style="width: 400px">Property</th>
+                        <th style="width: 350px">Value</th>
+                        <th style="width: 100px">Action</th>
+                    </tr>
+                    </thead>
+                </table>
+                <!-- 			<div class="cam-btn-add-container"><input type="image" title="New Asset Model" src="img/plus.png"/></div> -->
+                <div id="cam-asset-detail-btn-container" class="row-fluid">
+                    <button type="button" data-toggle="tooltip" title="New Attribute" class="cam-btn-add-container"
+                            ng-click="openNewAttributePanel()">
+                        <i class="fa fa-plus" data-toggle="modal" data-target="#newAttributeLabel"/> New Attribute
+                    </button>
 
-    <div id="asset-detail">
-        <fieldset class="asset-detail-fieldset">
-            <div class="row-fluid"><label>Name:</label> <span> {{selectedAsset.name}}</span></div>
-            <div class="row-fluid"><label>Model:</label> <span> {{selectedAsset.model}}</span></div>
-            <div class="row-fluid"><label>Created:</label> <span> {{selectedAsset.created}}</span></div>
-            <div class="row-fluid"><label>Owner:</label> <span> {{selectedAsset.owner}}</span></div>
-        </fieldset>
-        <div id="asset-detail-table" class="cam-asset-detail-table-container">
-
-            <table asset-table="assetDetailOverrideOptions" aa-data="selectedAsset.attributes"
-                   ao-column-defs="assetDetailColumnDefs" class="cam-data-table table">
-                <thead>
-                <tr>
-                    <th style="width: 50px"></th>
-                    <th style="width: 400px">Property</th>
-                    <th style="width: 350px">Value</th>
-                    <th style="width: 100px">Action</th>
-                </tr>
-                </thead>
-            </table>
-            <!-- 			<div class="cam-btn-add-container"><input type="image" title="New Asset Model" src="img/plus.png"/></div> -->
-            <div id="cam-asset-detail-btn-container" class="row-fluid">
-                <button type="button" data-toggle="tooltip" title="New Attribute" class="cam-btn-add-container"
-                        ng-click="openNewAttributePanel()">
-                    <i class="fa fa-plus" data-toggle="modal" data-target="#newAttributeLabel"/> New Attribute
-                </button>
-
-                <button type="button" data-toggle="tooltip" title="New Relationship" class="cam-btn-add-container"
-                        ng-click="openNewRelationshipPanel()">
-                    <i class="fa fa-plus" data-toggle="modal" data-target="#newRelationshipLabel"/> New Relationship
-                </button>
-
+                    <button type="button" data-toggle="tooltip" title="New Relationship" class="cam-btn-add-container"
+                            ng-click="openNewRelationshipPanel()">
+                        <i class="fa fa-plus" data-toggle="modal" data-target="#newRelationshipLabel"/> New Relationship
+                    </button>
+                </div>
             </div>
         </div>
-
+        <a id="detail-button-back" ng-href="#/{{className}}"> <span id="detail-button-back-icon" style="margin-top: 18%;"
+                                                                    class="glyphicon glyphicon-chevron-left"
+                                                                    aria-hidden="true"/>Back</a>
     </div>
 </div>

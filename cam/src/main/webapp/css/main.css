@@ -408,3 +408,13 @@ tr.ng-scope {
 i.fa {
     /*font-size: 12px;*/
 }
+
+a#detail-button-back {
+    color: #000;
+}
+
+.panel-height {
+    height: calc(84vh);
+    overflow-y: auto;
+}
+
