@@ -418,3 +418,6 @@ a#detail-button-back {
     overflow-y: auto;
 }
 
+button[ng-disabled="true"]{
+    color: #808080 !important;
+}
