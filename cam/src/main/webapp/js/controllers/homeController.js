@@ -234,13 +234,13 @@ camApp.controller('homeController', [
         }
 
         $scope.addTooltipToAssetModel = function () {
-            function addTooltip(htmlObj) {
+            function addTooltip(htmlObj, maxLenght) {
                 var value = htmlObj.text();
                 htmlObj.attr('data-toggle', 'tooltip');
                 htmlObj.attr('data-container', 'body');
                 htmlObj.attr('title', value);
-                if (value && value.length > 20) {
-                    value = value.substring(0, 20).concat('...');
+                if (value && value.length > maxLenght) {
+                    value = value.substring(0, maxLenght).concat('...');
                     htmlObj.text(value);
                 }
             }
@@ -248,8 +248,9 @@ camApp.controller('homeController', [
             var tableAssetElems = angular.element('tr.ng-scope');
             angular.forEach(tableAssetElems, function (value, key) {
                 var children = angular.element(value).children();
-                addTooltip(angular.element(children[0]));
-                addTooltip(angular.element(children[1]));
+                addTooltip(angular.element(children[0]), 20); //asset
+                addTooltip(angular.element(children[1]), 15); //class
+                addTooltip(angular.element(children[2]), 20); //owner group
             });
             $('[data-toggle="tooltip"]').tooltip();
         }

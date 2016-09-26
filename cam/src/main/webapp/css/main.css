@@ -350,7 +350,7 @@ div#breadcrumb {
     height: 30px;
     line-height: 30px;
     background: #EEEEEE url(../img/bcbk.png);
-    margin-top: 15px;
+    margin-top: 5px;
 }
 
 div#breadcrumb a {
@@ -414,7 +414,7 @@ a#detail-button-back {
 }
 
 .panel-height {
-    height: calc(84vh);
+    height: calc(83vh);
     overflow-y: auto;
 }
 
