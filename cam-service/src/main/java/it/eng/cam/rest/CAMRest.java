@@ -21,11 +21,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import it.eng.cam.rest.exception.CAMServiceWebException;
 import it.eng.ontorepo.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -52,6 +52,7 @@ public class CAMRest extends ResourceConfig {
 
     /**
      * author ascatox the param flat = true gives a FLAT list of all classes
+     *
      * @param flat
      * @return
      */
@@ -65,7 +66,7 @@ public class CAMRest extends ResourceConfig {
             return CAMRestImpl.getClasses(repoInstance, true, flat);
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -85,7 +86,7 @@ public class CAMRest extends ResourceConfig {
             return deepSearchClass.getSubClasses();
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -102,7 +103,7 @@ public class CAMRest extends ResourceConfig {
             return Response.ok("Class with name '" + clazz.getName() + "' was successfully created!").build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -119,7 +120,7 @@ public class CAMRest extends ResourceConfig {
                     CAMRestImpl.renameClass(repoInstance, className, clazz.getName());
                 } catch (Exception e) {
                     logger.error(e);
-                    return createResponseError(e.getMessage());
+                    throw new CAMServiceWebException(e.getMessage());
                 } finally {
                     SesameRepoManager.releaseRepoDaoConn(repoInstance);
                 }
@@ -129,7 +130,7 @@ public class CAMRest extends ResourceConfig {
             return Response.ok("Class with name '" + className + "' has parent Class " + clazz.getParentName()).build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -145,7 +146,7 @@ public class CAMRest extends ResourceConfig {
             return Response.ok("Class with name '" + className + "' was successfully deleted!").build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -172,7 +173,7 @@ public class CAMRest extends ResourceConfig {
                     .collect(Collectors.toList());
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -192,7 +193,7 @@ public class CAMRest extends ResourceConfig {
             return CAMRestImpl.getIndividuals(repoInstance, className);
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -210,7 +211,7 @@ public class CAMRest extends ResourceConfig {
                     + "' for Owner '" + asset.getOwnerName() + "' was successfully created!").build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -227,7 +228,7 @@ public class CAMRest extends ResourceConfig {
             individualAttributes = CAMRestImpl.getIndividualAttributes(repoInstance, assetName);
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -237,7 +238,7 @@ public class CAMRest extends ResourceConfig {
                 CAMRestImpl.deleteIndividual(repoInstance, assetName);
             } catch (Exception e) {
                 logger.error(e);
-                return createResponseError(e.getMessage());
+                throw new CAMServiceWebException(e.getMessage());
             } finally {
                 SesameRepoManager.releaseRepoDaoConn(repoInstance);
             }
@@ -249,7 +250,7 @@ public class CAMRest extends ResourceConfig {
 
             } catch (Exception e) {
                 logger.error(e);
-                return createResponseError(e.getMessage());
+                throw new CAMServiceWebException(e.getMessage());
             } finally {
                 SesameRepoManager.releaseRepoDaoConn(repoInstance);
             }
@@ -271,7 +272,7 @@ public class CAMRest extends ResourceConfig {
             return Response.ok("Individual with name '" + assetName + "' was successfully deleted!").build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -291,7 +292,7 @@ public class CAMRest extends ResourceConfig {
                     .collect(Collectors.toList());
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -313,7 +314,7 @@ public class CAMRest extends ResourceConfig {
             return null;
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -333,16 +334,16 @@ public class CAMRest extends ResourceConfig {
                     + "' was successfully added!").build();
         } catch (IllegalArgumentException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (ClassNotFoundException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (RuntimeException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -359,7 +360,7 @@ public class CAMRest extends ResourceConfig {
             CAMRestImpl.removeProperty(repoInstance, assetName, attributeName);
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -373,16 +374,16 @@ public class CAMRest extends ResourceConfig {
                     .build();
         } catch (IllegalArgumentException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (ClassNotFoundException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (RuntimeException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -400,13 +401,13 @@ public class CAMRest extends ResourceConfig {
                     + "' was successfully deleted!").build();
         } catch (IllegalArgumentException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (RuntimeException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -426,7 +427,7 @@ public class CAMRest extends ResourceConfig {
                     .collect(Collectors.toList());
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -449,7 +450,7 @@ public class CAMRest extends ResourceConfig {
             return null;
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -468,7 +469,7 @@ public class CAMRest extends ResourceConfig {
                     + relationship.getReferredName() + "' was successfully created!").build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -485,7 +486,7 @@ public class CAMRest extends ResourceConfig {
             CAMRestImpl.removeProperty(repoInstance, assetName, relationshipName);
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -496,7 +497,7 @@ public class CAMRest extends ResourceConfig {
                     + relationship.getReferredName() + "' was successfully updated!").build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -515,7 +516,7 @@ public class CAMRest extends ResourceConfig {
                     .build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -531,7 +532,7 @@ public class CAMRest extends ResourceConfig {
             return CAMRestImpl.getAttributes(repoInstance);
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -555,7 +556,7 @@ public class CAMRest extends ResourceConfig {
                     .collect(Collectors.toList());
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -575,7 +576,7 @@ public class CAMRest extends ResourceConfig {
                     .collect(Collectors.toList());
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -593,7 +594,7 @@ public class CAMRest extends ResourceConfig {
                     + "' for Owner '" + model.getOwnerName() + "' was successfully created!").build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -612,7 +613,7 @@ public class CAMRest extends ResourceConfig {
                     CAMRestImpl.deleteIndividual(repoInstance, modelName);
                 } catch (Exception e) {
                     logger.error(e);
-                    return createResponseError(e.getMessage());
+                    throw new CAMServiceWebException(e.getMessage());
                 } finally {
                     SesameRepoManager.releaseRepoDaoConn(repoInstance);
                 }
@@ -624,7 +625,7 @@ public class CAMRest extends ResourceConfig {
                             + "' for Owner '" + model.getOwnerName() + "' was successfully updated!").build();
                 } catch (Exception e) {
                     logger.error(e);
-                    return createResponseError(e.getMessage());
+                    throw new CAMServiceWebException(e.getMessage());
                 } finally {
                     SesameRepoManager.releaseRepoDaoConn(repoInstance);
                 }
@@ -634,7 +635,7 @@ public class CAMRest extends ResourceConfig {
             }
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -651,7 +652,7 @@ public class CAMRest extends ResourceConfig {
             return Response.ok("Model with name '" + modelName + "' was successfully deleted!").build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -671,7 +672,7 @@ public class CAMRest extends ResourceConfig {
                     .collect(Collectors.toList());
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -693,7 +694,7 @@ public class CAMRest extends ResourceConfig {
             return null;
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -713,16 +714,16 @@ public class CAMRest extends ResourceConfig {
                     + "' was successfully added!").build();
         } catch (IllegalArgumentException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (ClassNotFoundException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (RuntimeException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -739,7 +740,7 @@ public class CAMRest extends ResourceConfig {
             CAMRestImpl.removeProperty(repoInstance, modelName, attributeName);
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -752,16 +753,16 @@ public class CAMRest extends ResourceConfig {
                     .build();
         } catch (IllegalArgumentException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (ClassNotFoundException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (RuntimeException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -780,13 +781,13 @@ public class CAMRest extends ResourceConfig {
                     + "' was successfully deleted!").build();
         } catch (IllegalArgumentException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (RuntimeException e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -806,7 +807,7 @@ public class CAMRest extends ResourceConfig {
                     .collect(Collectors.toList());
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -829,7 +830,7 @@ public class CAMRest extends ResourceConfig {
             return null;
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -848,7 +849,7 @@ public class CAMRest extends ResourceConfig {
                     + relationship.getReferredName() + "' was successfully created!").build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -865,7 +866,7 @@ public class CAMRest extends ResourceConfig {
             CAMRestImpl.removeProperty(repoInstance, modelName, relationshipName);
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -877,7 +878,7 @@ public class CAMRest extends ResourceConfig {
                     + relationship.getReferredName() + "' was successfully updated!").build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -896,7 +897,7 @@ public class CAMRest extends ResourceConfig {
                     .build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -914,16 +915,11 @@ public class CAMRest extends ResourceConfig {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             List<OwnerJSON> retval = new ArrayList<OwnerJSON>();
             List<String> owners = CAMRestImpl.getOwners(repoInstance);
-            // if (null == ownerName || "".equalsIgnoreCase(ownerName))
             owners.forEach(item -> retval.add(new OwnerJSON(item)));
-            // else
-            // owners.stream().filter(owner ->
-            // owner.equalsIgnoreCase(ownerName)).collect(Collectors.toList())
-            // .forEach(item -> retval.add(new OwnerJSON(item)));
             return retval;
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -946,7 +942,7 @@ public class CAMRest extends ResourceConfig {
             return retval;
         } catch (Exception e) {
             logger.error(e);
-            throw new WebApplicationException(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -963,7 +959,7 @@ public class CAMRest extends ResourceConfig {
             return Response.ok("Owner with name '" + owner.getName() + "' was successfully created!").build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -979,7 +975,7 @@ public class CAMRest extends ResourceConfig {
             CAMRestImpl.deleteOwner(repoInstance, ownerName);
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -989,7 +985,7 @@ public class CAMRest extends ResourceConfig {
             return Response.ok("Owner with name '" + owner.getName() + "' was successfully updated!").build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -1005,7 +1001,7 @@ public class CAMRest extends ResourceConfig {
             return Response.ok("Owner with name '" + ownerName + "' was successfully deleted!").build();
         } catch (Exception e) {
             logger.error(e);
-            return createResponseError(e.getMessage());
+            throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
@@ -1075,9 +1071,5 @@ public class CAMRest extends ResourceConfig {
                 SesameRepoManager.releaseRepoDaoConn(repoInstance);
             }
         }
-    }
-
-    private Response createResponseError(String message) {
-        return Response.status(500).entity(message).type("text/plain").build();
     }
 }
