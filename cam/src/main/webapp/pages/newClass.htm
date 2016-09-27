@@ -4,14 +4,16 @@
             <button type="button" class="close" ng-click="closeCreateClassPanel()">
                 <i class="fa fa-times" aria-hidden="true"></i>
             </button>
-            <h4 class="modal-title" id="newClassLabel">{{title}}</h4>
+            <h4 class="modal-title" id="newClassLabel">{{title}} <b>{{className}}</b></h4>
         </div>
         <form name="newClassForm" ng-submit="" style="border:none;">
             <div class="modal-body">
-                <div class="row-fluid"><label>Class Name:</label> <input class="form-control" type="text"
-                                                                         ng-model="newClass.name"
-                                                                         ng-readonly="isNewClassNameReadonly"
-                                                                         name="name" ng-pattern="regexPattern"></input>
+                <div class="row-fluid"><label>Class Name:</label>
+                    <input class="form-control" type="text"
+                       ng-model="newClass.name"
+                       ng-readonly="isNewClassNameReadonly"
+                       name="name" ng-pattern="regexPattern">
+                    </input>
                     <span ng-show="newClassForm.name.$error.pattern">{{invalidNameMsg}}</span>
                     <span ng-show="invalidName">{{nameIsMandatory}}</span></div>
 

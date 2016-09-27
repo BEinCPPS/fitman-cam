@@ -414,7 +414,7 @@ a#detail-button-back {
 }
 
 .panel-height {
-    height: calc(83vh);
+    height: calc(100vh);
     overflow-y: auto;
 }
 

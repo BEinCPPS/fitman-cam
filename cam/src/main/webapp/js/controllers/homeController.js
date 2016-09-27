@@ -164,7 +164,7 @@ camApp.controller('homeController', [
 
         $scope.openAddChildPanel = function (node) {
             $scope.className = node.className;
-            $scope.title = 'Add child class';
+            $scope.title = 'Add child class to ';
             $ngDialog.open({
                 template: 'pages/newClass.htm',
                 controller: 'newChildClassController',
