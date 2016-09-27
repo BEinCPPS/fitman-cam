@@ -18,7 +18,7 @@ camApp.directive('lazyLoadClassesOptions', ['$http', function ($http) {
             $element.bind('mousedown', function () {
 
                 if (!$scope.loaded) {
-                    $http.get(BACK_END_URL_CONST + '/classes').success(function (data) {
+                    $http.get(BACK_END_URL_CONST + '/classes?flat=true').success(function (data) {
                         $scope.options = data;
                     }).error(function (error) {
                         $scope.$parent.closeCreateClassPanel();

@@ -50,14 +50,19 @@ public class CAMRest extends ResourceConfig {
 
     // CLASSES
 
+    /**
+     * author ascatox the param flat = true gives a FLAT list of all classes
+     * @param flat
+     * @return
+     */
     @GET
     @Path("/classes")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ClassItem> getClassHierarchy() {
+    public List<ClassItem> getClassHierarchy(@QueryParam("flat") boolean flat) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            return CAMRestImpl.getClasses(repoInstance, true);
+            return CAMRestImpl.getClasses(repoInstance, true, flat);
         } catch (Exception e) {
             logger.error(e);
             throw new WebApplicationException(e.getMessage());
@@ -73,7 +78,7 @@ public class CAMRest extends ResourceConfig {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            List<ClassItem> classes = CAMRestImpl.getClasses(repoInstance, false);
+            List<ClassItem> classes = CAMRestImpl.getClasses(repoInstance, false, false);
             ClassItem deepSearchClass = CAMRestImpl.deepSearchClasses(classes, className);
             if (deepSearchClass == null)
                 return new ArrayList<ClassItem>();

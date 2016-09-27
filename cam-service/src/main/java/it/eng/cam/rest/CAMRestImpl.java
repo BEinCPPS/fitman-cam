@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.ws.rs.WebApplicationException;
 
+import it.eng.cam.rest.dto.ClassJSON;
 import it.eng.ontorepo.*;
 import it.eng.ontorepo.sesame2.Sesame2RepositoryDAO;
 import org.apache.log4j.LogManager;
@@ -21,7 +22,7 @@ public class CAMRestImpl {
         return dao.getClassHierarchy();
     }
 
-    public static List<ClassItem> getClasses(RepositoryDAO dao, boolean checkNormalizedName) {
+    public static List<ClassItem> getClasses(RepositoryDAO dao, boolean checkNormalizedName, boolean flat) {
         ClassItem root = getClassHierarchy(dao);
         List<ClassItem> subClasses = root.getSubClasses();
         if (!checkNormalizedName)
@@ -32,9 +33,19 @@ public class CAMRestImpl {
                 classItem.setNormalizedName(normalizeClassName(normName));
             }
         }
-        return subClasses.stream()
-                .filter(item -> (item.getNamespace()).equalsIgnoreCase(SesameRepoManager.getNamespace()))
-                .collect(Collectors.toList());
+        if (!flat)
+            return subClasses.stream()
+                    .filter(item -> (item.getNamespace()).equalsIgnoreCase(SesameRepoManager.getNamespace()))
+                    .collect(Collectors.toList());
+        else {
+            List<ClassItem> results = new ArrayList<>();
+            Map<String, Boolean> visited = new HashMap<>(); //null
+            deepSearchFirstRecursive(dao, visited, root, results, false);
+            return results.stream()
+                    .filter(item -> (item.getNamespace()).equalsIgnoreCase(SesameRepoManager.getNamespace()))
+                    .collect(Collectors.toList());
+        }
+
     }
 
     public static List<IndividualItem> getIndividuals(RepositoryDAO dao) {
@@ -50,50 +61,60 @@ public class CAMRestImpl {
     }
 
     /**
-     * author ascatoz 2016-09-26 Depth First SEARCH Algorithm Recursive
+     * author ascatox 2016-09-26 Depth First SEARCH Algorithm Recursive
+     *
      * @param dao
      * @param visited
      * @param clazz
-     *
      */
-    private static void dfs_rec(RepositoryDAO dao, Map<String,
-            Boolean> visited, ClassItem clazz, List<IndividualItem> results) {
+    private static void deepSearchFirstRecursive(RepositoryDAO dao, Map<String,
+            Boolean> visited, ClassItem clazz, List results, boolean searchIndividuals) {
         visited.put(clazz.getNormalizedName(), true);
-        int i = 0;
+       int i = 0;
         for (ClassItem cls : clazz.getSubClasses()) {
-            if (i >= 3) {
-                SesameRepoManager.releaseRepoDaoConn(dao);
-                dao = SesameRepoManager.getRepoInstance(null);
-                i = 0;
-            }
             if (null == visited.get(cls.getNormalizedName()) || !visited.get(cls.getNormalizedName())) {
-                results.addAll(dao.getIndividuals(cls.getNormalizedName()));
-                dfs_rec(dao, visited, cls, results);
+                if (searchIndividuals)
+                    results.addAll(getIndividualsInDFS(dao, cls.getNormalizedName(), i));
+                else {
+                    results.add(cls);
+                }
+                deepSearchFirstRecursive(dao, visited, cls, results, searchIndividuals);
             }
-            i++;
         }
     }
 
+    private static List<IndividualItem> getIndividualsInDFS(RepositoryDAO dao, String className, int i) {
+        if (i >= 3) {
+            SesameRepoManager.releaseRepoDaoConn(dao);
+            dao = SesameRepoManager.getRepoInstance(null);
+            i = 0;
+        }
+        List<IndividualItem> individuals = dao.getIndividuals(className);
+        i++;
+        return individuals;
+    }
+
     /**
-     * author ascatoz 2016-09-26 Depth First SEARCH Algorithm Recursive
+     * author ascatox 2016-09-26 Depth First SEARCH Algorithm Recursive
+     *
      * @param dao
      * @param clazz
      * @return a List of Individual Items
      */
 
-    private static List<IndividualItem> dfs(RepositoryDAO dao, ClassItem clazz) {
+    private static List<IndividualItem> deepSearchFirst(RepositoryDAO dao, ClassItem clazz) {
         List<IndividualItem> results = new ArrayList<>();
         Map<String, Boolean> visited = new HashMap<>(); //null
         results.addAll(dao.getIndividuals(clazz.getNormalizedName()));
-        dfs_rec(dao, visited, clazz, results);
+        deepSearchFirstRecursive(dao, visited, clazz, results, true);
         return results;
     }
 
 
     public static List<IndividualItem> getIndividualsForChildren(RepositoryDAO dao, String className) {
-        List<ClassItem> classes = CAMRestImpl.getClasses(dao, false);
+        List<ClassItem> classes = CAMRestImpl.getClasses(dao, false, false);
         ClassItem fatherClass = CAMRestImpl.deepSearchClasses(classes, className);
-        return dfs(dao, fatherClass);
+        return deepSearchFirst(dao, fatherClass);
     }
 
     public static IndividualItem getIndividual(RepositoryDAO dao, String className) {
@@ -244,7 +265,7 @@ public class CAMRestImpl {
             List<String> hierarchy = new ArrayList<String>();
             hierarchy.add(className); //add input class as a first element
             repoInstance = SesameRepoManager.getRepoInstance(CAMRestImpl.class);
-            List<ClassItem> classes = CAMRestImpl.getClasses(repoInstance, false);
+            List<ClassItem> classes = CAMRestImpl.getClasses(repoInstance, false, false);
             ClassItem clazz = CAMRestImpl.deepSearchClasses(classes, className);
             while (null != clazz.getSuperClass() && !clazz.getSuperClass().getNormalizedName().contains("Thing")) {
                 // Add recursively ancestors of any class to build path
