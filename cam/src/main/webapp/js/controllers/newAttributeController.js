@@ -100,9 +100,12 @@ camApp.controller('newAttributeController', [
                 return;
             }
             $scope.typeToAdd = 'attribute';
+            $scope.titleOperationMessage = 'Create a new ';
             $scope.operationMessage = 'Are you sure you want to create a new ';
-            if ($scope.isAutocomplete)
+            if ($scope.isAutocomplete) {
                 $scope.operationMessage = 'Are you sure you want to select this ';
+                $scope.titleOperationMessage = 'Select this ';
+            }
             $ngDialog.open({
                 template: 'pages/confirmNewOperation.htm',
                 controller: 'confirmNewOperationController',
