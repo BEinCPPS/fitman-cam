@@ -31,7 +31,7 @@ camApp.controller('moveClassController', [
                 $scope.select.options = excludeMe;
             }
         });
-        
+
         $scope.saveNewClass = function () {
             $http.put(BACK_END_URL_CONST + '/classes/' + $scope.newClass.name, $scope.newClass)
                 .success(function (data, status) {
