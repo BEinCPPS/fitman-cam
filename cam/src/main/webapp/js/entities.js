@@ -88,7 +88,7 @@ var EntityManager = (function () {
             /*if (data[i].isModel == true) {
              elementType = 'model';
              }*/
-            data[i].action = '<div class="inline-flex-item"> <button class="cam-table-button" ng-click="openRemoveAssetPanel(\'' + data[i].asset + '\', \'' + elementType + '\')' + '"> <i data-toggle="tooltip" title="Delete asset model" class="fa fa-trash cam-table-button"></i> </button>'
+            data[i].action = '<div class="inline-flex-item"> <button class="cam-table-button" ng-click="openRemoveAssetPanel(\'' + data[i].asset + '\', \'' + elementType + '\')' + '"> <i data-toggle="tooltip" title="Delete asset" class="fa fa-trash cam-table-button"></i> </button>'
 
                 + '<a class="cam-icon-a" href="#/detail/' + data[i].asset + '/' + clazzName + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-arrow-circle-right cam-table-button"></i> </a>';
 
