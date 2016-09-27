@@ -25,6 +25,13 @@ camApp.controller('moveClassController', [
             options: null
         };
 
+        $scope.$watch('select.options', function () {
+            if ($scope.select.options && $scope.select.options.length > 1) { //TODO
+                var excludeMe = entityManager.removeClassMySelf($scope.select.options, $scope.className);
+                $scope.select.options = excludeMe;
+            }
+        });
+        
         $scope.saveNewClass = function () {
             $http.put(BACK_END_URL_CONST + '/classes/' + $scope.newClass.name, $scope.newClass)
                 .success(function (data, status) {
