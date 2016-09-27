@@ -7,7 +7,7 @@
             <h4 class="modal-title" id="confirmNewOperationLabel">Create a new  <b>{{typeToAdd}}</b></h4>
         </div>
         <div class="modal-body">
-            <span>Are you sure you want to create a new {{typeToAdd}}?</span>
+            <span>{{operationMessage}} {{typeToAdd}}?</span>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-mini" ng-click="closeConfirmNewOperationPanel()"> Cancel

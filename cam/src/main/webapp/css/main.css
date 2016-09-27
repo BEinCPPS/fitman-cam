@@ -424,5 +424,5 @@ button[ng-disabled="true"] {
 }
 
 .tree-nodes-container li:last-child{
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }

@@ -11,6 +11,7 @@ camApp.controller('newRelationshipController', [
         $scope.invalidName = false;
         $scope.valueIsMandatory = false;
         $scope.isEditing = false;
+        $scope.operationMessage = 'Are you sure you want to create a new ';
 
         var urlFragment = '/assets/';
         if ($scope.attributeName) {
