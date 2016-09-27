@@ -423,6 +423,6 @@ button[ng-disabled="true"] {
     color: #808080 !important;
 }
 
-ul#home-tree-nodes {
-    margin-bottom: 50px;
+.tree-nodes-container li:last-child{
+    margin-bottom: 15px;
 }
