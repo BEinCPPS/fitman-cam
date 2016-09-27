@@ -813,7 +813,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 
         name = Util.getGlobalName(getImplicitNamespace(), name);
         if (getIndividualDeclarationCount(name) > 0) {
-            throw new IllegalArgumentException("Asset " + name + " already exists");
+            throw new IllegalArgumentException("Asset " + Util.getLocalName(getImplicitNamespace(), name) + " already exists");
         }
 
         className = Util.getGlobalName(getImplicitNamespace(), className);
@@ -873,7 +873,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 
         name = Util.getGlobalName(getImplicitNamespace(), name);
         if (getIndividualDeclarationCount(name) > 0) {
-            throw new IllegalArgumentException("Asset " + name + " already exists");
+            throw new IllegalArgumentException("Asset " + Util.getLocalName(getImplicitNamespace(), name) + " already exists");
         }
 
         modelName = Util.getGlobalName(getImplicitNamespace(), modelName);
