@@ -414,10 +414,15 @@ a#detail-button-back {
 }
 
 .panel-height {
-    height: calc(100vh);
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-button[ng-disabled="true"]{
+button[ng-disabled="true"] {
     color: #808080 !important;
+}
+
+ul#home-tree-nodes {
+    margin-bottom: 50px;
 }
