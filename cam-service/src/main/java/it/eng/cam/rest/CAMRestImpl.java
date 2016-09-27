@@ -70,28 +70,23 @@ public class CAMRestImpl {
     private static void deepSearchFirstRecursive(RepositoryDAO dao, Map<String,
             Boolean> visited, ClassItem clazz, List results, boolean searchIndividuals) {
         visited.put(clazz.getNormalizedName(), true);
-       int i = 0;
+        int i = 0;
         for (ClassItem cls : clazz.getSubClasses()) {
             if (null == visited.get(cls.getNormalizedName()) || !visited.get(cls.getNormalizedName())) {
-                if (searchIndividuals)
-                    results.addAll(getIndividualsInDFS(dao, cls.getNormalizedName(), i));
-                else {
+                if (searchIndividuals) {
+                    if (i >= 3) {
+                        SesameRepoManager.releaseRepoDaoConn(dao);
+                        dao = SesameRepoManager.getRepoInstance(null);
+                        i = 0;
+                    }
+                    results.addAll(dao.getIndividuals(cls.getNormalizedName()));
+                    i++;
+                } else {
                     results.add(cls);
                 }
                 deepSearchFirstRecursive(dao, visited, cls, results, searchIndividuals);
             }
         }
-    }
-
-    private static List<IndividualItem> getIndividualsInDFS(RepositoryDAO dao, String className, int i) {
-        if (i >= 3) {
-            SesameRepoManager.releaseRepoDaoConn(dao);
-            dao = SesameRepoManager.getRepoInstance(null);
-            i = 0;
-        }
-        List<IndividualItem> individuals = dao.getIndividuals(className);
-        i++;
-        return individuals;
     }
 
     /**
