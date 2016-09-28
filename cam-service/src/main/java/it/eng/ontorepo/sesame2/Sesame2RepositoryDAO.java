@@ -640,6 +640,10 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             throw new IllegalArgumentException("Class name is mandatory");
         }
 
+        if (name.equals(parentName)) {
+            throw new IllegalArgumentException("Class parent could not be itself");
+        }
+
         // only "user-defined" classes can be moved
         if (!Util.isLocalName(name)) {
             throw new IllegalArgumentException("Class name must not be qualified by a namespace: " + name);

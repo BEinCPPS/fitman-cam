@@ -1,18 +1,16 @@
 package it.eng.cam.rest;
 
-import java.util.*;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
-import javax.ws.rs.WebApplicationException;
-
-import it.eng.cam.rest.dto.ClassJSON;
+import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.*;
-import it.eng.ontorepo.sesame2.Sesame2RepositoryDAO;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import it.eng.cam.rest.sesame.SesameRepoManager;
+import javax.ws.rs.WebApplicationException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CAMRestImpl {
     private static final Logger logger = LogManager.getLogger(CAMRestImpl.class.getName());
