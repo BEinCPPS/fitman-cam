@@ -423,6 +423,11 @@ button[ng-disabled="true"] {
     color: #808080 !important;
 }
 
+a[disabled="true"] {
+    color: #808080 !important;
+    cursor: default !important;
+}
+
 .tree-nodes-container li:last-child{
     margin-bottom: 10px;
 }
