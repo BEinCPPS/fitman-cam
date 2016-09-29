@@ -112,6 +112,14 @@ camApp.controller('newAttributeController', [
                 scope: $scope
             });
         };
+        
+        $scope.manageEdit = function() {
+            if($scope.isAutocomplete) {
+                $scope.saveNewAttribute();
+            } else {
+                $scope.openConfirmOperationPanel();
+            }
+        };
 
     }]);
 

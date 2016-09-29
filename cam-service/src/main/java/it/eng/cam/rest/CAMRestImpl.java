@@ -72,7 +72,7 @@ public class CAMRestImpl {
         for (ClassItem cls : clazz.getSubClasses()) {
             if (null == visited.get(cls.getNormalizedName()) || !visited.get(cls.getNormalizedName())) {
                 if (searchIndividuals) {
-                    if (i >= 3) {
+                    if (i >= 0) {
                         SesameRepoManager.releaseRepoDaoConn(dao);
                         dao = SesameRepoManager.getRepoInstance(null);
                         i = 0;
