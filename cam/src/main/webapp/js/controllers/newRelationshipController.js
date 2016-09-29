@@ -71,6 +71,10 @@ camApp.controller('newRelationshipController', [
         };
 
         $scope.openConfirmOperationPanel = function () {
+            if ($scope.attributeName) {
+                $scope.saveNewRelationship();
+                return;
+            }
             if (isEmpty($scope.newRelationship.name)) {
                 $scope.invalidName = true;
                 return;

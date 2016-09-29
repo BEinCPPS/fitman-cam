@@ -8,7 +8,7 @@ camApp.controller('homeController', [
     'ngDialog',
     '$timeout',
     'ngNotifier',
-    function ($scope, Scopes, $http, $routeParams, $route, $q, $ngDialog, $timeout, ngNotifier ){
+    function ($scope, Scopes, $http, $routeParams, $route, $q, $ngDialog, $timeout, ngNotifier) {
         Scopes.store('homeController', $scope);
         entityManager.init($scope, $http, $q);
 
@@ -71,12 +71,14 @@ camApp.controller('homeController', [
 
         $scope.assetList = [];
         entityManager.getClasses();
+        entityManager.getOwnersList();
         $scope.newAssetVisible = false;
 
 
         //funzioni di utilità
         $scope.loadChildren = function () {
             entityManager.getChildrenForClass($scope.currentNode.className);
+            window.scroll(0,0);
         }
 
         $scope.loadAsset = function () {

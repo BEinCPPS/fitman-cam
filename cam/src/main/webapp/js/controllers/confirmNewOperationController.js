@@ -14,8 +14,10 @@ camApp.controller('confirmNewOperationController', [
         $scope.confirmNewOperation = function () {
             if ($scope.typeToAdd == 'attribute') {
                 Scopes.get('newAttributeController').saveNewAttribute();
-            } else {
+            } else if($scope.typeToAdd == 'relationship'){
                 Scopes.get('newRelationshipController').saveNewRelationship();
+            } else if($scope.typeToAdd == 'domain'){
+                Scopes.get('newDomainController').saveNewDomain();
             }
             $ngDialog.closeAll();
         };

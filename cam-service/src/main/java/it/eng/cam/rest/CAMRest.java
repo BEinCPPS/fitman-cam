@@ -491,6 +491,7 @@ public class CAMRest extends ResourceConfig {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
         try {
+            repoInstance = SesameRepoManager.getRepoInstance(null);
             CAMRestImpl.setRelationship(repoInstance, relationship.getName(), assetName,
                     relationship.getReferredName());
             return Response.ok("Relation with name '" + relationshipName + "'between '" + assetName + "' and '"
@@ -745,6 +746,7 @@ public class CAMRest extends ResourceConfig {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
         try {
+            repoInstance = SesameRepoManager.getRepoInstance(null);
             CAMRestImpl.setAttribute(repoInstance, attribute.getName(), modelName, attribute.getValue(),
                     attribute.getType());
             return Response.ok(

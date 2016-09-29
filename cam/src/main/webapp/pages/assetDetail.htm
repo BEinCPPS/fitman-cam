@@ -1,6 +1,11 @@
+<div id="toaster-info">
+    <toaster-container toaster-options="
+    {'time-out':{ 'toast-warning': 10, 'toast-error': 0 } }">
+    </toaster-container>
+</div>
 <div id="asset-detail-container">
     <div id="breadcrumb">
-        <a ng-href="#/"><span><b>Home</b></span></a><a ng-href="#/{{className}}"><span>{{className}}</span></a>
+        <a ng-href="#/"><span><b>Home</b></span></a><a href="#/class/{{className}}"><span>{{className}}</span></a>
     </div>
     <div id="panel-container" class="panel panel-default panel-height">
         <div id="asset-detail">
@@ -33,8 +38,6 @@
                     </tr>
                     </thead>
                 </table>
-                <!-- 			<div class="cam-btn-add-container"><input type="image" title="New Asset Model" src="img/plus.png"/></div> -->
-
             </div>
         </div>
 

@@ -111,7 +111,6 @@ var EntityManager = (function () {
         //TODO Address
             .success(function (data) {
                 $scope.classList = createClasses(data);
-                console.log($scope.classList);
                 if (deferred)
                     deferred.resolve(data);
 
@@ -217,7 +216,11 @@ var EntityManager = (function () {
             .success(function (data) {
                 $scope.ownersList = [];
                 for (var i = 0; i < data.length; i++) {
-                    $scope.ownersList.push(data[i].name);
+                    var domain = {
+                        name: data[i].name,
+                        action:  '<div class="inline-flex-item"><button class="cam-table-button" ng-click="openConfirmDeleteDomain(\''+data[i].name+'\')"> <i data-toggle="tooltip" title="Delete ' + data[i].name + '" class="fa fa-trash cam-table-button"></i> </button>'
+                    };
+                    $scope.ownersList.push(domain);
                 }
             })
             .error(function (error) {

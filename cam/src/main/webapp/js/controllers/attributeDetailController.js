@@ -1,10 +1,10 @@
 camApp.controller('attributeDetailController', [
-		'$scope',
-        'Scopes',
-		'$http',
-        '$q',
-	    'ngDialog',
-       	function ($scope, Scopes, $http, $q, $ngDialog) {
+    '$scope',
+    'Scopes',
+    '$http',
+    '$q',
+    'ngDialog',
+    function ($scope, Scopes, $http, $q, $ngDialog) {
         Scopes.store('attributeDetailController', $scope);
 
         $scope.typeIsMandatoryMsg = "Type is mandatory";
@@ -46,7 +46,8 @@ camApp.controller('attributeDetailController', [
             if (!isEmpty($scope.newAttribute.name)) {
                 $scope.invalidName = false;
             }
-        });
+        })
+
         $scope.$watch('newAttribute.type', function () {
             if (!isEmpty($scope.newAttribute.type)) {
                 $scope.typeIsMandatory = false;
@@ -58,6 +59,10 @@ camApp.controller('attributeDetailController', [
                 $scope.valueIsMandatory = false;
             }
         });
+
+        $scope.manageEdit = function () {
+            $scope.saveNewAttribute();
+        };
 
         $scope.saveNewAttribute = function () {
             if (isEmpty($scope.newAttribute.name)) {
@@ -79,5 +84,7 @@ camApp.controller('attributeDetailController', [
                 $ngDialog.close();
                 $scope.openErrorPanel(err);
             });
-        }
-        }]);
+        };
+
+
+    }]);
