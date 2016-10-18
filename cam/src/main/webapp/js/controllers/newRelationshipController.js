@@ -1,10 +1,12 @@
 camApp.controller('newRelationshipController', [
     '$scope',
     'Scopes',
-    '$http',
     '$q',
     'ngDialog',
-    function ($scope, Scopes, $http, $q, $ngDialog) {
+    'ngNotifier',
+    'entityManager',
+    '$route',
+    function ($scope, Scopes,  $q, $ngDialog, ngNotifier, entityManager, $route) {
         Scopes.store('newRelationshipController', $scope);
         $scope.relPanelTitle = "Add Relationship";
         $scope.valueIsMandatoryMsg = "Referred name is mandatory";
@@ -18,13 +20,16 @@ camApp.controller('newRelationshipController', [
         if ($scope.attributeName) {
             $scope.relPanelTitle = "Edit Relationship";
             $scope.isEditing = true;
-            $http.get(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/relationships/' + $scope.attributeName)
+            // $http.get(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/relationships/' + $scope.attributeName)
+            entityManager.getRelationship($scope.selectedAssetName, $scope.attributeName)
                 .success(function (data) {
                     $scope.newRelationship = {
                         name: data.normalizedName,
                         referredName: data.propertyValue
                     };
-                });
+                }).error(function (err) {
+                $scope.openErrorPanel(err);
+            });
         } else {
             $scope.newRelationship = {
                 name: "",
@@ -50,22 +55,29 @@ camApp.controller('newRelationshipController', [
 
         $scope.saveNewRelationship = function () {
             if ($scope.attributeName) {
-                $http.put(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/relationships/' + $scope.attributeName, $scope.newRelationship).success(function (data, status) {
-                    entityManager.getAssetDetail($scope.selectedAssetName);
+                //$http.put(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/relationships/' + $scope.attributeName,
+                //  $scope.newRelationship)
+                entityManager.updateRelationship($scope.selectedAssetName, $scope.attributeName, $scope.newRelationship)
+                    .success(function (data, status) {
+                        entityManager.getAssetDetail($scope.selectedAssetName);
+                        $ngDialog.close();
+                        ngNotifier.success();
+                        $route.reload();
+                    }).error(function (err) {
                     $ngDialog.close();
-
-                }).error(function (err) {
-                    $ngDialog.close();
-                    $scope.openErrorPanel(err);
+                    ngNotifier.error(err);
                 });
             } else {
-                $http.post(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/relationships', $scope.newRelationship).success(function (data, status) {
-                    entityManager.getAssetDetail($scope.selectedAssetName);
+                //$http.post(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/relationships', $scope.newRelationship)
+                entityManager.createRelationship($scope.selectedAssetName, $scope.newRelationship)
+                    .success(function (data, status) {
+                        entityManager.getAssetDetail($scope.selectedAssetName);
+                        $ngDialog.close();
+                        ngNotifier.success();
+                        $route.reload();
+                    }).error(function (err) {
                     $ngDialog.close();
-
-                }).error(function (err) {
-                    $ngDialog.close();
-                    $scope.openErrorPanel(err);
+                   ngNotifier.error(err);
                 });
             }
         };

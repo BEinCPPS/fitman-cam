@@ -96,6 +96,7 @@ a:link, a:visited, a:hover {
 
 .cam-data-table {
     border-bottom: 0.05em solid #CCC;
+    width:  100%;
 }
 
 div[data-angular-treeview] {

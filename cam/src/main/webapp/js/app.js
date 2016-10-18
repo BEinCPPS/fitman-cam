@@ -1,6 +1,6 @@
 // MODULE
 var camApp = angular.module('camApp', ['ngRoute', 'ngResource', 'angularTreeview', 'ngDialog', 'ngContextMenu',
-    'toaster', 'ngAnimate','ui.bootstrap','ngScrollTo']);
+    'toaster', 'ngAnimate','ui.bootstrap','ngTable']);
 
 camApp.config(['ngDialogProvider', function (ngDialogProvider) {
     ngDialogProvider.setDefaults({
@@ -33,37 +33,7 @@ camApp.config(function ($httpProvider) {
                 return $q.reject(rejection);
             }
         }
-    })
-});
-
-
-camApp.factory('Scopes', function ($rootScope) {
-    var mem = {};
-    return {
-        store: function (key, value) {
-            mem[key] = value;
-        },
-        get: function (key) {
-            return mem[key];
-        },
-        reset: function () {
-            mem = {};
-        }
-    };
-});
-
-
-camApp.factory('ngNotifier', function (toaster) {
-    return {
-        notify: function (msg) {
-            toaster.success(msg);
-        },
-        notifyError: function (msg) {
-            toaster.error(msg);
-        },
-        notifyInfo: function (msg) {
-            toaster.info(msg);
-        }
-    }
+    });
+    $httpProvider.interceptors.push('AuthInterceptor');
 });
 

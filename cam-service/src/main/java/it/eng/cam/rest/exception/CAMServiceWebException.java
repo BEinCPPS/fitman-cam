@@ -13,4 +13,8 @@ public class CAMServiceWebException extends WebApplicationException {
     public CAMServiceWebException(String message) {
         super(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).type(MediaType.TEXT_PLAIN).build());
     }
+
+    public CAMServiceWebException(Response.Status status, String message) {
+        super(Response.status(status).entity(message).type(MediaType.TEXT_PLAIN).build());
+    }
 }

@@ -1,9 +1,10 @@
 camApp.controller('newClassController', [
     '$scope',
-    '$http',
     '$q',
     'ngDialog',
-    function ($scope, $http, $q, $ngDialog) {
+    'entityManager',
+    'ngNotifier',
+    function ($scope, $q, $ngDialog, entityManager, ngNotifier) {
         $scope.isNewClassReadonly = false;
         $scope.isParentNameReadonly = false;
         $scope.isNewRootClass = true;
@@ -34,12 +35,14 @@ camApp.controller('newClassController', [
                 return;
             }
 
-            $http.post(BACK_END_URL_CONST + '/classes', $scope.newClass).success(function (data, status) {
+            entityManager.createClass($scope.newClass)
+                .success(function (data, status) {
+                    $ngDialog.close();
+                    ngNotifier.success();
+                    window.location.reload();
+                }).error(function (err) {
                 $ngDialog.close();
-                window.location.reload();
-            }).error(function (err) {
-                $ngDialog.close();
-                $scope.openErrorPanel(err);
+                ngNotifier.error(err);
             });
         }
 

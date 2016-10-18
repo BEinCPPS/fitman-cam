@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,36 +14,32 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import it.eng.cam.rest.client.identity.IDMService;
+import it.eng.cam.rest.dto.*;
 import it.eng.cam.rest.exception.CAMServiceWebException;
+import it.eng.cam.rest.security.CAMSecurityContext;
+import it.eng.cam.rest.security.Role;
+//import it.eng.cam.rest.security.Secured;
+import it.eng.cam.rest.security.keystone.dto.PrincipalJSON;
 import it.eng.ontorepo.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import it.eng.cam.rest.dto.AssetJSON;
-import it.eng.cam.rest.dto.AssetModelJSON;
-import it.eng.cam.rest.dto.AttributeJSON;
-import it.eng.cam.rest.dto.ClassJSON;
-import it.eng.cam.rest.dto.OwnerJSON;
-import it.eng.cam.rest.dto.RelationshipJSON;
 import it.eng.cam.rest.sesame.SesameRepoManager;
+
 
 @Path("/")
 public class CAMRest extends ResourceConfig {
+    @Context
+    CAMSecurityContext securityContext;
+    //@Secured
     private static final Logger logger = LogManager.getLogger(CAMRest.class.getName());
 
     public CAMRest() {
@@ -58,6 +56,7 @@ public class CAMRest extends ResourceConfig {
      */
     @GET
     @Path("/classes")
+    //@Secured({Role.DEFAULT})
     @Produces(MediaType.APPLICATION_JSON)
     public List<ClassItem> getClassHierarchy(@QueryParam("flat") boolean flat) {
         RepositoryDAO repoInstance = null;
@@ -1022,6 +1021,45 @@ public class CAMRest extends ResourceConfig {
         return CAMRestImpl.getTreePath(className);
     }
 
+
+    @GET
+    @Path("/users")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<UserJSON> geUsers() {
+        try {
+            return IDMService.getUsers();
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        }
+    }
+
+
+    @POST
+    @Path("/authenticate")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createOwner(UserLoginJSON user) {
+        try {
+            return IDMService.authenticate(user);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+        }
+    }
+
+    @GET
+    @Path("/logged")
+    @Produces(MediaType.APPLICATION_JSON)
+    public UserJSON getUserLogged(@Context HttpServletRequest httpRequest) {
+        try {
+            return IDMService.getUser(httpRequest);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        }
+    }
+
     @GET
     @Produces("text/html")
     public String summary(@Context HttpServletRequest httpRequest) {
@@ -1075,3 +1113,4 @@ public class CAMRest extends ResourceConfig {
         }
     }
 }
+

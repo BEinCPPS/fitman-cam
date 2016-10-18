@@ -1,10 +1,12 @@
 camApp.controller('attributeDetailController', [
     '$scope',
     'Scopes',
-    '$http',
     '$q',
     'ngDialog',
-    function ($scope, Scopes, $http, $q, $ngDialog) {
+    'entityManager',
+    '$route',
+    'ngNotifier',
+    function ($scope, Scopes, $q, $ngDialog, entityManager, $route, ngNotifier) {
         Scopes.store('attributeDetailController', $scope);
 
         $scope.typeIsMandatoryMsg = "Type is mandatory";
@@ -20,14 +22,11 @@ camApp.controller('attributeDetailController', [
         }
 
         $scope.updateValueType = function () {
-
             $scope.newAttribute.value = '';
         }
 
-        var urlFragment = '/assets/';
-        if ($scope.isModel)
-            urlFragment = '/models/';
-        $http.get(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/attributes/' + $scope.attributeName)
+        //$http.get(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/attributes/' + $scope.attributeName)
+        entityManager.getAttribute($scope.isModel, $scope.selectedAssetName, $scope.attributeName)
             .success(function (data) {
                 $scope.newAttribute = {
                     name: data.normalizedName,
@@ -35,7 +34,9 @@ camApp.controller('attributeDetailController', [
                     type: data.propertyType
                 }
 
-            });
+            }).error(function (err) {
+            console.log(err);
+        });
 
 
         $scope.closeNewAttributePanel = function () {
@@ -77,12 +78,16 @@ camApp.controller('attributeDetailController', [
                 $scope.valueIsMandatory = true;
                 return;
             }
-            $http.put(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/attributes/' + $scope.newAttribute.name, $scope.newAttribute).success(function (data, status) {
-                entityManager.getAssetDetail($scope.selectedAssetName);
+            //$http.put(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/attributes/' + $scope.newAttribute.name, $scope.newAttribute)
+            entityManager.updateAttribute($scope.isModel, $scope.selectedAssetName, $scope.newAttribute.name, $scope.newAttribute)
+                .success(function (data, status) {
+                    Scopes.get('detailController').getAssetDetail($scope.selectedAssetName, ATTRIBUTES);
+                    $ngDialog.close();
+                    ngNotifier.notify('Success!!!');
+                    $route.reload();
+                }).error(function (err) {
                 $ngDialog.close();
-            }).error(function (err) {
-                $ngDialog.close();
-                $scope.openErrorPanel(err);
+                ngNotifier.error(err);
             });
         };
 

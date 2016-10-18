@@ -1,22 +1,34 @@
 camApp.controller('homeController', [
     '$scope',
     'Scopes',
-    '$http',
     '$routeParams',
     '$route',
     '$q',
     'ngDialog',
     '$timeout',
     'ngNotifier',
-    function ($scope, Scopes, $http, $routeParams, $route, $q, $ngDialog, $timeout, ngNotifier) {
+    'entityManager',
+    'Auth',
+    '$rootScope',
+    '$location',
+    function ($scope, Scopes, $routeParams, $route, $q, $ngDialog, $timeout, ngNotifier, entityManager, Auth, $rootScope, $location) {
         Scopes.store('homeController', $scope);
-        entityManager.init($scope, $http, $q);
+        $scope.getAssets = function (name, retrieveChildren) {
+            entityManager.getAssets(name, retrieveChildren)
+                .then(function (response) {
+                    $scope.fetchAssetList(response.data, function (res) {
+                        $scope.assetList = $scope.formatAssetListTable(res, name);
+                    });
+                }, function (error) {
+                   ngNotifier.error(error);
+                });
+        }
 
         if (!isEmpty($routeParams.className)) {
             setTimeout(function () { //CHIAMATA ASINCRONA PER RICARICARE GLI ASSET DELLA CLASSE
                 $scope.currentNode = {};
                 $scope.currentNode.className = $routeParams.className;
-                entityManager.getAssets($routeParams.className, true);
+                $scope.getAssets($routeParams.className, true);
                 $scope.expandAncestors($routeParams.className);
                 $scope.newAssetVisible = true;
             }, 0);
@@ -29,7 +41,6 @@ camApp.controller('homeController', [
 
 
         $scope.columnDefs = [
-
             {
                 "mDataProp": "asset",
                 "aTargets": [0],
@@ -70,22 +81,33 @@ camApp.controller('homeController', [
 
 
         $scope.assetList = [];
-        entityManager.getClasses();
-        entityManager.getOwnersList();
-        $scope.newAssetVisible = false;
+        entityManager.getClasses().then(function (response) {
+            $scope.classList = $scope.createClasses(response.data);
+        }, function (error) {
+           ngNotifier.error(error);
+        })
 
+        $scope.newAssetVisible = false;
 
         //funzioni di utilità
         $scope.loadChildren = function () {
-            entityManager.getChildrenForClass($scope.currentNode.className);
-            window.scroll(0,0);
+            entityManager.getChildrenForClass($scope.currentNode.className)
+                .then(function (response) {
+                    var dataNotMySelf = $scope.removeClassMySelf(response.data, $scope.currentNode.className);
+                    if (!isEmpty(dataNotMySelf)) {
+                        var classes = $scope.createClasses(dataNotMySelf);
+                        $scope.currentNode.children = classes;
+                    }
+                    $scope.loadAsset();
+                }, function (error) {
+                    ngNotifier.error(error);
+                });
+            window.scroll(0, 0);
         }
 
         $scope.loadAsset = function () {
-            //				alert($scope.currentNode); //per recuperare il nodo da passare in input a servizio rest
             if ($scope.currentNode.className) {
-                entityManager.getAssets($scope.currentNode.className, true);
-
+                $scope.getAssets($scope.currentNode.className, true);
                 $scope.newAssetVisible = true;
             } else {
                 $scope.assetList = [];
@@ -94,7 +116,7 @@ camApp.controller('homeController', [
         }
 
         $scope.openNewAssetModelPanel = function () {
-            $http.get(BACK_END_URL_CONST + '/owners')
+            entityManager.getOwners()
                 .success(function (data) {
                     $scope.ownersList = [];
                     $scope.ownersList.push('');
@@ -109,33 +131,30 @@ camApp.controller('homeController', [
                 })
                 .error(function (error) {
                     $scope.ownersList = [];
-                    openErrorPanel(error);
+                    ngNotifier.error(error);
                 });
         }
 
         $scope.openNewAssetPanel = function (selectedModel) {
             $scope.selectedModel = selectedModel;
-
-            $http.get(BACK_END_URL_CONST + '/owners')
-                .success(function (data) {
-                    $scope.ownersList = [];
-                    for (var i = 0; i < data.length; i++) {
-                        $scope.ownersList.push(data[i].name);
-                    }
-                    $ngDialog.open({
-                        template: 'pages/newAsset.htm',
-                        controller: 'newAssetController',
-                        scope: $scope
-                    });
-                })
+            entityManager.getOwners().success(function (data) {
+                $scope.ownersList = [];
+                for (var i = 0; i < data.length; i++) {
+                    $scope.ownersList.push(data[i].name);
+                }
+                $ngDialog.open({
+                    template: 'pages/newAsset.htm',
+                    controller: 'newAssetController',
+                    scope: $scope
+                });
+            })
                 .error(function (error) {
                     $scope.ownersList = [];
-                    openErrorPanel(error);
+                    ngNotifier.error(error);
                 });
 
 
         }
-
         $scope.changeBackground = function (ev) {
             $('.ownselector').each(
                 function () {
@@ -200,20 +219,19 @@ camApp.controller('homeController', [
             //     controller: 'openErrorController',
             //     scope: $scope
             // });
-            ngNotifier.notifyError($scope.errorMsg);
-
+            console.log($scope.errorMsg);
+            if (typeof($scope.errorMsg) === 'object')
+                $scope.errorMsg = JSON.stringify($scope.errorMsg);
+            ngNotifier.error($scope.errorMsg);
         }
 
         $scope.backToHomeWithExpandedTree = function (className) {
             $scope.ancestorClassName = className;
-            var deferred = $q.defer();
-            entityManager.getAncestorsList(className, deferred);
-            var promise = deferred.promise;
-            promise.then(function (data) {
+            entityManager.getAncestors(className).then(function (response) {
                 $route.reload();
                 $scope.init();
             }, function (error) {
-                console.log(error);
+               ngNotifier.error(error);
             });
 
         }
@@ -271,21 +289,119 @@ camApp.controller('homeController', [
                 }
             }
 
-            var deferred = $q.defer();
-            entityManager.getAncestorsList(elem, deferred);
-            var promise = deferred.promise;
+            var promise = entityManager.getAncestors(elem);
             var isLeaf = false
-            promise.then(function (data) {
-                var dataStr = data + '';
+            promise.then(function (response) {
+                var dataStr = response.data + '';
                 var ancestors = dataStr.split(',');
                 for (var i = 0; i < ancestors.length; i++) {
                     isLeaf = ancestors.length - 1 == i;
                     search($scope.classList, ancestors[i]);
                 }
             }, function (error) {
-                console.log(error);
+               ngNotifier.error(error);
             });
 
+        };
+
+
+        $scope.formatAssetListTable = function (data, clazzName) {
+            if (!data)
+                return [];
+            for (var i = 0; i < data.length; i++) {
+                var elementType = 'asset';
+
+                data[i].action = '<div class="inline-flex-item"> <button class="cam-table-button" ng-click="openRemoveAssetPanel(\'' + data[i].asset + '\', \'' + elementType + '\')' + '"> <i data-toggle="tooltip" title="Delete asset" class="fa fa-trash cam-table-button"></i> </button>'
+                    + '<a class="cam-icon-a" href="#/detail/' + data[i].asset + '/' + clazzName + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-arrow-circle-right cam-table-button"></i> </a>';
+                data[i].action += '<button class="cam-table-button" ng-click="openNewAssetPanel(\'' + data[i].asset + '\')' + '"> <i data-toggle="tooltip" title="Create new asset from this model" class="fa fa-plus cam-table-button"></i></div> </button>';
+            }
+
+            data.sort(function (a, b) {
+                return new Date(b.originalDate) - new Date(a.originalDate);
+            });
+
+            return data;
         }
-    }])
-;
+
+
+        $scope.fetchAssetList = function (assetList, completeCallback) {
+            var result = [];
+
+            function fetchData() {
+                if (assetList.length == 0) {
+                    completeCallback(result);
+                } else {
+                    var cur = assetList.shift();
+                    //$http.get(BACK_END_URL_CONST + '/assets/' + cur.individualName + '/attributes')
+                    entityManager.getAttributesForIndividual(cur.individualName)
+                        .success(function (data) {
+                            var owned;
+                            var model;
+                            var created;
+                            var originalDate;
+                            var isModel = true;
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].normalizedName.indexOf('ownedBy') > 0)
+                                    owned = data[i].propertyValue.substring(data[i].propertyValue.lastIndexOf('#') + 1);
+                                if (data[i].normalizedName.indexOf('instanceOf') > 0) {
+                                    model = data[i].propertyValue;
+                                    isModel = false;
+                                }
+                                if (data[i].normalizedName.indexOf('createdOn') > 0) {
+                                    var myDate = new Date(data[i].propertyValue);
+                                    var month = (myDate.getMonth() + 1).toString();
+                                    var day = new String(myDate.getDate());
+                                    while (month.length < 2)
+                                        month = '0' + month;
+                                    while (day.length < 2)
+                                        day = '0' + day;
+                                    created = day + "/" + month + "/" + myDate.getFullYear();
+                                    originalDate = myDate;
+
+                                }
+                            }
+
+                            var asset = {
+                                asset: cur.individualName,
+                                created: created,
+                                originalDate: myDate,
+                                model: model || "",
+                                owner: owned || "",
+                                class: cur.className,
+                                isModel: isModel,
+                                index: i,
+                            };
+                            result.push(asset);
+                        })
+                        .error(function (error) {
+                            ngNotifier.error(error);
+
+                        }).finally(function () {
+                        fetchData();
+                    });
+                }
+            }
+
+            fetchData();
+        }
+
+
+        $scope.removeClassMySelf = function (data, className) {
+            return entityManager.removeClassMySelf(data, className);
+        }
+
+        $scope.createClasses = function (data) {
+            var classes = [];
+            for (var i in data) {
+                var classItem = {
+                    className: data[i].normalizedName,
+                    classId: data[i].normalizedName,
+                    children: $scope.createClasses(data[i].subClasses),
+                    collapsed: true,
+                }
+                classes.push(classItem);
+            }
+            return classes;
+        }
+
+    }]);

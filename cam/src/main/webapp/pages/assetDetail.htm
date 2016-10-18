@@ -1,12 +1,13 @@
-<div id="toaster-info">
-    <toaster-container toaster-options="
-    {'time-out':{ 'toast-warning': 10, 'toast-error': 0 } }">
-    </toaster-container>
-</div>
+<div ng-include="'pages/notification.html'"></div>
 <div id="asset-detail-container">
-    <div id="breadcrumb">
-        <a ng-href="#/"><span><b>Home</b></span></a><a href="#/class/{{className}}"><span>{{className}}</span></a>
+    <div ng-include="'pages/mainMenu.html'"></div>
+    <div class="well">
+           <h5><a href="#/class/{{className}}">{{className}}</a></h5>
     </div>
+    <!--<div id="breadcrumb">-->
+        <!--<a ng-href="#/"><span><b>Home</b></span></a><a href="#/class/{{className}}"><span>{{className}}</span></a>-->
+    <!--</div>-->
+
     <div id="panel-container" class="panel panel-default panel-height">
         <div id="asset-detail">
             <fieldset class="asset-detail-fieldset">

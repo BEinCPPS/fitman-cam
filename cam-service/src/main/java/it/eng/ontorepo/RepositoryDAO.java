@@ -142,6 +142,17 @@ public interface RepositoryDAO {
             throws IllegalArgumentException, RuntimeException;
 
     /**
+     * Creates a new UserJSON to associate to a Domain/Owner
+     * @param username
+     * @param name
+     * @param enabled
+     * @throws IllegalArgumentException
+     * @throws RuntimeException
+     */
+    public void createUser(String username, String name, boolean enabled)
+            throws IllegalArgumentException, RuntimeException;
+
+    /**
      * Deletes an existing Owner from the Reference Ontology.
      * <p/>
      * This operation fails if the target item has dependent items.

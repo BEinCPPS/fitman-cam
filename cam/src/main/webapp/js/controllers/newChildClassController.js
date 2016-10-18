@@ -1,12 +1,13 @@
 camApp.controller('newChildClassController', [
-		'$scope',
-        'Scopes',
-		'$http',
-        '$q',
-	    'ngDialog',
-        '$route',
-        '$timeout',
-		function ($scope, Scopes, $http, $q, $ngDialog, $route, $timeout) {
+    '$scope',
+    'Scopes',
+    '$q',
+    'ngDialog',
+    '$route',
+    '$timeout',
+    'entityManager',
+    'ngNotifier',
+    function ($scope, Scopes, $q, $ngDialog, $route, $timeout, entityManager, ngNotifier) {
         $scope.isNewClassReadonly = false;
         $scope.isParentNameReadonly = true;
         $scope.closeCreateClassPanel = function () {
@@ -35,16 +36,20 @@ camApp.controller('newChildClassController', [
                 $scope.invalidName = true;
                 return;
             }
-            $http.post(BACK_END_URL_CONST + '/classes', $scope.newClass).success(function (data, status) {
-                $ngDialog.close();
-                $route.reload();
-                $timeout(function () {
-                    Scopes.get('homeController').expandAncestors($scope.className);
-                },1000);
+            entityManager.createClasses($scope.newClass)
+                .then(function (response) {
+                    $ngDialog.close();
+                    ngNotifier.success()
+                    $route.reload();
+                    // $timeout(function () {
+                    //     Scopes.get('homeController').expandAncestors($scope.className);
+                    // }, 1000);
 
-            }).error(function (err) {
-                $ngDialog.close();
-                $scope.openErrorPanel(err);
+                }, function (error) {
+                    $ngDialog.close();
+                    $scope.openErrorPanel(error);
+                }).then(function (response) {
+                Scopes.get('homeController').expandAncestors($scope.className);
             });
         }
-        }]);
+    }]);

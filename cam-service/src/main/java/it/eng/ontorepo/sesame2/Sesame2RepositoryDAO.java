@@ -588,6 +588,34 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     }
 
     @Override
+    public void createUser(String username, String name, boolean enabled) throws IllegalArgumentException,
+            RuntimeException {
+        if (null == name || name.length() == 0) {
+            throw new IllegalArgumentException("Owner name is mandatory");
+        }
+
+        if (!Util.isLocalName(name)) {
+            throw new IllegalArgumentException("Owner must not be qualified by a namespace: " + name);
+        }
+
+        if (!Util.isValidLocalName(name)) {
+            throw new IllegalArgumentException("Not a valid Owner name: " + name);
+        }
+
+        name = Util.getGlobalName(BeInCpps.SYSTEM_NS, name);
+        if (getIndividualDeclarationCount(name) > 0) {
+            throw new IllegalArgumentException("Owner " + name + " already exists");
+        }
+
+        List<Statement> statements = new ArrayList<Statement>();
+        URI assetUri = vf.createURI(name);
+        URI classUri = vf.createURI(BeInCpps.OWNER_CLASS);
+        statements.add(vf.createStatement(assetUri, RDF.TYPE, classUri));
+        statements.add(vf.createStatement(assetUri, RDF.TYPE, ni));
+        addStatements(statements);
+    }
+
+    @Override
     public void deleteOwner(String name) throws IllegalArgumentException,
             IllegalStateException, RuntimeException {
         doDeleteIndividual(name, true);

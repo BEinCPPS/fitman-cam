@@ -45,6 +45,7 @@ camApp.directive('assetTable', ['$compile', function ($compile) {
         //        }
 
         options["fnRowCallback"] = function (nRow) {
+
             $compile(nRow)(scope);
             return nRow;
         };

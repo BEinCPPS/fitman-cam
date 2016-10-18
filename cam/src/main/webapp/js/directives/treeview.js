@@ -17,7 +17,6 @@
                                 b.cancelBubble = !0;
                                 b.returnValue = !1;
                                 a.collapsed = !a.collapsed
-
                             }
                         ,
                         a.selectNodeLabel = a.selectNodeLabel || function (c, b) {

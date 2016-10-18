@@ -16,7 +16,6 @@
                             | filter:$viewValue | limitTo:8"
                             typeahead-on-select= "updateValueType($item, $model, $label)"
                             ng-change="changeName()">
-
                     </input>
                     <span ng-show="newAttributeForm.name.$error.pattern">{{invalidNameMsg}}</span>
                     <span ng-show="invalidName">{{nameIsMandatory}}</span></div>
@@ -50,7 +49,6 @@
                         <select ng-model="newAttribute.value" class="form-control" ng-switch-when="java.lang.Boolean">
                             <option value="true">True</option>
                             <option value="false">False</option>
-
                         </select>
                         <input ng-switch-default class="form-control" type="text" ng-model="newAttribute.value"
                                ng-required="newAttribute.type">

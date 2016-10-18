@@ -1,9 +1,10 @@
 camApp.controller('newAssetController', [
     '$scope',
-    '$http',
     '$q',
     'ngDialog',
-    function ($scope, $http, $q, $ngDialog) {
+    'entityManager',
+    'ngNotifier',
+    function ($scope, $q, $ngDialog, entityManager, ngNotifier) {
         //$scope.elementToDelete;
         //$scope.typetoDelete;
         $scope.invalidName = false;
@@ -29,12 +30,13 @@ camApp.controller('newAssetController', [
                 $scope.invalidName = true;
                 return;
             }
-            $http.post(BACK_END_URL_CONST + urlFragment, $scope.newAsset).success(function (data, status) {
+            entityManager.createAsset($scope.newAsset).success(function (data, status) {
                 $scope.loadChildren();
                 $ngDialog.close();
+                ngNotifier.success("Success");
             }).error(function (err) {
                 $ngDialog.close();
-                $scope.openErrorPanel(err);
+                ngNotifier.error(err);
             });
         }
     }]);

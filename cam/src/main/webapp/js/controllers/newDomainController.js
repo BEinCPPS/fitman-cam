@@ -1,11 +1,12 @@
 camApp.controller('newDomainController', [
     '$scope',
     'Scopes',
-    '$http',
     '$q',
     'ngDialog',
     '$route',
-    function ($scope, Scopes, $http, $q, $ngDialog, $route) {
+    'entityManager',
+    'ngNotifier',
+    function ($scope, Scopes, $q, $ngDialog, $route, entityManager, ngNotifier) {
         Scopes.store('newDomainController', $scope);
         $scope.panelTitle = "Add Domain";
 
@@ -29,16 +30,18 @@ camApp.controller('newDomainController', [
         };
 
         $scope.saveNewDomain = function () {
-            $http.post(BACK_END_URL_CONST + '/owners', $scope.domain)
+            entityManager.createOwner($scope.domain)
                 .success(function (data, status) {
                     $ngDialog.close();
-                    entityManager.getOwnersList();
-                    setTimeout(function () {
-                        $route.reload();
-                    },1000);
+                    entityManager.getOwners()
+                        .then(function () {
+                            $route.reload();
+                        }, function (error) {
+                            console.log(error);
+                        });
                 }).error(function (err) {
                 $ngDialog.close();
-                $scope.openErrorPanel(err);
+                ngNotifier.error(err);
             });
         };
 

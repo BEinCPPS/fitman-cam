@@ -1,12 +1,13 @@
 camApp.controller('moveClassController', [
     '$scope',
     'Scopes',
-    '$http',
     '$q',
     'ngDialog',
     '$timeout',
     '$route',
-    function ($scope, Scopes, $http, $q, $ngDialog, $timeout, $route) {
+    'entityManager',
+    'ngNotifier',
+    function ($scope, Scopes, $q, $ngDialog, $timeout, $route, entityManager, ngNotifier) {
         $scope.isNewClassNameReadonly = true;
         $scope.isParentNameReadonly = false;
         $scope.isNewRootClass = false;
@@ -33,16 +34,24 @@ camApp.controller('moveClassController', [
         });
 
         $scope.saveNewClass = function () {
-            $http.put(BACK_END_URL_CONST + '/classes/' + $scope.newClass.name, $scope.newClass)
-                .success(function (data, status) {
+            //$http.put(BACK_END_URL_CONST + '/classes/' + $scope.newClass.name, $scope.newClass)
+            entityManager.updateClass($scope.newClass.name, $scope.newClass)
+                .then(function (data) {
+                    // $ngDialog.close();
+                    // $route.reload();
+                    // $timeout(function () {
+                    //     Scopes.get('homeController').expandAncestors($scope.newClass.parentName);
+                    // }, 1000);
+                    ngNotifier.success('Success');
+                }, function (error) {
                     $ngDialog.close();
-                    $route.reload();
-                    $timeout(function () {
-                        Scopes.get('homeController').expandAncestors($scope.newClass.parentName);
-                    }, 1000);
-                }).error(function (err) {
+                    ngNotifier.error(error);
+                }).then(function (data) {
                 $ngDialog.close();
-                $scope.openErrorPanel(err);
-            });
+                $route.reload();
+                $timeout(function () {
+                    Scopes.get('homeController').expandAncestors($scope.newClass.parentName);
+                }, 1000);
+            })
         }
     }]);

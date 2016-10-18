@@ -1,11 +1,13 @@
 camApp.controller('newAttributeController', [
     '$scope',
     'Scopes',
-    '$http',
     '$q',
     'ngDialog',
     '$timeout',
-    function ($scope, Scopes, $http, $q, $ngDialog, $timeout) {
+    'entityManager',
+    '$route',
+    'ngNotifier',
+    function ($scope, Scopes, $q, $ngDialog, $timeout, entityManager, $route, ngNotifier) {
         Scopes.store('newAttributeController', $scope);
         $scope.typeIsMandatoryMsg = "Type is mandatory";
         $scope.valueIsMandatoryMsg = "Value is mandatory";
@@ -73,15 +75,19 @@ camApp.controller('newAttributeController', [
         };
 
         $scope.saveNewAttribute = function () {
-            $http.post(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/attributes',
-                $scope.newAttribute).success(function (data, status) {
-                entityManager.getAssetDetail($scope.selectedAssetName);
-                entityManager.getAttributes();
-                $ngDialog.close();
-            }).error(function (err) {
-                $ngDialog.close();
-                $scope.openErrorPanel(err);
-            });
+            //$http.post(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/attributes',   $scope.newAttribute)
+            entityManager.createAttribute($scope.isModel, $scope.selectedAssetName, $scope.newAttribute)
+                .then(function (response) {
+                    Scopes.get('homeController').getAssetDetail($scope.selectedAssetName);
+                    Scopes.get('detailController').getAttributes();
+                    $ngDialog.close();
+                    ngNotifier.success();
+                    Scopes.get('detailController').getAssetDetail($scope.selectedAssetName, ATTRIBUTES);
+                    $route.reload();
+                }, function (err) {
+                    $ngDialog.close();
+                    ngNotifier.error(err);
+                });
         };
         var detailController = Scopes.get('detailController');
         $scope.attributes = detailController.attributes;
@@ -112,9 +118,9 @@ camApp.controller('newAttributeController', [
                 scope: $scope
             });
         };
-        
-        $scope.manageEdit = function() {
-            if($scope.isAutocomplete) {
+
+        $scope.manageEdit = function () {
+            if ($scope.isAutocomplete) {
                 $scope.saveNewAttribute();
             } else {
                 $scope.openConfirmOperationPanel();
