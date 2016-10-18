@@ -50,7 +50,16 @@ public class IDMService {
         invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
         invocationBuilder.header(X_SUBJECT_TOKEN, token);
         Response response = invocationBuilder.get();
-        return buildUser(response);
+        UserJSON user = buildUserFromToken(response);
+        return getUser(user);
+    }
+
+    private static UserJSON getUser(UserJSON user) {
+        Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
+        WebTarget webTarget = client.target(IDM_URL).path("users").path(user.getId());
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
+       return buildUser(invocationBuilder.get());
     }
 
     public static Response authenticate(UserLoginJSON userLoginJSON) {
@@ -64,7 +73,6 @@ public class IDMService {
         return response;
     }
 
-
     public static Response validateAuthToken(String token) {
         Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
         WebTarget webTarget = client.target(IDM_URL).path("auth").path("tokens");
@@ -74,7 +82,6 @@ public class IDMService {
         Response response = invocationBuilder.head();
         return response;
     }
-
 
     private static PrincipalJSON buildPrincipal(String name, String password, String domainId) {
         PrincipalJSON principal = new PrincipalJSON();
@@ -89,14 +96,28 @@ public class IDMService {
         return principal;
     }
 
-
-    private static UserJSON buildUser(Response response) {
+    private static UserJSON buildUserFromToken(Response response) {
         final JsonObject dataJson = response.readEntity(JsonObject.class);
         final JsonObject tokenObj = dataJson.getJsonObject("token");
         final JsonObject userJson = tokenObj.getJsonObject("user");
         UserJSON user = new UserJSON();
         user.setUsername(userJson.getString("name"));
+        user.setId(userJson.getString("id"));
         user.setDomain_id(userJson.getJsonObject("domain").getString("name"));
+        return user;
+    }
+
+    private static UserJSON buildUser(Response response) {
+        final JsonObject dataJson = response.readEntity(JsonObject.class);
+        final JsonObject userJson = dataJson.getJsonObject("user");
+        UserJSON user = new UserJSON();
+        user.setUsername(userJson.getString("username"));
+        user.setId(userJson.getString("id"));
+        user.setName(userJson.getString("name"));
+        user.setEnabled(userJson.getBoolean("enabled"));
+//        user.setTrial_started_at(userJson.getString("trial_started_at"));
+//        user.setTrial_duration(userJson.getString("trial_duration"));
+        user.setDomain_id(userJson.getString("domain_id"));
         return user;
     }
 }

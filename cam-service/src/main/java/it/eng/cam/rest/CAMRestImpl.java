@@ -282,10 +282,15 @@ public class CAMRestImpl {
 
 
     //Users
-     public static void importUsers(List<UserJSON> users,RepositoryDAO dao) {
+     public static void importUsers(List<UserJSON> users, RepositoryDAO dao) {
          for (UserJSON usr:
               users) {
-             dao.deleteUser(usr.getUsername());
+             try {
+                 dao.deleteUser(usr.getId());
+             } catch (RuntimeException e) {
+
+             }
+             //dao.createUser();
          }
     }
 
