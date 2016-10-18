@@ -1,10 +1,9 @@
 camApp.controller('newAssetController', [
     '$scope',
+    '$http',
     '$q',
     'ngDialog',
-    'entityManager',
-    'ngNotifier',
-    function ($scope, $q, $ngDialog, entityManager, ngNotifier) {
+    function ($scope, $http, $q, $ngDialog) {
         //$scope.elementToDelete;
         //$scope.typetoDelete;
         $scope.invalidName = false;
@@ -33,7 +32,6 @@ camApp.controller('newAssetController', [
             entityManager.createAsset($scope.newAsset).success(function (data, status) {
                 $scope.loadChildren();
                 $ngDialog.close();
-                ngNotifier.success("Success");
             }).error(function (err) {
                 $ngDialog.close();
                 ngNotifier.error(err);

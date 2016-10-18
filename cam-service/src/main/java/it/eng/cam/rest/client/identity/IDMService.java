@@ -28,7 +28,6 @@ public class IDMService {
     public static final String X_SUBJECT_TOKEN = "X-Subject-Token";
 
     //TODO Logging
-
     public static List<UserJSON> getUsers() {
         Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
         WebTarget webTarget = client.target(IDM_URL).path("users");

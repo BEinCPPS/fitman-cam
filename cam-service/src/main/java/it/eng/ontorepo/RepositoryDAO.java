@@ -165,6 +165,19 @@ public interface RepositoryDAO {
     public void deleteOwner(String name)
             throws IllegalArgumentException, IllegalStateException, RuntimeException;
 
+    /***
+     *  Deletes an existing User from the Reference Ontology.
+     * <p/>
+     * This operation fails if the target item has dependent items.
+     * @param name
+     * @throws IllegalArgumentException
+     * @throws IllegalStateException
+     * @throws RuntimeException
+     */
+
+    public void deleteUser(String name)
+            throws IllegalArgumentException, IllegalStateException, RuntimeException;
+
     /**
      * Creates a new Class with the given name, which inherits from the given parent Class.
      * <p/>

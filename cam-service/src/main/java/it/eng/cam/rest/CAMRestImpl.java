@@ -1,5 +1,6 @@
 package it.eng.cam.rest;
 
+import it.eng.cam.rest.dto.UserJSON;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.*;
 import org.apache.log4j.LogManager;
@@ -279,6 +280,17 @@ public class CAMRestImpl {
         }
     }
 
+
+    //Users
+     public static void importUsers(List<UserJSON> users,RepositoryDAO dao) {
+         for (UserJSON usr:
+              users) {
+             dao.deleteUser(usr.getUsername());
+         }
+    }
+
+
+    //
 
     private static String normalizeClassName(String normName) {
         if (null != normName && normName.contains("#") && !normName.contains("system"))
