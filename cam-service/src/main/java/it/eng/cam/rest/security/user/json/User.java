@@ -1,12 +1,11 @@
-package it.eng.cam.rest.dto;
+package it.eng.cam.rest.security.user.json;
 
 import java.io.Serializable;
-import java.security.Principal;
 
 /**
  * Created by ascatolo on 12/10/2016.
  */
-public class UserJSON implements Serializable {
+public class User implements Serializable {
 
     private String username;
     private String name;
@@ -99,4 +98,6 @@ public class UserJSON implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
+
+
 }

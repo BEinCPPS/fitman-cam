@@ -1,23 +1,28 @@
 package it.eng.cam.rest.security;
 
-import it.eng.cam.rest.dto.UserJSON;
+import it.eng.cam.rest.security.user.json.User;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by ascatolo on 13/10/2016.
  */
-public class CAMPrincipal extends UserJSON implements Serializable, java.security.Principal {
+public class CAMPrincipal extends User implements Serializable, java.security.Principal {
 
-    private List<String> role;
+    private List<String> roles;
+
+    public CAMPrincipal() {
+        roles = new ArrayList<>();
+    }
 
     @Override
     public String getName() {
         return super.getName();
     }
 
-    public List<String> getRole() {return role;}
-    public void setRole(List<String> role) {this.role = role;}
+    public List<String> getRoles() {return roles;}
+
 
 }

@@ -1,4 +1,4 @@
-package it.eng.cam.rest.dto;
+package it.eng.cam.rest.security.user.json;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class UserContainerJSON implements Serializable{
 
-    private List<UserJSON> users;
+    private List<User> users;
     private Object links;
 
     public Object getLinks() {
@@ -20,19 +20,19 @@ public class UserContainerJSON implements Serializable{
         this.links = links;
     }
 
-    public UserContainerJSON(List<UserJSON> users) {
+    public UserContainerJSON(List<User> users) {
         this.users = users;
     }
 
     public UserContainerJSON() {
-        this.users = new ArrayList<UserJSON>();
+        this.users = new ArrayList<User>();
     }
 
-    public List<UserJSON> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<UserJSON> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 }

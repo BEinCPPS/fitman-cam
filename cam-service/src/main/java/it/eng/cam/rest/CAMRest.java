@@ -1,11 +1,31 @@
 package it.eng.cam.rest;
 
+import it.eng.cam.rest.security.CAMPrincipal;
+import it.eng.cam.rest.security.IDMService;
+import it.eng.cam.rest.sesame.dto.*;
+import it.eng.cam.rest.exception.CAMServiceWebException;
+import it.eng.cam.rest.security.user.json.User;
+import it.eng.cam.rest.security.user.json.UserLoginJSON;
+import it.eng.cam.rest.security.roles.Role;
+import it.eng.cam.rest.sesame.SesameRepoManager;
+import it.eng.ontorepo.*;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.eclipse.rdf4j.model.vocabulary.OWL;
+
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -13,40 +33,14 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import it.eng.cam.rest.client.identity.IDMService;
-import it.eng.cam.rest.dto.*;
-import it.eng.cam.rest.exception.CAMServiceWebException;
-import it.eng.cam.rest.security.CAMSecurityContext;
-import it.eng.cam.rest.security.Role;
-//import it.eng.cam.rest.security.Secured;
-import it.eng.cam.rest.security.keystone.dto.PrincipalJSON;
-import it.eng.ontorepo.*;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.eclipse.rdf4j.model.vocabulary.OWL;
-import org.glassfish.jersey.server.ResourceConfig;
-
-import it.eng.cam.rest.sesame.SesameRepoManager;
-
-
+@DeclareRoles({Role.BASIC, Role.ADMIN})  //Add new Roles if needed
 @Path("/")
-public class CAMRest extends ResourceConfig {
-    @Context
-    CAMSecurityContext securityContext;
-    //@Secured
+@PermitAll
+public class CAMRest {
     private static final Logger logger = LogManager.getLogger(CAMRest.class.getName());
 
     public CAMRest() {
-        packages("it.eng.cam.rest");
     }
-
-    // CLASSES
 
     /**
      * author ascatox the param flat = true gives a FLAT list of all classes
@@ -56,7 +50,6 @@ public class CAMRest extends ResourceConfig {
      */
     @GET
     @Path("/classes")
-    //@Secured({Role.DEFAULT})
     @Produces(MediaType.APPLICATION_JSON)
     public List<ClassItem> getClassHierarchy(@QueryParam("flat") boolean flat) {
         RepositoryDAO repoInstance = null;
@@ -73,6 +66,7 @@ public class CAMRest extends ResourceConfig {
 
     @GET
     @Path("/classes/{className}")
+    //@RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public List<ClassItem> getIndividuals(@PathParam("className") String className) {
         RepositoryDAO repoInstance = null;
@@ -1025,7 +1019,7 @@ public class CAMRest extends ResourceConfig {
     @GET
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<UserJSON> geUsers() {
+    public List<User> geUsers() {
         try {
             return IDMService.getUsers();
         } catch (Exception e) {
@@ -1048,17 +1042,22 @@ public class CAMRest extends ResourceConfig {
         }
     }
 
+    @Context
+    SecurityContext securityContext;
+
     @GET
     @Path("/logged")
+    //@RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public UserJSON getUserLogged(@Context HttpServletRequest httpRequest) {
+    public CAMPrincipal getUserLogged(@Context HttpServletRequest httpRequest) {
         try {
-            return IDMService.getUser(httpRequest);
+            return (CAMPrincipal) securityContext.getUserPrincipal();
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
         }
     }
+
 
     @GET
     @Produces("text/html")

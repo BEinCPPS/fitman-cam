@@ -142,7 +142,7 @@ public interface RepositoryDAO {
             throws IllegalArgumentException, RuntimeException;
 
     /**
-     * Creates a new UserJSON to associate to a Domain/Owner
+     * Creates a new User to associate to a Domain/Owner
      * @param username
      * @param name
      * @param enabled

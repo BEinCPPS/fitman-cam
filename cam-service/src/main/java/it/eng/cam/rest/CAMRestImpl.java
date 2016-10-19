@@ -1,6 +1,6 @@
 package it.eng.cam.rest;
 
-import it.eng.cam.rest.dto.UserJSON;
+import it.eng.cam.rest.security.user.json.User;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.*;
 import org.apache.log4j.LogManager;
@@ -280,10 +280,10 @@ public class CAMRestImpl {
         }
     }
 
-
+    //TODO Work in progress.......
     //Users
-     public static void importUsers(List<UserJSON> users, RepositoryDAO dao) {
-         for (UserJSON usr:
+     public static void importUsers(List<User> users, RepositoryDAO dao) {
+         for (User usr:
               users) {
              try {
                  dao.deleteUser(usr.getId());

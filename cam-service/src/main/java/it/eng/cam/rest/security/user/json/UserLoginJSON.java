@@ -1,4 +1,4 @@
-package it.eng.cam.rest.dto;
+package it.eng.cam.rest.security.user.json;
 
 import java.io.Serializable;
 

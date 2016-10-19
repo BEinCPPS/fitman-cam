@@ -1,5 +1,7 @@
 package it.eng.cam.rest.security;
 
+import it.eng.cam.rest.security.roles.Role;
+
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 
@@ -7,7 +9,7 @@ import java.security.Principal;
  * Created by ascatolo on 13/10/2016.
  */
 public class CAMSecurityContext implements SecurityContext {
-    private CAMPrincipal principal; //TODO
+    private CAMPrincipal principal;
     private String scheme;
 
     public CAMSecurityContext(CAMPrincipal principal, String scheme) {
@@ -15,9 +17,11 @@ public class CAMSecurityContext implements SecurityContext {
         this.scheme = scheme;
     }
 
-
     public CAMSecurityContext(CAMPrincipal principal) {
         this.principal = principal;
+    }
+
+    public CAMSecurityContext() {
     }
 
     @Override
@@ -25,11 +29,13 @@ public class CAMSecurityContext implements SecurityContext {
         return this.principal;
     }
 
+
     @Override
-    public boolean isUserInRole(String s) {
-        if (principal.getRole() != null) {
-            return principal.getRole().contains(s);
+    public boolean isUserInRole(String role) {
+        if (principal.getRoles() != null) {
+            return principal.getRoles().contains(Role.valueOf(role.toUpperCase()));
         }
+
         return false;
     }
 

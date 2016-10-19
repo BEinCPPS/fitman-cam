@@ -1,20 +1,21 @@
-package it.eng.cam.rest.client.identity;
+package it.eng.cam.rest.security;
 
 
-import it.eng.cam.rest.dto.UserContainerJSON;
-import it.eng.cam.rest.dto.UserJSON;
-import it.eng.cam.rest.dto.UserLoginJSON;
-import it.eng.cam.rest.security.keystone.dto.*;
+import it.eng.cam.rest.security.authentication.credentials.json.*;
+import it.eng.cam.rest.security.roles.RoleManager;
+import it.eng.cam.rest.security.user.json.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,9 +27,11 @@ public class IDMService {
     private static final String ADMIN_TOKEN = "ADMIN"; //TODO
     public static final String X_AUTH_TOKEN = "X-Auth-Token";
     public static final String X_SUBJECT_TOKEN = "X-Subject-Token";
+    public static final RoleManager roleManager = new RoleManager(); //TODO
+
 
     //TODO Logging
-    public static List<UserJSON> getUsers() {
+    public static List<it.eng.cam.rest.security.user.json.User> getUsers() {
         Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
         WebTarget webTarget = client.target(IDM_URL).path("users");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
@@ -42,24 +45,54 @@ public class IDMService {
         return userContainerJSON.getUsers();
     }
 
-    public static UserJSON getUser(HttpServletRequest request) {
+    public static CAMPrincipal getUserPrincipal(HttpServletRequest request) {
         String token = request.getHeader(X_AUTH_TOKEN);
+        return getUserPrincipalByToken(token);
+    }
+
+    public static CAMPrincipal getUserPrincipalByToken(String token) {
         Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
         WebTarget webTarget = client.target(IDM_URL).path("auth").path("tokens");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
         invocationBuilder.header(X_SUBJECT_TOKEN, token);
         Response response = invocationBuilder.get();
-        UserJSON user = buildUserFromToken(response);
-        return getUser(user);
+        CAMPrincipal user = buildUserFromToken(response);
+        user = fetchUser(user);
+        return fetchUserRoles(user);
     }
 
-    private static UserJSON getUser(UserJSON user) {
+    public static List<String> getRoles() {
+        Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
+        WebTarget webTarget = client.target(IDM_URL).path("roles");
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
+        Response response = invocationBuilder.get();
+        JsonObject jsonObject = response.readEntity(JsonObject.class);
+        JsonArray roles = jsonObject.getJsonArray("roles");
+        List<String> ruoli = new ArrayList<>();
+        for (int i = 0; i < roles.size(); i++) {
+            JsonObject role = roles.getJsonObject(i);
+            ruoli.add(role.getString("name"));
+        }
+        return ruoli;
+    }
+
+    private static CAMPrincipal fetchUser(CAMPrincipal user) {
         Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
         WebTarget webTarget = client.target(IDM_URL).path("users").path(user.getId());
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
-       return buildUser(invocationBuilder.get());
+        return buildUser(invocationBuilder.get());
+    }
+
+    private static CAMPrincipal fetchUserRoles(CAMPrincipal user) {
+        Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
+        WebTarget webTarget = client.target(IDM_URL).path("domains")
+                .path(user.getDomain_id()).path("users").path(user.getId()).path("roles");
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
+        return buildRoles(invocationBuilder.get(), user);
     }
 
     public static Response authenticate(UserLoginJSON userLoginJSON) {
@@ -67,7 +100,7 @@ public class IDMService {
         WebTarget webTarget = client.target(IDM_URL).path("auth").path("tokens");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
-        PrincipalJSON principal = buildPrincipal(userLoginJSON.getUsername(), userLoginJSON.getPassword(), null);
+        Credentials principal = buildPrincipal(userLoginJSON.getUsername(), userLoginJSON.getPassword(), null);
         Response response = invocationBuilder.post(Entity.entity(principal, MediaType.APPLICATION_JSON));
         logger.info(response.getHeaders());
         return response;
@@ -83,12 +116,12 @@ public class IDMService {
         return response;
     }
 
-    private static PrincipalJSON buildPrincipal(String name, String password, String domainId) {
-        PrincipalJSON principal = new PrincipalJSON();
+    private static Credentials buildPrincipal(String name, String password, String domainId) {
+        Credentials principal = new Credentials();
         Auth auth = new Auth();
         Identity identity = new Identity();
         Password passwordObj = new Password();
-        it.eng.cam.rest.security.keystone.dto.User user = new it.eng.cam.rest.security.keystone.dto.User(name, new Domain(domainId), password);
+        it.eng.cam.rest.security.authentication.credentials.json.User user = new it.eng.cam.rest.security.authentication.credentials.json.User(name, new Domain(domainId), password);
         passwordObj.setUser(user);
         identity.setPassword(passwordObj);
         auth.setIdentity(identity);
@@ -96,29 +129,38 @@ public class IDMService {
         return principal;
     }
 
-    private static UserJSON buildUserFromToken(Response response) {
+    private static CAMPrincipal buildUserFromToken(Response response) {
         final JsonObject dataJson = response.readEntity(JsonObject.class);
         final JsonObject tokenObj = dataJson.getJsonObject("token");
         final JsonObject userJson = tokenObj.getJsonObject("user");
-        UserJSON user = new UserJSON();
+        CAMPrincipal user = new CAMPrincipal();
         user.setUsername(userJson.getString("name"));
         user.setId(userJson.getString("id"));
         user.setDomain_id(userJson.getJsonObject("domain").getString("name"));
         return user;
     }
 
-    private static UserJSON buildUser(Response response) {
+    private static CAMPrincipal buildUser(Response response) {
         final JsonObject dataJson = response.readEntity(JsonObject.class);
         final JsonObject userJson = dataJson.getJsonObject("user");
-        UserJSON user = new UserJSON();
+        CAMPrincipal user = new CAMPrincipal();
         user.setUsername(userJson.getString("username"));
         user.setId(userJson.getString("id"));
         user.setName(userJson.getString("name"));
         user.setEnabled(userJson.getBoolean("enabled"));
-//        user.setTrial_started_at(userJson.getString("trial_started_at"));
-//        user.setTrial_duration(userJson.getString("trial_duration"));
         user.setDomain_id(userJson.getString("domain_id"));
         return user;
+    }
+
+    private static CAMPrincipal buildRoles(Response response, CAMPrincipal principal) {
+        final JsonObject dataJson = response.readEntity(JsonObject.class);
+        final JsonArray rolesJsonArray = dataJson.getJsonArray("roles");
+        for (int i = 0; i < rolesJsonArray.size(); i++) {
+            JsonObject rol = rolesJsonArray.getJsonObject(i);
+            String name = rol.getString("name");
+            principal.getRoles().add(roleManager.getRolesLookup().get(name));
+        }
+        return principal;
     }
 }
 

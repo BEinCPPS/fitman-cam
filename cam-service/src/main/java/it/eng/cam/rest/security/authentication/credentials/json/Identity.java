@@ -1,4 +1,4 @@
-package it.eng.cam.rest.security.keystone.dto;
+package it.eng.cam.rest.security.authentication.credentials.json;
 
 import java.io.Serializable;
 import java.util.ArrayList;

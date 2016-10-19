@@ -1,4 +1,4 @@
-package it.eng.cam.rest.dto;
+package it.eng.cam.rest.sesame.dto;
 
 import java.io.Serializable;
 

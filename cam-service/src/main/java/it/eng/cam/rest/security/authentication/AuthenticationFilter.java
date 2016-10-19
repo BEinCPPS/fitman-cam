@@ -1,9 +1,14 @@
-package it.eng.cam.rest.security;
+package it.eng.cam.rest.security.authentication;
 
-import it.eng.cam.rest.client.identity.IDMService;
+import it.eng.cam.rest.security.CAMPrincipal;
+import it.eng.cam.rest.security.CAMSecurityContext;
+import it.eng.cam.rest.security.IDMService;
 
+import javax.annotation.Priority;
+import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
@@ -11,11 +16,10 @@ import javax.ws.rs.ext.Provider;
 /**
  * Created by ascatolo on 13/10/2016.
  */
-//@Secured
 @Provider
-public class XAuthenticationFilter implements ContainerRequestFilter {
-
-
+@Priority(Priorities.AUTHENTICATION)
+@PreMatching
+public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
@@ -37,9 +41,9 @@ public class XAuthenticationFilter implements ContainerRequestFilter {
                     .build());
             return;
         }
-        //Build User for Authorization va fatta sull'Ontologia
-
-
+        //Build User for Authorization
+        CAMPrincipal userPrincipal = IDMService.getUserPrincipalByToken(token);
+        requestContext.setSecurityContext(new CAMSecurityContext(userPrincipal));
     }
 
 

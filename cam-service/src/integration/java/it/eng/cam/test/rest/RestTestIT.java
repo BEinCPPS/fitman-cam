@@ -17,9 +17,6 @@ import com.eclipsesource.restfuse.RequestContext;
 import com.eclipsesource.restfuse.Response;
 import com.eclipsesource.restfuse.annotation.Context;
 import com.eclipsesource.restfuse.annotation.HttpTest;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import it.eng.cam.rest.dto.ClassJSON;
 
 @RunWith(HttpJUnitRunner.class)
 public class RestTestIT extends Assert {

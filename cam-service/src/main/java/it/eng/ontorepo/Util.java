@@ -1,17 +1,10 @@
 package it.eng.ontorepo;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import javax.xml.bind.DatatypeConverter;
-
-import it.eng.cam.rest.CAMRestImpl;
-import it.eng.cam.rest.dto.OwnerJSON;
-import it.eng.cam.rest.sesame.SesameRepoManager;
 
 /**
  * Collection of utility methods of general interest.
