@@ -142,31 +142,35 @@ public interface RepositoryDAO {
             throws IllegalArgumentException, RuntimeException;
 
     /**
-     *
-     * @return
+     * List the Users in Ontology
+     *<p></p>
+     * @return a list of OntoUser
      * @throws RuntimeException
      */
     List<OntoUser> getUsers() throws RuntimeException;
 
     /**
+     * Gives the asked user from Ontology
+     * <p></p>
      * @param name
-     * @return
+     * @return on object of type OntoUser
      */
     OntoUser getUser(String name) throws RuntimeException;
 
     /**
-     *
+     *Gives the list of attributes composing the User
+     * <p></p>
      * @param name
-     * @return
+     * @return List of PropertyValueItem (username, name, enabled)
      * @throws RuntimeException
      */
     List<PropertyValueItem> getUserAttributes(String name) throws RuntimeException;
 
     /**
      * Creates a new User to associate to a Domain/Owner
-     *
+     * <p></p>
      * @param id
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if mandatory fields are missing
      * @throws RuntimeException
      */
     void createUser(String id) throws IllegalArgumentException,

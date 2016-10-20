@@ -18,7 +18,6 @@ camApp.controller('menuController', [
             .then(function (data) {
                 $scope.user = data.data;
             });
-        console.log('Logged User', $scope.user);
         $rootScope.$on('$routeChangeStart', function () {
             $scope.loggedIn = Auth.isLoggedIn();
             if (!$scope.loggedIn) $location.path('/login');
@@ -66,6 +65,5 @@ camApp.controller('menuController', [
                 return 'active';
             else return '';
         }
-
 
     }]);

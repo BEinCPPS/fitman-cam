@@ -13,12 +13,14 @@
             <div class="collapse navbar-collapse" id="navigationbar">
                 <ul class="nav navbar-nav">
                     <li ng-class="activeMenuClass()"><a href="#/"><i class="fa fa-home" aria-hidden="true"></i> Classes</a></li>
-                    <li ng-class="activeMenuDomain()"><a href="#/domain"><i class="fa fa-user" aria-hidden="true"></i> Domains</a></li>
+                    <li ng-class="activeMenuDomain()"><a href="#/domain"><i class="fa fa-users" aria-hidden="true"></i> Domains</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li ng-if="!loggedIn"><a href="/login">Login</a></li>
-                    <li ng-if="loggedIn" class="navbar-text">Hello {{ user.username }}!</li>
-                    <li ng-if="loggedIn"><a href="#" ng-click="doLogout()">Logout</a></li>
+                    <li ng-if="loggedIn" class="navbar-text">
+                        <i class="fa fa-user" aria-hidden="true"></i> {{ user.username }}</li>
+                    <li ng-if="loggedIn"><a href="#" ng-click="doLogout()"><i class="fa fa-sign-in" aria-hidden="true">
+                    </i> Logout</a></li>
                 </ul>
             </div>
         </div>
