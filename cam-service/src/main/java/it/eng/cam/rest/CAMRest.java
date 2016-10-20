@@ -1020,25 +1020,64 @@ public class CAMRest {
     @Path("/users")
     @RolesAllowed({Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public List<User> geUsers() {
+    public List<OntoUser> geUsers() {
+        RepositoryDAO repoInstance = null;
         try {
-            return IDMService.getUsers();
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            return CAMRestImpl.getUsers(repoInstance);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
         }
     }
 
-    @PUT
-    @Path("/users/import")
+    @GET
+    @Path("/users/{username}")
     @RolesAllowed({Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public List<User> importUsers() {
+    public OntoUser geUser(@PathParam("username") String username) {
+        RepositoryDAO repoInstance = null;
         try {
-            return IDMService.getUsers();
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            return CAMRestImpl.getUser(repoInstance, username);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
+        }
+    }
+
+
+    @DELETE
+    @Path("/users/{username}")
+    @RolesAllowed({Role.ADMIN}) //TODO
+    public Response deleteUser(@PathParam("username") String username) {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            CAMRestImpl.deleteUser(repoInstance, username);
+            return Response.ok("User with name '" + username + "' was successfully deleted!").build();
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
+    @PUT
+    @Path("/users/import")
+    @RolesAllowed({Role.ADMIN})
+    public Response importUsers() {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            CAMRestImpl.importUsers(repoInstance);
+            return Response.ok("Users were successfully updated from Keyrock IDM!").build();
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
     }
 
@@ -1058,7 +1097,6 @@ public class CAMRest {
 
     @Context
     SecurityContext securityContext;
-
     @GET
     @Path("/logged")
     //@RolesAllowed({Role.BASIC, Role.ADMIN})
@@ -1071,7 +1109,6 @@ public class CAMRest {
             throw new CAMServiceWebException(e.getMessage());
         }
     }
-
 
     @GET
     @Produces("text/html")

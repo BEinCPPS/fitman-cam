@@ -3,12 +3,11 @@ package it.eng.cam.rest.security;
 
 import it.eng.cam.rest.security.authentication.credentials.json.*;
 import it.eng.cam.rest.security.roles.RoleManager;
-import it.eng.cam.rest.security.user.json.*;
 import it.eng.cam.rest.security.user.json.User;
+import it.eng.cam.rest.security.user.json.UserContainerJSON;
+import it.eng.cam.rest.security.user.json.UserLoginJSON;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.filter.LoggingFilter;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -31,8 +30,6 @@ public class IDMService {
     public static final String X_SUBJECT_TOKEN = "X-Subject-Token";
     public static final RoleManager roleManager = new RoleManager(); //TODO
 
-
-    //TODO Logging
     public static List<User> getUsers() {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(IDM_URL).path("users");

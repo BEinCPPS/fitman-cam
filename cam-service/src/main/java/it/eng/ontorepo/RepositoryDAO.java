@@ -142,22 +142,35 @@ public interface RepositoryDAO {
             throws IllegalArgumentException, RuntimeException;
 
     /**
+     *
      * @return
      * @throws RuntimeException
      */
-    List<String> getUsers() throws RuntimeException;
+    List<OntoUser> getUsers() throws RuntimeException;
+
+    /**
+     * @param name
+     * @return
+     */
+    OntoUser getUser(String name) throws RuntimeException;
+
+    /**
+     *
+     * @param name
+     * @return
+     * @throws RuntimeException
+     */
+    List<PropertyValueItem> getUserAttributes(String name) throws RuntimeException;
 
     /**
      * Creates a new User to associate to a Domain/Owner
      *
-     * @param username
-     * @param name
-     * @param enabled
+     * @param id
      * @throws IllegalArgumentException
      * @throws RuntimeException
      */
-    public void createUser(String username, String id, String name, boolean enabled)
-            throws IllegalArgumentException, RuntimeException;
+    void createUser(String id) throws IllegalArgumentException,
+            RuntimeException;
 
     /**
      * Deletes an existing Owner from the Reference Ontology.

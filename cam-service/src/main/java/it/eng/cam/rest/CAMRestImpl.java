@@ -6,6 +6,7 @@ import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.eclipse.rdf4j.query.algebra.Str;
 
 import javax.ws.rs.WebApplicationException;
 import java.util.ArrayList;
@@ -75,8 +76,7 @@ public class CAMRestImpl {
             if (null == visited.get(cls.getNormalizedName()) || !visited.get(cls.getNormalizedName())) {
                 if (searchIndividuals) {
                     if (i >= 0) {
-                        SesameRepoManager.releaseRepoDaoConn(dao);
-                        dao = SesameRepoManager.getRepoInstance(null);
+                        dao = releaseRepo(dao);
                         i = 0;
                     }
                     results.addAll(dao.getIndividuals(cls.getNormalizedName()));
@@ -181,6 +181,11 @@ public class CAMRestImpl {
 
     }
 
+    public static void deleteUser(RepositoryDAO dao, String ownerName) {
+        dao.deleteUser(ownerName);
+
+    }
+
     public static void setAttribute(RepositoryDAO dao, String name, String individualName, String value, String type)
             throws IllegalArgumentException, ClassNotFoundException, RuntimeException {
         List<PropertyValueItem> individualAttributes = dao.getIndividualAttributes(individualName);
@@ -281,8 +286,16 @@ public class CAMRestImpl {
         }
     }
 
-    //TODO Work in progress.......
     //Users
+    public static List<OntoUser> getUsers(RepositoryDAO dao) {
+        return dao.getUsers();
+    }
+
+    public static OntoUser getUser(RepositoryDAO dao, String username) {
+        return dao.getUser(username);
+    }
+
+
     public static void importUsers(RepositoryDAO dao) {
         alignKeyrockOnto(dao);
         alignOntoKeyrock(dao);
@@ -291,20 +304,51 @@ public class CAMRestImpl {
     private static void alignKeyrockOnto(RepositoryDAO dao) {
         List<User> users = IDMService.getUsers();
         for (User usr : users) {
-            SesameRepoManager.releaseRepoDaoConn(dao);
-            dao = SesameRepoManager.getRepoInstance(null);
-            IndividualItem userOnto = dao.getIndividual(usr.getId());
+            dao = releaseRepo(dao);
+            OntoUser userOnto = dao.getUser(usr.getId());
             if (userOnto != null) continue;
-            else
-                dao.createUser(usr.getUsername(), usr.getId(), usr.getName(), usr.getEnabled());
+            else {
+                dao.createUser(usr.getId());
+                dao = releaseRepo(dao);
+                dao.setAttribute("username", usr.getId(), usr.getUsername(), null);
+                dao = releaseRepo(dao);
+                dao.setAttribute("name", usr.getId(), usr.getName(), null);
+                dao = releaseRepo(dao);
+                dao.setAttribute("enabled", usr.getId(), usr.getEnabled() + "", Boolean.class);
+                dao = releaseRepo(dao);
+            }
         }
     }
 
-    private static void alignOntoKeyrock(RepositoryDAO dao) {
-        List<String> users = dao.getUsers();
-
+    private static RepositoryDAO releaseRepo(RepositoryDAO dao) {
+        SesameRepoManager.releaseRepoDaoConn(dao);
+        dao = SesameRepoManager.getRepoInstance(null);
+        return dao;
     }
 
+    private static void alignOntoKeyrock(RepositoryDAO dao) {
+        dao = releaseRepo(dao);
+        List<OntoUser> usersOnto = dao.getUsers();
+        List<User> usersKeyrock = IDMService.getUsers();
+        for (OntoUser usr : usersOnto) {
+            if (usersKeyrock.stream().anyMatch((u -> u.getId().equals(usr))))
+                continue;
+            else {
+                dao = releaseRepo(dao);
+                deleteUserWithRelationships(usr.getId(), dao);
+            }
+        }
+    }
+
+    private static void deleteUserWithRelationships(String name, RepositoryDAO dao) {
+        List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(dao, name);
+        List<PropertyValueItem> individualAttributesToDel = new ArrayList<>();
+        individualAttributesToDel.addAll(individualAttributes);
+        for (PropertyValueItem propertyValueItem : individualAttributesToDel) {
+            dao = releaseRepo(dao);
+            dao.removeProperty(propertyValueItem.getNormalizedName(), name);
+        }
+    }
 
     private static String normalizeClassName(String normName) {
         if (null != normName && normName.contains("#") && !normName.contains("system"))

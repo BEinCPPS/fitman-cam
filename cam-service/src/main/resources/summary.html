@@ -1,183 +1,185 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>CAMService REST API</title>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-	integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
-	crossorigin="anonymous">
+    <title>CAMService REST API</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+          crossorigin="anonymous">
 
-<!-- Optional theme -->
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-	integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
-	crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+          crossorigin="anonymous">
 
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
-	crossorigin="anonymous"></script>
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+            crossorigin="anonymous"></script>
 </head>
-<h3>artifactInfo</h3>
+<div class="page-header">
+    <h2>artifactInfo</h2>
+</div>
 <br/>
 <body>
-	<table style="width: 100%" class="table">
-		<tr>
-			<th style="text-align: left">Method</th>
-			<th style="text-align: left">Path</th>
-			<th style="text-align: left">Produces</th>
-			<th style="text-align: left">Consumes</th>
-			<th style="text-align: left">Name</th>
-			<th style="text-align: left">URL</th>
-		</tr>
-		<tr></tr>
-		<tr></tr>
-		<tr>
-			<td>GET</td>
-			<td>/classes</td>
-			<td>JSON</td>
-			<td></td>
-			<td>getClasses</td>
-			<td><a href="camServiceUrl/classes">Link</a></td>
-		</tr>
-		<tr>
-			<td>GET</td>
-			<td>/classes/ancestors/{className}</td>
-			<td>JSON</td>
-			<td></td>
-			<td>getTreePath</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>GET</td>
-			<td>/classes/{className}</td>
-			<td>JSON</td>
-			<td></td>
-			<td>getIndividuals</td>
-			<td></td>
-		</tr>
-		
-		<tr>
-			<td>POST</td>
-			<td>/classes/{name}/{parentName}</td>
-			<td></td>
-			<td>JSON</td>
-			<td>createClass</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>PUT</td>
-			<td>/classes/{name}/{parentName}</td>
-			<td></td>
-			<td>JSON</td>
-			<td>moveClass</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>DELETE</td>
-			<td>/classes/{name}</td>
-			<td></td>
-			<td></td>
-			<td>deleteClass</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>POST</td>
-			<td>/classes/model/{name}/{className}/{ownerName}</td>
-			<td></td>
-			<td>JSON</td>
-			<td>createAssetModel</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>POST</td>
-			<td>/classes/{name}/{modelName}/{ownerName}</td>
-			<td></td>
-			<td>JSON</td>
-			<td>createAsset</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>PUT</td>
-			<td>/classes/{name}/{individualName}/{referredName}</td>
-			<td></td>
-			<td>JSON</td>
-			<td>setRelationship</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>POST</td>
-			<td>/classes/attribute</td>
-			<td></td>
-			<td>JSON</td>
-			<td>setAttribute</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>DELETE</td>
-			<td>/classes/property/{propertyName}/{assetName}</td>
-			<td></td>
-			<td></td>
-			<td>removeProperty</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>GET</td>
-			<td>/assets</td>
-			<td>JSON</td>
-			<td></td>
-			<td>getIndividuals</td>
-			<td><a href="camServiceUrl/assets">Link</a></td>
-		</tr>
-			<tr>
-			<td>GET</td>
-			<td>/assets/{assetName}</td>
-			<td>JSON</td>
-			<td></td>
-			<td>getIndividualAttributes</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>GET</td>
-			<td>/owners</td>
-			<td>JSON</td>
-			<td></td>
-			<td>getOwners</td>
-			<td><a href="camServiceUrl/owners">Link</a></td>
-		</tr>
-		<tr>
-			<td>POST</td>
-			<td>/owners/{ownerName}</td>
-			<td></td>
-			<td>JSON</td>
-			<td>createOwner</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>DELETE</td>
-			<td>/owners/{ownerName}</td>
-			<td></td>
-			<td></td>
-			<td>deleteOwner</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>GET</td>
-			<td>/attributes</td>
-			<td>JSON</td>
-			<td></td>
-			<td>getAttributes</td>
-			<td><a href="camServiceUrl/attributes">Link</a> </td>
-		</tr>
-		<tr>
-			<td>GET</td>
-			<td>/users</td>
-			<td>JSON</td>
-			<td></td>
-			<td>getUsers</td>
-			<td><a href="camServiceUrl/users">Link</a> </td>
-		</tr>
-	</table>
+<table style="width: 100%" class="table">
+    <tr>
+        <th style="text-align: left">Method</th>
+        <th style="text-align: left">Path</th>
+        <th style="text-align: left">Produces</th>
+        <th style="text-align: left">Consumes</th>
+        <th style="text-align: left">Name</th>
+        <th style="text-align: left">URL</th>
+    </tr>
+    <tr></tr>
+    <tr></tr>
+    <tr>
+        <td>GET</td>
+        <td>/classes</td>
+        <td>JSON</td>
+        <td></td>
+        <td>getClasses</td>
+        <td><a href="camServiceUrl/classes">Link</a></td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/classes/ancestors/{className}</td>
+        <td>JSON</td>
+        <td></td>
+        <td>getTreePath</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/classes/{className}</td>
+        <td>JSON</td>
+        <td></td>
+        <td>getIndividuals</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>POST</td>
+        <td>/classes/{name}/{parentName}</td>
+        <td></td>
+        <td>JSON</td>
+        <td>createClass</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>PUT</td>
+        <td>/classes/{name}/{parentName}</td>
+        <td></td>
+        <td>JSON</td>
+        <td>moveClass</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>DELETE</td>
+        <td>/classes/{name}</td>
+        <td></td>
+        <td></td>
+        <td>deleteClass</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td>/classes/model/{name}/{className}/{ownerName}</td>
+        <td></td>
+        <td>JSON</td>
+        <td>createAssetModel</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td>/classes/{name}/{modelName}/{ownerName}</td>
+        <td></td>
+        <td>JSON</td>
+        <td>createAsset</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>PUT</td>
+        <td>/classes/{name}/{individualName}/{referredName}</td>
+        <td></td>
+        <td>JSON</td>
+        <td>setRelationship</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td>/classes/attribute</td>
+        <td></td>
+        <td>JSON</td>
+        <td>setAttribute</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>DELETE</td>
+        <td>/classes/property/{propertyName}/{assetName}</td>
+        <td></td>
+        <td></td>
+        <td>removeProperty</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/assets</td>
+        <td>JSON</td>
+        <td></td>
+        <td>getIndividuals</td>
+        <td><a href="camServiceUrl/assets">Link</a></td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/assets/{assetName}</td>
+        <td>JSON</td>
+        <td></td>
+        <td>getIndividualAttributes</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/owners</td>
+        <td>JSON</td>
+        <td></td>
+        <td>getOwners</td>
+        <td><a href="camServiceUrl/owners">Link</a></td>
+    </tr>
+    <tr>
+        <td>POST</td>
+        <td>/owners/{ownerName}</td>
+        <td></td>
+        <td>JSON</td>
+        <td>createOwner</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>DELETE</td>
+        <td>/owners/{ownerName}</td>
+        <td></td>
+        <td></td>
+        <td>deleteOwner</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/attributes</td>
+        <td>JSON</td>
+        <td></td>
+        <td>getAttributes</td>
+        <td><a href="camServiceUrl/attributes">Link</a></td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/users</td>
+        <td>JSON</td>
+        <td></td>
+        <td>getUsers</td>
+        <td><a href="camServiceUrl/users">Link</a></td>
+    </tr>
+</table>
 </body>
 
 </html>

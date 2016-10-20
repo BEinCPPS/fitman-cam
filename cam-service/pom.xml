@@ -231,7 +231,6 @@
 			<properties>
 				<version>${version}</version>
 				<artifact.id>${artifactId}</artifact.id>
-
 				<sesame.url></sesame.url>
 				<sesame.repository>TEST</sesame.repository>
 				<sesame.namespace>http://www.msee-ip.eu/ontology/beincppsns#</sesame.namespace>

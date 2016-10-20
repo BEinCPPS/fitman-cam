@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import it.eng.ontorepo.*;
 import org.eclipse.rdf4j.IsolationLevel;
 import org.eclipse.rdf4j.IsolationLevels;
 import org.eclipse.rdf4j.model.Literal;
@@ -46,14 +47,6 @@ import org.eclipse.rdf4j.rio.rdfxml.RDFXMLWriter;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
-
-import it.eng.ontorepo.BeInCpps;
-import it.eng.ontorepo.ClassItem;
-import it.eng.ontorepo.IndividualItem;
-import it.eng.ontorepo.PropertyDeclarationItem;
-import it.eng.ontorepo.PropertyValueItem;
-import it.eng.ontorepo.RepositoryDAO;
-import it.eng.ontorepo.Util;
 
 
 /**
@@ -588,42 +581,91 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     }
 
     @Override
-    public List<String> getUsers() throws RuntimeException {
-        List<String> names = new ArrayList<String>();
+    public List<OntoUser> getUsers() throws RuntimeException {
+        List<OntoUser> users = new ArrayList<>();
         for (IndividualItem item : getIndividuals(BeInCpps.USER_CLASS)) {
-            names.add(BeInCpps.getLocalName(item.getIndividualName()));
+            OntoUser user = new OntoUser();
+            user.setId(item.getIndividualName());
+            List<PropertyValueItem> userAttributes = getUserAttributes(item.getIndividualName());
+            for (PropertyValueItem attribute : userAttributes) {
+                setUserAttribute(user, attribute);
+            }
+            users.add(user);
         }
-        return names;
+        return users;
+    }
+
+    private void setUserAttribute(OntoUser user, PropertyValueItem attribute) {
+        String normalizedName = attribute.getNormalizedName();
+        if (normalizedName.equals("username"))
+            user.setUsername(attribute.getPropertyOriginalValue());
+        else if (normalizedName.equals("name"))
+            user.setName(attribute.getPropertyOriginalValue());
+        else if (normalizedName.equals("enabled"))
+            user.setEnabled(Boolean.parseBoolean(attribute.getPropertyOriginalValue()));
     }
 
     @Override
-    public void createUser(String username, String id, String name, boolean enabled) throws IllegalArgumentException,
+    public OntoUser getUser(String name) throws RuntimeException {
+        if (null == name || name.length() == 0) {
+            throw new IllegalArgumentException("User name is mandatory");
+        }
+        OntoUser user = new OntoUser();
+        user.setId(name);
+        List<PropertyValueItem> userAttributes = getUserAttributes(name);
+        for (PropertyValueItem attribute : userAttributes) {
+            setUserAttribute(user, attribute);
+        }
+        return user;
+    }
+
+    @Override
+    public List<PropertyValueItem> getUserAttributes(String name) throws RuntimeException {
+        if (null == name || name.length() == 0) {
+            throw new IllegalArgumentException("Individual name is mandatory");
+        }
+        List<PropertyValueItem> items = new ArrayList<PropertyValueItem>();
+        name = Util.getGlobalName(BeInCpps.SYSTEM_NS, name);
+        String qs = QUERY_PROPS_FOR_INDIVIDUAL.replace(VARTAG, name);
+        String lastName = null;
+        List<BindingSet> results = executeSelect(qs);
+        for (BindingSet result : results) {
+            PropertyValueItem item = getPropertyValueItem(result, name);
+            if (!item.getOriginalName().equals(lastName)) {
+                items.add(item);
+                lastName = item.getOriginalName();
+            }
+        }
+        return items;
+    }
+
+    @Override
+    public void createUser(String id) throws IllegalArgumentException,
             RuntimeException {
-        if (null == username || username.length() == 0) {
+        String origUsername = id;
+        if (null == id || id.length() == 0) {
             throw new IllegalArgumentException("User name is mandatory");
         }
 
-        if (!Util.isLocalName(username)) {
-            throw new IllegalArgumentException("User must not be qualified by a namespace: " + username);
+        if (!Util.isLocalName(id)) {
+            throw new IllegalArgumentException("User must not be qualified by a namespace: " + id);
         }
 
-        if (!Util.isValidLocalName(username)) {
-            throw new IllegalArgumentException("Not a valid User name: " + username);
+        if (!Util.isValidLocalName(id)) {
+            throw new IllegalArgumentException("Not a valid User name: " + id);
         }
 
-        username = Util.getGlobalName(BeInCpps.SYSTEM_NS, username);
-        if (getIndividualDeclarationCount(name) > 0) {
-            throw new IllegalArgumentException("User " + username + " already exists");
+        id = Util.getGlobalName(BeInCpps.SYSTEM_NS, id);
+        if (getIndividualDeclarationCount(id) > 0) {
+            throw new IllegalArgumentException("User " + id + " already exists");
         }
         List<Statement> statements = new ArrayList<Statement>();
-        URI assetUri = vf.createURI(username);
+        URI assetUri = vf.createURI(id);
         URI classUri = vf.createURI(BeInCpps.USER_CLASS);
         statements.add(vf.createStatement(assetUri, RDF.TYPE, classUri));
         statements.add(vf.createStatement(assetUri, RDF.TYPE, ni));
         addStatements(statements);
-        setAttribute("id", username, id, null);
-        setAttribute("name", username, name, null);
-        setAttribute("enabled", username, enabled+"", Boolean.class);
+
     }
 
     @Override
@@ -1277,11 +1319,13 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             throw new IllegalArgumentException("Individual name must not be qualified by a namespace: " + individualName);
         }
 
-        individualName = Util.getGlobalName(getImplicitNamespace(), individualName);
-        if (null == getIndividualDeclaration(individualName)) {
-            throw new IllegalArgumentException("Individual does not exist: " + individualName);
+        String individualName_ = Util.getGlobalName(getImplicitNamespace(), individualName);
+        if (null == getIndividualDeclaration(individualName_)) {
+            individualName_ = Util.getGlobalName(BeInCpps.SYSTEM_NS, individualName);
+            if (null == getIndividualDeclaration(individualName_))
+                throw new IllegalArgumentException("Individual does not exist: " + individualName);
         }
-
+        individualName = individualName_;
         URI indivUri = vf.createURI(individualName);
         URI propUri = null;
         if (Util.isLocalName(name)) {
