@@ -35,7 +35,6 @@ public class CAMSecurityContext implements SecurityContext {
         if (principal.getRoles() != null) {
             return principal.getRoles().contains(Role.valueOf(role.toUpperCase()));
         }
-
         return false;
     }
 

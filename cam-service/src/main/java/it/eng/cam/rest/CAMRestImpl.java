@@ -1,5 +1,6 @@
 package it.eng.cam.rest;
 
+import it.eng.cam.rest.security.IDMService;
 import it.eng.cam.rest.security.user.json.User;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.*;
@@ -282,20 +283,28 @@ public class CAMRestImpl {
 
     //TODO Work in progress.......
     //Users
-     public static void importUsers(List<User> users, RepositoryDAO dao) {
-         for (User usr:
-              users) {
-             try {
-                 dao.deleteUser(usr.getId());
-             } catch (RuntimeException e) {
-
-             }
-             //dao.createUser();
-         }
+    public static void importUsers(RepositoryDAO dao) {
+        alignKeyrockOnto(dao);
+        alignOntoKeyrock(dao);
     }
 
+    private static void alignKeyrockOnto(RepositoryDAO dao) {
+        List<User> users = IDMService.getUsers();
+        for (User usr : users) {
+            SesameRepoManager.releaseRepoDaoConn(dao);
+            dao = SesameRepoManager.getRepoInstance(null);
+            IndividualItem userOnto = dao.getIndividual(usr.getId());
+            if (userOnto != null) continue;
+            else
+                dao.createUser(usr.getUsername(), usr.getId(), usr.getName(), usr.getEnabled());
+        }
+    }
 
-    //
+    private static void alignOntoKeyrock(RepositoryDAO dao) {
+        List<String> users = dao.getUsers();
+
+    }
+
 
     private static String normalizeClassName(String normName) {
         if (null != normName && normName.contains("#") && !normName.contains("system"))

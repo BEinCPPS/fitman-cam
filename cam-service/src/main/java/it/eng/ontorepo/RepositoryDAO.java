@@ -142,14 +142,21 @@ public interface RepositoryDAO {
             throws IllegalArgumentException, RuntimeException;
 
     /**
+     * @return
+     * @throws RuntimeException
+     */
+    List<String> getUsers() throws RuntimeException;
+
+    /**
      * Creates a new User to associate to a Domain/Owner
+     *
      * @param username
      * @param name
      * @param enabled
      * @throws IllegalArgumentException
      * @throws RuntimeException
      */
-    public void createUser(String username, String name, boolean enabled)
+    public void createUser(String username, String id, String name, boolean enabled)
             throws IllegalArgumentException, RuntimeException;
 
     /**

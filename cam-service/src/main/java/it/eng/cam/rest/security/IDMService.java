@@ -4,6 +4,7 @@ package it.eng.cam.rest.security;
 import it.eng.cam.rest.security.authentication.credentials.json.*;
 import it.eng.cam.rest.security.roles.RoleManager;
 import it.eng.cam.rest.security.user.json.*;
+import it.eng.cam.rest.security.user.json.User;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.client.ClientConfig;
@@ -11,7 +12,6 @@ import org.glassfish.jersey.filter.LoggingFilter;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -31,8 +31,8 @@ public class IDMService {
 
 
     //TODO Logging
-    public static List<it.eng.cam.rest.security.user.json.User> getUsers() {
-        Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
+    public static List<User> getUsers() {
+        Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(IDM_URL).path("users");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
@@ -45,13 +45,8 @@ public class IDMService {
         return userContainerJSON.getUsers();
     }
 
-    public static CAMPrincipal getUserPrincipal(HttpServletRequest request) {
-        String token = request.getHeader(X_AUTH_TOKEN);
-        return getUserPrincipalByToken(token);
-    }
-
     public static CAMPrincipal getUserPrincipalByToken(String token) {
-        Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
+        Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(IDM_URL).path("auth").path("tokens");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
@@ -63,7 +58,7 @@ public class IDMService {
     }
 
     public static List<String> getRoles() {
-        Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
+        Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(IDM_URL).path("roles");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
@@ -79,7 +74,7 @@ public class IDMService {
     }
 
     private static CAMPrincipal fetchUser(CAMPrincipal user) {
-        Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
+        Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(IDM_URL).path("users").path(user.getId());
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
@@ -87,7 +82,7 @@ public class IDMService {
     }
 
     private static CAMPrincipal fetchUserRoles(CAMPrincipal user) {
-        Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
+        Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(IDM_URL).path("domains")
                 .path(user.getDomain_id()).path("users").path(user.getId()).path("roles");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
@@ -96,18 +91,18 @@ public class IDMService {
     }
 
     public static Response authenticate(UserLoginJSON userLoginJSON) {
-        Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
+        Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(IDM_URL).path("auth").path("tokens");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
-        Credentials principal = buildPrincipal(userLoginJSON.getUsername(), userLoginJSON.getPassword(), null);
+        Credentials principal = buildCredentials(userLoginJSON.getUsername(), userLoginJSON.getPassword(), null);
         Response response = invocationBuilder.post(Entity.entity(principal, MediaType.APPLICATION_JSON));
         logger.info(response.getHeaders());
         return response;
     }
 
     public static Response validateAuthToken(String token) {
-        Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
+        Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(IDM_URL).path("auth").path("tokens");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
@@ -116,7 +111,7 @@ public class IDMService {
         return response;
     }
 
-    private static Credentials buildPrincipal(String name, String password, String domainId) {
+    private static Credentials buildCredentials(String name, String password, String domainId) {
         Credentials principal = new Credentials();
         Auth auth = new Auth();
         Identity identity = new Identity();

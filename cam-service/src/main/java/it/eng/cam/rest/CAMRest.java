@@ -2,9 +2,9 @@ package it.eng.cam.rest;
 
 import it.eng.cam.rest.security.CAMPrincipal;
 import it.eng.cam.rest.security.IDMService;
+import it.eng.cam.rest.security.user.json.User;
 import it.eng.cam.rest.sesame.dto.*;
 import it.eng.cam.rest.exception.CAMServiceWebException;
-import it.eng.cam.rest.security.user.json.User;
 import it.eng.cam.rest.security.user.json.UserLoginJSON;
 import it.eng.cam.rest.security.roles.Role;
 import it.eng.cam.rest.sesame.SesameRepoManager;
@@ -1018,8 +1018,22 @@ public class CAMRest {
 
     @GET
     @Path("/users")
+    @RolesAllowed({Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> geUsers() {
+        try {
+            return IDMService.getUsers();
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        }
+    }
+
+    @PUT
+    @Path("/users/import")
+    @RolesAllowed({Role.ADMIN})
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<User> importUsers() {
         try {
             return IDMService.getUsers();
         } catch (Exception e) {

@@ -588,30 +588,42 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     }
 
     @Override
-    public void createUser(String username, String name, boolean enabled) throws IllegalArgumentException,
+    public List<String> getUsers() throws RuntimeException {
+        List<String> names = new ArrayList<String>();
+        for (IndividualItem item : getIndividuals(BeInCpps.USER_CLASS)) {
+            names.add(BeInCpps.getLocalName(item.getIndividualName()));
+        }
+        return names;
+    }
+
+    @Override
+    public void createUser(String username, String id, String name, boolean enabled) throws IllegalArgumentException,
             RuntimeException {
-        if (null == name || name.length() == 0) {
+        if (null == username || username.length() == 0) {
             throw new IllegalArgumentException("User name is mandatory");
         }
 
-        if (!Util.isLocalName(name)) {
-            throw new IllegalArgumentException("User must not be qualified by a namespace: " + name);
+        if (!Util.isLocalName(username)) {
+            throw new IllegalArgumentException("User must not be qualified by a namespace: " + username);
         }
 
-        if (!Util.isValidLocalName(name)) {
-            throw new IllegalArgumentException("Not a valid User name: " + name);
+        if (!Util.isValidLocalName(username)) {
+            throw new IllegalArgumentException("Not a valid User name: " + username);
         }
 
-        name = Util.getGlobalName(BeInCpps.SYSTEM_NS, name);
+        username = Util.getGlobalName(BeInCpps.SYSTEM_NS, username);
         if (getIndividualDeclarationCount(name) > 0) {
-            throw new IllegalArgumentException("User " + name + " already exists");
+            throw new IllegalArgumentException("User " + username + " already exists");
         }
         List<Statement> statements = new ArrayList<Statement>();
-        URI assetUri = vf.createURI(name);
+        URI assetUri = vf.createURI(username);
         URI classUri = vf.createURI(BeInCpps.USER_CLASS);
         statements.add(vf.createStatement(assetUri, RDF.TYPE, classUri));
         statements.add(vf.createStatement(assetUri, RDF.TYPE, ni));
         addStatements(statements);
+        setAttribute("id", username, id, null);
+        setAttribute("name", username, name, null);
+        setAttribute("enabled", username, enabled+"", Boolean.class);
     }
 
     @Override

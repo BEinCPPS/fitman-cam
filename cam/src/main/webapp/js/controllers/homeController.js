@@ -102,7 +102,7 @@ camApp.controller('homeController', [
                 }, function (error) {
                     ngNotifier.error(error);
                 });
-            window.scroll(0, 0);
+            //window.scroll(0, 0);
         }
 
         $scope.loadAsset = function () {

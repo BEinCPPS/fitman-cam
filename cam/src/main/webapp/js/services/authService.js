@@ -47,7 +47,6 @@ camApp
         authFactory.getUser = function () {
             if (AuthToken.getToken())
                 return $http.get(BACK_END_URL_CONST +'/logged', {cache: false});
-            else
                 return $q.reject({message: 'User has no token.'});
         };
 
