@@ -17,13 +17,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Created by ascatolo on 12/10/2016.
  */
 public class IDMService {
     private static final Logger logger = LogManager.getLogger(IDMService.class.getName());
-    public static final String IDM_URL = "http://161.27.159.76:8080/v3";
+    public static ResourceBundle finder =  ResourceBundle.getBundle("cam-service");
+    public static final String IDM_URL =  finder.getString("keyrock.url");
     private static final String ADMIN_TOKEN = "ADMIN"; //TODO
     public static final String X_AUTH_TOKEN = "X-Auth-Token";
     public static final String X_SUBJECT_TOKEN = "X-Subject-Token";

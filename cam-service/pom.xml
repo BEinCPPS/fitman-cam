@@ -242,6 +242,7 @@
 				<destination.url.integration>http://localhost:8080/${artifactId}/</destination.url.integration>
 				<!-- CORS API ENABLING true or false -->
 				<cors.api>true</cors.api>
+				<keyrock.url>http://161.27.159.76:8080/v3</keyrock.url>
 			</properties>
 		</profile>
 		<!-- Production environment @ production server -->
@@ -261,6 +262,7 @@
 				<destination.url.integration>http://localhost:8080/${artifactId}/</destination.url.integration>
 				<!-- CORS API ENABLING true or false -->
 				<cors.api>true</cors.api>
+				<keyrock.url>http://161.27.159.76:8080/v3</keyrock.url>
 			</properties>
 		</profile>
 
