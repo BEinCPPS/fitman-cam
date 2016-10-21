@@ -110,6 +110,17 @@ public interface RepositoryDAO {
     public IndividualItem getIndividual(String name) throws RuntimeException;
 
     /**
+     * Reads the given Individual declaration from the Reference Ontology in the Repository
+     * using the passed namespace.
+     *
+     * @param name
+     * @param namespace
+     * @return
+     * @throws RuntimeException
+     */
+    public IndividualItem getIndividualByNS(String name, String namespace) throws RuntimeException;
+
+    /**
      * Reads all the Property Value assertions of a given Individual from the Reference
      * Ontology in the Repository, and returns them as a flat list of items.
      *
@@ -121,13 +132,21 @@ public interface RepositoryDAO {
             throws RuntimeException;
 
     /**
-     * Reads all the Owners and returns their (unique) local names.
+     * Reads all the Owners and returns an Object containing the local name
+     * and a list of associated Users.
      *
      * @return
      * @throws RuntimeException
      */
-    public List<String> getOwners() throws RuntimeException;
+    public List<OntoDomain> getOwners() throws RuntimeException;
 
+    /**
+     * Return a Domain with name and associated Users.
+     * @param name
+     * @return
+     * @throws RuntimeException
+     */
+    public OntoDomain getOwner(String name) throws RuntimeException;
     /**
      * Creates a new Owner with the given name.
      * <p/>
@@ -143,7 +162,8 @@ public interface RepositoryDAO {
 
     /**
      * List the Users in Ontology
-     *<p></p>
+     * <p></p>
+     *
      * @return a list of OntoUser
      * @throws RuntimeException
      */
@@ -152,23 +172,16 @@ public interface RepositoryDAO {
     /**
      * Gives the asked user from Ontology
      * <p></p>
+     *
      * @param name
      * @return on object of type OntoUser
      */
     OntoUser getUser(String name) throws RuntimeException;
 
     /**
-     *Gives the list of attributes composing the User
-     * <p></p>
-     * @param name
-     * @return List of PropertyValueItem (username, name, enabled)
-     * @throws RuntimeException
-     */
-    List<PropertyValueItem> getUserAttributes(String name) throws RuntimeException;
-
-    /**
      * Creates a new User to associate to a Domain/Owner
      * <p></p>
+     *
      * @param id
      * @throws IllegalArgumentException if mandatory fields are missing
      * @throws RuntimeException
@@ -401,10 +414,21 @@ public interface RepositoryDAO {
             throws RuntimeException;
 
     /**
-     * *
+     * Gives the list of attributes from Individual in SYSTEM namespace
+     * <p></p>
      *
-     * @return the list of Properties with no values associated
-     * @throws RuntimeException author ascatox at 2016-09-20
+     * @param name
+     * @return List of PropertyValueItem (username, name, enabled)
+     * @throws RuntimeException
+     */
+    public List<PropertyValueItem> getAttributesByNS(String name, String namespace) throws RuntimeException;
+
+    /**
+     * Gives the list of attributes from Individual in implicit namespace
+     * <p></p>
+     *
+     * @return
+     * @throws RuntimeException
      */
     public List<PropertyDeclarationItem> getAttributes() throws RuntimeException;
 }

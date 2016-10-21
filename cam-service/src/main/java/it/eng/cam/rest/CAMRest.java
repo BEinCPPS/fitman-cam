@@ -900,18 +900,15 @@ public class CAMRest {
     // FINE MODELS
 
     // OWNERS
-
     @GET
-    @Path("/owners/")
+    @Path("/owners")
+    @RolesAllowed({Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public List<OwnerJSON> getOwners() {
+    public List<OntoDomain> getOwners() {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            List<OwnerJSON> retval = new ArrayList<OwnerJSON>();
-            List<String> owners = CAMRestImpl.getOwners(repoInstance);
-            owners.forEach(item -> retval.add(new OwnerJSON(item)));
-            return retval;
+            return CAMRestImpl.getOwners(repoInstance);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -922,19 +919,13 @@ public class CAMRest {
 
     @GET
     @Path("/owners/{ownerName}")
+    @RolesAllowed({Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public List<OwnerJSON> getOwner(@PathParam("ownerName") String ownerName) {
+    public OntoDomain getOwner(@PathParam("ownerName") String ownerName) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            List<OwnerJSON> retval = new ArrayList<OwnerJSON>();
-            List<String> owners = CAMRestImpl.getOwners(repoInstance);
-            if (null == ownerName || "".equalsIgnoreCase(ownerName))
-                owners.forEach(item -> retval.add(new OwnerJSON(item)));
-            else
-                owners.stream().filter(owner -> owner.equalsIgnoreCase(ownerName)).collect(Collectors.toList())
-                        .forEach(item -> retval.add(new OwnerJSON(item)));
-            return retval;
+            return CAMRestImpl.getOwner(repoInstance, ownerName);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -944,7 +935,7 @@ public class CAMRest {
     }
 
     @POST
-    @Path("/owners/")
+    @Path("/owners")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createOwner(OwnerJSON owner) {
         RepositoryDAO repoInstance = null;
@@ -962,6 +953,7 @@ public class CAMRest {
 
     @PUT
     @Path("/owners/{ownerName}")
+    @RolesAllowed({Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateOwner(@PathParam("ownerName") String ownerName, OwnerJSON owner) {
         RepositoryDAO repoInstance = null;
@@ -988,6 +980,7 @@ public class CAMRest {
 
     @DELETE
     @Path("/owners/{ownerName}")
+    @RolesAllowed({Role.ADMIN})
     public Response deleteOwner(@PathParam("ownerName") String ownerName) {
         RepositoryDAO repoInstance = null;
         try {
@@ -1049,7 +1042,7 @@ public class CAMRest {
 
     @DELETE
     @Path("/users/{username}")
-    @RolesAllowed({Role.ADMIN}) //TODO
+    @RolesAllowed({Role.ADMIN})
     public Response deleteUser(@PathParam("username") String username) {
         RepositoryDAO repoInstance = null;
         try {
@@ -1081,11 +1074,28 @@ public class CAMRest {
         }
     }
 
+    @PUT
+    @Path("/domains/{domainName}/users")
+    @RolesAllowed({Role.ADMIN})
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response insertUsersInDomain(@PathParam("domainName") String domainName, List<String> users) {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            CAMRestImpl.insertUsersInDomain(repoInstance, domainName, users);
+            return Response.ok("Users were successfully added to Domain " + domainName).build();
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
 
     @POST
     @Path("/authenticate")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createOwner(UserLoginJSON user) {
+    public Response authenticate(UserLoginJSON user) {
         try {
             return IDMService.authenticate(user);
         } catch (Exception e) {
@@ -1097,6 +1107,7 @@ public class CAMRest {
 
     @Context
     SecurityContext securityContext;
+
     @GET
     @Path("/logged")
     //@RolesAllowed({Role.BASIC, Role.ADMIN})

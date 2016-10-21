@@ -53,10 +53,6 @@ public class CAMRestImpl {
         return dao.getIndividuals();
     }
 
-    public static List<String> getOwners(RepositoryDAO dao) {
-        return dao.getOwners();
-    }
-
     public static List<IndividualItem> getIndividuals(RepositoryDAO dao, String className) {
         return dao.getIndividuals(className);
     }
@@ -105,6 +101,21 @@ public class CAMRestImpl {
         return results;
     }
 
+    public static ClassItem deepSearchClasses(List<ClassItem> items, String className) {
+        ClassItem retval = null;
+        for (ClassItem classItem : items) {
+            if (classItem.getNormalizedName().equalsIgnoreCase(className)) {
+                return classItem;
+            }
+        }
+        for (ClassItem classItem : items) {
+            retval = deepSearchClasses(classItem.getSubClasses(), className);
+            if (retval != null)
+                return retval;
+        }
+        return null;
+    }
+
 
     public static List<IndividualItem> getIndividualsForChildren(RepositoryDAO dao, String className) {
         List<ClassItem> classes = CAMRestImpl.getClasses(dao, false, false);
@@ -125,8 +136,6 @@ public class CAMRestImpl {
     }
 
     public static void moveClass(RepositoryDAO dao, String name, String parentName) {
-        // if (!isNormalized(parentName))
-        // parentName = normalize(parentName);
         dao.moveClass(name, parentName);
     }
 
@@ -166,10 +175,16 @@ public class CAMRestImpl {
         dao.deleteIndividual(assetName);
     }
 
-    // TODO Test
     public static void removeProperty(RepositoryDAO dao, String assetName, String propertyName) {
         dao.removeProperty(propertyName, assetName);
+    }
 
+    public static List<OntoDomain> getOwners(RepositoryDAO dao) {
+        return dao.getOwners();
+    }
+
+    public static OntoDomain getOwner(RepositoryDAO dao, String ownerName) {
+        return dao.getOwner(ownerName);
     }
 
     public static void createOwner(RepositoryDAO dao, String ownerName) {
@@ -178,12 +193,21 @@ public class CAMRestImpl {
 
     public static void deleteOwner(RepositoryDAO dao, String ownerName) {
         dao.deleteOwner(ownerName);
-
     }
 
     public static void deleteUser(RepositoryDAO dao, String ownerName) {
         dao.deleteUser(ownerName);
+    }
 
+    public static void insertUsersInDomain(RepositoryDAO dao, String name, List<String> users) throws RuntimeException {
+        if (name == null || name.isEmpty() || users == null || users.isEmpty())
+            throw new RuntimeException("Input parameters 'Domain name' and 'List of users' are mandatory!");
+        dao.getOwner(name);
+        for (String usr : users) {
+            OntoUser user = dao.getUser(usr);
+            dao = releaseRepo(dao);
+            dao.setRelationship("rel_user_" + name + "_" + user.getId(), name, user.getId());
+        }
     }
 
     public static void setAttribute(RepositoryDAO dao, String name, String individualName, String value, String type)
@@ -213,13 +237,6 @@ public class CAMRestImpl {
         return false;
     }
 
-    /**
-     * A name is normalized if contains the prefix
-     * http://www.w3.org/2002/07/owl#
-     *
-     * @param originalName
-     * @return
-     */
     public static String normalize(String originalName) {
         return PREFIX + originalName;
     }
@@ -235,20 +252,6 @@ public class CAMRestImpl {
         return normalizedName;
     }
 
-    public static ClassItem deepSearchClasses(List<ClassItem> items, String className) {
-        ClassItem retval = null;
-        for (ClassItem classItem : items) {
-            if (classItem.getNormalizedName().equalsIgnoreCase(className)) {
-                return classItem;
-            }
-        }
-        for (ClassItem classItem : items) {
-            retval = deepSearchClasses(classItem.getSubClasses(), className);
-            if (retval != null)
-                return retval;
-        }
-        return null;
-    }
 
     public static List<PropertyDeclarationItem> getAttributes(RepositoryDAO dao) {
         List<PropertyDeclarationItem> attributes = dao.getAttributes();
@@ -361,6 +364,4 @@ public class CAMRestImpl {
             return true;
         return false;
     }
-
-
 }

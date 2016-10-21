@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.print.attribute.standard.MediaSize;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -16,14 +17,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import it.eng.ontorepo.*;
 import org.w3c.dom.Document;
 
-import it.eng.ontorepo.ClassItem;
-import it.eng.ontorepo.IndividualItem;
-import it.eng.ontorepo.PropertyDeclarationItem;
-import it.eng.ontorepo.PropertyValueItem;
-import it.eng.ontorepo.RepositoryDAO;
-import it.eng.ontorepo.Util;
 import it.eng.ontorepo.sesame2.Sesame2RepositoryDAO;
 
 public class TestDriver {
@@ -153,9 +149,9 @@ public class TestDriver {
 
         System.out.println("PRINTING OWNERS **********");
 
-        List<String> owners = dao.getOwners();
-        for (String owner : owners) {
-            System.out.println(owner);
+        List<OntoDomain> owners = dao.getOwners();
+        for (OntoDomain owner : owners) {
+            System.out.println(owner.getName());
         }
 
         System.out.println("OWNERS PRINTED **********");

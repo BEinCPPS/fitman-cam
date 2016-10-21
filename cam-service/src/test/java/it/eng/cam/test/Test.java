@@ -18,6 +18,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import it.eng.ontorepo.OntoDomain;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -79,7 +80,7 @@ public class Test extends Assert {
 	//
 	@org.junit.Test
 	public void getOwners() {
-		List<String> owners = CAMRestImpl.getOwners(dao);
+		List<OntoDomain> owners = CAMRestImpl.getOwners(dao);
 		assertNotNull("Null owners list", owners);
 		// Onwers empty is not problem
 		// assertFalse(owners.isEmpty());
@@ -190,8 +191,8 @@ public class Test extends Assert {
 			assertFalse(e.getMessage(), true);
 		}
 
-		List<String> owners = CAMRestImpl.getOwners(dao);
-		List<String> ownersFiltered = owners.stream().filter(own -> own.equals(ownerName)).collect(Collectors.toList());
+		List<OntoDomain> owners = CAMRestImpl.getOwners(dao);
+		List<OntoDomain> ownersFiltered = owners.stream().filter(own -> own.getName().equals(ownerName)).collect(Collectors.toList());
 
 		assertNotNull("Delete owner: deleted owner: " + ownerName, ownersFiltered);
 		assertTrue("Delete owner: deleted owner: " + ownerName, ownersFiltered.isEmpty());
@@ -393,8 +394,8 @@ public class Test extends Assert {
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
-		List<String> owners = CAMRestImpl.getOwners(dao);
-		List<String> ownersFiltered = owners.stream().filter(own -> own.equals(ownerName)).collect(Collectors.toList());
+		List<OntoDomain> owners = CAMRestImpl.getOwners(dao);
+		List<OntoDomain> ownersFiltered = owners.stream().filter(own -> own.getName().equals(ownerName)).collect(Collectors.toList());
 
 		assertNotNull("Create owner: owner (null) not retrieved for ownerName: " + ownerName, ownersFiltered);
 		assertFalse("Create owner: owner (empty) not retrieved for ownerName: " + ownerName, ownersFiltered.isEmpty());
