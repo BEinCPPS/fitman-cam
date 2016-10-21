@@ -32,17 +32,25 @@
         <th style="text-align: left">Produces</th>
         <th style="text-align: left">Consumes</th>
         <th style="text-align: left">Name</th>
-        <th style="text-align: left">URL</th>
+        <th style="text-align: left">Role</th>
     </tr>
     <tr></tr>
     <tr></tr>
+    <tr>
+        <td>POST</td>
+        <td>/authenticate</td>
+        <td>JSON</td>
+        <td>JSON</td>
+        <td>authenticate</td>
+        <td></td>
+    </tr>
     <tr>
         <td>GET</td>
         <td>/classes</td>
         <td>JSON</td>
         <td></td>
         <td>getClasses</td>
-        <td><a href="camServiceUrl/classes">Link</a></td>
+        <td>BASIC</td>
     </tr>
     <tr>
         <td>GET</td>
@@ -50,7 +58,7 @@
         <td>JSON</td>
         <td></td>
         <td>getTreePath</td>
-        <td></td>
+        <td>BASIC</td>
     </tr>
     <tr>
         <td>GET</td>
@@ -58,7 +66,7 @@
         <td>JSON</td>
         <td></td>
         <td>getIndividuals</td>
-        <td></td>
+        <td>BASIC</td>
     </tr>
 
     <tr>
@@ -67,7 +75,7 @@
         <td></td>
         <td>JSON</td>
         <td>createClass</td>
-        <td></td>
+        <td>BASIC</td>
     </tr>
     <tr>
         <td>PUT</td>
@@ -75,7 +83,7 @@
         <td></td>
         <td>JSON</td>
         <td>moveClass</td>
-        <td></td>
+        <td>BASIC</td>
     </tr>
     <tr>
         <td>DELETE</td>
@@ -83,7 +91,7 @@
         <td></td>
         <td></td>
         <td>deleteClass</td>
-        <td></td>
+        <td>BASIC</td>
     </tr>
     <tr>
         <td>POST</td>
@@ -91,7 +99,7 @@
         <td></td>
         <td>JSON</td>
         <td>createAssetModel</td>
-        <td></td>
+        <td>BASIC</td>
     </tr>
     <tr>
         <td>POST</td>
@@ -99,7 +107,7 @@
         <td></td>
         <td>JSON</td>
         <td>createAsset</td>
-        <td></td>
+        <td>BASIC</td>
     </tr>
     <tr>
         <td>PUT</td>
@@ -107,7 +115,7 @@
         <td></td>
         <td>JSON</td>
         <td>setRelationship</td>
-        <td></td>
+        <td>BASIC</td>
     </tr>
     <tr>
         <td>POST</td>
@@ -115,7 +123,7 @@
         <td></td>
         <td>JSON</td>
         <td>setAttribute</td>
-        <td></td>
+        <td>BASIC</td>
     </tr>
     <tr>
         <td>DELETE</td>
@@ -123,7 +131,7 @@
         <td></td>
         <td></td>
         <td>removeProperty</td>
-        <td></td>
+        <td>BASIC</td>
     </tr>
     <tr>
         <td>GET</td>
@@ -131,7 +139,7 @@
         <td>JSON</td>
         <td></td>
         <td>getIndividuals</td>
-        <td><a href="camServiceUrl/assets">Link</a></td>
+        <td>BASIC</td>
     </tr>
     <tr>
         <td>GET</td>
@@ -139,15 +147,23 @@
         <td>JSON</td>
         <td></td>
         <td>getIndividualAttributes</td>
-        <td></td>
+        <td>BASIC</td>
     </tr>
     <tr>
         <td>GET</td>
         <td>/owners</td>
         <td>JSON</td>
-        <td></td>
+        <td>JSON</td>
         <td>getOwners</td>
-        <td><a href="camServiceUrl/owners">Link</a></td>
+        <td>ADMIN</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/owners/{ownerName}</td>
+        <td>JSON</td>
+        <td>JSON</td>
+        <td>getOwner</td>
+        <td>ADMIN</td>
     </tr>
     <tr>
         <td>POST</td>
@@ -155,7 +171,7 @@
         <td></td>
         <td>JSON</td>
         <td>createOwner</td>
-        <td></td>
+        <td>ADMIN</td>
     </tr>
     <tr>
         <td>DELETE</td>
@@ -163,7 +179,15 @@
         <td></td>
         <td></td>
         <td>deleteOwner</td>
+        <td>ADMIN</td>
+    </tr>
+    <tr>
+        <td>PUT</td>
+        <td>/domains/{domainName}/users</td>
+        <td>JSON</td>
         <td></td>
+        <td>insertUsersInDomain</td>
+        <td>ADMIN</td>
     </tr>
     <tr>
         <td>GET</td>
@@ -171,15 +195,39 @@
         <td>JSON</td>
         <td></td>
         <td>getAttributes</td>
-        <td><a href="camServiceUrl/attributes">Link</a></td>
+        <td>BASIC</td>
     </tr>
     <tr>
         <td>GET</td>
         <td>/users</td>
         <td>JSON</td>
-        <td></td>
+        <td>JSON</td>
         <td>getUsers</td>
-        <td><a href="camServiceUrl/users">Link</a></td>
+        <td>ADMIN</td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/users/{username}</td>
+        <td>JSON</td>
+        <td>JSON</td>
+        <td>getUser</td>
+        <td>ADMIN</td>
+    </tr>
+    <tr>
+        <td>DELETE</td>
+        <td>/users/{username}</td>
+        <td>JSON</td>
+        <td></td>
+        <td>deleteUser</td>
+        <td>ADMIN</td>
+    </tr>
+    <tr>
+        <td>PUT</td>
+        <td>/users/import</td>
+        <td></td>
+        <td></td>
+        <td>importUsers</td>
+        <td>ADMIN</td>
     </tr>
 </table>
 </body>
