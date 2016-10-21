@@ -38,6 +38,7 @@ camApp.controller('homeController', [
         $scope.regexPattern = REGEX_PATTERN;
         $scope.invalidNameMsg = INVALID_NAME_MSG;
         $scope.nameIsMandatory = NAME_IS_MANDATORY_MSG;
+        $scope.keyrockSignupUrl = KEYROCK_SIGNUP_URL;
 
 
         $scope.columnDefs = [
