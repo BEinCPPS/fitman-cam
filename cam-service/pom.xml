@@ -242,6 +242,7 @@
                 <!-- CORS API ENABLING true or false -->
                 <cors.api>true</cors.api>
                 <keyrock.url>http://161.27.159.76:8080</keyrock.url>
+                <keyrock.admin.token>ADMIN</keyrock.admin.token>
             </properties>
         </profile>
         <!-- Production environment @ production server -->
@@ -262,6 +263,7 @@
                 <!-- CORS API ENABLING true or false -->
                 <cors.api>true</cors.api>
                 <keyrock.url>http://161.27.159.76:8080</keyrock.url>
+                <keyrock.admin.token>ADMIN</keyrock.admin.token>
             </properties>
         </profile>
 

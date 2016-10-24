@@ -1,11 +1,11 @@
 package it.eng.cam.rest.security;
 
 
-import it.eng.cam.rest.security.authentication.credentials.json.*;
+import it.eng.cam.rest.security.authentication.credentials.Credentials;
 import it.eng.cam.rest.security.roles.RoleManager;
-import it.eng.cam.rest.security.user.json.User;
-import it.eng.cam.rest.security.user.json.UserContainerJSON;
-import it.eng.cam.rest.security.user.json.UserLoginJSON;
+import it.eng.cam.rest.security.user.User;
+import it.eng.cam.rest.security.user.UserContainerJSON;
+import it.eng.cam.rest.security.user.UserLoginJSON;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -23,14 +23,15 @@ import java.util.ResourceBundle;
  */
 public class IDMService {
     private static final Logger logger = LogManager.getLogger(IDMService.class.getName());
-    public static ResourceBundle finder =  ResourceBundle.getBundle("cam-service");
-    public static final String IDM_URL =  finder.getString("keyrock.url")+"/v3";
-    private static final String ADMIN_TOKEN = "ADMIN"; //TODO
+    public static ResourceBundle finder = ResourceBundle.getBundle("cam-service");
+    public static final String IDM_URL = finder.getString("keyrock.url") + "/v3";
+    private static final String ADMIN_TOKEN = finder.getString("keyrock.admin.token");
     public static final String X_AUTH_TOKEN = "X-Auth-Token";
     public static final String X_SUBJECT_TOKEN = "X-Subject-Token";
     public static final RoleManager roleManager = new RoleManager(); //TODO
 
-    public static List<User> getUsers() {
+
+     public static List<User> getUsers() {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(IDM_URL).path("users");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
@@ -112,10 +113,10 @@ public class IDMService {
 
     private static Credentials buildCredentials(String name, String password, String domainId) {
         Credentials principal = new Credentials();
-        Auth auth = new Auth();
-        Identity identity = new Identity();
-        Password passwordObj = new Password();
-        it.eng.cam.rest.security.authentication.credentials.json.User user = new it.eng.cam.rest.security.authentication.credentials.json.User(name, new Domain(domainId), password);
+        Credentials.Auth auth = new Credentials.Auth();
+        Credentials.Identity identity = new Credentials.Identity();
+        Credentials.Password passwordObj = new Credentials.Password();
+        Credentials.User user = new Credentials.User(name, new Credentials.Domain(domainId), password);
         passwordObj.setUser(user);
         identity.setPassword(passwordObj);
         auth.setIdentity(identity);

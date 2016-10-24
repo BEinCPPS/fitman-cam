@@ -1,12 +1,11 @@
 package it.eng.cam.rest;
 
 import it.eng.cam.rest.security.IDMService;
-import it.eng.cam.rest.security.user.json.User;
+import it.eng.cam.rest.security.user.User;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.eclipse.rdf4j.query.algebra.Str;
 
 import javax.ws.rs.WebApplicationException;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package it.eng.cam.rest.security;
 
-import it.eng.cam.rest.security.user.json.User;
+import it.eng.cam.rest.security.user.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;

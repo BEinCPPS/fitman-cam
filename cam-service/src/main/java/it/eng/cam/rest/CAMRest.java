@@ -2,10 +2,9 @@ package it.eng.cam.rest;
 
 import it.eng.cam.rest.security.CAMPrincipal;
 import it.eng.cam.rest.security.IDMService;
-import it.eng.cam.rest.security.user.json.User;
 import it.eng.cam.rest.sesame.dto.*;
 import it.eng.cam.rest.exception.CAMServiceWebException;
-import it.eng.cam.rest.security.user.json.UserLoginJSON;
+import it.eng.cam.rest.security.user.UserLoginJSON;
 import it.eng.cam.rest.security.roles.Role;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.*;
