@@ -50,6 +50,7 @@ public class CAMRest {
      */
     @GET
     @Path("/classes")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public List<ClassItem> getClassHierarchy(@QueryParam("flat") boolean flat) {
         RepositoryDAO repoInstance = null;
@@ -66,7 +67,7 @@ public class CAMRest {
 
     @GET
     @Path("/classes/{className}")
-    //@RolesAllowed({Role.BASIC, Role.ADMIN})
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public List<ClassItem> getIndividuals(@PathParam("className") String className) {
         RepositoryDAO repoInstance = null;
@@ -87,6 +88,7 @@ public class CAMRest {
 
     @POST
     @Path("/classes")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createClass(ClassJSON clazz) {
         RepositoryDAO repoInstance = null;
@@ -104,6 +106,7 @@ public class CAMRest {
 
     @PUT
     @Path("/classes/{className}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateClass(@PathParam("className") String className, ClassJSON clazz) {
         RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
@@ -131,6 +134,7 @@ public class CAMRest {
 
     @DELETE
     @Path("/classes/{className}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     public Response deleteClass(@PathParam("className") String className) {
         RepositoryDAO repoInstance = null;
         try {
@@ -152,6 +156,7 @@ public class CAMRest {
     //Models as template of assets doesn't exist anymore.
     @GET
     @Path("/assets/{assetName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public List<IndividualItem> getAssetByName(@PathParam("assetName") String assetName) {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
@@ -175,6 +180,7 @@ public class CAMRest {
     @GET
     @Path("/assets")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     public List<IndividualItem> getAssetsForClass(@QueryParam("className") String className,
                                                   @QueryParam("retrieveForChildren") boolean retrieveForChildren) {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
@@ -213,6 +219,7 @@ public class CAMRest {
     @PUT
     @Path("/assets/{assetName}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     public Response updateAsset(@PathParam("assetName") String assetName, AssetJSON asset) {
         List<PropertyValueItem> individualAttributes = null;
         RepositoryDAO repoInstance = null;
@@ -256,6 +263,7 @@ public class CAMRest {
 
     @DELETE
     @Path("/assets/{assetName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     public Response deleteAsset(@PathParam("assetName") String assetName) {
         RepositoryDAO repoInstance = null;
         try {
@@ -274,6 +282,7 @@ public class CAMRest {
     @GET
     @Path("/assets/{assetName}/attributes")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     public List<PropertyValueItem> getIndividualAttributes(@PathParam("assetName") String assetName) {
         RepositoryDAO repoInstance = null;
         try {
@@ -293,6 +302,7 @@ public class CAMRest {
 
     @GET
     @Path("/assets/{assetName}/attributes/{attributeName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public PropertyValueItem getIndividualAttribute(@PathParam("assetName") String assetName,
                                                     @PathParam("attributeName") String attributeName) {
@@ -315,6 +325,7 @@ public class CAMRest {
 
     @POST
     @Path("/assets/{assetName}/attributes/")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setAttribute(@PathParam("assetName") String assetName, AttributeJSON attribute) {
         RepositoryDAO repoInstance = null;
@@ -344,6 +355,7 @@ public class CAMRest {
 
     @PUT
     @Path("/assets/{assetName}/attributes/{attributeName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setAttribute(@PathParam("assetName") String assetName,
                                  @PathParam("attributeName") String attributeName, AttributeJSON attribute) {
@@ -384,6 +396,7 @@ public class CAMRest {
 
     @DELETE
     @Path("/assets/{assetName}/attributes/{attributeName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     public Response removeAttribute(@PathParam("assetName") String assetName,
                                     @PathParam("attributeName") String attributeName) {
         RepositoryDAO repoInstance = null;
@@ -408,6 +421,7 @@ public class CAMRest {
 
     @GET
     @Path("/assets/{assetName}/relationships")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public List<PropertyValueItem> getRelationships(@PathParam("assetName") String assetName) {
         RepositoryDAO repoInstance = null;
@@ -428,6 +442,7 @@ public class CAMRest {
 
     @GET
     @Path("/assets/{assetName}/relationships/{relationshipName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public PropertyValueItem getRelationship(@PathParam("assetName") String assetName,
                                              @PathParam("relationshipName") String relationshipName) {
@@ -451,6 +466,7 @@ public class CAMRest {
 
     @POST
     @Path("/assets/{assetName}/relationships")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createRelationship(@PathParam("assetName") String assetName, RelationshipJSON relationship) {
         RepositoryDAO repoInstance = null;
@@ -470,6 +486,7 @@ public class CAMRest {
 
     @PUT
     @Path("/assets/{assetName}/relationships/{relationshipName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateRelationship(@PathParam("assetName") String assetName,
                                        @PathParam("relationshipName") String relationshipName, RelationshipJSON relationship) {
@@ -499,6 +516,7 @@ public class CAMRest {
 
     @DELETE
     @Path("/assets/{assetName}/relationships/{relationshipName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     public Response deleteRelationship(@PathParam("assetName") String assetName,
                                        @PathParam("relationshipName") String relationshipName) {
         RepositoryDAO repoInstance = null;
@@ -519,6 +537,7 @@ public class CAMRest {
     // FINE ASSETS
     @GET
     @Path("/attributes")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public List<PropertyDeclarationItem> getAttributes() {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
@@ -535,6 +554,7 @@ public class CAMRest {
 
     @GET
     @Path("/models/{modelName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public List<IndividualItem> getModelByName(@PathParam("modelName") String modelName) {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
@@ -558,6 +578,7 @@ public class CAMRest {
 
     @GET
     @Path("/models")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public List<IndividualItem> getModelsForClass(@QueryParam("className") String className) {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
@@ -578,6 +599,7 @@ public class CAMRest {
 
     @POST
     @Path("/models")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createAssetModel(AssetModelJSON model) {
         RepositoryDAO repoInstance = null;
@@ -596,6 +618,7 @@ public class CAMRest {
 
     @PUT
     @Path("/models/{modelName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateAssetModel(@PathParam("modelName") String modelName, AssetModelJSON model) {
         RepositoryDAO repoInstance = null;
@@ -637,6 +660,7 @@ public class CAMRest {
 
     @DELETE
     @Path("/models/{modelName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     public Response deleteModel(@PathParam("modelName") String modelName) {
         RepositoryDAO repoInstance = null;
         try {
@@ -654,6 +678,7 @@ public class CAMRest {
 
     @GET
     @Path("/models/{modelName}/attributes")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public List<PropertyValueItem> getModelAttributes(@PathParam("modelName") String modelName) {
         RepositoryDAO repoInstance = null;
@@ -674,6 +699,7 @@ public class CAMRest {
 
     @GET
     @Path("/models/{modelName}/attributes/{attributeName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public PropertyValueItem getModelAttribute(@PathParam("modelName") String modelName,
                                                @PathParam("attributeName") String attributeName) {
@@ -696,6 +722,7 @@ public class CAMRest {
 
     @POST
     @Path("/models/{modelName}/attributes/")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setModelAttribute(@PathParam("modelName") String modelName, AttributeJSON attribute) {
         RepositoryDAO repoInstance = null;
@@ -725,6 +752,7 @@ public class CAMRest {
 
     @PUT
     @Path("/models/{modelName}/attributes/{attributeName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setModelAttribute(@PathParam("modelName") String modelName,
                                       @PathParam("attributeName") String attributeName, AttributeJSON attribute) {
@@ -765,6 +793,7 @@ public class CAMRest {
 
     @DELETE
     @Path("/models/{modelName}/attributes/{attributeName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response removeModelAttribute(@PathParam("modelName") String modelName,
                                          @PathParam("attributeName") String attributeName) {
@@ -790,6 +819,7 @@ public class CAMRest {
 
     @GET
     @Path("/models/{modelName}/relationships")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public List<PropertyValueItem> getModelRelationships(@PathParam("modelName") String modelName) {
         RepositoryDAO repoInstance = null;
@@ -810,6 +840,7 @@ public class CAMRest {
 
     @GET
     @Path("/models/{modelName}/relationships/{relationshipName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public PropertyValueItem getModelRelationship(@PathParam("modelName") String modelName,
                                                   @PathParam("relationshipName") String relationshipName) {
@@ -833,6 +864,7 @@ public class CAMRest {
 
     @POST
     @Path("/models/{modelName}/relationships")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createModelRelationship(@PathParam("modelName") String modelName, RelationshipJSON relationship) {
         RepositoryDAO repoInstance = null;
@@ -852,6 +884,7 @@ public class CAMRest {
 
     @PUT
     @Path("/models/{modelName}/relationships/{relationshipName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateModelRelationship(@PathParam("modelName") String modelName,
                                             @PathParam("relationshipName") String relationshipName, RelationshipJSON relationship) {
@@ -881,6 +914,7 @@ public class CAMRest {
 
     @DELETE
     @Path("/models/{modelName}/relationships/{relationshipName}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     public Response deleteModelRelationship(@PathParam("modelName") String modelName,
                                             @PathParam("relationshipName") String relationshipName) {
         RepositoryDAO repoInstance = null;
