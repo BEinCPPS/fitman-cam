@@ -8,10 +8,8 @@ camApp.controller('homeController', [
     '$timeout',
     'ngNotifier',
     'entityManager',
-    'Auth',
-    '$rootScope',
-    '$location',
-    function ($scope, Scopes, $routeParams, $route, $q, $ngDialog, $timeout, ngNotifier, entityManager, Auth, $rootScope, $location) {
+    'templateManager',
+    function ($scope, Scopes, $routeParams, $route, $q, $ngDialog, $timeout, ngNotifier, entityManager, templateManager) {
         Scopes.store('homeController', $scope);
         $scope.getAssets = function (name, retrieveChildren) {
             entityManager.getAssets(name, retrieveChildren)
@@ -20,7 +18,7 @@ camApp.controller('homeController', [
                         $scope.assetList = $scope.formatAssetListTable(res, name);
                     });
                 }, function (error) {
-                   ngNotifier.error(error);
+                    ngNotifier.error(error);
                 });
         }
 
@@ -85,7 +83,7 @@ camApp.controller('homeController', [
         entityManager.getClasses().then(function (response) {
             $scope.classList = $scope.createClasses(response.data);
         }, function (error) {
-           ngNotifier.error(error);
+            ngNotifier.error(error);
         })
 
         $scope.newAssetVisible = false;
@@ -232,7 +230,7 @@ camApp.controller('homeController', [
                 $route.reload();
                 $scope.init();
             }, function (error) {
-               ngNotifier.error(error);
+                ngNotifier.error(error);
             });
 
         }
@@ -300,11 +298,23 @@ camApp.controller('homeController', [
                     search($scope.classList, ancestors[i]);
                 }
             }, function (error) {
-               ngNotifier.error(error);
+                ngNotifier.error(error);
             });
 
         };
 
+        templateManager.getAssetAction().then(function (response) {
+            $scope.actionAssetTemplate = response.data;
+        }, function (error) {
+            $scope.actionAssetTemplate = '';
+            ngNotifier.error(error);
+        });
+        templateManager.getAssetButtonAction().then(function (response) {
+            $scope.actionAssetButtonTemplate = response.data;
+        }, function (error) {
+            $scope.actionAssetButtonTemplate = '';
+            ngNotifier.error(error);
+        });
 
         $scope.formatAssetListTable = function (data, clazzName) {
             if (!data)
@@ -312,9 +322,13 @@ camApp.controller('homeController', [
             for (var i = 0; i < data.length; i++) {
                 var elementType = 'asset';
 
-                data[i].action = '<div class="inline-flex-item"> <button class="cam-table-button" ng-click="openRemoveAssetPanel(\'' + data[i].asset + '\', \'' + elementType + '\')' + '"> <i data-toggle="tooltip" title="Delete asset" class="fa fa-trash cam-table-button"></i> </button>'
-                    + '<a class="cam-icon-a" href="#/detail/' + data[i].asset + '/' + clazzName + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-arrow-circle-right cam-table-button"></i> </a>';
-                data[i].action += '<button class="cam-table-button" ng-click="openNewAssetPanel(\'' + data[i].asset + '\')' + '"> <i data-toggle="tooltip" title="Create new asset from this model" class="fa fa-plus cam-table-button"></i></div> </button>';
+                data[i].action = (function () {
+                    return $scope.actionAssetTemplate.replaceAll('$value$', data[i].asset).replaceAll('$element$', elementType).replaceAll('$className$', clazzName);
+
+                })();
+                data[i].action += (function () {
+                    return $scope.actionAssetButtonTemplate.replaceAll('$value$', data[i].asset);
+                })();
             }
 
             data.sort(function (a, b) {

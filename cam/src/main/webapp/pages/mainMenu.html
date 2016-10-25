@@ -13,7 +13,7 @@
             <div class="collapse navbar-collapse" id="navigationbar">
                 <ul class="nav navbar-nav">
                     <li ng-class="activeMenuClass()"><a href="#/"><i class="fa fa-home" aria-hidden="true"></i> Classes</a></li>
-                    <li ng-class="activeMenuDomain()"><a href="#/domain"><i class="fa fa-users" aria-hidden="true"></i> Domains</a></li>
+                    <li ng-class="activeMenuDomain()" ng-if="isAdmin()"><a href="#/domain"><i class="fa fa-users" aria-hidden="true"></i> Domains</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li ng-if="!loggedIn"><a href="/login">Login</a></li>

@@ -7,8 +7,16 @@ camApp.controller('domainController', [
     'NgTableParams',
     'entityManager',
     'ngNotifier',
-    function ($scope, Scopes, $q, $ngDialog, NgTableParams, entityManager, ngNotifier) {
+    'templateManager',
+    function ($scope, Scopes, $q, $ngDialog, NgTableParams, entityManager, ngNotifier, templateManager) {
         Scopes.store('domainController', $scope);
+        templateManager.getDomainAction().then(function (response) {
+            $scope.actionTemplate =  response.data;
+        }, function (error) {
+            $scope.actionTemplate = '';
+            ngNotifier.error(error);
+            return null;
+        });
 
         (function getOwners() {
             entityManager.getOwners().then(function (response) {
@@ -18,8 +26,11 @@ camApp.controller('domainController', [
                 ownList.forEach(function (value) {
                     var domain = {
                         name: value.name,
-                        //TODO
-                        action: '<div class="inline-flex-item"><button class="cam-table-button" ng-click="openConfirmDeleteDomain(\'' + value.name + '\')"> <i data-toggle="tooltip" title="Delete ' + value.name + '" class="fa fa-trash cam-table-button"></i> </button>'
+                        users: value.users,
+                        action: function () {
+                            return $scope.actionTemplate.replaceAll('$value$', value.name);
+                        }
+                        //'<div class="inline-flex-item"><button class="cam-table-button" ng-click="openConfirmDeleteDomain(\'' + value.name + '\')"> <i data-toggle="tooltip" title="Delete ' + value.name + '" class="fa fa-trash cam-table-button"></i> </button>'
                     };
                     $scope.ownersList.push(domain);
                 })

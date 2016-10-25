@@ -22,11 +22,22 @@ camApp.controller('menuController', [
             $scope.loggedIn = Auth.isLoggedIn();
             if (!$scope.loggedIn) $location.path('/login');
             // get user information on page load
-            Auth.getUser()
-                .then(function (data) {
-                    $scope.user = data.data;
-                });
+            // Auth.getUser()
+            //     .then(function (data) {
+            //         $scope.user = data.data;
+            //     });
         });
+
+        $scope.isAdmin = function () {
+            if ($scope.user) {
+                var roles = $scope.user.roles;
+                for (var i in roles) {
+                    if (roles[i] == 'ADMIN')
+                        return true;
+                }
+            }
+            return false;
+        }
         // function to handle logging out
         $scope.doLogout = function () {
             Auth.logout();
@@ -42,8 +53,10 @@ camApp.controller('menuController', [
                 .success(function (data) {
                     $scope.processing = false;
                     // if a user successfully logs in, redirect to users page
-                    if (data.token)
+                    if (data.token) {
+                        $scope.user = undefined;
                         $location.path('/');
+                    }
                     else
                         ngNotifier.info(data);
                 }).error(function (error) {

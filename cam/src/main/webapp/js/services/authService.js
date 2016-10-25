@@ -9,11 +9,11 @@ camApp
 // inject $q to return promise objects
 // inject AuthToken to manage tokens
 // ===================================================
-    .factory('Auth', function ($http, $q, AuthToken) {
+    .factory('Auth', function ($http, $q, AuthToken, $cacheFactory) {
 
         // create auth factory object
         var authFactory = {};
-
+        var cache = $cacheFactory('camCache');
         // log a user in
         authFactory.login = function (username, password) {
             // return the promise object and its data
@@ -22,6 +22,7 @@ camApp
                 password: password
             }).success(function (data, status, headers) {
                 AuthToken.setToken(headers('X-Subject-Token'));
+                cache.remove('user');
                 return data;
             }).error(function (error) {
                 return error;
@@ -45,9 +46,16 @@ camApp
 
         // get the logged in user
         authFactory.getUser = function () {
-            if (AuthToken.getToken())
-                return $http.get(BACK_END_URL_CONST +'/logged');
-                return $q.reject({message: 'User has no token.'});
+            if (AuthToken.getToken()) {
+                if(!cache.get('user')) {
+                    var promise = $http.get(BACK_END_URL_CONST + '/logged', {cache: false});
+                    cache.put('user',promise);
+                    return promise ;
+                }
+                else
+                    return cache.get('user');
+            }
+            return $q.reject({message: 'User has no token.'});
         };
 
 

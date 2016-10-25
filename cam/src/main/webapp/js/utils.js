@@ -24,3 +24,9 @@ var Routes = {
     HOME_ASSET: "/:assetName",
     DETAIL: "/:selectedAssetName"
 }
+
+String.prototype.replaceAll = function(str1, str2, ignoreCase) {
+    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignoreCase ? "gi" : "g")), (typeof(str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
+}
+
+
