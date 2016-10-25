@@ -2,17 +2,17 @@ package it.eng.cam.rest.sesame.dto;
 
 import java.io.Serializable;
 
-public class OwnerJSON implements Serializable {
+public class DomainJSON implements Serializable {
 
 	private static final long serialVersionUID = -284213782713312073L;
 	private String name;
 
 	
-	public OwnerJSON() {
+	public DomainJSON() {
 		super();
 	}
 
-	public OwnerJSON(String name) {
+	public DomainJSON(String name) {
 		super();
 		this.name = name;
 	}

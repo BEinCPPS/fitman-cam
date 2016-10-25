@@ -39,8 +39,8 @@ public class RestTestIT extends Assert {
 				.addPathSegment("assetNameCreated2", "New_Asset_2_" + random)
 				.addPathSegment("assetNameCreated3", "New_Asset_3_" + random)
 				.addPathSegment("assetModelNameCreated", "New_Model_" + random)
-				.addPathSegment("ownerNameCreated", "New_Owner_" + random)
-				.addPathSegment("ownerNameCreated2", "New_Owner_2_" + random)
+				.addPathSegment("domainNameCreated", "New_Domain_" + random)
+				.addPathSegment("domainNameCreated2", "New_Domain_2_" + random)
 				.addPathSegment("relationShipNameCreated", "New_Relationship_" + random)
 				.addPathSegment("testClass", "New_Class_827021490");
 		return destination;
@@ -93,32 +93,32 @@ public class RestTestIT extends Assert {
 //		assertOk(response);
 //	}
 //
-//	@HttpTest(method = Method.POST, path = "/owners/{ownerNameCreated}", order = 9, content = "dummy")
-//	public void testCreateOwner() {
+//	@HttpTest(method = Method.POST, path = "/domains/{domainNameCreated}", order = 9, content = "dummy")
+//	public void testCreateDomain() {
 //		assertOk(response);
 //	}
 //
-//	@HttpTest(method = Method.POST, path = "/owners/{ownerNameCreated2}", order = 10, content = "dummy")
-//	public void testCreateOwner2() {
+//	@HttpTest(method = Method.POST, path = "/domains/{domainNameCreated2}", order = 10, content = "dummy")
+//	public void testCreateDomain2() {
 //		assertOk(response);
 //	}
 //
-//	@HttpTest(method = Method.POST, path = "/classes/model/{assetModelNameCreated}/{classNameCreated}/{ownerNameCreated}", order = 11, content = "dummy")
+//	@HttpTest(method = Method.POST, path = "/classes/model/{assetModelNameCreated}/{classNameCreated}/{domainNameCreated}", order = 11, content = "dummy")
 //	public void testCreateAssetModel() {
 //		assertOk(response);
 //	}
 //
-//	@HttpTest(method = Method.POST, path = "/classes/{assetNameCreated}/{assetModelNameCreated}/{ownerNameCreated}", order = 12, content = "dummy")
+//	@HttpTest(method = Method.POST, path = "/classes/{assetNameCreated}/{assetModelNameCreated}/{domainNameCreated}", order = 12, content = "dummy")
 //	public void testCreateAsset() {
 //		assertOk(response);
 //	}
 //
-//	@HttpTest(method = Method.POST, path = "/classes/{assetNameCreated2}/{assetModelNameCreated}/{ownerNameCreated}", order = 13, content = "dummy")
+//	@HttpTest(method = Method.POST, path = "/classes/{assetNameCreated2}/{assetModelNameCreated}/{domainNameCreated}", order = 13, content = "dummy")
 //	public void testCreateAsset2() {
 //		assertOk(response);
 //	}
 //	
-//	@HttpTest(method = Method.POST, path = "/classes/{assetNameCreated3}/{assetModelNameCreated}/{ownerNameCreated}", order = 14, content = "dummy")
+//	@HttpTest(method = Method.POST, path = "/classes/{assetNameCreated3}/{assetModelNameCreated}/{domainNameCreated}", order = 14, content = "dummy")
 //	public void testCreateAsset3() {
 //		assertOk(response);
 //	}
@@ -150,13 +150,13 @@ public class RestTestIT extends Assert {
 //		assertOk(response);
 //	}
 //
-//	@HttpTest(method = Method.GET, path = "/owners", order = 19)
-//	public void testGetOwners() {
+//	@HttpTest(method = Method.GET, path = "/domains", order = 19)
+//	public void testGetDomains() {
 //		assertOk(response);
 //	}
 //
-//	@HttpTest(method = Method.DELETE, path = "/owners/{ownerNameCreated2}", order = 20)
-//	public void testDeleteOwner() {
+//	@HttpTest(method = Method.DELETE, path = "/domains/{domainNameCreated2}", order = 20)
+//	public void testDeleteDomain() {
 //		assertOk(response);
 //	}
 //

@@ -147,14 +147,14 @@ public class TestDriver {
             System.out.println();
         }
 
-        System.out.println("PRINTING OWNERS **********");
+        System.out.println("PRINTING DOMAINS **********");
 
-        List<OntoDomain> owners = dao.getOwners();
-        for (OntoDomain owner : owners) {
-            System.out.println(owner.getName());
+        List<String> domains = dao.getDomains();
+        for (String domain : domains) {
+            System.out.println(domain);
         }
 
-        System.out.println("OWNERS PRINTED **********");
+        System.out.println("DOMAINS PRINTED **********");
         System.out.println();
         System.out.println();
         System.out.println();
@@ -227,7 +227,7 @@ public class TestDriver {
         }
 
         try {
-            dao.deleteClass("http://www.msee-ip.eu/ontology/system#ResourceOwner");
+            dao.deleteClass("http://www.msee-ip.eu/ontology/system#ResourceDomain");
             System.out.println("TEST #8 FAILED!");
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -239,32 +239,32 @@ public class TestDriver {
             throws IOException, TransformerException {
         printOntology(dao, fileStep1);
 
-        dao.createOwner("MyOwner");
+        dao.createDomain("MyDomain");
         printOntology(dao, fileStep2);
 
         try {
-            dao.createOwner("MyOwner");
+            dao.createDomain("MyDomain");
             System.out.println("TEST #1 FAILED!");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         try {
-            dao.createOwner("%Rejected");
+            dao.createDomain("%Rejected");
             System.out.println("TEST #2 FAILED!");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         try {
-            dao.createOwner("http://www.msee-ip.eu/ontology/system#Rejected");
+            dao.createDomain("http://www.msee-ip.eu/ontology/system#Rejected");
             System.out.println("TEST #3 FAILED!");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         try {
-            dao.createOwner("msee:Rejected");
+            dao.createDomain("msee:Rejected");
             System.out.println("TEST #4 FAILED!");
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -272,7 +272,7 @@ public class TestDriver {
 
         dao.createClass("MyTestSubClass", "Liquid");
         dao.createClass("MyTestSubSubClass", "MyTestSubClass");
-        dao.createAssetModel("MyAssetModel1", "MyTestSubSubClass", "MyOwner");
+        dao.createAssetModel("MyAssetModel1", "MyTestSubSubClass", "MyDomain");
         printOntology(dao, fileStep3);
 
         try {
@@ -283,7 +283,7 @@ public class TestDriver {
         }
 
         try {
-            dao.deleteOwner("MyOwner");
+            dao.deleteDomain("MyDomain");
             System.out.println("TEST #6 FAILED!");
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -303,7 +303,7 @@ public class TestDriver {
         dao.deleteIndividual("MyAssetModel1");
         dao.deleteClass("MyTestSubSubClass1");
         dao.deleteClass("MyTestSubClass1");
-        dao.deleteOwner("MyOwner");
+        dao.deleteDomain("MyDomain");
         printOntology(dao, fileStep5);
     }
 
@@ -351,7 +351,7 @@ public class TestDriver {
         }
 
         try {
-            dao.createAssetModel("Rejected", "http://www.msee-ip.eu/ontology/system#ResourceOwner", null);
+            dao.createAssetModel("Rejected", "http://www.msee-ip.eu/ontology/system#ResourceDomain", null);
             System.out.println("TEST #6 FAILED!");
         } catch (Exception e) {
             System.out.println(e.getMessage());

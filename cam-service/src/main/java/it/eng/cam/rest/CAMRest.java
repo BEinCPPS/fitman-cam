@@ -204,9 +204,9 @@ public class CAMRest {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            CAMRestImpl.createAsset(repoInstance, asset.getName(), asset.getModelName(), asset.getOwnerName());
+            CAMRestImpl.createAsset(repoInstance, asset.getName(), asset.getModelName(), asset.getDomainName());
             return Response.ok("Asset with name '" + asset.getName() + "' for Model '" + asset.getModelName()
-                    + "' for Owner '" + asset.getOwnerName() + "' was successfully created!").build();
+                    + "' for Domain '" + asset.getDomainName() + "' was successfully created!").build();
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -243,9 +243,9 @@ public class CAMRest {
             }
             try {
                 repoInstance = SesameRepoManager.getRepoInstance(getClass());
-                CAMRestImpl.createAsset(repoInstance, asset.getName(), asset.getModelName(), asset.getOwnerName());
+                CAMRestImpl.createAsset(repoInstance, asset.getName(), asset.getModelName(), asset.getDomainName());
                 return Response.ok("Asset with name '" + asset.getName() + "' for Model '" + asset.getModelName()
-                        + "' for Owner '" + asset.getOwnerName() + "' was successfully updated!").build();
+                        + "' for Domain '" + asset.getDomainName() + "' was successfully updated!").build();
 
             } catch (Exception e) {
                 logger.error(e);
@@ -255,7 +255,7 @@ public class CAMRest {
             }
         } else {
             return Response.notModified("Asset with name '" + asset.getName() + "' for Model '" + asset.getModelName()
-                    + "' for Owner '" + asset.getOwnerName() + "' does not exist").build();
+                    + "' for Domain '" + asset.getDomainName() + "' does not exist").build();
         }
 
     }
@@ -604,9 +604,9 @@ public class CAMRest {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            CAMRestImpl.createAssetModel(repoInstance, model.getName(), model.getClassName(), model.getOwnerName());
+            CAMRestImpl.createAssetModel(repoInstance, model.getName(), model.getClassName(), model.getDomainName());
             return Response.ok("Model with name '" + model.getName() + "' for Model '" + model.getClassName()
-                    + "' for Owner '" + model.getOwnerName() + "' was successfully created!").build();
+                    + "' for Domain '" + model.getDomainName() + "' was successfully created!").build();
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -636,9 +636,9 @@ public class CAMRest {
                 try {
                     repoInstance = SesameRepoManager.getRepoInstance(getClass());
                     CAMRestImpl.createAssetModel(repoInstance, model.getName(), model.getClassName(),
-                            model.getOwnerName());
+                            model.getDomainName());
                     return Response.ok("Model with name '" + model.getName() + "' for Model '" + model.getClassName()
-                            + "' for Owner '" + model.getOwnerName() + "' was successfully updated!").build();
+                            + "' for Domain '" + model.getDomainName() + "' was successfully updated!").build();
                 } catch (Exception e) {
                     logger.error(e);
                     throw new CAMServiceWebException(e.getMessage());
@@ -647,7 +647,7 @@ public class CAMRest {
                 }
             } else {
                 return Response.notModified("Model with name '" + model.getName() + "' for Model '"
-                        + model.getClassName() + "' for Owner '" + model.getOwnerName() + "' does not exist").build();
+                        + model.getClassName() + "' for Domain '" + model.getDomainName() + "' does not exist").build();
             }
         } catch (Exception e) {
             logger.error(e);
@@ -932,16 +932,16 @@ public class CAMRest {
     }
     // FINE MODELS
 
-    // OWNERS
+    // DOMAINS
     @GET
-    @Path("/owners")
+    @Path("/domains")
     @RolesAllowed({Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public List<OntoDomain> getOwners() {
+    public List<OntoDomain> getDomains() {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            return CAMRestImpl.getOwners(repoInstance);
+            return CAMRestImpl.getDomains(repoInstance);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -951,14 +951,14 @@ public class CAMRest {
     }
 
     @GET
-    @Path("/owners/{ownerName}")
+    @Path("/domains/{domainName}")
     @RolesAllowed({Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public OntoDomain getOwner(@PathParam("ownerName") String ownerName) {
+    public OntoDomain getDomain(@PathParam("domainName") String domainName) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            return CAMRestImpl.getOwner(repoInstance, ownerName);
+            return CAMRestImpl.getDomain(repoInstance, domainName);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -968,14 +968,14 @@ public class CAMRest {
     }
 
     @POST
-    @Path("/owners")
+    @Path("/domains")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createOwner(OwnerJSON owner) {
+    public Response createDomain(DomainJSON domain) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            CAMRestImpl.createOwner(repoInstance, owner.getName());
-            return Response.ok("Owner with name '" + owner.getName() + "' was successfully created!").build();
+            CAMRestImpl.createDomain(repoInstance, domain.getName());
+            return Response.ok("Domain with name '" + domain.getName() + "' was successfully created!").build();
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -985,14 +985,14 @@ public class CAMRest {
     }
 
     @PUT
-    @Path("/owners/{ownerName}")
+    @Path("/domains/{domainName}")
     @RolesAllowed({Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateOwner(@PathParam("ownerName") String ownerName, OwnerJSON owner) {
+    public Response updateDomain(@PathParam("domainName") String domainName, DomainJSON domain) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            CAMRestImpl.deleteOwner(repoInstance, ownerName);
+            CAMRestImpl.deleteDomain(repoInstance, domainName);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -1001,8 +1001,8 @@ public class CAMRest {
         }
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            CAMRestImpl.createOwner(repoInstance, owner.getName());
-            return Response.ok("Owner with name '" + owner.getName() + "' was successfully updated!").build();
+            CAMRestImpl.createDomain(repoInstance, domain.getName());
+            return Response.ok("Domain with name '" + domain.getName() + "' was successfully updated!").build();
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -1012,14 +1012,14 @@ public class CAMRest {
     }
 
     @DELETE
-    @Path("/owners/{ownerName}")
+    @Path("/domains/{domainName}")
     @RolesAllowed({Role.ADMIN})
-    public Response deleteOwner(@PathParam("ownerName") String ownerName) {
+    public Response deleteDomain(@PathParam("domainName") String domainName) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            CAMRestImpl.deleteOwner(repoInstance, ownerName);
-            return Response.ok("Owner with name '" + ownerName + "' was successfully deleted!").build();
+            CAMRestImpl.deleteDomain(repoInstance, domainName);
+            return Response.ok("Domain with name '" + domainName + "' was successfully deleted!").build();
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -1028,7 +1028,7 @@ public class CAMRest {
         }
     }
 
-    // FINE OWNERS
+    // FINE DOMAINS
 
     // REST Utilities
 
@@ -1143,7 +1143,7 @@ public class CAMRest {
 
     @GET
     @Path("/logged")
-    //@RolesAllowed({Role.BASIC, Role.ADMIN})
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public CAMPrincipal getUserLogged(@Context HttpServletRequest httpRequest) {
         try {

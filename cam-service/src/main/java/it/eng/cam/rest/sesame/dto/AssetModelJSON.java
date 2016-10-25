@@ -8,7 +8,7 @@ public class AssetModelJSON implements Serializable {
 	
 	private String name;
 	private String className;
-	private String ownerName;
+	private String domainName;
 
 	public String getName() {
 		return name;
@@ -23,11 +23,11 @@ public class AssetModelJSON implements Serializable {
 	public void setClassName(String className) {
 		this.className = className;
 	}
-	public String getOwnerName() {
-		return ownerName;
+	public String getDomainName() {
+		return domainName;
 	}
-	public void setOwnerName(String ownerName) {
-		this.ownerName = ownerName;
+	public void setDomainName(String domainName) {
+		this.domainName = domainName;
 	}
 
 }

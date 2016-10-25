@@ -132,13 +132,13 @@ public interface RepositoryDAO {
             throws RuntimeException;
 
     /**
-     * Reads all the Owners and returns an Object containing the local name
+     * Reads all the Domains and returns an Object containing the local name
      * and a list of associated Users.
      *
      * @return
      * @throws RuntimeException
      */
-    public List<OntoDomain> getOwners() throws RuntimeException;
+    public List<String> getDomains() throws RuntimeException;
 
     /**
      * Return a Domain with name and associated Users.
@@ -146,18 +146,18 @@ public interface RepositoryDAO {
      * @return
      * @throws RuntimeException
      */
-    public OntoDomain getOwner(String name) throws RuntimeException;
+    public OntoDomain getDomain(String name) throws RuntimeException;
     /**
-     * Creates a new Owner with the given name.
+     * Creates a new Domain with the given name.
      * <p/>
      * This operation is safe, as it cannot have any side effects on existing items of the
      * Reference Ontology.
      *
-     * @param name the local name of the new Owner
+     * @param name the local name of the new Domain
      * @throws IllegalArgumentException if name is not unique or not valid
      * @throws RuntimeException         if the Reference Ontology cannot be updated for any other reason
      */
-    public void createOwner(String name)
+    public void createDomain(String name)
             throws IllegalArgumentException, RuntimeException;
 
     /**
@@ -167,7 +167,7 @@ public interface RepositoryDAO {
      * @return a list of OntoUser
      * @throws RuntimeException
      */
-    List<OntoUser> getUsers() throws RuntimeException;
+    List<String> getUsers() throws RuntimeException;
 
     /**
      * Gives the asked user from Ontology
@@ -179,7 +179,7 @@ public interface RepositoryDAO {
     OntoUser getUser(String name) throws RuntimeException;
 
     /**
-     * Creates a new User to associate to a Domain/Owner
+     * Creates a new User to associate to a Domain
      * <p></p>
      *
      * @param id
@@ -190,16 +190,16 @@ public interface RepositoryDAO {
             RuntimeException;
 
     /**
-     * Deletes an existing Owner from the Reference Ontology.
+     * Deletes an existing Domain from the Reference Ontology.
      * <p/>
      * This operation fails if the target item has dependent items.
      *
-     * @param name the local name of the Owner to be deleted
-     * @throws IllegalArgumentException if name is not local, or is not an existing Owner name
+     * @param name the local name of the Domain to be deleted
+     * @throws IllegalArgumentException if name is not local, or is not an existing Domain name
      * @throws IllegalStateException    if any dependencies exist which prevent deletion
      * @throws RuntimeException         if the Reference Ontology cannot be updated for any other reason
      */
-    public void deleteOwner(String name)
+    public void deleteDomain(String name)
             throws IllegalArgumentException, IllegalStateException, RuntimeException;
 
     /***
@@ -280,14 +280,14 @@ public interface RepositoryDAO {
      *
      * @param name      the local name of the new item
      * @param className the local name of the Class of which the new item is an instance
-     * @param ownerName optional: the local name of an Individual which represents the owner of the new
+     * @param domainName optional: the local name of an Individual which represents the domain of the new
      *                  item (if provided, must be an existing Organization item in the Reference Ontology)
      * @throws IllegalArgumentException if name is not unique or not valid, if className
      *                                  is not an existing Class name or identifies a Class which is part of the Base Ontology
-     *                                  (e.g., "Organization"), if ownerName (when provided) does not identify an existing Organization
+     *                                  (e.g., "Organization"), if domainName (when provided) does not identify an existing Organization
      * @throws RuntimeException         if the Reference Ontology cannot be updated for any other reason
      */
-    public void createAssetModel(String name, String className, String ownerName)
+    public void createAssetModel(String name, String className, String domainName)
             throws IllegalArgumentException, RuntimeException;
 
     /**
@@ -300,14 +300,14 @@ public interface RepositoryDAO {
      *
      * @param name      the local name of the new item
      * @param modelName the local name of the Asset Model from which the new item is cloned
-     * @param ownerName optional: the local name of an Individual which represents the owner of the new
+     * @param domainName optional: the local name of an Individual which represents the domain of the new
      *                  item (if provided, must be an existing Organization item in the Reference Ontology)
      * @throws IllegalArgumentException if name is not unique or not valid, if modelName does not
-     *                                  identify an existing Asset Model, if ownerName (when provided) does not identify an existing
+     *                                  identify an existing Asset Model, if domainName (when provided) does not identify an existing
      *                                  Organization
      * @throws RuntimeException         if the Reference Ontology cannot be updated for any other reason
      */
-    public void createAsset(String name, String modelName, String ownerName)
+    public void createAsset(String name, String modelName, String domainName)
             throws IllegalArgumentException, RuntimeException;
 
     /**
@@ -431,4 +431,6 @@ public interface RepositoryDAO {
      * @throws RuntimeException
      */
     public List<PropertyDeclarationItem> getAttributes() throws RuntimeException;
+
+	void setUserAttribute(OntoUser user, PropertyValueItem attribute);
 }

@@ -79,11 +79,11 @@ public class Test extends Assert {
 
 	//
 	@org.junit.Test
-	public void getOwners() {
-		List<OntoDomain> owners = CAMRestImpl.getOwners(dao);
-		assertNotNull("Null owners list", owners);
+	public void getDomains() {
+		List<OntoDomain> domains = CAMRestImpl.getDomains(dao);
+		assertNotNull("Null domains list", domains);
 		// Onwers empty is not problem
-		// assertFalse(owners.isEmpty());
+		// assertFalse(domains.isEmpty());
 	}
 
 	// TODO Always Fail :-(
@@ -176,26 +176,26 @@ public class Test extends Assert {
 
 	
 	@org.junit.Test
-	public void deleteOwner() {
-		String ownerName = "NewOwner" + getNextRandom();
+	public void deleteDomain() {
+		String domainName = "NewDomain" + getNextRandom();
 		try {
-			CAMRestImpl.createOwner(dao, ownerName);
+			CAMRestImpl.createDomain(dao, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
 		tearDown();
 		setUp();
 		try {
-			CAMRestImpl.deleteOwner(dao, ownerName);
+			CAMRestImpl.deleteDomain(dao, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
 
-		List<OntoDomain> owners = CAMRestImpl.getOwners(dao);
-		List<OntoDomain> ownersFiltered = owners.stream().filter(own -> own.getName().equals(ownerName)).collect(Collectors.toList());
+		List<OntoDomain> domains = CAMRestImpl.getDomains(dao);
+		List<OntoDomain> domainsFiltered = domains.stream().filter(own -> own.getName().equals(domainName)).collect(Collectors.toList());
 
-		assertNotNull("Delete owner: deleted owner: " + ownerName, ownersFiltered);
-		assertTrue("Delete owner: deleted owner: " + ownerName, ownersFiltered.isEmpty());
+		assertNotNull("Delete domain: deleted domain: " + domainName, domainsFiltered);
+		assertTrue("Delete domain: deleted domain: " + domainName, domainsFiltered.isEmpty());
 
 	}
 
@@ -209,9 +209,9 @@ public class Test extends Assert {
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
-		String ownerName = "Jack_Frost_" + getNextRandom();
+		String domainName = "Jack_Frost_" + getNextRandom();
 		try {
-			CAMRestImpl.createOwner(dao, ownerName);
+			CAMRestImpl.createDomain(dao, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
@@ -219,7 +219,7 @@ public class Test extends Assert {
 		setUp();
 		String assetModelName = "MyAsset_" + getNextRandom();
 		try {
-			CAMRestImpl.createAssetModel(dao, assetModelName, className, ownerName);
+			CAMRestImpl.createAssetModel(dao, assetModelName, className, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
@@ -244,9 +244,9 @@ public class Test extends Assert {
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
-		String ownerName = "NewOwner_" + getNextRandom();
+		String domainName = "NewDomain_" + getNextRandom();
 		try {
-			CAMRestImpl.createOwner(dao, ownerName);
+			CAMRestImpl.createDomain(dao, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
@@ -254,7 +254,7 @@ public class Test extends Assert {
 		setUp();
 		String assetModelName = "NewAssetModelName_" + getNextRandom();
 		try {
-			CAMRestImpl.createAssetModel(dao, assetModelName, className, ownerName);
+			CAMRestImpl.createAssetModel(dao, assetModelName, className, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
@@ -262,7 +262,7 @@ public class Test extends Assert {
 		setUp();
 		String assetName = "NewAsset_" + getNextRandom();
 		try {
-			CAMRestImpl.createAsset(dao, assetName, assetModelName, ownerName);
+			CAMRestImpl.createAsset(dao, assetName, assetModelName, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
@@ -287,9 +287,9 @@ public class Test extends Assert {
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
-		String ownerName = "NewOwner_" + getNextRandom();
+		String domainName = "NewDomain_" + getNextRandom();
 		try {
-			CAMRestImpl.createOwner(dao, ownerName);
+			CAMRestImpl.createDomain(dao, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
@@ -297,7 +297,7 @@ public class Test extends Assert {
 		setUp();
 		String assetModelName = "NewAssetModelName_" + getNextRandom();
 		try {
-			CAMRestImpl.createAssetModel(dao, assetModelName, className, ownerName);
+			CAMRestImpl.createAssetModel(dao, assetModelName, className, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
@@ -305,7 +305,7 @@ public class Test extends Assert {
 		setUp();
 		String assetName = "NewAsset_" + getNextRandom();
 		try {
-			CAMRestImpl.createAsset(dao, assetName, assetModelName, ownerName);
+			CAMRestImpl.createAsset(dao, assetName, assetModelName, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
@@ -336,9 +336,9 @@ public class Test extends Assert {
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
-		String ownerName = "NewOwner_" + getNextRandom();
+		String domainName = "NewDomain_" + getNextRandom();
 		try {
-			CAMRestImpl.createOwner(dao, ownerName);
+			CAMRestImpl.createDomain(dao, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
@@ -346,7 +346,7 @@ public class Test extends Assert {
 		setUp();
 		String assetModelName = "NewAssetModelName_" + getNextRandom();
 		try {
-			CAMRestImpl.createAssetModel(dao, assetModelName, className, ownerName);
+			CAMRestImpl.createAssetModel(dao, assetModelName, className, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
@@ -354,7 +354,7 @@ public class Test extends Assert {
 		setUp();
 		String assetName = "NewAsset_" + getNextRandom();
 		try {
-			CAMRestImpl.createAsset(dao, assetName, assetModelName, ownerName);
+			CAMRestImpl.createAsset(dao, assetName, assetModelName, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
@@ -362,7 +362,7 @@ public class Test extends Assert {
 		setUp();
 		String assetName2 = "NewAsset2_" + getNextRandom();
 		try {
-			CAMRestImpl.createAsset(dao, assetName2, assetModelName, ownerName);
+			CAMRestImpl.createAsset(dao, assetName2, assetModelName, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
@@ -387,19 +387,19 @@ public class Test extends Assert {
 	}
 	
 	@org.junit.Test
-	public void createOwner() {
-		String ownerName = "MyOwner_" + getNextRandom();
+	public void createDomain() {
+		String domainName = "MyDomain_" + getNextRandom();
 		try {
-			CAMRestImpl.createOwner(dao, ownerName);
+			CAMRestImpl.createDomain(dao, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
-		List<OntoDomain> owners = CAMRestImpl.getOwners(dao);
-		List<OntoDomain> ownersFiltered = owners.stream().filter(own -> own.getName().equals(ownerName)).collect(Collectors.toList());
+		List<OntoDomain> domains = CAMRestImpl.getDomains(dao);
+		List<OntoDomain> domainsFiltered = domains.stream().filter(own -> own.getName().equals(domainName)).collect(Collectors.toList());
 
-		assertNotNull("Create owner: owner (null) not retrieved for ownerName: " + ownerName, ownersFiltered);
-		assertFalse("Create owner: owner (empty) not retrieved for ownerName: " + ownerName, ownersFiltered.isEmpty());
-		assertTrue("Create owner: owner created :-)", ownersFiltered.size() == 1);
+		assertNotNull("Create domain: domain (null) not retrieved for domainName: " + domainName, domainsFiltered);
+		assertFalse("Create domain: domain (empty) not retrieved for domainName: " + domainName, domainsFiltered.isEmpty());
+		assertTrue("Create domain: domain created :-)", domainsFiltered.size() == 1);
 	}
 	
 	@org.junit.Test
@@ -411,9 +411,9 @@ public class Test extends Assert {
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
-		String ownerName = "NewOwner_" + getNextRandom();
+		String domainName = "NewDomain_" + getNextRandom();
 		try {
-			CAMRestImpl.createOwner(dao, ownerName);
+			CAMRestImpl.createDomain(dao, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
@@ -421,7 +421,7 @@ public class Test extends Assert {
 		setUp();
 		String assetModelName = "MyAsset_" + getNextRandom();
 		try {
-			CAMRestImpl.createAssetModel(dao, assetModelName, className, ownerName);
+			CAMRestImpl.createAssetModel(dao, assetModelName, className, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
@@ -429,7 +429,7 @@ public class Test extends Assert {
 		setUp();
 		String assetName = "NewAsset_" + getNextRandom();
 		try {
-			CAMRestImpl.createAsset(dao, assetName, assetModelName, ownerName);
+			CAMRestImpl.createAsset(dao, assetName, assetModelName, domainName);
 		} catch (Exception e) {
 			assertFalse(e.getMessage(), true);
 		}
