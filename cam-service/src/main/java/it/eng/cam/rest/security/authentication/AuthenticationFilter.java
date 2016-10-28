@@ -1,8 +1,8 @@
 package it.eng.cam.rest.security.authentication;
 
 import it.eng.cam.rest.security.service.Constants;
-import it.eng.cam.rest.security.service.IDMKeystone;
-import it.eng.cam.rest.security.service.IDMOauth2;
+import it.eng.cam.rest.security.service.impl.IDMService;
+import it.eng.cam.rest.security.service.IdmServiceManager;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
@@ -16,9 +16,11 @@ import javax.ws.rs.ext.Provider;
 /**
  * Created by ascatolo on 13/10/2016.
  */
+
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 @PreMatching
+
 public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Override
@@ -33,7 +35,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                     .build());
             return;
         }
-        Response responseAuth = IDMOauth2.validateAuthToken(token);
+        IDMService authService = IdmServiceManager.getAuthService();
+        Response responseAuth = authService.validateAuthToken(token);
         if (responseAuth.getStatus() != Response.Status.OK.getStatusCode()) { //TODO
             requestContext.abortWith(Response
                     .status(Response.Status.FORBIDDEN)
@@ -42,8 +45,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             return;
         }
         //Build User for Authorization
-        //CAMPrincipal userPrincipal = IDMOauth2.getUserPrincipalByToken(token);
-        CAMPrincipal userPrincipal = IDMOauth2.getUserPrincipalByResponse(responseAuth);
+        //CAMPrincipal userPrincipal = IDMOauth2Service.getUserPrincipalByToken(token);
+        CAMPrincipal userPrincipal = authService.getUserPrincipalByResponse(responseAuth);
         requestContext.setSecurityContext(new CAMSecurityContext(userPrincipal));
     }
 

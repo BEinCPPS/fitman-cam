@@ -245,6 +245,8 @@
                 <cors.api>true</cors.api>
                 <keyrock.url>http://161.27.159.76</keyrock.url>
                 <keyrock.admin.token>ADMIN</keyrock.admin.token>
+                <!-- OAUTH2, KEYSTONE Supported at the moment -->
+                <authentication.service>OAUTH2</authentication.service>
             </properties>
         </profile>
         <!-- Production environment @ production server -->
@@ -266,6 +268,8 @@
                 <cors.api>true</cors.api>
                 <keyrock.url>http://161.27.159.76</keyrock.url>
                 <keyrock.admin.token>ADMIN</keyrock.admin.token>
+                <!-- OAUTH2, KEYSTONE Supported at the moment -->
+                <authentication.service>OAUTH2</authentication.service>
             </properties>
         </profile>
 

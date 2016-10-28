@@ -1,7 +1,8 @@
-package it.eng.cam.rest.security.service;
+package it.eng.cam.rest.security.service.impl;
 
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
 import it.eng.cam.rest.security.roles.Role;
+import it.eng.cam.rest.security.service.Constants;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -16,10 +17,10 @@ import javax.ws.rs.core.Response;
 /**
  * Created by ascatolo on 26/10/2016.
  */
-public class IDMOauth2 {
-    private static final Logger logger = LogManager.getLogger(IDMOauth2.class.getName());
+public class IDMOauth2Service implements IDMService {
+    private static final Logger logger = LogManager.getLogger(IDMOauth2Service.class.getName());
 
-    public static Response validateAuthToken(String token) {
+    public  Response validateAuthToken(String token) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Constants.IDM_URL).path("user")
                 .queryParam("access_token", token);
@@ -28,7 +29,7 @@ public class IDMOauth2 {
         return response;
     }
 
-    public static CAMPrincipal getUserPrincipalByToken(String token) {
+    public CAMPrincipal getUserPrincipalByToken(String token) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Constants.IDM_URL).path("user")
                 .queryParam("access_token", token);
@@ -37,7 +38,7 @@ public class IDMOauth2 {
         return buildUser(response);
     }
 
-    public static CAMPrincipal getUserPrincipalByResponse(Response response) {
+    public CAMPrincipal getUserPrincipalByResponse(Response response) {
         return buildUser(response);
     }
 

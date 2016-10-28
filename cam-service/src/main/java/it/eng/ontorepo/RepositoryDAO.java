@@ -7,7 +7,7 @@ import org.w3c.dom.Document;
 
 /**
  * A simple Data Access Object to interact with the Reference Ontology (RO), whatever
- * the underlying repository might be. Concrete implementations of this interface should
+ * the underlying repository might be. Concrete implementations of this impl should
  * deal with a specific repository technology - e.g., local or streamed files, RDBMS, etc.
  * To obtain an object of this type, use the appropriate Factory.
  * <p/>

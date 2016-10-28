@@ -1,8 +1,9 @@
-package it.eng.cam.rest.security.service;
+package it.eng.cam.rest.security.service.impl;
 
 
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
 import it.eng.cam.rest.security.authentication.credentials.Credentials;
+import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.security.user.User;
 import it.eng.cam.rest.security.user.UserContainerJSON;
 import it.eng.cam.rest.security.user.UserLoginJSON;
@@ -16,16 +17,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 /**
  * Created by ascatolo on 12/10/2016.
  */
-public class IDMKeystone {
-    private static final Logger logger = LogManager.getLogger(IDMKeystone.class.getName());
+public class IDMKeystoneService implements IDMService {
+    private static final Logger logger = LogManager.getLogger(IDMKeystoneService.class.getName());
 
 
-    public static List<User> getUsers() {
+
+    public List<User> getUsers() {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("users");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
@@ -39,7 +40,7 @@ public class IDMKeystone {
         return userContainerJSON.getUsers();
     }
 
-    public static CAMPrincipal getUserPrincipalByToken(String token) {
+    public CAMPrincipal getUserPrincipalByToken(String token) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("auth").path("tokens");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
@@ -51,7 +52,15 @@ public class IDMKeystone {
         return fetchUserRoles(user);
     }
 
-    public static List<String> getRoles() {
+    @Override
+    public CAMPrincipal getUserPrincipalByResponse(Response response) {
+        CAMPrincipal user = buildUserFromToken(response);
+        user = fetchUser(user);
+        return fetchUserRoles(user);
+    }
+
+
+    public List<String> getRoles() {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("roles");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
@@ -67,7 +76,7 @@ public class IDMKeystone {
         return ruoli;
     }
 
-    private static CAMPrincipal fetchUser(CAMPrincipal user) {
+    private CAMPrincipal fetchUser(CAMPrincipal user) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("users").path(user.getId());
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
@@ -75,7 +84,7 @@ public class IDMKeystone {
         return buildUser(invocationBuilder.get());
     }
 
-    private static CAMPrincipal fetchUserRoles(CAMPrincipal user) {
+    private CAMPrincipal fetchUserRoles(CAMPrincipal user) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("domains")
                 .path(user.getDomain_id()).path("users").path(user.getId()).path("roles");
@@ -86,9 +95,9 @@ public class IDMKeystone {
 
     /** At the moment we are using oAuth2 **/
     /**
-     * @See IDMOauth2
+     * @See IDMOauth2Service
      **/
-    public static Response authenticate(UserLoginJSON userLoginJSON) {
+    public Response authenticate(UserLoginJSON userLoginJSON) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("auth").path("tokens");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
@@ -100,9 +109,9 @@ public class IDMKeystone {
     }
     /** At the moment we are using oAuth2 **/
     /**
-     * @See IDMOauth2
+     * @See IDMOauth2Service
      **/
-    public static Response validateAuthToken(String token) {
+    public Response validateAuthToken(String token) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("auth").path("tokens");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
@@ -112,7 +121,7 @@ public class IDMKeystone {
         return response;
     }
 
-    private static Credentials buildCredentials(String name, String password, String domainId) {
+    private Credentials buildCredentials(String name, String password, String domainId) {
         Credentials principal = new Credentials();
         Credentials.Auth auth = new Credentials.Auth();
         Credentials.Identity identity = new Credentials.Identity();
@@ -125,7 +134,7 @@ public class IDMKeystone {
         return principal;
     }
 
-    private static CAMPrincipal buildUserFromToken(Response response) {
+    private CAMPrincipal buildUserFromToken(Response response) {
         final JsonObject dataJson = response.readEntity(JsonObject.class);
         final JsonObject tokenObj = dataJson.getJsonObject("token");
         final JsonObject userJson = tokenObj.getJsonObject("user");
@@ -136,7 +145,7 @@ public class IDMKeystone {
         return user;
     }
 
-    private static CAMPrincipal buildUser(Response response) {
+    private  CAMPrincipal buildUser(Response response) {
         final JsonObject dataJson = response.readEntity(JsonObject.class);
         final JsonObject userJson = dataJson.getJsonObject("user");
         CAMPrincipal user = new CAMPrincipal();
@@ -148,7 +157,7 @@ public class IDMKeystone {
         return user;
     }
 
-    private static CAMPrincipal buildRoles(Response response, CAMPrincipal principal) {
+    private CAMPrincipal buildRoles(Response response, CAMPrincipal principal) {
         final JsonObject dataJson = response.readEntity(JsonObject.class);
         final JsonArray rolesJsonArray = dataJson.getJsonArray("roles");
         for (int i = 0; i < rolesJsonArray.size(); i++) {

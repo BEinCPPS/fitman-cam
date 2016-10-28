@@ -1,7 +1,7 @@
 package it.eng.cam.rest;
 
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
-import it.eng.cam.rest.security.service.IDMKeystone;
+import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
 import it.eng.cam.rest.sesame.dto.*;
 import it.eng.cam.rest.exception.CAMServiceWebException;
 import it.eng.cam.rest.security.user.UserLoginJSON;
@@ -1130,7 +1130,8 @@ public class CAMRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response authenticate(UserLoginJSON user) {
         try {
-            return IDMKeystone.authenticate(user);
+            IDMKeystoneService service = new IDMKeystoneService();
+            return service.authenticate(user);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -1140,6 +1141,7 @@ public class CAMRest {
 
     @Context
     SecurityContext securityContext;
+
     @GET
     @Path("/logged")
     @RolesAllowed({Role.BASIC, Role.ADMIN})

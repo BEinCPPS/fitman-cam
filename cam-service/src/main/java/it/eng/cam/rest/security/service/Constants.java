@@ -1,5 +1,7 @@
 package it.eng.cam.rest.security.service;
 
+import it.eng.cam.rest.security.roles.RoleManager;
+
 import java.util.ResourceBundle;
 
 /**
@@ -12,5 +14,6 @@ public class Constants {
     public static final String ADMIN_TOKEN = finder.getString("keyrock.admin.token");
     public static final String X_AUTH_TOKEN = "X-Auth-Token";
     public static final String X_SUBJECT_TOKEN = "X-Subject-Token";
-    //public static final RoleManager roleManager = new RoleManager(); //TODO
+    public static final RoleManager roleManager = new RoleManager();
+    public static final String AUTHENTICATION_SERVICE= finder.getString("authentication.service");
 }
