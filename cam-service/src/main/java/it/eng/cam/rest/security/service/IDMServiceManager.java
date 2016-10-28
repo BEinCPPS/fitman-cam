@@ -7,7 +7,7 @@ import it.eng.cam.rest.security.service.impl.IDMService;
 /**
  * Created by ascatolo on 28/10/2016.
  */
-public class IdmServiceManager {
+public class IDMServiceManager {
 
     public static IDMService getAuthService() {
         if (Constants.AUTHENTICATION_SERVICE.equalsIgnoreCase(AuthenticationService.OAUTH2.name()))

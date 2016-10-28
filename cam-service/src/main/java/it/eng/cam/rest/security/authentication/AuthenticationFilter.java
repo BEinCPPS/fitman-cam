@@ -2,7 +2,7 @@ package it.eng.cam.rest.security.authentication;
 
 import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.security.service.impl.IDMService;
-import it.eng.cam.rest.security.service.IdmServiceManager;
+import it.eng.cam.rest.security.service.IDMServiceManager;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
@@ -35,7 +35,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                     .build());
             return;
         }
-        IDMService authService = IdmServiceManager.getAuthService();
+        IDMService authService = IDMServiceManager.getAuthService();
         Response responseAuth = authService.validateAuthToken(token);
         if (responseAuth.getStatus() != Response.Status.OK.getStatusCode()) { //TODO
             requestContext.abortWith(Response
