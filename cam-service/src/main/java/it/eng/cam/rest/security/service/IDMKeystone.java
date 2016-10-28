@@ -1,8 +1,8 @@
-package it.eng.cam.rest.security;
+package it.eng.cam.rest.security.service;
 
 
+import it.eng.cam.rest.security.authentication.CAMPrincipal;
 import it.eng.cam.rest.security.authentication.credentials.Credentials;
-import it.eng.cam.rest.security.roles.RoleManager;
 import it.eng.cam.rest.security.user.User;
 import it.eng.cam.rest.security.user.UserContainerJSON;
 import it.eng.cam.rest.security.user.UserLoginJSON;
@@ -21,21 +21,15 @@ import java.util.ResourceBundle;
 /**
  * Created by ascatolo on 12/10/2016.
  */
-public class IDMService {
-    private static final Logger logger = LogManager.getLogger(IDMService.class.getName());
-    public static ResourceBundle finder = ResourceBundle.getBundle("cam-service");
-    public static final String IDM_URL = finder.getString("keyrock.url") + "/v3";
-    private static final String ADMIN_TOKEN = finder.getString("keyrock.admin.token");
-    public static final String X_AUTH_TOKEN = "X-Auth-Token";
-    public static final String X_SUBJECT_TOKEN = "X-Subject-Token";
-    public static final RoleManager roleManager = new RoleManager(); //TODO
+public class IDMKeystone {
+    private static final Logger logger = LogManager.getLogger(IDMKeystone.class.getName());
 
 
-     public static List<User> getUsers() {
+    public static List<User> getUsers() {
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(IDM_URL).path("users");
+        WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("users");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
+        invocationBuilder.header(Constants.X_AUTH_TOKEN, Constants.ADMIN_TOKEN);
         Response response = invocationBuilder.get();
         UserContainerJSON userContainerJSON = response.readEntity(UserContainerJSON.class);
         if (null == userContainerJSON
@@ -47,10 +41,10 @@ public class IDMService {
 
     public static CAMPrincipal getUserPrincipalByToken(String token) {
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(IDM_URL).path("auth").path("tokens");
+        WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("auth").path("tokens");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
-        invocationBuilder.header(X_SUBJECT_TOKEN, token);
+        invocationBuilder.header(Constants.X_AUTH_TOKEN, Constants.ADMIN_TOKEN);
+        invocationBuilder.header(Constants.X_SUBJECT_TOKEN, token);
         Response response = invocationBuilder.get();
         CAMPrincipal user = buildUserFromToken(response);
         user = fetchUser(user);
@@ -59,9 +53,9 @@ public class IDMService {
 
     public static List<String> getRoles() {
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(IDM_URL).path("roles");
+        WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("roles");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
+        invocationBuilder.header(Constants.X_AUTH_TOKEN, Constants.ADMIN_TOKEN);
         Response response = invocationBuilder.get();
         JsonObject jsonObject = response.readEntity(JsonObject.class);
         JsonArray roles = jsonObject.getJsonArray("roles");
@@ -75,38 +69,45 @@ public class IDMService {
 
     private static CAMPrincipal fetchUser(CAMPrincipal user) {
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(IDM_URL).path("users").path(user.getId());
+        WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("users").path(user.getId());
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
+        invocationBuilder.header(Constants.X_AUTH_TOKEN, Constants.ADMIN_TOKEN);
         return buildUser(invocationBuilder.get());
     }
 
     private static CAMPrincipal fetchUserRoles(CAMPrincipal user) {
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(IDM_URL).path("domains")
+        WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("domains")
                 .path(user.getDomain_id()).path("users").path(user.getId()).path("roles");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
+        invocationBuilder.header(Constants.X_AUTH_TOKEN, Constants.ADMIN_TOKEN);
         return buildRoles(invocationBuilder.get(), user);
     }
 
+    /** At the moment we are using oAuth2 **/
+    /**
+     * @See IDMOauth2
+     **/
     public static Response authenticate(UserLoginJSON userLoginJSON) {
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(IDM_URL).path("auth").path("tokens");
+        WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("auth").path("tokens");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
+        invocationBuilder.header(Constants.X_AUTH_TOKEN, Constants.ADMIN_TOKEN);
         Credentials principal = buildCredentials(userLoginJSON.getUsername(), userLoginJSON.getPassword(), null);
         Response response = invocationBuilder.post(Entity.entity(principal, MediaType.APPLICATION_JSON));
         logger.info(response.getHeaders());
         return response;
     }
-
+    /** At the moment we are using oAuth2 **/
+    /**
+     * @See IDMOauth2
+     **/
     public static Response validateAuthToken(String token) {
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(IDM_URL).path("auth").path("tokens");
+        WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("auth").path("tokens");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        invocationBuilder.header(X_AUTH_TOKEN, ADMIN_TOKEN);
-        invocationBuilder.header(X_SUBJECT_TOKEN, token);
+        invocationBuilder.header(Constants.X_AUTH_TOKEN, Constants.ADMIN_TOKEN);
+        invocationBuilder.header(Constants.X_SUBJECT_TOKEN, token);
         Response response = invocationBuilder.head();
         return response;
     }
@@ -153,7 +154,7 @@ public class IDMService {
         for (int i = 0; i < rolesJsonArray.size(); i++) {
             JsonObject rol = rolesJsonArray.getJsonObject(i);
             String name = rol.getString("name");
-            principal.getRoles().add(roleManager.getRolesLookup().get(name));
+            principal.getRoles().add(Constants.roleManager.getRolesLookup().get(name));
         }
         return principal;
     }

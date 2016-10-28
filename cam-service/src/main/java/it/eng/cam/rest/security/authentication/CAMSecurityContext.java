@@ -1,4 +1,4 @@
-package it.eng.cam.rest.security;
+package it.eng.cam.rest.security.authentication;
 
 import it.eng.cam.rest.security.roles.Role;
 

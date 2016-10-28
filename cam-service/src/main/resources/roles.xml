@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<roles>
+    <role name="ADMIN">
+
+        <external-role name="administrator"></external-role>
+    </role>
+    <role name="BASIC">
+        <external-role name="Provider"></external-role>
+        <external-role name="Purchaser"></external-role>
+    </role>
+</roles>

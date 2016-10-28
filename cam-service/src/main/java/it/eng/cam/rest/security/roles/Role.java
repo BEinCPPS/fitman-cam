@@ -9,7 +9,7 @@ public class Role {
 
     public static String valueOf(String name) {
         if (name.equalsIgnoreCase(BASIC)) return BASIC;
-        else if (name.equalsIgnoreCase(ADMIN)) return ADMIN;
-        return null;
+        else if (name.toUpperCase().contains(ADMIN)) return ADMIN; //TODO
+        else return BASIC;
     }
 }

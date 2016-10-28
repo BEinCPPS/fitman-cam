@@ -58,6 +58,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.glassfish.jersey.security</groupId>
+            <artifactId>oauth2-client</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.restfuse</groupId>
             <artifactId>com.eclipsesource.restfuse</artifactId>
             <version>1.2.0</version>
@@ -90,11 +96,7 @@
             <version>2.7.3</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.scribe</groupId>
-            <artifactId>scribe</artifactId>
-            <version>1.3.7</version>
-        </dependency>
+
     </dependencies>
 
     <build>
@@ -241,7 +243,7 @@
                 <destination.url.integration>http://localhost:8080/${artifactId}/</destination.url.integration>
                 <!-- CORS API ENABLING true or false -->
                 <cors.api>true</cors.api>
-                <keyrock.url>http://161.27.159.76:8080</keyrock.url>
+                <keyrock.url>http://161.27.159.76</keyrock.url>
                 <keyrock.admin.token>ADMIN</keyrock.admin.token>
             </properties>
         </profile>
@@ -262,7 +264,7 @@
                 <destination.url.integration>http://localhost:8080/${artifactId}/</destination.url.integration>
                 <!-- CORS API ENABLING true or false -->
                 <cors.api>true</cors.api>
-                <keyrock.url>http://161.27.159.76:8080</keyrock.url>
+                <keyrock.url>http://161.27.159.76</keyrock.url>
                 <keyrock.admin.token>ADMIN</keyrock.admin.token>
             </properties>
         </profile>

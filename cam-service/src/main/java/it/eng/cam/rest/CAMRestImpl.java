@@ -1,6 +1,6 @@
 package it.eng.cam.rest;
 
-import it.eng.cam.rest.security.IDMService;
+import it.eng.cam.rest.security.service.IDMKeystone;
 import it.eng.cam.rest.security.user.User;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.*;
@@ -330,7 +330,7 @@ public class CAMRestImpl {
 	}
 
 	private static void alignKeyrockOnto(RepositoryDAO dao) {
-		List<User> users = IDMService.getUsers();
+		List<User> users = IDMKeystone.getUsers();
 		for (User usr : users) {
 			dao = releaseRepo(dao);
 			OntoUser userOnto = dao.getUser(usr.getId());
@@ -358,7 +358,7 @@ public class CAMRestImpl {
 	private static void alignOntoKeyrock(RepositoryDAO dao) {
 		dao = releaseRepo(dao);
 		List<OntoUser> usersOnto = getUsers(dao);
-		List<User> usersKeyrock = IDMService.getUsers();
+		List<User> usersKeyrock = IDMKeystone.getUsers();
 		for (OntoUser usr : usersOnto) {
 			if (usersKeyrock.stream().anyMatch((u -> u.getId().equals(usr))))
 				continue;

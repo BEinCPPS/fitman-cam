@@ -1,8 +1,8 @@
 package it.eng.cam.rest.security.authentication;
 
-import it.eng.cam.rest.security.CAMPrincipal;
-import it.eng.cam.rest.security.CAMSecurityContext;
-import it.eng.cam.rest.security.IDMService;
+import it.eng.cam.rest.security.service.Constants;
+import it.eng.cam.rest.security.service.IDMKeystone;
+import it.eng.cam.rest.security.service.IDMOauth2;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
@@ -24,8 +24,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) {
         String path = requestContext.getUriInfo().getPath();
-        if (path.isEmpty() || path.contains("authenticate")) return;
-        String token = requestContext.getHeaderString(IDMService.X_AUTH_TOKEN);
+        if (path.isEmpty() || path.contains("authenticate") || path.contains("authorize")) return;
+        String token = requestContext.getHeaderString(Constants.X_AUTH_TOKEN);
         if (null == token || token.isEmpty()) {
             requestContext.abortWith(Response
                     .status(Response.Status.UNAUTHORIZED)
@@ -33,7 +33,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                     .build());
             return;
         }
-        Response responseAuth = IDMService.validateAuthToken(token);
+        Response responseAuth = IDMOauth2.validateAuthToken(token);
         if (responseAuth.getStatus() != Response.Status.OK.getStatusCode()) { //TODO
             requestContext.abortWith(Response
                     .status(Response.Status.FORBIDDEN)
@@ -42,7 +42,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             return;
         }
         //Build User for Authorization
-        CAMPrincipal userPrincipal = IDMService.getUserPrincipalByToken(token);
+        //CAMPrincipal userPrincipal = IDMOauth2.getUserPrincipalByToken(token);
+        CAMPrincipal userPrincipal = IDMOauth2.getUserPrincipalByResponse(responseAuth);
         requestContext.setSecurityContext(new CAMSecurityContext(userPrincipal));
     }
 
