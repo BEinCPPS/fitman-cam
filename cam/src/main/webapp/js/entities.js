@@ -214,17 +214,17 @@
 //     var getOwnersList = function () {
 //         $http.get(BACK_END_URL_CONST + '/owners')
 //             .success(function (data) {
-//                 $scope.ownersList = [];
+//                 $scope.domainsList = [];
 //                 for (var i = 0; i < data.length; i++) {
 //                     var domain = {
 //                         name: data[i].name,
 //                         action: '<div class="inline-flex-item"><button class="cam-table-button" ng-click="openConfirmDeleteDomain(\'' + data[i].name + '\')"> <i data-toggle="tooltip" title="Delete ' + data[i].name + '" class="fa fa-trash cam-table-button"></i> </button>'
 //                     };
-//                     $scope.ownersList.push(domain);
+//                     $scope.domainsList.push(domain);
 //                 }
 //             })
 //             .error(function (error) {
-//                 $scope.ownersList = [];
+//                 $scope.domainsList = [];
 //                 $scope.openErrorPanel(error);
 //             });
 //     }

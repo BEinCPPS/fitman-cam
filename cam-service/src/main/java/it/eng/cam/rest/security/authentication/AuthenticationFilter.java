@@ -45,7 +45,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             return;
         }
         //Build User for Authorization
-        //CAMPrincipal userPrincipal = IDMOauth2Service.getUserPrincipalByToken(token);
         CAMPrincipal userPrincipal = authService.getUserPrincipalByResponse(responseAuth);
         requestContext.setSecurityContext(new CAMSecurityContext(userPrincipal));
     }

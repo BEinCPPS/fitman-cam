@@ -42,13 +42,7 @@ camApp.controller('confirmDeleteController', [
                         if ($scope.detail) {
                             $route.reload();
                             $scope.entityManager.getAssetDetail($scope.individualName);
-                        } else if ($scope.typeToDelete == 'domain') {
-                            entityManager.getOwnersList();
-                            setTimeout(function () {
-                                $route.reload();
-                            }, 1000);
-                        }
-                        else
+                        } else
                             $scope.loadChildren();
                         $ngDialog.closeAll();
                     }).error(function (err) {

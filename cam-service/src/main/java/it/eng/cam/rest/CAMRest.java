@@ -1,6 +1,9 @@
 package it.eng.cam.rest;
 
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
+import it.eng.cam.rest.security.project.Project;
+import it.eng.cam.rest.security.service.AuthenticationService;
+import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
 import it.eng.cam.rest.sesame.dto.*;
 import it.eng.cam.rest.exception.CAMServiceWebException;
@@ -146,6 +149,15 @@ public class CAMRest {
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
+    }
+
+    @GET
+    @Path("/classes/ancestors/{className}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<String> getTreePath(@PathParam("className") String className) {
+        if (null == className || "".equalsIgnoreCase(className.trim()))
+            return new ArrayList<String>();
+        return CAMRestImpl.getTreePath(className);
     }
 
     // FINE CLASSES
@@ -937,120 +949,10 @@ public class CAMRest {
     @Path("/domains")
     @RolesAllowed({Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public List<OntoDomain> getDomains() {
-        RepositoryDAO repoInstance = null;
+    public List<Project> getDomains() {
         try {
-            repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            return CAMRestImpl.getDomains(repoInstance);
-        } catch (Exception e) {
-            logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
-        }
-    }
-
-    @GET
-    @Path("/domains/{domainName}")
-    @RolesAllowed({Role.ADMIN})
-    @Produces(MediaType.APPLICATION_JSON)
-    public OntoDomain getDomain(@PathParam("domainName") String domainName) {
-        RepositoryDAO repoInstance = null;
-        try {
-            repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            return CAMRestImpl.getDomain(repoInstance, domainName);
-        } catch (Exception e) {
-            logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
-        }
-    }
-
-    @POST
-    @Path("/domains")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response createDomain(DomainJSON domain) {
-        RepositoryDAO repoInstance = null;
-        try {
-            repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            CAMRestImpl.createDomain(repoInstance, domain.getName());
-            return Response.ok("Domain with name '" + domain.getName() + "' was successfully created!").build();
-        } catch (Exception e) {
-            logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
-        }
-    }
-
-    @PUT
-    @Path("/domains/{domainName}")
-    @RolesAllowed({Role.ADMIN})
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateDomain(@PathParam("domainName") String domainName, DomainJSON domain) {
-        RepositoryDAO repoInstance = null;
-        try {
-            repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            CAMRestImpl.deleteDomain(repoInstance, domainName);
-        } catch (Exception e) {
-            logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
-        }
-        try {
-            repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            CAMRestImpl.createDomain(repoInstance, domain.getName());
-            return Response.ok("Domain with name '" + domain.getName() + "' was successfully updated!").build();
-        } catch (Exception e) {
-            logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
-        }
-    }
-
-    @DELETE
-    @Path("/domains/{domainName}")
-    @RolesAllowed({Role.ADMIN})
-    public Response deleteDomain(@PathParam("domainName") String domainName) {
-        RepositoryDAO repoInstance = null;
-        try {
-            repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            CAMRestImpl.deleteDomain(repoInstance, domainName);
-            return Response.ok("Domain with name '" + domainName + "' was successfully deleted!").build();
-        } catch (Exception e) {
-            logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
-        }
-    }
-
-    // FINE DOMAINS
-
-    // REST Utilities
-
-    @GET
-    @Path("/classes/ancestors/{className}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<String> getTreePath(@PathParam("className") String className) {
-        if (null == className || "".equalsIgnoreCase(className.trim()))
-            return new ArrayList<String>();
-        return CAMRestImpl.getTreePath(className);
-    }
-
-
-    @GET
-    @Path("/users")
-    @RolesAllowed({Role.ADMIN})
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<OntoUser> geUsers() {
-        RepositoryDAO repoInstance = null;
-        try {
-            repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            return CAMRestImpl.getUsers(repoInstance);
+            IDMKeystoneService idmService = new IDMKeystoneService();
+            return idmService.getProjects();
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -1058,30 +960,14 @@ public class CAMRest {
     }
 
     @GET
-    @Path("/users/{username}")
+    @Path("/domains/{domainId}/assets")
     @RolesAllowed({Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public OntoUser geUser(@PathParam("username") String username) {
+    public List<IndividualItem> getAssetsForDomain(@PathParam("domainId") String domainId) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            return CAMRestImpl.getUser(repoInstance, username);
-        } catch (Exception e) {
-            logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        }
-    }
-
-
-    @DELETE
-    @Path("/users/{username}")
-    @RolesAllowed({Role.ADMIN})
-    public Response deleteUser(@PathParam("username") String username) {
-        RepositoryDAO repoInstance = null;
-        try {
-            repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            CAMRestImpl.deleteUser(repoInstance, username);
-            return Response.ok("User with name '" + username + "' was successfully deleted!").build();
+            return CAMRestImpl.getAssetsForDomain(repoInstance, domainId);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -1089,53 +975,180 @@ public class CAMRest {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
     }
+//    @GET
+//    @Path("/domains/{domainName}")
+//    @RolesAllowed({Role.ADMIN})
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public OntoDomain getDomain(@PathParam("domainName") String domainName) {
+//        RepositoryDAO repoInstance = null;
+//        try {
+//            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+//            return CAMRestImpl.getDomain(repoInstance, domainName);
+//        } catch (Exception e) {
+//            logger.error(e);
+//            throw new CAMServiceWebException(e.getMessage());
+//        } finally {
+//            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+//        }
+//    }
+//
+//    @POST
+//    @Path("/domains")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public Response createDomain(DomainJSON domain) {
+//        RepositoryDAO repoInstance = null;
+//        try {
+//            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+//            CAMRestImpl.createDomain(repoInstance, domain.getName());
+//            return Response.ok("Domain with name '" + domain.getName() + "' was successfully created!").build();
+//        } catch (Exception e) {
+//            logger.error(e);
+//            throw new CAMServiceWebException(e.getMessage());
+//        } finally {
+//            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+//        }
+//    }
+//
+//    @PUT
+//    @Path("/domains/{domainName}")
+//    @RolesAllowed({Role.ADMIN})
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public Response updateDomain(@PathParam("domainName") String domainName, DomainJSON domain) {
+//        RepositoryDAO repoInstance = null;
+//        try {
+//            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+//            CAMRestImpl.deleteDomain(repoInstance, domainName);
+//        } catch (Exception e) {
+//            logger.error(e);
+//            throw new CAMServiceWebException(e.getMessage());
+//        } finally {
+//            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+//        }
+//        try {
+//            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+//            CAMRestImpl.createDomain(repoInstance, domain.getName());
+//            return Response.ok("Domain with name '" + domain.getName() + "' was successfully updated!").build();
+//        } catch (Exception e) {
+//            logger.error(e);
+//            throw new CAMServiceWebException(e.getMessage());
+//        } finally {
+//            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+//        }
+//    }
+//
+//    @DELETE
+//    @Path("/domains/{domainName}")
+//    @RolesAllowed({Role.ADMIN})
+//    public Response deleteDomain(@PathParam("domainName") String domainName) {
+//        RepositoryDAO repoInstance = null;
+//        try {
+//            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+//            CAMRestImpl.deleteDomain(repoInstance, domainName);
+//            return Response.ok("Domain with name '" + domainName + "' was successfully deleted!").build();
+//        } catch (Exception e) {
+//            logger.error(e);
+//            throw new CAMServiceWebException(e.getMessage());
+//        } finally {
+//            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+//        }
+//    }
 
-    @PUT
-    @Path("/users/import")
-    @RolesAllowed({Role.ADMIN})
-    public Response importUsers() {
-        RepositoryDAO repoInstance = null;
-        try {
-            repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            CAMRestImpl.importUsers(repoInstance);
-            return Response.ok("Users were successfully updated from Keyrock IDM!").build();
-        } catch (Exception e) {
-            logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
-        }
-    }
-
-    @PUT
-    @Path("/domains/{domainName}/users")
-    @RolesAllowed({Role.ADMIN})
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response insertUsersInDomain(@PathParam("domainName") String domainName, List<String> users) {
-        RepositoryDAO repoInstance = null;
-        try {
-            repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            CAMRestImpl.insertUsersInDomain(repoInstance, domainName, users);
-            return Response.ok("Users were successfully added to Domain " + domainName).build();
-        } catch (Exception e) {
-            logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
-        }
-    }
+//
+//    @GET
+//    @Path("/users")
+//    @RolesAllowed({Role.ADMIN})
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public List<OntoUser> geUsers() {
+//        RepositoryDAO repoInstance = null;
+//        try {
+//            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+//            return CAMRestImpl.getUsers(repoInstance);
+//        } catch (Exception e) {
+//            logger.error(e);
+//            throw new CAMServiceWebException(e.getMessage());
+//        }
+//    }
+//
+//    @GET
+//    @Path("/users/{username}")
+//    @RolesAllowed({Role.ADMIN})
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public OntoUser geUser(@PathParam("username") String username) {
+//        RepositoryDAO repoInstance = null;
+//        try {
+//            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+//            return CAMRestImpl.getUser(repoInstance, username);
+//        } catch (Exception e) {
+//            logger.error(e);
+//            throw new CAMServiceWebException(e.getMessage());
+//        }
+//    }
+//
+//
+//    @DELETE
+//    @Path("/users/{username}")
+//    @RolesAllowed({Role.ADMIN})
+//    public Response deleteUser(@PathParam("username") String username) {
+//        RepositoryDAO repoInstance = null;
+//        try {
+//            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+//            CAMRestImpl.deleteUser(repoInstance, username);
+//            return Response.ok("User with name '" + username + "' was successfully deleted!").build();
+//        } catch (Exception e) {
+//            logger.error(e);
+//            throw new CAMServiceWebException(e.getMessage());
+//        } finally {
+//            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+//        }
+//    }
+//
+//    @PUT
+//    @Path("/users/import")
+//    @RolesAllowed({Role.ADMIN})
+//    public Response importUsers() {
+//        RepositoryDAO repoInstance = null;
+//        try {
+//            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+//            CAMRestImpl.importUsers(repoInstance);
+//            return Response.ok("Users were successfully updated from Keyrock IDM!").build();
+//        } catch (Exception e) {
+//            logger.error(e);
+//            throw new CAMServiceWebException(e.getMessage());
+//        } finally {
+//            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+//        }
+//    }
+//
+//    @PUT
+//    @Path("/domains/{domainName}/users")
+//    @RolesAllowed({Role.ADMIN})
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public Response insertUsersInDomain(@PathParam("domainName") String domainName, List<String> users) {
+//        RepositoryDAO repoInstance = null;
+//        try {
+//            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+//            CAMRestImpl.insertUsersInDomain(repoInstance, domainName, users);
+//            return Response.ok("Users were successfully added to Domain " + domainName).build();
+//        } catch (Exception e) {
+//            logger.error(e);
+//            throw new CAMServiceWebException(e.getMessage());
+//        } finally {
+//            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+//        }
+//    }
 
     @POST
     @Path("/authenticate")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response authenticate(UserLoginJSON user) {
         try {
+            if (Constants.AUTHENTICATION_SERVICE.equalsIgnoreCase(AuthenticationService.OAUTH2.name()))
+                throw new UnsupportedOperationException("OAuth2 authentication is not allowed!");
             IDMKeystoneService service = new IDMKeystoneService();
             return service.authenticate(user);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
-        } finally {
         }
     }
 

@@ -146,7 +146,7 @@ public interface RepositoryDAO {
      * @return
      * @throws RuntimeException
      */
-    public OntoDomain getDomain(String name) throws RuntimeException;
+   // public OntoDomain getDomain(String name) throws RuntimeException;
     /**
      * Creates a new Domain with the given name.
      * <p/>
@@ -167,7 +167,7 @@ public interface RepositoryDAO {
      * @return a list of OntoUser
      * @throws RuntimeException
      */
-    List<String> getUsers() throws RuntimeException;
+   // List<String> getUsers() throws RuntimeException;
 
     /**
      * Gives the asked user from Ontology
@@ -176,7 +176,7 @@ public interface RepositoryDAO {
      * @param name
      * @return on object of type OntoUser
      */
-    OntoUser getUser(String name) throws RuntimeException;
+   // OntoUser getUser(String name) throws RuntimeException;
 
     /**
      * Creates a new User to associate to a Domain
@@ -432,5 +432,5 @@ public interface RepositoryDAO {
      */
     public List<PropertyDeclarationItem> getAttributes() throws RuntimeException;
 
-	void setUserAttribute(OntoUser user, PropertyValueItem attribute);
+	//void setUserAttribute(OntoUser user, PropertyValueItem attribute);
 }

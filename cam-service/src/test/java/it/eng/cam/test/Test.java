@@ -1,36 +1,20 @@
 package it.eng.cam.test;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import it.eng.ontorepo.OntoDomain;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.w3c.dom.Document;
-
 import it.eng.cam.rest.CAMRestImpl;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.ClassItem;
 import it.eng.ontorepo.IndividualItem;
 import it.eng.ontorepo.RepositoryDAO;
+import org.junit.*;
+import org.w3c.dom.Document;
+
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 public class Test extends Assert {
 
@@ -78,13 +62,13 @@ public class Test extends Assert {
 	}
 
 	//
-	@org.junit.Test
-	public void getDomains() {
-		List<OntoDomain> domains = CAMRestImpl.getDomains(dao);
-		assertNotNull("Null domains list", domains);
-		// Onwers empty is not problem
-		// assertFalse(domains.isEmpty());
-	}
+//	@org.junit.Test
+//	public void getDomains() {
+//		List<OntoDomain> domains = CAMRestImpl.getDomains(dao);
+//		assertNotNull("Null domains list", domains);
+//		// Onwers empty is not problem
+//		// assertFalse(domains.isEmpty());
+//	}
 
 	// TODO Always Fail :-(
 	// @org.junit.Test
@@ -175,29 +159,29 @@ public class Test extends Assert {
 	}
 
 	
-	@org.junit.Test
-	public void deleteDomain() {
-		String domainName = "NewDomain" + getNextRandom();
-		try {
-			CAMRestImpl.createDomain(dao, domainName);
-		} catch (Exception e) {
-			assertFalse(e.getMessage(), true);
-		}
-		tearDown();
-		setUp();
-		try {
-			CAMRestImpl.deleteDomain(dao, domainName);
-		} catch (Exception e) {
-			assertFalse(e.getMessage(), true);
-		}
-
-		List<OntoDomain> domains = CAMRestImpl.getDomains(dao);
-		List<OntoDomain> domainsFiltered = domains.stream().filter(own -> own.getName().equals(domainName)).collect(Collectors.toList());
-
-		assertNotNull("Delete domain: deleted domain: " + domainName, domainsFiltered);
-		assertTrue("Delete domain: deleted domain: " + domainName, domainsFiltered.isEmpty());
-
-	}
+//	@org.junit.Test
+//	public void deleteDomain() {
+//		String domainName = "NewDomain" + getNextRandom();
+//		try {
+//			CAMRestImpl.createDomain(dao, domainName);
+//		} catch (Exception e) {
+//			assertFalse(e.getMessage(), true);
+//		}
+//		tearDown();
+//		setUp();
+//		try {
+//			CAMRestImpl.deleteDomain(dao, domainName);
+//		} catch (Exception e) {
+//			assertFalse(e.getMessage(), true);
+//		}
+//
+//		List<OntoDomain> domains = CAMRestImpl.getDomains(dao);
+//		List<OntoDomain> domainsFiltered = domains.stream().filter(own -> own.getName().equals(domainName)).collect(Collectors.toList());
+//
+//		assertNotNull("Delete domain: deleted domain: " + domainName, domainsFiltered);
+//		assertTrue("Delete domain: deleted domain: " + domainName, domainsFiltered.isEmpty());
+//
+//	}
 
 	@org.junit.Test
 	public void createAssetModel() {
@@ -386,21 +370,21 @@ public class Test extends Assert {
 		assertTrue("Relationship exists!", thrown);
 	}
 	
-	@org.junit.Test
-	public void createDomain() {
-		String domainName = "MyDomain_" + getNextRandom();
-		try {
-			CAMRestImpl.createDomain(dao, domainName);
-		} catch (Exception e) {
-			assertFalse(e.getMessage(), true);
-		}
-		List<OntoDomain> domains = CAMRestImpl.getDomains(dao);
-		List<OntoDomain> domainsFiltered = domains.stream().filter(own -> own.getName().equals(domainName)).collect(Collectors.toList());
-
-		assertNotNull("Create domain: domain (null) not retrieved for domainName: " + domainName, domainsFiltered);
-		assertFalse("Create domain: domain (empty) not retrieved for domainName: " + domainName, domainsFiltered.isEmpty());
-		assertTrue("Create domain: domain created :-)", domainsFiltered.size() == 1);
-	}
+//	@org.junit.Test
+//	public void createDomain() {
+//		String domainName = "MyDomain_" + getNextRandom();
+//		try {
+//			CAMRestImpl.createDomain(dao, domainName);
+//		} catch (Exception e) {
+//			assertFalse(e.getMessage(), true);
+//		}
+//		List<OntoDomain> domains = CAMRestImpl.getDomains(dao);
+//		List<OntoDomain> domainsFiltered = domains.stream().filter(own -> own.getName().equals(domainName)).collect(Collectors.toList());
+//
+//		assertNotNull("Create domain: domain (null) not retrieved for domainName: " + domainName, domainsFiltered);
+//		assertFalse("Create domain: domain (empty) not retrieved for domainName: " + domainName, domainsFiltered.isEmpty());
+//		assertTrue("Create domain: domain created :-)", domainsFiltered.size() == 1);
+//	}
 	
 	@org.junit.Test
 	public void getIndividualsForClass() {

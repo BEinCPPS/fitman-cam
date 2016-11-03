@@ -5,27 +5,27 @@ camApp.controller('menuController', [
     '$scope',
     '$rootScope',
     '$location',
-    'Auth',
+    'oAuth',
     'Scopes',
     '$location',
     'ngNotifier',
-    function ($scope, $rootScope, $location, Auth, Scopes, $location, ngNotifier) {
+    '$window',
+    function ($scope, $rootScope, $location, oAuth, Scopes, $location, ngNotifier, $window) {
         Scopes.store('menuController', $scope);
         // get info if a person is logged in
-        $scope.loggedIn = Auth.isLoggedIn();
+        $scope.loggedIn = oAuth.isLoggedIn();
         // check to see if a user is logged in on every request$scope
-        Auth.getUser()
+        oAuth.getUser()
             .then(function (data) {
                 $scope.user = data.data;
+                console.log($scope.user);
+            }, function (error) {
+                ngNotifier.error(error);
             });
         $rootScope.$on('$routeChangeStart', function () {
-            $scope.loggedIn = Auth.isLoggedIn();
-            if (!$scope.loggedIn) $location.path('/login');
-            // get user information on page load
-            // Auth.getUser()
-            //     .then(function (data) {
-            //         $scope.user = data.data;
-            //     });
+            $scope.loggedIn = oAuth.isLoggedIn();
+            if (!$scope.loggedIn && !oAuth.isInLogout)
+                oAuth.login();
         });
 
         $scope.isAdmin = function () {
@@ -40,16 +40,20 @@ camApp.controller('menuController', [
         }
         // function to handle logging out
         $scope.doLogout = function () {
-            Auth.logout();
+            oAuth.logout();
             $scope.user = '';
-            $location.path('/login');
+            //$location.path('/login');
+
+            //$window.location.href = KEYROCK_LOGOUT_URL;
+            $window.open(KEYROCK_LOGOUT_URL);
         };
 
+        //NOT USED with OAuth2
         $scope.doLogin = function () {
             $scope.processing = true;
             // clear the error
             $scope.error = '';
-            Auth.login($scope.loginData.username, $scope.loginData.password)
+            oAuth.login($scope.loginData.username, $scope.loginData.password)
                 .success(function (data) {
                     $scope.processing = false;
                     // if a user successfully logs in, redirect to users page
@@ -78,5 +82,11 @@ camApp.controller('menuController', [
                 return 'active';
             else return '';
         }
+
+        $scope.dynamicPopover = {
+            content: 'Hello, World!',
+            templateUrl: 'myPopoverTemplate.html',
+            title: 'Title'
+        };
 
     }]);

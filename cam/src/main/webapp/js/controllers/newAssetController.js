@@ -14,7 +14,7 @@ camApp.controller('newAssetController', [
         $scope.newAsset = {
             name: "",
             modelName: $scope.selectedModel,
-            ownerName: ""
+            domainName: ""
         };
         var urlFragment = '/assets/';
 

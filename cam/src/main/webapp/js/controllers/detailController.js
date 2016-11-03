@@ -71,7 +71,7 @@ camApp.controller('detailController',
                                 name: name,
                                 created: created,
                                 model: model,
-                                owner: owned,
+                                domain: owned,
                                 attributes: attrs,
                                 isModel: isEmpty(model)
                             };

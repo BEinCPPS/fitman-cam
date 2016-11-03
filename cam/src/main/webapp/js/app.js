@@ -34,7 +34,7 @@ camApp.config(function ($httpProvider) {
             }
         }
     });
-    $httpProvider.interceptors.push('AuthInterceptor');
+    $httpProvider.interceptors.push('oAuthInterceptor');
     $httpProvider.defaults.cache = true;
 });
 

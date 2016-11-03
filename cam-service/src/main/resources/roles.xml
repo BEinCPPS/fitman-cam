@@ -2,9 +2,12 @@
 <roles>
     <role name="ADMIN">
         <external-role>administrator</external-role>
+        <external-role>admin</external-role>
     </role>
     <role name="BASIC">
         <external-role>Provider</external-role>
         <external-role>Purchaser</external-role>
+        <external-role>basic</external-role>
     </role>
 </roles>
+

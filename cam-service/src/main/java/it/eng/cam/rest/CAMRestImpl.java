@@ -1,5 +1,6 @@
 package it.eng.cam.rest;
 
+import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
 import it.eng.cam.rest.security.user.User;
 import it.eng.cam.rest.sesame.SesameRepoManager;
@@ -177,26 +178,26 @@ public class CAMRestImpl {
         dao.removeProperty(propertyName, assetName);
     }
 
-    public static List<OntoDomain> getDomains(RepositoryDAO dao) {
-        List<String> domains_ = dao.getDomains();
-        List<OntoDomain> domains = new ArrayList<>();
-        for (String dmn : domains_) {
-            OntoDomain domain = new OntoDomain();
-            domain.setName(BeInCpps.getLocalName(dmn));
-            dao = releaseRepo(dao);
-            List<PropertyValueItem> attributes = dao.getAttributesByNS(dmn, BeInCpps.SYSTEM_NS);
-            for (PropertyValueItem attribute : attributes) {
-                dao = releaseRepo(dao);
-                domain.getUsers().add(dao.getUser(attribute.getPropertyOriginalValue()));
-            }
-            domains.add(domain);
-        }
-        return domains;
-    }
+//    public static List<OntoDomain> getDomains(RepositoryDAO dao) {
+//        List<String> domains_ = dao.getDomains();
+//        List<OntoDomain> domains = new ArrayList<>();
+//        for (String dmn : domains_) {
+//            OntoDomain domain = new OntoDomain();
+//            domain.setName(BeInCpps.getLocalName(dmn));
+//            dao = releaseRepo(dao);
+//            List<PropertyValueItem> attributes = dao.getAttributesByNS(dmn, BeInCpps.SYSTEM_NS);
+//            for (PropertyValueItem attribute : attributes) {
+//                dao = releaseRepo(dao);
+//                domain.getUsers().add(dao.getUser(attribute.getPropertyOriginalValue()));
+//            }
+//            domains.add(domain);
+//        }
+//        return domains;
+//    }
 
-    public static OntoDomain getDomain(RepositoryDAO dao, String domainName) {
-        return dao.getDomain(domainName);
-    }
+//    public static OntoDomain getDomain(RepositoryDAO dao, String domainName) {
+//        return dao.getDomain(domainName);
+//    }
 
     public static void createDomain(RepositoryDAO dao, String domainName) {
         dao.createDomain(domainName);
@@ -206,20 +207,25 @@ public class CAMRestImpl {
         dao.deleteDomain(domainName);
     }
 
-    public static void deleteUser(RepositoryDAO dao, String domainName) {
-        dao.deleteUser(domainName);
+//    public static void deleteUser(RepositoryDAO dao, String domainName) {
+//        dao.deleteUser(domainName);
+//    }
+
+//    public static void insertUsersInDomain(RepositoryDAO dao, String name, List<String> users) throws RuntimeException {
+//        if (name == null || name.isEmpty() || users == null || users.isEmpty())
+//            throw new RuntimeException("Input parameters 'Domain name' and 'List of users' are mandatory!");
+//        dao.getDomain(name);
+//        for (String usr : users) {
+//            OntoUser user = dao.getUser(usr);
+//            dao = releaseRepo(dao);
+//            dao.setRelationship("rel_user_" + name + "_" + user.getId(), name, user.getId());
+//        }
+//    }
+
+    public static List<IndividualItem> getAssetsForDomain(RepositoryDAO dao, String domainId){
+        return getIndividuals(dao, Constants.IDM_PROJECTS_PREFIX+domainId);
     }
 
-    public static void insertUsersInDomain(RepositoryDAO dao, String name, List<String> users) throws RuntimeException {
-        if (name == null || name.isEmpty() || users == null || users.isEmpty())
-            throw new RuntimeException("Input parameters 'Domain name' and 'List of users' are mandatory!");
-        dao.getDomain(name);
-        for (String usr : users) {
-            OntoUser user = dao.getUser(usr);
-            dao = releaseRepo(dao);
-            dao.setRelationship("rel_user_" + name + "_" + user.getId(), name, user.getId());
-        }
-    }
 
     public static void setAttribute(RepositoryDAO dao, String name, String individualName, String value, String type)
             throws IllegalArgumentException, ClassNotFoundException, RuntimeException {
@@ -303,83 +309,79 @@ public class CAMRestImpl {
     }
 
     // Users
-    public static List<OntoUser> getUsers(RepositoryDAO dao) {
-        List<String> utenti = dao.getUsers();
-        List<OntoUser> users = new ArrayList<>();
-        for (String id : utenti) {
-            OntoUser user = new OntoUser();
-            user.setId(id);
-            dao = releaseRepo(dao);
-            List<PropertyValueItem> userAttributes = dao.getAttributesByNS(id, BeInCpps.SYSTEM_NS);
-            for (PropertyValueItem attribute : userAttributes) {
-                dao = releaseRepo(dao);
-                dao.setUserAttribute(user, attribute);
-            }
-            users.add(user);
-        }
-        return users;
-    }
+//    public static List<OntoUser> getUsers(RepositoryDAO dao) {
+//        List<String> utenti = dao.getUsers();
+//        List<OntoUser> users = new ArrayList<>();
+//        for (String id : utenti) {
+//            OntoUser user = new OntoUser();
+//            user.setId(id);
+//            dao = releaseRepo(dao);
+//            List<PropertyValueItem> userAttributes = dao.getAttributesByNS(id, BeInCpps.SYSTEM_NS);
+//            for (PropertyValueItem attribute : userAttributes) {
+//                dao = releaseRepo(dao);
+//                dao.setUserAttribute(user, attribute);
+//            }
+//            users.add(user);
+//        }
+//        return users;
+//    }
+//
+//    public static OntoUser getUser(RepositoryDAO dao, String username) {
+//        return dao.getUser(username);
+//    }
+//
+//    public static void importUsers(RepositoryDAO dao) {
+//        alignKeyrockOnto(dao);
+//        alignOntoKeyrock(dao);
+//    }
+//
+//    private static void alignKeyrockOnto(RepositoryDAO dao) {
+//        IDMKeystoneService authService = new IDMKeystoneService();
+//        List<User> users = authService.getUsers();
+//        for (User usr : users) {
+//            dao = releaseRepo(dao);
+//            OntoUser userOnto = dao.getUser(usr.getId());
+//            if (userOnto != null)
+//                continue;
+//            else {
+//                dao.createUser(usr.getId());
+//                dao = releaseRepo(dao);
+//                dao.setAttribute("username", usr.getId(), usr.getUsername(), null);
+//                dao = releaseRepo(dao);
+//                dao.setAttribute("name", usr.getId(), usr.getName(), null);
+//                dao = releaseRepo(dao);
+//                dao.setAttribute("enabled", usr.getId(), usr.getEnabled() + "", Boolean.class);
+//                dao = releaseRepo(dao);
+//            }
+//        }
+//    }
 
-    public static OntoUser getUser(RepositoryDAO dao, String username) {
-        return dao.getUser(username);
-    }
 
-    public static void importUsers(RepositoryDAO dao) {
-        alignKeyrockOnto(dao);
-        alignOntoKeyrock(dao);
-    }
 
-    private static void alignKeyrockOnto(RepositoryDAO dao) {
-        IDMKeystoneService authService = new IDMKeystoneService();
-        List<User> users = authService.getUsers();
-        for (User usr : users) {
-            dao = releaseRepo(dao);
-            OntoUser userOnto = dao.getUser(usr.getId());
-            if (userOnto != null)
-                continue;
-            else {
-                dao.createUser(usr.getId());
-                dao = releaseRepo(dao);
-                dao.setAttribute("username", usr.getId(), usr.getUsername(), null);
-                dao = releaseRepo(dao);
-                dao.setAttribute("name", usr.getId(), usr.getName(), null);
-                dao = releaseRepo(dao);
-                dao.setAttribute("enabled", usr.getId(), usr.getEnabled() + "", Boolean.class);
-                dao = releaseRepo(dao);
-            }
-        }
-    }
-
-    private static RepositoryDAO releaseRepo(RepositoryDAO dao) {
-        SesameRepoManager.releaseRepoDaoConn(dao);
-        dao = SesameRepoManager.getRepoInstance(null);
-        return dao;
-    }
-
-    private static void alignOntoKeyrock(RepositoryDAO dao) {
-        dao = releaseRepo(dao);
-        List<OntoUser> usersOnto = getUsers(dao);
-        IDMKeystoneService authService = new IDMKeystoneService();
-        List<User> usersKeyrock = authService.getUsers();
-        for (OntoUser usr : usersOnto) {
-            if (usersKeyrock.stream().anyMatch((u -> u.getId().equals(usr))))
-                continue;
-            else {
-                dao = releaseRepo(dao);
-                deleteUserWithRelationships(usr.getId(), dao);
-            }
-        }
-    }
-
-    private static void deleteUserWithRelationships(String name, RepositoryDAO dao) {
-        List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(dao, name);
-        List<PropertyValueItem> individualAttributesToDel = new ArrayList<>();
-        individualAttributesToDel.addAll(individualAttributes);
-        for (PropertyValueItem propertyValueItem : individualAttributesToDel) {
-            dao = releaseRepo(dao);
-            dao.removeProperty(propertyValueItem.getNormalizedName(), name);
-        }
-    }
+//    private static void alignOntoKeyrock(RepositoryDAO dao) {
+//        dao = releaseRepo(dao);
+//        List<OntoUser> usersOnto = getUsers(dao);
+//        IDMKeystoneService authService = new IDMKeystoneService();
+//        List<User> usersKeyrock = authService.getUsers();
+//        for (OntoUser usr : usersOnto) {
+//            if (usersKeyrock.stream().anyMatch((u -> u.getId().equals(usr))))
+//                continue;
+//            else {
+//                dao = releaseRepo(dao);
+//                deleteUserWithRelationships(usr.getId(), dao);
+//            }
+//        }
+//    }
+//
+//    private static void deleteUserWithRelationships(String name, RepositoryDAO dao) {
+//        List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(dao, name);
+//        List<PropertyValueItem> individualAttributesToDel = new ArrayList<>();
+//        individualAttributesToDel.addAll(individualAttributes);
+//        for (PropertyValueItem propertyValueItem : individualAttributesToDel) {
+//            dao = releaseRepo(dao);
+//            dao.removeProperty(propertyValueItem.getNormalizedName(), name);
+//        }
+//    }
 
     private static String normalizeClassName(String normName) {
         if (null != normName && normName.contains("#") && !normName.contains("system"))
@@ -391,5 +393,11 @@ public class CAMRestImpl {
         if (null != normName && normName.contains("#"))
             return true;
         return false;
+    }
+
+    private static RepositoryDAO releaseRepo(RepositoryDAO dao) {
+        SesameRepoManager.releaseRepoDaoConn(dao);
+        dao = SesameRepoManager.getRepoInstance(null);
+        return dao;
     }
 }

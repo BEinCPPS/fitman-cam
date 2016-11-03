@@ -27,8 +27,8 @@ camApp.factory('entityManager', function ($http) {
         return $http.get(BACK_END_URL_CONST + '/assets/' + name + '/' + type)
     }
 
-    entityManager.getOwners = function () {
-        return $http.get(BACK_END_URL_CONST + '/owners');
+    entityManager.getDomains = function () {
+        return $http.get(BACK_END_URL_CONST + '/domains');
     }
 
     entityManager.getAncestors = function (className) {
@@ -50,9 +50,9 @@ camApp.factory('entityManager', function ($http) {
         return $http.get(BACK_END_URL_CONST + urlFragment + assetName + '/attributes/' + attributeName);
     }
 
-    entityManager.updateOwner = function (originalName, domain) {
-        return $http.put(BACK_END_URL_CONST + '/owners/' + originalName, domain);
-    }
+    // entityManager.updateOwner = function (originalName, domain) {
+    //     return $http.put(BACK_END_URL_CONST + '/owners/' + originalName, domain);
+    // }
 
     entityManager.deleteIndividual = function (typeToDelete, elementToDelete, individualName) {
         var urlFragment = '/assets/';
@@ -91,9 +91,9 @@ camApp.factory('entityManager', function ($http) {
     entityManager.createClass = function (newClass) {
         return $http.post(BACK_END_URL_CONST + '/classes', newClass);
     }
-    entityManager.createOwner = function (owner) {
-        return $http.post(BACK_END_URL_CONST + '/owners', owner);
-    }
+    // entityManager.createOwner = function (owner) {
+    //     return $http.post(BACK_END_URL_CONST + '/owners', owner);
+    // }
     entityManager.createAttribute = function (isModel, individualName, attribute) {
         var urlFragment = '/assets/';
         if (isModel)
@@ -120,6 +120,10 @@ camApp.factory('entityManager', function ($http) {
         if (isModel)
             urlFragment = '/models/';
         return $http.put(BACK_END_URL_CONST + urlFragment + individualName + '/attributes/' + attributeName, attribute);
+    }
+
+    entityManager.getAssetsFromDomain = function(domainId){
+        return $http.get(BACK_END_URL_CONST + '/domains/' + domainId + '/assets' );
     }
 
     // return our entire userFactory object

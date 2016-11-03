@@ -48,7 +48,7 @@ camApp.controller('homeController', [
                 "mDataProp": "class",
                 "aTargets": [1]
             }, {
-                "mDataProp": "owner",
+                "mDataProp": "domain",
                 "aTargets": [2]
             }, {
                 "mDataProp": "created",
@@ -115,12 +115,12 @@ camApp.controller('homeController', [
         }
 
         $scope.openNewAssetModelPanel = function () {
-            entityManager.getOwners()
+            entityManager.getDomains()
                 .success(function (data) {
-                    $scope.ownersList = [];
-                    $scope.ownersList.push('');
+                    $scope.domainsList = [];
+                    $scope.domainsList.push('');
                     for (var i = 0; i < data.length; i++) {
-                        $scope.ownersList.push(data[i].name);
+                        $scope.domainsList.push(data[i].name);
                     }
                     $ngDialog.open({
                         template: 'pages/newAssetModel.htm',
@@ -129,17 +129,17 @@ camApp.controller('homeController', [
                     });
                 })
                 .error(function (error) {
-                    $scope.ownersList = [];
+                    $scope.domainsList = [];
                     ngNotifier.error(error);
                 });
         }
 
         $scope.openNewAssetPanel = function (selectedModel) {
             $scope.selectedModel = selectedModel;
-            entityManager.getOwners().success(function (data) {
-                $scope.ownersList = [];
+            entityManager.getDomains().success(function (data) {
+                $scope.domainsList = [];
                 for (var i = 0; i < data.length; i++) {
-                    $scope.ownersList.push(data[i].name);
+                    $scope.domainsList.push(data[i].name);
                 }
                 $ngDialog.open({
                     template: 'pages/newAsset.htm',
@@ -148,7 +148,7 @@ camApp.controller('homeController', [
                 });
             })
                 .error(function (error) {
-                    $scope.ownersList = [];
+                    $scope.domainsList = [];
                     ngNotifier.error(error);
                 });
 
@@ -381,7 +381,7 @@ camApp.controller('homeController', [
                                 created: created,
                                 originalDate: myDate,
                                 model: model || "",
-                                owner: owned || "",
+                                domain: owned || "",
                                 class: cur.className,
                                 isModel: isModel,
                                 index: i,

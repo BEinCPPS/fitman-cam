@@ -3,6 +3,9 @@ package it.eng.cam.rest.security.service.impl;
 
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
 import it.eng.cam.rest.security.authentication.credentials.Credentials;
+import it.eng.cam.rest.security.project.Project;
+import it.eng.cam.rest.security.project.ProjectContainerJSON;
+import it.eng.cam.rest.security.project.ProjectsCacheManager;
 import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.security.user.User;
 import it.eng.cam.rest.security.user.UserContainerJSON;
@@ -15,15 +18,13 @@ import javax.json.JsonObject;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by ascatolo on 12/10/2016.
  */
 public class IDMKeystoneService implements IDMService {
     private static final Logger logger = LogManager.getLogger(IDMKeystoneService.class.getName());
-
 
 
     public List<User> getUsers() {
@@ -40,6 +41,29 @@ public class IDMKeystoneService implements IDMService {
         return userContainerJSON.getUsers();
     }
 
+    public List<Project> getProjects() {
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("projects");
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        invocationBuilder.header(Constants.X_AUTH_TOKEN, Constants.ADMIN_TOKEN);
+        Response response = invocationBuilder.get();
+        ProjectContainerJSON projectContainerJSON = response.readEntity(ProjectContainerJSON.class);
+        List<Project> projects = projectContainerJSON.getProjects();
+        if ((projects == null || projects.isEmpty()) && !ProjectsCacheManager.getInstance().getCache().isEmpty())
+            return new ArrayList<>(ProjectsCacheManager.getInstance().getCache().values());
+        buildProjectsCache(projects);
+        return projects;
+    }
+
+    private void buildProjectsCache(List<Project> projects) {
+        if (projects == null || projects.isEmpty()) return;
+        for (Project project :
+                projects) {
+            ProjectsCacheManager.getInstance().getCache().put(project.getId(), project);
+        }
+    }
+
+    @Override
     public CAMPrincipal getUserPrincipalByToken(String token) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("auth").path("tokens");
@@ -59,22 +83,6 @@ public class IDMKeystoneService implements IDMService {
         return fetchUserRoles(user);
     }
 
-
-    public List<String> getRoles() {
-        Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("roles");
-        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        invocationBuilder.header(Constants.X_AUTH_TOKEN, Constants.ADMIN_TOKEN);
-        Response response = invocationBuilder.get();
-        JsonObject jsonObject = response.readEntity(JsonObject.class);
-        JsonArray roles = jsonObject.getJsonArray("roles");
-        List<String> ruoli = new ArrayList<>();
-        for (int i = 0; i < roles.size(); i++) {
-            JsonObject role = roles.getJsonObject(i);
-            ruoli.add(role.getString("name"));
-        }
-        return ruoli;
-    }
 
     private CAMPrincipal fetchUser(CAMPrincipal user) {
         Client client = ClientBuilder.newClient();
@@ -111,13 +119,14 @@ public class IDMKeystoneService implements IDMService {
     /**
      * @See IDMOauth2Service
      **/
+    @Override
     public Response validateAuthToken(String token) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("auth").path("tokens");
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.header(Constants.X_AUTH_TOKEN, Constants.ADMIN_TOKEN);
         invocationBuilder.header(Constants.X_SUBJECT_TOKEN, token);
-        Response response = invocationBuilder.head();
+        Response response = invocationBuilder.get();
         return response;
     }
 
@@ -145,7 +154,7 @@ public class IDMKeystoneService implements IDMService {
         return user;
     }
 
-    private  CAMPrincipal buildUser(Response response) {
+    private CAMPrincipal buildUser(Response response) {
         final JsonObject dataJson = response.readEntity(JsonObject.class);
         final JsonObject userJson = dataJson.getJsonObject("user");
         CAMPrincipal user = new CAMPrincipal();

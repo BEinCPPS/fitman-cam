@@ -9,7 +9,7 @@ camApp.controller('newAssetModelController', [
         $scope.newAssetModel = {
             name: "",
             className: $scope.currentNode.className,
-            ownerName: ""
+            domainName: ""
         };
 
         $scope.closeNewAssetModelPanel = function () {

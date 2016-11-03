@@ -9,10 +9,12 @@ camApp.factory('ngNotifier', function (toaster) {
         toaster.success(msg);
     };
     notifierFactory.error = function (error) {
+        console.log(error);
         if (typeof error === 'object' && error.error)
             error = error.error.message;
-        else if (typeof error === 'object' && error.statusText)
-            error = error.statusText;
+        else if (typeof error === 'object' && error.statusText) {
+            error = error.statusText +' <br/> ' + error.data;
+        }
         toaster.error(error);
     };
     notifierFactory.info = function (msg) {
