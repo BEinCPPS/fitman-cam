@@ -16,5 +16,8 @@ public class Constants {
     public static final String X_SUBJECT_TOKEN = "X-Subject-Token";
     public static final RoleManager roleManager = new RoleManager();
     public static final String AUTHENTICATION_SERVICE= finder.getString("authentication.service");
-    public static final String IDM_PROJECTS_PREFIX = IDM_URL_KEYSTONE+"/projects/";
+    public static final String IDM_PROJECTS_PREFIX = IDM_URL_KEYSTONE+"/projects";
+    public static final String NO_NAME = "NO_NAME";
+
+
 }

@@ -106,4 +106,14 @@ public class Project implements Serializable {
     }
 
 
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Project proj = (Project) obj;
+        return this.id.equals(proj.getId());
+    }
 }

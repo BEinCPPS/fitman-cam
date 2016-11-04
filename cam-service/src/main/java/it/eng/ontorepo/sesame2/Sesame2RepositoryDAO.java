@@ -1,5 +1,6 @@
 package it.eng.ontorepo.sesame2;
 
+import it.eng.cam.rest.security.service.Constants;
 import it.eng.ontorepo.*;
 import org.eclipse.rdf4j.IsolationLevels;
 import org.eclipse.rdf4j.model.*;
@@ -115,10 +116,41 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     // name
 
     /**
-     * author ascatox Modified at 20/09/2016
+     * author @ascatox Modified at 20/09/2016
      */
     private static final String QUERY_ALL_DATA_PROPS = "SELECT DISTINCT ?name ?type ?range  " + "WHERE { "
             + "OPTIONAL { ?name rdfs:range ?range } " + "} ";
+
+    /**
+     * @author ascatox Modified at 03/11/2016
+     */
+    private static final String QUERY_INDIVIDUALS_NO_DOMAIN = "SELECT DISTINCT ?name ?class "
+            + "WHERE { "
+            + "?name <" + VARTAG + "> ?domain. "
+            + "FILTER ( !regex( str(?domain ), \"^" + VARTAG2 + "\") ). "
+
+            + "?name rdf:type ?class; rdf:type owl:NamedIndividual. "
+            + "FILTER(!(?class = owl:NamedIndividual)). "
+            + "} ORDER by ?name";
+
+    private static final String QUERY_ALL_DOMAINS_IDM_URI = "SELECT DISTINCT ?domain "
+            + "WHERE { "
+            + "?name <" + VARTAG + "> ?domain "
+            + "FILTER regex( str(?domain ), \"^" + VARTAG2 + "\")  }";
+
+    private static final String QUERY_SUB_CLASSES_OF = "SELECT DISTINCT ?name ?superclass " +
+            "WHERE { ?name rdf:type <"
+            + OWL.CLASS + ">; " + "rdfs:subClassOf* ?superclass. " +
+            "FILTER(?superclass = <" + VARTAG + ">). " +
+            "}";
+
+    private static final String QUERY_INDIVIDUALS_BY_SUB_CLASSES = "SELECT DISTINCT ?name ?class WHERE "
+            + "{ "
+            + "?nameclass rdf:type <http://www.w3.org/2002/07/owl#Class>; rdfs:subClassOf* ?superclass. "
+            + "FILTER(?superclass = <" + VARTAG + ">). "
+            + "?name rdf:type ?class; rdf:type owl:NamedIndividual. "
+            + " FILTER((?class = ?nameclass)). "
+            + "} ORDER by ?name";
 
     // Modified by @ascatox 2016-04-26 to use MemoryStore in Unit Test
     private AbstractRepository repo;
@@ -431,12 +463,29 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     }
 
     @Override
+    public List<IndividualItem> getIndividualsNoDomain() throws RuntimeException {
+        String query = QUERY_INDIVIDUALS_NO_DOMAIN.replace(VARTAG, BeInCpps.SYSTEM_NS + BeInCpps.ownedBy)
+                .replace(VARTAG2, Constants.IDM_PROJECTS_PREFIX);
+        return doGetIndividuals(query, null);
+    }
+
+    @Override
     public List<IndividualItem> getIndividuals(String className) throws RuntimeException {
         if (null == className || className.length() == 0) {
             throw new IllegalArgumentException("Class name is mandatory");
         }
         className = Util.getGlobalName(getImplicitNamespace(), className);
         String qs = QUERY_INDIVIDUALS_FOR_CLASS.replace(VARTAG, className);
+        return doGetIndividuals(qs, className);
+    }
+
+    @Override
+    public List<IndividualItem> getIndividualsBySubClasses(String className) throws RuntimeException {
+        if (null == className || className.length() == 0) {
+            throw new IllegalArgumentException("Class name is mandatory");
+        }
+        className = Util.getGlobalName(getImplicitNamespace(), className);
+        String qs = QUERY_INDIVIDUALS_BY_SUB_CLASSES.replace(VARTAG, className);
         return doGetIndividuals(qs, className);
     }
 
@@ -525,21 +574,21 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         return domains;
     }
 
-//	@Override
-//	public OntoDomain getDomain(String name) throws RuntimeException {
-//		if (null == name || name.length() == 0) {
-//			throw new IllegalArgumentException("Domain name is mandatory");
-//		}
-//		if (getIndividualByNS(name, BeInCpps.SYSTEM_NS) == null)
-//			throw new IllegalArgumentException("Domain name is unknown");
-//		OntoDomain domain = new OntoDomain();
-//		domain.setName(BeInCpps.getLocalName(name));
-//		List<PropertyValueItem> attributes = getAttributesByNS(name, BeInCpps.SYSTEM_NS);
-//		for (PropertyValueItem attribute : attributes) {
-//			domain.getUsers().add(getUser(attribute.getPropertyOriginalValue()));
-//		}
-//		return domain;
-//	}
+    @Override
+    public List<String> getProjects() throws RuntimeException {
+        String query = QUERY_ALL_DOMAINS_IDM_URI.replace(VARTAG, BeInCpps.SYSTEM_NS + BeInCpps.ownedBy)
+                .replace(VARTAG2, Constants.IDM_PROJECTS_PREFIX);
+        return doGetProjects(query);
+    }
+
+    private List<String> doGetProjects(String query) throws RuntimeException {
+        List<String> domains = new ArrayList<>();
+        List<BindingSet> results = executeSelect(query);
+        for (BindingSet result : results) {
+            domains.add(result.getValue("domain").stringValue());
+        }
+        return domains;
+    }
 
     @Override
     public void createDomain(String name) throws IllegalArgumentException, RuntimeException {
@@ -568,42 +617,6 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 
         addStatements(statements);
     }
-
-//	@Override
-//	public List<String> getUsers() throws RuntimeException {
-//		List<String> users = new ArrayList<>();
-//		for (IndividualItem item : getIndividuals(BeInCpps.USER_CLASS)) {
-//			users.add(BeInCpps.getLocalName(item.getIndividualName()));
-//		}
-//		return users;
-//	}
-//
-//	@Override
-//	public OntoUser getUser(String name) throws RuntimeException {
-//		if (null == name || name.length() == 0) {
-//			throw new IllegalArgumentException("User name is mandatory");
-//		}
-//		if (getIndividualByNS(name, BeInCpps.SYSTEM_NS) == null)
-//			throw new IllegalArgumentException("User name is unknown");
-//		OntoUser user = new OntoUser();
-//		user.setId(BeInCpps.getLocalName(name));
-//		List<PropertyValueItem> userAttributes = getAttributesByNS(name, BeInCpps.SYSTEM_NS);
-//		for (PropertyValueItem attribute : userAttributes) {
-//			setUserAttribute(user, attribute);
-//		}
-//		return user;
-//	}
-
-//	@Override
-//	public void setUserAttribute(OntoUser user, PropertyValueItem attribute) {
-//		String normalizedName = attribute.getNormalizedName();
-//		if (normalizedName.equals("username"))
-//			user.setUsername(attribute.getPropertyOriginalValue());
-//		else if (normalizedName.equals("name"))
-//			user.setName(attribute.getPropertyOriginalValue());
-//		else if (normalizedName.equals("enabled"))
-//			user.setEnabled(Boolean.parseBoolean(attribute.getPropertyOriginalValue()));
-//	}
 
     @Override
     public List<PropertyValueItem> getAttributesByNS(String name, String namespace) throws RuntimeException {
@@ -976,7 +989,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         URI modelUri = vf.createURI(modelName);
         statements.add(vf.createStatement(assetUri, instanceUri, modelUri));
 
-        if (null != domainName && !domainName.isEmpty() && Util.isValidDomainURI(domainName)) {
+        if (null != domainName && !domainName.isEmpty()) {
             if (!Util.isValidDomainURI(domainName)) {
                 if (!Util.isLocalName(domainName)) {
                     throw new IllegalArgumentException("Domain must not be qualified by a namespace: " + domainName);
@@ -1218,7 +1231,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     }
 
     private IndividualItem getIndividualDeclarationByNS(String name, String namespace) throws RuntimeException {
-        return getIndividualDeclarationImpl(name, BeInCpps.SYSTEM_NS);
+        return getIndividualDeclarationImpl(name, namespace);
     }
 
     private IndividualItem getIndividualDeclarationImpl(String name, String namespace) {

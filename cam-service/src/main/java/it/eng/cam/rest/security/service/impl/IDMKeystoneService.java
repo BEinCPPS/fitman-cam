@@ -10,6 +10,11 @@ import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.security.user.User;
 import it.eng.cam.rest.security.user.UserContainerJSON;
 import it.eng.cam.rest.security.user.UserLoginJSON;
+import it.eng.ontorepo.BeInCpps;
+import it.eng.ontorepo.IndividualItem;
+import it.eng.ontorepo.PropertyValueItem;
+import it.eng.ontorepo.RepositoryDAO;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -51,6 +56,7 @@ public class IDMKeystoneService implements IDMService {
         List<Project> projects = projectContainerJSON.getProjects();
         if ((projects == null || projects.isEmpty()) && !ProjectsCacheManager.getInstance().getCache().isEmpty())
             return new ArrayList<>(ProjectsCacheManager.getInstance().getCache().values());
+        addNoNameProject(projects);
         buildProjectsCache(projects);
         return projects;
     }
@@ -61,6 +67,15 @@ public class IDMKeystoneService implements IDMService {
                 projects) {
             ProjectsCacheManager.getInstance().getCache().put(project.getId(), project);
         }
+    }
+
+
+    private void addNoNameProject(List<Project> projects) {
+        Project noName = new Project();
+        noName.setId(Constants.NO_NAME);
+        noName.setName("NO NAME");
+        noName.setDescription("No Name");
+        projects.add(noName);
     }
 
     @Override
@@ -177,7 +192,3 @@ public class IDMKeystoneService implements IDMService {
         return principal;
     }
 }
-
-
-
-

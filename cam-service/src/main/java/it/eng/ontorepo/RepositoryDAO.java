@@ -100,6 +100,29 @@ public interface RepositoryDAO {
     public List<IndividualItem> getIndividuals(String className) throws RuntimeException;
 
     /**
+     * Reads all Individual declarations of a given Class and *SubClasses* from the Reference Ontology in
+     * the Repository, and returns them as a flat list of items.
+     *
+     * @param className
+     * @return
+     * @throws RuntimeException
+     * @author ascatox
+     */
+
+    public List<IndividualItem> getIndividualsBySubClasses(String className) throws RuntimeException;
+
+    /**
+     * Reads all Individual declarations from the Reference Ontology in
+     * the Repository not owned by any *Domain*, and returns them as a flat list of items.
+     *
+     * @return
+     * @throws RuntimeException
+     * @author ascatox
+     */
+
+    public List<IndividualItem> getIndividualsNoDomain() throws RuntimeException;
+
+    /**
      * Reads the given Individual declaration from the Reference Ontology in the Repository.
      *
      * @param name the local name or full URI of the target Individual
@@ -132,13 +155,22 @@ public interface RepositoryDAO {
             throws RuntimeException;
 
     /**
-     * Reads all the Domains and returns an Object containing the local name
-     * and a list of associated Users.
-     *
+     * Reads all the Domains and returns a String containing the local name
+     *     *
      * @return
      * @throws RuntimeException
      */
     public List<String> getDomains() throws RuntimeException;
+
+
+    /**
+     * Reads all the Reference Domains pointing to IDM (Fiware Keyrock) resources
+     * and returns a String containing the URI.
+     *
+     * @return
+     * @throws RuntimeException
+     */
+    public List<String> getProjects() throws RuntimeException;
 
     /**
      * Return a Domain with name and associated Users.
@@ -146,7 +178,8 @@ public interface RepositoryDAO {
      * @return
      * @throws RuntimeException
      */
-   // public OntoDomain getDomain(String name) throws RuntimeException;
+    // public OntoDomain getDomain(String name) throws RuntimeException;
+
     /**
      * Creates a new Domain with the given name.
      * <p/>
@@ -167,7 +200,7 @@ public interface RepositoryDAO {
      * @return a list of OntoUser
      * @throws RuntimeException
      */
-   // List<String> getUsers() throws RuntimeException;
+    // List<String> getUsers() throws RuntimeException;
 
     /**
      * Gives the asked user from Ontology
@@ -176,7 +209,7 @@ public interface RepositoryDAO {
      * @param name
      * @return on object of type OntoUser
      */
-   // OntoUser getUser(String name) throws RuntimeException;
+    // OntoUser getUser(String name) throws RuntimeException;
 
     /**
      * Creates a new User to associate to a Domain
@@ -278,10 +311,10 @@ public interface RepositoryDAO {
      * Reference Ontology. It is used to create Asset Models, and will fail if the parent
      * Class is not a user-defined one - i.e., is part of the Base Ontology.
      *
-     * @param name      the local name of the new item
-     * @param className the local name of the Class of which the new item is an instance
+     * @param name       the local name of the new item
+     * @param className  the local name of the Class of which the new item is an instance
      * @param domainName optional: the local name of an Individual which represents the domain of the new
-     *                  item (if provided, must be an existing Organization item in the Reference Ontology)
+     *                   item (if provided, must be an existing Organization item in the Reference Ontology)
      * @throws IllegalArgumentException if name is not unique or not valid, if className
      *                                  is not an existing Class name or identifies a Class which is part of the Base Ontology
      *                                  (e.g., "Organization"), if domainName (when provided) does not identify an existing Organization
@@ -298,10 +331,10 @@ public interface RepositoryDAO {
      * This operation is safe, as it cannot have any side effects on existing items of the
      * Reference Ontology.
      *
-     * @param name      the local name of the new item
-     * @param modelName the local name of the Asset Model from which the new item is cloned
+     * @param name       the local name of the new item
+     * @param modelName  the local name of the Asset Model from which the new item is cloned
      * @param domainName optional: the local name of an Individual which represents the domain of the new
-     *                  item (if provided, must be an existing Organization item in the Reference Ontology)
+     *                   item (if provided, must be an existing Organization item in the Reference Ontology)
      * @throws IllegalArgumentException if name is not unique or not valid, if modelName does not
      *                                  identify an existing Asset Model, if domainName (when provided) does not identify an existing
      *                                  Organization
@@ -432,5 +465,5 @@ public interface RepositoryDAO {
      */
     public List<PropertyDeclarationItem> getAttributes() throws RuntimeException;
 
-	//void setUserAttribute(OntoUser user, PropertyValueItem attribute);
+    //void setUserAttribute(OntoUser user, PropertyValueItem attribute);
 }

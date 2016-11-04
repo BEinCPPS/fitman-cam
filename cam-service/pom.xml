@@ -95,7 +95,11 @@
             <artifactId>jackson-annotations</artifactId>
             <version>2.7.3</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.0</version>
+        </dependency>
 
     </dependencies>
 
@@ -272,6 +276,5 @@
                 <authentication.service>OAUTH2</authentication.service>
             </properties>
         </profile>
-
     </profiles>
 </project>
