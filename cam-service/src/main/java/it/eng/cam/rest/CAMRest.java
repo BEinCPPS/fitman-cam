@@ -169,10 +169,10 @@ public class CAMRest {
     @Path("/assets/{assetName}")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public List<IndividualItem> getAssetByName(@PathParam("assetName") String assetName) {
+    public List<Asset> getAssetByName(@PathParam("assetName") String assetName) {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
         try {
-            List<IndividualItem> assets = CAMRestImpl.getIndividuals(repoInstance);
+            List<Asset> assets = CAMRestImpl.getIndividuals(repoInstance);
             if (null == assetName || "".equals(assetName.trim()))
                 return assets.stream()
                         .filter(asset ->
@@ -192,8 +192,8 @@ public class CAMRest {
     @Path("/assets")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({Role.BASIC, Role.ADMIN})
-    public List<IndividualItem> getAssetsForClass(@QueryParam("className") String className,
-                                                  @QueryParam("retrieveForChildren") boolean retrieveForChildren) {
+    public List<Asset> getAssetsForClass(@QueryParam("className") String className,
+                                         @QueryParam("retrieveForChildren") boolean retrieveForChildren) {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
         try {
             if (null == className)
@@ -567,10 +567,10 @@ public class CAMRest {
     @Path("/models/{modelName}")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public List<IndividualItem> getModelByName(@PathParam("modelName") String modelName) {
+    public List<Asset> getModelByName(@PathParam("modelName") String modelName) {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
         try {
-            List<IndividualItem> models = CAMRestImpl.getIndividuals(repoInstance);
+            List<Asset> models = CAMRestImpl.getIndividuals(repoInstance);
             if (null == modelName)
                 return models.stream()
                         .filter(asset -> CAMRestImpl.isModel(repoInstance, getClass(), asset.getIndividualName()))
@@ -591,12 +591,12 @@ public class CAMRest {
     @Path("/models")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public List<IndividualItem> getModelsForClass(@QueryParam("className") String className) {
+    public List<Asset> getModelsForClass(@QueryParam("className") String className) {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
         try {
             if (null == className)
                 return getModelByName(null);
-            List<IndividualItem> individuals = CAMRestImpl.getIndividuals(repoInstance, className);
+            List<Asset> individuals = CAMRestImpl.getIndividuals(repoInstance, className);
             return individuals.stream()
                     .filter(indiv -> CAMRestImpl.isModel(repoInstance, getClass(), indiv.getIndividualName()))
                     .collect(Collectors.toList());
@@ -963,11 +963,15 @@ public class CAMRest {
     @Path("/domains/{domainId}/assets")
     @RolesAllowed({Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public List<IndividualItemWrapper> getAssetsForDomain(@PathParam("domainId") String domainId) {
+    public List<Asset> getAssetsForDomain(@PathParam("domainId") String domainId) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            return CAMRestImpl.getAssetsForDomain(repoInstance, domainId);
+            List<Asset> assets = CAMRestImpl.getAssetsForDomain(repoInstance, domainId);
+            return assets.stream()
+                    .filter(asset ->
+                            asset.getNamespace().equalsIgnoreCase(SesameRepoManager.getNamespace()))
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());

@@ -41,14 +41,43 @@ camApp.controller('domainController', [
         })();
 
         $scope.columnDefs = Scopes.get('homeController').columnDefs;
+        $scope.columnDefs.push({
+            "mDataProp": "lostDomain",
+            "aTargets": [5]
+        });
         $scope.overrideOptions = Scopes.get('homeController').overrideOptions;
+
         $scope.loadChildren = function () {
             entityManager.getAssetsFromDomain($scope.currentNode.id)
                 .then(function (response) {
-                  $scope.assetList = response.data;
+                  $scope.assetList = $scope.formatAssetListTable(response.data);
                 }, function (error) {
                     ngNotifier.error(error);
                 });
+        }
+
+        $scope.formatAssetListTable = function (data) {
+            if (!data)
+                return [];
+            for (var i = 0; i < data.length; i++) {
+                var elementType = 'asset';
+
+                data[i].action = '';
+                //     (function () {
+                //     return $scope.actionAssetTemplate.replaceAll('$value$', data[i].asset).replaceAll('$element$', elementType).replaceAll('$className$', data[i].className);
+                //
+                // })();
+                //data[i].action +=
+                //     (function () {
+                //     return $scope.actionAssetButtonTemplate.replaceAll('$value$', data[i].individualName);
+                // })();
+            }
+
+            data.sort(function (a, b) {
+                return new Date(b.createdOn) - new Date(a.createdOn);
+            });
+
+            return data;
         }
 
         $scope.openConfirmDeleteDomain = function (elem) {

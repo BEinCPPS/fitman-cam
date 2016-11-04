@@ -14,9 +14,9 @@ camApp.controller('homeController', [
         $scope.getAssets = function (name, retrieveChildren) {
             entityManager.getAssets(name, retrieveChildren)
                 .then(function (response) {
-                    $scope.fetchAssetList(response.data, function (res) {
-                        $scope.assetList = $scope.formatAssetListTable(res, name);
-                    });
+                    //$scope.fetchAssetList(response.data, function (res) {
+                        $scope.assetList = $scope.formatAssetListTable(response.data, name);
+                    //});
                 }, function (error) {
                     ngNotifier.error(error);
                 });
@@ -41,17 +41,17 @@ camApp.controller('homeController', [
 
         $scope.columnDefs = [
             {
-                "mDataProp": "asset",
+                "mDataProp": "individualName",
                 "aTargets": [0],
             },
             {
-                "mDataProp": "class",
+                "mDataProp": "className",
                 "aTargets": [1]
             }, {
                 "mDataProp": "domain",
                 "aTargets": [2]
             }, {
-                "mDataProp": "created",
+                "mDataProp": "createdOn",
                 "aTargets": [3]
             }, {
                 "mDataProp": "action",
@@ -323,16 +323,17 @@ camApp.controller('homeController', [
                 var elementType = 'asset';
 
                 data[i].action = (function () {
-                    return $scope.actionAssetTemplate.replaceAll('$value$', data[i].asset).replaceAll('$element$', elementType).replaceAll('$className$', clazzName);
+                    return $scope.actionAssetTemplate.replaceAll('$value$', data[i].individualName)
+                        .replaceAll('$element$', elementType).replaceAll('$className$', clazzName);
 
                 })();
                 data[i].action += (function () {
-                    return $scope.actionAssetButtonTemplate.replaceAll('$value$', data[i].asset);
+                    return $scope.actionAssetButtonTemplate.replaceAll('$value$', data[i].individualName);
                 })();
             }
 
             data.sort(function (a, b) {
-                return new Date(b.originalDate) - new Date(a.originalDate);
+                return new Date(b.createdOn) - new Date(a.createdOn);
             });
 
             return data;
@@ -342,62 +343,8 @@ camApp.controller('homeController', [
         $scope.fetchAssetList = function (assetList, completeCallback) {
             var result = [];
 
-            function fetchData() {
-                if (assetList.length == 0) {
-                    completeCallback(result);
-                } else {
-                    var cur = assetList.shift();
-                    //$http.get(BACK_END_URL_CONST + '/assets/' + cur.individualName + '/attributes')
-                    entityManager.getAttributesForIndividual(cur.individualName)
-                        .success(function (data) {
-                            var owned;
-                            var model;
-                            var created;
-                            var originalDate;
-                            var isModel = true;
-                            for (var i = 0; i < data.length; i++) {
-                                if (data[i].normalizedName.indexOf('ownedBy') > 0)
-                                    owned = data[i].propertyValue.substring(data[i].propertyValue.lastIndexOf('#') + 1);
-                                if (data[i].normalizedName.indexOf('instanceOf') > 0) {
-                                    model = data[i].propertyValue;
-                                    isModel = false;
-                                }
-                                if (data[i].normalizedName.indexOf('createdOn') > 0) {
-                                    var myDate = new Date(data[i].propertyValue);
-                                    var month = (myDate.getMonth() + 1).toString();
-                                    var day = new String(myDate.getDate());
-                                    while (month.length < 2)
-                                        month = '0' + month;
-                                    while (day.length < 2)
-                                        day = '0' + day;
-                                    created = day + "/" + month + "/" + myDate.getFullYear();
-                                    originalDate = myDate;
+            entityManager.getAssetsInfo(assetList, completeCallback, result)
 
-                                }
-                            }
-
-                            var asset = {
-                                asset: cur.individualName,
-                                created: created,
-                                originalDate: myDate,
-                                model: model || "",
-                                domain: owned || "",
-                                class: cur.className,
-                                isModel: isModel,
-                                index: i,
-                            };
-                            result.push(asset);
-                        })
-                        .error(function (error) {
-                            ngNotifier.error(error);
-
-                        }).finally(function () {
-                        fetchData();
-                    });
-                }
-            }
-
-            fetchData();
         }
 
 

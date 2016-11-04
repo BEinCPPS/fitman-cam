@@ -14,6 +14,60 @@ camApp.factory('entityManager', function ($http) {
         return $http.get(BACK_END_URL_CONST + '/assets?className=' + name + assetsForChildren);
     };
 
+    entityManager.getAssetsInfo = function(assetList, completeCallback, result) {
+        if (assetList.length == 0) {
+            completeCallback(result);
+        } else {
+            var cur = assetList.shift();
+            //$http.get(BACK_END_URL_CONST + '/assets/' + cur.individualName + '/attributes')
+            entityManager.getAttributesForIndividual(cur.individualName)
+                .success(function (data) {
+                    var owned;
+                    var model;
+                    var created;
+                    var originalDate;
+                    var isModel = true;
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].normalizedName.indexOf('ownedBy') > 0)
+                            owned = data[i].propertyValue.substring(data[i].propertyValue.lastIndexOf('#') + 1);
+                        if (data[i].normalizedName.indexOf('instanceOf') > 0) {
+                            model = data[i].propertyValue;
+                            isModel = false;
+                        }
+                        if (data[i].normalizedName.indexOf('createdOn') > 0) {
+                            var myDate = new Date(data[i].propertyValue);
+                            var month = (myDate.getMonth() + 1).toString();
+                            var day = new String(myDate.getDate());
+                            while (month.length < 2)
+                                month = '0' + month;
+                            while (day.length < 2)
+                                day = '0' + day;
+                            created = day + "/" + month + "/" + myDate.getFullYear();
+                            originalDate = myDate;
+
+                        }
+                    }
+                    var asset = {
+                        asset: cur.individualName,
+                        created: created,
+                        originalDate: myDate,
+                        model: model || "",
+                        domain: owned || "",
+                        class: cur.className,
+                        isModel: isModel,
+                        index: i,
+                    };
+                    result.push(asset);
+                })
+                .error(function (error) {
+                    ngNotifier.error(error);
+
+                }).finally(function () {
+                getAssetsInfo(assetList, completeCallback, result);
+            });
+        }
+    }
+
     entityManager.getClasses = function () {
         return $http.get(BACK_END_URL_CONST + '/classes');
     }
@@ -49,10 +103,6 @@ camApp.factory('entityManager', function ($http) {
             urlFragment = '/models/'
         return $http.get(BACK_END_URL_CONST + urlFragment + assetName + '/attributes/' + attributeName);
     }
-
-    // entityManager.updateOwner = function (originalName, domain) {
-    //     return $http.put(BACK_END_URL_CONST + '/owners/' + originalName, domain);
-    // }
 
     entityManager.deleteIndividual = function (typeToDelete, elementToDelete, individualName) {
         var urlFragment = '/assets/';
@@ -91,9 +141,6 @@ camApp.factory('entityManager', function ($http) {
     entityManager.createClass = function (newClass) {
         return $http.post(BACK_END_URL_CONST + '/classes', newClass);
     }
-    // entityManager.createOwner = function (owner) {
-    //     return $http.post(BACK_END_URL_CONST + '/owners', owner);
-    // }
     entityManager.createAttribute = function (isModel, individualName, attribute) {
         var urlFragment = '/assets/';
         if (isModel)
@@ -122,8 +169,8 @@ camApp.factory('entityManager', function ($http) {
         return $http.put(BACK_END_URL_CONST + urlFragment + individualName + '/attributes/' + attributeName, attribute);
     }
 
-    entityManager.getAssetsFromDomain = function(domainId){
-        return $http.get(BACK_END_URL_CONST + '/domains/' + domainId + '/assets' );
+    entityManager.getAssetsFromDomain = function (domainId) {
+        return $http.get(BACK_END_URL_CONST + '/domains/' + domainId + '/assets');
     }
 
     // return our entire userFactory object

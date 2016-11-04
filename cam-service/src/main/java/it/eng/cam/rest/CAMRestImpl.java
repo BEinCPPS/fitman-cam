@@ -49,21 +49,14 @@ public class CAMRestImpl {
         }
     }
 
-    public static List<IndividualItem> getIndividuals(RepositoryDAO dao) {
-        return dao.getIndividuals();
+    public static List<Asset> getIndividuals(RepositoryDAO dao) throws Exception {
+        return IndividualtemToAssetTransformer.transformAll(dao, dao.getIndividuals());
     }
 
-    public static List<IndividualItem> getIndividuals(RepositoryDAO dao, String className) {
-        return dao.getIndividuals(className);
+    public static List<Asset> getIndividuals(RepositoryDAO dao, String className) throws Exception {
+        return IndividualtemToAssetTransformer.transformAll(dao, dao.getIndividuals(className));
     }
 
-    /**
-     * author ascatox 2016-09-26 Depth First SEARCH Algorithm Recursive
-     *
-     * @param dao
-     * @param visited
-     * @param clazz
-     */
     private static void deepSearchFirstRecursive(RepositoryDAO dao, Map<String, Boolean> visited, ClassItem clazz,
                                                  List results, boolean searchIndividuals) {
         visited.put(clazz.getNormalizedName(), true);
@@ -85,20 +78,13 @@ public class CAMRestImpl {
         }
     }
 
-    /**
-     * author ascatox 2016-09-26 Depth First SEARCH Algorithm Recursive
-     *
-     * @param dao
-     * @param clazz
-     * @return a List of Individual Items
-     */
-    private static List<IndividualItem> deepSearchFirst(RepositoryDAO dao, ClassItem clazz) {
-        List<IndividualItem> results = new ArrayList<>();
-        Map<String, Boolean> visited = new HashMap<>(); // null
-        results.addAll(dao.getIndividuals(clazz.getNormalizedName()));
-        deepSearchFirstRecursive(dao, visited, clazz, results, true);
-        return results;
-    }
+//    private static List<IndividualItem> deepSearchFirst(RepositoryDAO dao, ClassItem clazz) {
+//        List<IndividualItem> results = new ArrayList<>();
+//        Map<String, Boolean> visited = new HashMap<>(); // null
+//        results.addAll(dao.getIndividuals(clazz.getNormalizedName()));
+//        deepSearchFirstRecursive(dao, visited, clazz, results, true);
+//        return results;
+//    }
 
     public static ClassItem deepSearchClasses(List<ClassItem> items, String className) {
         ClassItem retval = null;
@@ -115,11 +101,11 @@ public class CAMRestImpl {
         return null;
     }
 
-    public static List<IndividualItem> getIndividualsForChildren(RepositoryDAO dao, String className) {
+    public static List<Asset> getIndividualsForChildren(RepositoryDAO dao, String className) throws Exception{
         //List<ClassItem> classes = CAMRestImpl.getClasses(dao, false, false);
         //ClassItem fatherClass = CAMRestImpl.deepSearchClasses(classes, className);
-        return dao.getIndividualsBySubClasses(className);
-                //deepSearchFirst(dao, fatherClass);
+        return IndividualtemToAssetTransformer.transformAll(dao, dao.getIndividualsBySubClasses(className));
+        //deepSearchFirst(dao, fatherClass);
     }
 
     public static IndividualItem getIndividual(RepositoryDAO dao, String className) {
@@ -178,25 +164,25 @@ public class CAMRestImpl {
         dao.removeProperty(propertyName, assetName);
     }
 
-    public static List<IndividualItemWrapper> getAssetsForDomain(RepositoryDAO dao, String domainId) {
+    public static List<Asset> getAssetsForDomain(RepositoryDAO dao, String domainId) throws Exception {
         if (Constants.NO_NAME.equalsIgnoreCase(domainId)) {
-            List<IndividualItemWrapper> individualsToGive = new ArrayList<>();
+            List<Asset> individualsToGive = new ArrayList<>();
             List<IndividualItem> individuals = dao.getIndividualsNoDomain();
             for (IndividualItem individual :
                     individuals) {
-                individualsToGive.add(IndividualtemTransformer.transform(individual, false));
+                individualsToGive.add(IndividualtemToAssetTransformer.transform(dao, individual));
             }
             dao = releaseRepo(dao);
             List<Project> projects = extractLostDomainProjects(dao);
             for (Project project :
                     projects) {
-                individualsToGive.addAll(IndividualtemTransformer.transformAll(
-                        getIndividuals(dao, Constants.IDM_PROJECTS_PREFIX + project.getId()), true));
+                individualsToGive.addAll(IndividualtemToAssetTransformer.transformAll(dao,
+                        dao.getIndividuals(Constants.IDM_PROJECTS_PREFIX + project.getId()), true));
             }
             return individualsToGive;
 
         } else
-            return IndividualtemTransformer.transformAll(getIndividuals(dao, Constants.IDM_PROJECTS_PREFIX + domainId), false);
+            return IndividualtemToAssetTransformer.transformAll(dao, dao.getIndividuals(Constants.IDM_PROJECTS_PREFIX + domainId), false);
     }
 
     private static List<Project> extractLostDomainProjects(RepositoryDAO dao) {
