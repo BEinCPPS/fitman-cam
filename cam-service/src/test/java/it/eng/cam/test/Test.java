@@ -3,6 +3,7 @@ package it.eng.cam.test;
 import it.eng.cam.rest.CAMRestImpl;
 import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.sesame.SesameRepoManager;
+import it.eng.ontorepo.Asset;
 import it.eng.ontorepo.ClassItem;
 import it.eng.ontorepo.IndividualItem;
 import it.eng.ontorepo.RepositoryDAO;
@@ -58,9 +59,16 @@ public class Test extends Assert {
 
     @org.junit.Test
     public void getIndividuals() {
-        List<IndividualItem> individuals = CAMRestImpl.getIndividuals(dao);
-        assertNotNull("Null individuals", individuals);
-        assertFalse("Empty indivduals list", individuals.isEmpty());
+        List<Asset> individuals;
+		try {
+			individuals = CAMRestImpl.getIndividuals(dao);
+			  assertNotNull("Null individuals", individuals);
+		      assertFalse("Empty indivduals list", individuals.isEmpty());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+      
     }
 
     //
@@ -395,9 +403,16 @@ public class Test extends Assert {
         } catch (Exception e) {
             assertFalse(e.getMessage(), true);
         }
-        List<IndividualItem> individuals = CAMRestImpl.getIndividuals(dao, className);
-        assertNotNull("individuals for class " + className + " are null", individuals);
-        assertFalse("Empty individuals list", individuals.isEmpty());
+        List<Asset> individuals;
+		try {
+			individuals = CAMRestImpl.getIndividuals(dao, className);
+			assertNotNull("individuals for class " + className + " are null", individuals);
+	        assertFalse("Empty individuals list", individuals.isEmpty());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
     }
 
     private int getNextRandom() {

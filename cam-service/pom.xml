@@ -273,7 +273,7 @@
                 <keyrock.url>http://161.27.159.76</keyrock.url>
                 <keyrock.admin.token>ADMIN</keyrock.admin.token>
                 <!-- OAUTH2, KEYSTONE Supported at the moment -->
-                <authentication.service>OAUTH2</authentication.service>
+                <authentication.service>KEYSTONE</authentication.service>
             </properties>
         </profile>
     </profiles>

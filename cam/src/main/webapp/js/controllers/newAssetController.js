@@ -2,8 +2,9 @@ camApp.controller('newAssetController', [
     '$scope',
     '$http',
     '$q',
+    'entityManager',
     'ngDialog',
-    function ($scope, $http, $q, $ngDialog) {
+    function ($scope, $http, $q, entityManager, $ngDialog) {
         //$scope.elementToDelete;
         //$scope.typetoDelete;
         $scope.invalidName = false;

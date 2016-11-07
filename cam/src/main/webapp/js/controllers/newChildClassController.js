@@ -36,7 +36,7 @@ camApp.controller('newChildClassController', [
                 $scope.invalidName = true;
                 return;
             }
-            entityManager.createClasses($scope.newClass)
+            entityManager.createClass($scope.newClass)
                 .then(function (response) {
                     $ngDialog.close();
                     ngNotifier.success()
