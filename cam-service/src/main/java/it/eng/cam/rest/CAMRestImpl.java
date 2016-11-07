@@ -24,7 +24,7 @@ public class CAMRestImpl {
         return dao.getClassHierarchy();
     }
 
-    public static List<ClassItem> getClasses(RepositoryDAO dao, boolean checkNormalizedName, boolean flat) {
+        public static List<ClassItem> getClasses(RepositoryDAO dao, boolean checkNormalizedName, boolean flat) {
         ClassItem root = getClassHierarchy(dao);
         List<ClassItem> subClasses = root.getSubClasses();
         if (!checkNormalizedName)
@@ -167,12 +167,14 @@ public class CAMRestImpl {
     public static List<Asset> getAssetsForDomain(RepositoryDAO dao, String domainId) throws Exception {
         if (Constants.NO_NAME.equalsIgnoreCase(domainId)) {
             List<Asset> individualsToGive = new ArrayList<>();
+            //Extract all asset without a domain with IDM IRI!
             List<IndividualItem> individuals = dao.getIndividualsNoDomain();
             for (IndividualItem individual :
                     individuals) {
                 individualsToGive.add(IndividualtemToAssetTransformer.transform(dao, individual));
             }
             dao = releaseRepo(dao);
+            //Extract and insert Lost Domains assets!
             List<Project> projects = extractLostDomainProjects(dao);
             for (Project project :
                     projects) {
@@ -180,7 +182,6 @@ public class CAMRestImpl {
                         dao.getIndividuals(Constants.IDM_PROJECTS_PREFIX + project.getId()), true));
             }
             return individualsToGive;
-
         } else
             return IndividualtemToAssetTransformer.transformAll(dao, dao.getIndividuals(Constants.IDM_PROJECTS_PREFIX + domainId), false);
     }

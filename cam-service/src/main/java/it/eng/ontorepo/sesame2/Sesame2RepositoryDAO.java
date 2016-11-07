@@ -1,6 +1,7 @@
 package it.eng.ontorepo.sesame2;
 
 import it.eng.cam.rest.security.service.Constants;
+import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.*;
 import org.eclipse.rdf4j.IsolationLevels;
 import org.eclipse.rdf4j.model.*;
@@ -126,11 +127,11 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
      */
     private static final String QUERY_INDIVIDUALS_NO_DOMAIN = "SELECT DISTINCT ?name ?class "
             + "WHERE { "
-            + "?name <" + VARTAG + "> ?domain. "
-            + "FILTER ( !regex( str(?domain ), \"^" + VARTAG2 + "\") ). "
-
             + "?name rdf:type ?class; rdf:type owl:NamedIndividual. "
-            + "FILTER(!(?class = owl:NamedIndividual)). "
+            + "FILTER(!(?class = owl:NamedIndividual)" +
+            " && NOT EXISTS {?name <"+VARTAG+"> ?domain }" +
+            " &&  regex(str(?name), \"^"+VARTAG2+"\")" +
+            "). "
             + "} ORDER by ?name";
 
     private static final String QUERY_ALL_DOMAINS_IDM_URI = "SELECT DISTINCT ?domain "
@@ -465,7 +466,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     @Override
     public List<IndividualItem> getIndividualsNoDomain() throws RuntimeException {
         String query = QUERY_INDIVIDUALS_NO_DOMAIN.replace(VARTAG, BeInCpps.SYSTEM_NS + BeInCpps.ownedBy)
-                .replace(VARTAG2, Constants.IDM_PROJECTS_PREFIX);
+                .replace(VARTAG2, SesameRepoManager.getNamespace());
         return doGetIndividuals(query, null);
     }
 
