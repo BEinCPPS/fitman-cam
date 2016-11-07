@@ -14,59 +14,59 @@ camApp.factory('entityManager', function ($http) {
         return $http.get(BACK_END_URL_CONST + '/assets?className=' + name + assetsForChildren);
     };
 
-    entityManager.getAssetsInfo = function(assetList, completeCallback, result) {
-        if (assetList.length == 0) {
-            completeCallback(result);
-        } else {
-            var cur = assetList.shift();
-            //$http.get(BACK_END_URL_CONST + '/assets/' + cur.individualName + '/attributes')
-            entityManager.getAttributesForIndividual(cur.individualName)
-                .success(function (data) {
-                    var owned;
-                    var model;
-                    var created;
-                    var originalDate;
-                    var isModel = true;
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i].normalizedName.indexOf('ownedBy') > 0)
-                            owned = data[i].propertyValue.substring(data[i].propertyValue.lastIndexOf('#') + 1);
-                        if (data[i].normalizedName.indexOf('instanceOf') > 0) {
-                            model = data[i].propertyValue;
-                            isModel = false;
-                        }
-                        if (data[i].normalizedName.indexOf('createdOn') > 0) {
-                            var myDate = new Date(data[i].propertyValue);
-                            var month = (myDate.getMonth() + 1).toString();
-                            var day = new String(myDate.getDate());
-                            while (month.length < 2)
-                                month = '0' + month;
-                            while (day.length < 2)
-                                day = '0' + day;
-                            created = day + "/" + month + "/" + myDate.getFullYear();
-                            originalDate = myDate;
-
-                        }
-                    }
-                    var asset = {
-                        asset: cur.individualName,
-                        created: created,
-                        originalDate: myDate,
-                        model: model || "",
-                        domain: owned || "",
-                        class: cur.className,
-                        isModel: isModel,
-                        index: i,
-                    };
-                    result.push(asset);
-                })
-                .error(function (error) {
-                    ngNotifier.error(error);
-
-                }).finally(function () {
-                getAssetsInfo(assetList, completeCallback, result);
-            });
-        }
-    }
+    // entityManager.getAssetsInfo = function(assetList, completeCallback, result) {
+    //     if (assetList.length == 0) {
+    //         completeCallback(result);
+    //     } else {
+    //         var cur = assetList.shift();
+    //         //$http.get(BACK_END_URL_CONST + '/assets/' + cur.individualName + '/attributes')
+    //         entityManager.getAttributesForIndividual(cur.individualName)
+    //             .success(function (data) {
+    //                 var owned;
+    //                 var model;
+    //                 var created;
+    //                 var originalDate;
+    //                 var isModel = true;
+    //                 for (var i = 0; i < data.length; i++) {
+    //                     if (data[i].normalizedName.indexOf('ownedBy') > 0)
+    //                         owned = data[i].propertyValue.substring(data[i].propertyValue.lastIndexOf('#') + 1);
+    //                     if (data[i].normalizedName.indexOf('instanceOf') > 0) {
+    //                         model = data[i].propertyValue;
+    //                         isModel = false;
+    //                     }
+    //                     if (data[i].normalizedName.indexOf('createdOn') > 0) {
+    //                         var myDate = new Date(data[i].propertyValue);
+    //                         var month = (myDate.getMonth() + 1).toString();
+    //                         var day = new String(myDate.getDate());
+    //                         while (month.length < 2)
+    //                             month = '0' + month;
+    //                         while (day.length < 2)
+    //                             day = '0' + day;
+    //                         created = day + "/" + month + "/" + myDate.getFullYear();
+    //                         originalDate = myDate;
+    //
+    //                     }
+    //                 }
+    //                 var asset = {
+    //                     asset: cur.individualName,
+    //                     created: created,
+    //                     originalDate: myDate,
+    //                     model: model || "",
+    //                     domain: owned || "",
+    //                     class: cur.className,
+    //                     isModel: isModel,
+    //                     index: i,
+    //                 };
+    //                 result.push(asset);
+    //             })
+    //             .error(function (error) {
+    //                 ngNotifier.error(error);
+    //
+    //             }).finally(function () {
+    //             getAssetsInfo(assetList, completeCallback, result);
+    //         });
+    //     }
+    // }
 
     entityManager.getClasses = function () {
         return $http.get(BACK_END_URL_CONST + '/classes');

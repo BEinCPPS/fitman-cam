@@ -50,7 +50,7 @@ camApp.controller('domainController', [
         $scope.loadChildren = function () {
             entityManager.getAssetsFromDomain($scope.currentNode.id)
                 .then(function (response) {
-                  $scope.assetList = $scope.formatAssetListTable(response.data);
+                    $scope.assetList = $scope.formatAssetListTable(response.data);
                 }, function (error) {
                     ngNotifier.error(error);
                 });
@@ -61,16 +61,7 @@ camApp.controller('domainController', [
                 return [];
             for (var i = 0; i < data.length; i++) {
                 var elementType = 'asset';
-
                 data[i].action = '';
-                //     (function () {
-                //     return $scope.actionAssetTemplate.replaceAll('$value$', data[i].asset).replaceAll('$element$', elementType).replaceAll('$className$', data[i].className);
-                //
-                // })();
-                //data[i].action +=
-                //     (function () {
-                //     return $scope.actionAssetButtonTemplate.replaceAll('$value$', data[i].individualName);
-                // })();
             }
 
             data.sort(function (a, b) {
@@ -79,22 +70,16 @@ camApp.controller('domainController', [
 
             return data;
         }
-
-        $scope.openConfirmDeleteDomain = function (elem) {
-            $scope.elementToDelete = elem;
-            $scope.typeToDelete = 'domain';
-            $ngDialog.open({
-                template: 'pages/confirmDelete.htm',
-                controller: 'confirmDeleteController',
-                scope: $scope
-            });
+        
+        $scope.updateAssetDomain = function () {
+            
         }
 
-        $scope.openPanel = function () {
-            $scope.title = 'Create domain';
+        $scope.openUpdateDomainPanel = function () {
+            $scope.title = 'Update domain';
             $ngDialog.open({
-                template: 'pages/newDomain.htm',
-                controller: 'newDomainController',
+                template: 'pages/updateDomain.htm',
+                controller: 'domainController',
                 scope: $scope
             });
         }
