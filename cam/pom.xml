@@ -1,13 +1,43 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>it.eng.cam</groupId>
-	<artifactId>CAM</artifactId>
-	<packaging>war</packaging>
-	<version>2.0.0</version>
-	<name>CAM Maven Webapp</name>
-	<url>http://maven.apache.org</url>
-	<build>
-		<finalName>CAM</finalName>
-	</build>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>it.eng.cam</groupId>
+    <artifactId>CAM</artifactId>
+    <packaging>war</packaging>
+    <version>2.0.0</version>
+    <name>CAM Maven Webapp</name>
+    <url>http://maven.apache.org</url>
+
+    <!-- !!Configure coherently with CAM BE Application!! -->
+    <!-- oAuth, OAuth2 Supported at the moment -->
+    <!-- Auth, is Keystone method authentication-->
+    <properties>
+        <authentication.service>Auth</authentication.service>
+        <keyrock.url>http://161.27.159.76</keyrock.url>
+        <!-- OAUTH2 CLIENT ID-->
+        <client.id>6a636dc9ff1d4e4395ae01c60fb9d3b5</client.id>
+    </properties>
+    <build>
+        <finalName>CAM</finalName>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>2.1</version>
+                    <configuration>
+                        <webResources>
+                            <resource>
+                                <filtering>true</filtering>
+                                <directory>src/main/webapp</directory>
+                                <includes>
+                                    <include>**/*.js</include>
+                                </includes>
+                            </resource>
+                        </webResources>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
