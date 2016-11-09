@@ -6,18 +6,22 @@
                 var e = c.treeModel
                     , h = c.nodeLabel || "label"
                     , d = c.nodeChildren || "children"
+                    , l = String(c.rightClickEnabled) == "true"? true :false
+                    , m = l ? 'ng-right-click="classRightClicked($event)"':  ''
+                    , n = l ? 'data-context-menu="pages/ctxtMenu.htm"' :''
+                    , o = c.iconClassName || ''
                     , k = '<ul id="home-tree-nodes">' +
                     '<li data-ng-repeat="node in ' + e + '">' +
-                    '<i class="collapsed" data-ng-show="node.' + d + '.length && node.collapsed"' +
+                    '<i class="collapsed '+o+'" data-ng-show="node.' + d + '.length && node.collapsed"' +
                          ' data-ng-click="selectNodeHead(node, $event)"></i>' +
-                    '<i class="expanded" data-ng-show="node.' + d + '.length && !node.collapsed" ' +
+                    '<i class="expanded '+o+'" data-ng-show="node.' + d + '.length && !node.collapsed" ' +
                         'data-ng-click="selectNodeHead(node, $event)">' +
                     '</i>' +
-                    '<i class="normal" data-ng-hide="node.' +
+                    '<i class="normal '+o+'" data-ng-hide="node.' +
                     d + '.length"></i>' +
-                    ' <span ng-right-click="classRightClicked($event)" ' +
+                    ' <span '+m+'" ' +
                     'data-ng-class="node.selected" data-ng-click="selectNodeLabel(node, $event)" ' +
-                    'data-context-menu="pages/ctxtMenu.htm" ng-model="node">{{node.' + h + '}}</span>' +
+                     n+' ng-model="node">{{node.' + h + '}}</span>' +
                     '<div data-ng-hide="node.collapsed" data-tree-model="node.' + d +
                     '" data-node-id=' + (c.nodeId || "id") + " " +
                     "data-node-label=" + h + " data-node-children=" + d + ">" +

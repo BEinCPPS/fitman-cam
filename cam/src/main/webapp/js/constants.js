@@ -12,8 +12,8 @@ var ATTRIBUTES = 'attributes';
 var RELATIONSHIPS = 'relationships';
 
 
-var KEYROCK_URL = PROTOCOL + '161.27.159.76';
-var client_id = '6a636dc9ff1d4e4395ae01c60fb9d3b5';
+var KEYROCK_URL = '${keyrock.url}';
+var client_id = '${client.id}';
 
 
 var KEYROCK_SIGNUP_URL = KEYROCK_URL + '/sign_up';

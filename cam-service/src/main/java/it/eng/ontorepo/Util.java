@@ -1,6 +1,7 @@
 package it.eng.ontorepo;
 
 import it.eng.cam.rest.security.service.Constants;
+import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -205,6 +206,9 @@ public class Util {
      */
     public static boolean isValidDomainURI(String domainName) {
         if (!domainName.contains(Constants.IDM_PROJECTS_PREFIX)) return false;
+        else if(!domainName.contains("#")) return false;
         return true;
     }
+
+
 }

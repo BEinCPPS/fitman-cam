@@ -138,7 +138,6 @@ public class CAMRestImpl {
 
     public static void createAssetModel(RepositoryDAO dao, String name, String className, String domainName) {
         dao.createAssetModel(name, className, domainName);
-
     }
 
     public static void createAsset(RepositoryDAO dao, String name, String modelName, String domainName) {
@@ -179,11 +178,11 @@ public class CAMRestImpl {
             for (Project project :
                     projects) {
                 individualsToGive.addAll(IndividualtemToAssetTransformer.transformAll(dao,
-                        dao.getIndividuals(Constants.IDM_PROJECTS_PREFIX + project.getId()), true));
+                        dao.getIndividualsForDomain(Constants.IDM_PROJECTS_PREFIX + "/"+project.getId())));
             }
             return individualsToGive;
         } else
-            return IndividualtemToAssetTransformer.transformAll(dao, dao.getIndividuals(Constants.IDM_PROJECTS_PREFIX + domainId), false);
+            return IndividualtemToAssetTransformer.transformAll(dao, dao.getIndividualsForDomain(Constants.IDM_PROJECTS_PREFIX + "/"+domainId));
     }
 
     private static List<Project> extractLostDomainProjects(RepositoryDAO dao) {

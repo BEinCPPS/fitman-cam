@@ -120,7 +120,14 @@ camApp.controller('homeController', [
                     $scope.domainsList = [];
                     $scope.domainsList.push('');
                     for (var i = 0; i < data.length; i++) {
-                        $scope.domainsList.push(data[i].name);
+                        var value = data[i];
+                        var domain = {
+                            name: value.name,
+                            id: value.id,
+                            iri: value.links.self + '#' + value.name,
+                            description: value.description,
+                        };
+                        $scope.domainsList.push(domain);
                     }
                     $ngDialog.open({
                         template: 'pages/newAssetModel.htm',

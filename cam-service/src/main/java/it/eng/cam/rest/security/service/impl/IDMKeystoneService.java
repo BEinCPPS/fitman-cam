@@ -54,9 +54,9 @@ public class IDMKeystoneService implements IDMService {
         Response response = invocationBuilder.get();
         ProjectContainerJSON projectContainerJSON = response.readEntity(ProjectContainerJSON.class);
         List<Project> projects = projectContainerJSON.getProjects();
+        addNoNameProject(projects);
         if ((projects == null || projects.isEmpty()) && !ProjectsCacheManager.getInstance().getCache().isEmpty())
             return new ArrayList<>(ProjectsCacheManager.getInstance().getCache().values());
-        addNoNameProject(projects);
         buildProjectsCache(projects);
         return projects;
     }
@@ -74,6 +74,7 @@ public class IDMKeystoneService implements IDMService {
         Project noName = new Project();
         noName.setId(Constants.NO_NAME);
         noName.setName("NO NAME");
+        noName.setLinks(new Project.Link(""));
         noName.setDescription("No Name");
         projects.add(noName);
     }

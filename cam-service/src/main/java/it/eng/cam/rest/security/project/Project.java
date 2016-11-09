@@ -96,6 +96,13 @@ public class Project implements Serializable {
     public static class Link {
         private String self;
 
+        public Link(String self) {
+            this.self = self;
+        }
+
+        public Link() {
+        }
+
         public String getSelf() {
             return self;
         }

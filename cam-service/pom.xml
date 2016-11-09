@@ -114,6 +114,14 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>3.0.0</version>
+                    <configuration>
+                        <outputDirectory>C:\Program Files\apache-tomcat-8.0.33\webapps</outputDirectory>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.tomcat.maven</groupId>
                     <artifactId>tomcat7-maven-plugin</artifactId>
                     <version>2.2</version>
@@ -250,7 +258,7 @@
                 <keyrock.url>http://161.27.159.76</keyrock.url>
                 <keyrock.admin.token>ADMIN</keyrock.admin.token>
                 <!-- OAUTH2, KEYSTONE Supported at the moment -->
-                <authentication.service>OAUTH2</authentication.service>
+                <authentication.service>KEYSTONE</authentication.service>
             </properties>
         </profile>
         <!-- Production environment @ production server -->
