@@ -9,7 +9,7 @@
                     , l = String(c.rightClickEnabled) == "true"? true :false
                     , m = l ? 'ng-right-click="classRightClicked($event)"':  ''
                     , n = l ? 'data-context-menu="pages/ctxtMenu.htm"' :''
-                    , o = c.iconClassName || ''
+                    , o = c.iconClassName
                     , k = '<ul id="home-tree-nodes">' +
                     '<li data-ng-repeat="node in ' + e + '">' +
                     '<i class="collapsed '+o+'" data-ng-show="node.' + d + '.length && node.collapsed"' +
@@ -24,9 +24,11 @@
                      n+' ng-model="node">{{node.' + h + '}}</span>' +
                     '<div data-ng-hide="node.collapsed" data-tree-model="node.' + d +
                     '" data-node-id=' + (c.nodeId || "id") + " " +
-                    "data-node-label=" + h + " data-node-children=" + d + ">" +
+                    "data-node-label=" + h + " data-node-children=" + d + " data-icon-class-name=\""+o+"\" " +
+                    "data-right-click-enabled=\""+l+"\" >" +
                     "</div>" +
                     "</li></ul>";
+                console.log(k);
                 e && e.length && (c.angularTreeview ? (a.$watch(e, function (m, b) {
                         g.empty().html($compile(k)(a))
                     }, !1),

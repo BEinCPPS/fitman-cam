@@ -4,7 +4,8 @@ camApp.controller('newClassController', [
     'ngDialog',
     'entityManager',
     'ngNotifier',
-    function ($scope, $q, $ngDialog, entityManager, ngNotifier) {
+    '$route',
+    function ($scope, $q, $ngDialog, entityManager, ngNotifier, $route) {
         $scope.isNewClassReadonly = false;
         $scope.isParentNameReadonly = false;
         $scope.isNewRootClass = true;
@@ -39,7 +40,11 @@ camApp.controller('newClassController', [
                 .success(function (data, status) {
                     $ngDialog.close();
                     ngNotifier.success();
-                    window.location.reload();
+                    entityManager.getClasses(false).then(function () {
+                        $route.reload();
+                    }, function (error) {
+                        ngNotifier.error(error)
+                    })
                 }).error(function (err) {
                 $ngDialog.close();
                 ngNotifier.error(err);

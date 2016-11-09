@@ -35,7 +35,7 @@ camApp.controller('attributeDetailController', [
                 }
 
             }).error(function (err) {
-            console.log(err);
+            ngNotifier.error(err);
         });
 
 
@@ -83,7 +83,7 @@ camApp.controller('attributeDetailController', [
                 .success(function (data, status) {
                     Scopes.get('detailController').getAssetDetail($scope.selectedAssetName, ATTRIBUTES);
                     $ngDialog.close();
-                    ngNotifier.notify('Success!!!');
+                    ngNotifier.success();
                     $route.reload();
                 }).error(function (err) {
                 $ngDialog.close();

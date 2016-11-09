@@ -14,7 +14,6 @@ camApp.controller('detailController',
         $scope.invalidNameMsg = INVALID_NAME_MSG;
         $scope.nameIsMandatory = NAME_IS_MANDATORY_MSG;
 
-
         $scope.formatAssetDetailTableRow = function (data) {
             var attribute = {};
             attribute.name = data.normalizedName;

@@ -3,6 +3,7 @@ package it.eng.cam.rest.security.service.impl;
 
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
 import it.eng.cam.rest.security.authentication.credentials.Credentials;
+import it.eng.cam.rest.security.authorization.DomainOwnershipFilter;
 import it.eng.cam.rest.security.project.Project;
 import it.eng.cam.rest.security.project.ProjectContainerJSON;
 import it.eng.cam.rest.security.project.ProjectsCacheManager;
@@ -10,11 +11,6 @@ import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.security.user.User;
 import it.eng.cam.rest.security.user.UserContainerJSON;
 import it.eng.cam.rest.security.user.UserLoginJSON;
-import it.eng.ontorepo.BeInCpps;
-import it.eng.ontorepo.IndividualItem;
-import it.eng.ontorepo.PropertyValueItem;
-import it.eng.ontorepo.RepositoryDAO;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -23,6 +19,7 @@ import javax.json.JsonObject;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.util.*;
 
 /**
@@ -61,6 +58,17 @@ public class IDMKeystoneService implements IDMService {
         return projects;
     }
 
+
+    public List<Project> getUserProjects(User user) {
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("users").path(user.getId()).path("projects");
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        invocationBuilder.header(Constants.X_AUTH_TOKEN, Constants.ADMIN_TOKEN);
+        Response response = invocationBuilder.get();
+        ProjectContainerJSON projectContainerJSON = response.readEntity(ProjectContainerJSON.class);
+        return projectContainerJSON.getProjects();
+    }
+
     private void buildProjectsCache(List<Project> projects) {
         if (projects == null || projects.isEmpty()) return;
         for (Project project :
@@ -89,14 +97,16 @@ public class IDMKeystoneService implements IDMService {
         Response response = invocationBuilder.get();
         CAMPrincipal user = buildUserFromToken(response);
         user = fetchUser(user);
-        return fetchUserRoles(user);
+        user = fetchUserRoles(user);
+        return fetchUserOrganizations(user);
     }
 
     @Override
     public CAMPrincipal getUserPrincipalByResponse(Response response) {
         CAMPrincipal user = buildUserFromToken(response);
         user = fetchUser(user);
-        return fetchUserRoles(user);
+        user = fetchUserRoles(user);
+        return fetchUserOrganizations(user);
     }
 
 
@@ -115,6 +125,17 @@ public class IDMKeystoneService implements IDMService {
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         invocationBuilder.header(Constants.X_AUTH_TOKEN, Constants.ADMIN_TOKEN);
         return buildRoles(invocationBuilder.get(), user);
+    }
+
+    private CAMPrincipal fetchUserOrganizations(CAMPrincipal user) {
+        List<Project> projects = getUserProjects(user);
+        for (Project project :
+                projects) {
+            CAMPrincipal.Organization org = new CAMPrincipal.Organization();
+            org.setName(project.getName());
+            user.getOrganizations().add(org);
+        }
+        return user;
     }
 
     /** At the moment we are using oAuth2 **/

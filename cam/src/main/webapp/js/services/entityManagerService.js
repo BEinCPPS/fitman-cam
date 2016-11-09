@@ -14,8 +14,12 @@ camApp.factory('entityManager', function ($http) {
         return $http.get(BACK_END_URL_CONST + '/assets?className=' + name + assetsForChildren);
     };
 
-    entityManager.getClasses = function () {
-        return $http.get(BACK_END_URL_CONST + '/classes');
+    entityManager.getClasses = function (useCache) {
+        var cache = {cache: true};
+        if(useCache) {
+            cache = {cache: Boolean(useCache)};
+        }
+        return $http.get(BACK_END_URL_CONST + '/classes', cache);
     }
 
     entityManager.getChildrenForClass = function (className) {
@@ -28,7 +32,8 @@ camApp.factory('entityManager', function ($http) {
     }
 
     entityManager.getDomains = function () {
-        return $http.get(BACK_END_URL_CONST + '/domains');
+        var cache = {cache: true};
+        return $http.get(BACK_END_URL_CONST + '/domains', cache);
     }
 
     entityManager.getAncestors = function (className) {

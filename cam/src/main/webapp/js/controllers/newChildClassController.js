@@ -40,11 +40,11 @@ camApp.controller('newChildClassController', [
                 .then(function (response) {
                     $ngDialog.close();
                     ngNotifier.success()
-                    $route.reload();
-                    // $timeout(function () {
-                    //     Scopes.get('homeController').expandAncestors($scope.className);
-                    // }, 1000);
-
+                    entityManager.getClasses(false).then(function () {
+                        $route.reload();
+                    }, function (error) {
+                        ngNotifier.error(error);
+                    })
                 }, function (error) {
                     $ngDialog.close();
                     $scope.openErrorPanel(error);

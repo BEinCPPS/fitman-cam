@@ -4,7 +4,8 @@ camApp.controller('newAssetModelController', [
     'ngDialog',
     'entityManager',
     'ngNotifier',
-    function ($scope, $q, $ngDialog, entityManager, ngNotifier) {
+    '$route',
+    function ($scope, $q, $ngDialog, entityManager, ngNotifier, $route) {
         $scope.invalidName = false;
         $scope.newAssetModel = {
             name: "",
@@ -33,6 +34,7 @@ camApp.controller('newAssetModelController', [
                     $scope.loadChildren();
                     $ngDialog.close();
                     ngNotifier.success();
+                    $route.reload();
                 }).error(function (err) {
                 $ngDialog.close();
                 ngNotifier.error(err);

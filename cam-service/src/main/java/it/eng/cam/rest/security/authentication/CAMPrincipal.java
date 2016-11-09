@@ -1,6 +1,7 @@
 package it.eng.cam.rest.security.authentication;
 
 import it.eng.cam.rest.security.authentication.credentials.Credentials;
+import it.eng.cam.rest.security.roles.Role;
 import it.eng.cam.rest.security.user.User;
 
 import java.io.Serializable;
@@ -33,6 +34,12 @@ public class CAMPrincipal extends User implements Serializable, java.security.Pr
         return organizations;
     }
 
+    public boolean isAdmin() {
+        if (getRoles().contains(Role.ADMIN))
+            return true;
+        return false;
+    }
+
 
     public static class Organization implements Serializable {
         private int id;
@@ -62,7 +69,6 @@ public class CAMPrincipal extends User implements Serializable, java.security.Pr
         public List<String> getRoles() {
             return roles;
         }
-
 
     }
 

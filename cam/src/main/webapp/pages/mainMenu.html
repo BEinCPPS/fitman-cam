@@ -12,7 +12,7 @@
             </div>
             <div class="collapse navbar-collapse" id="navigationbar">
                 <ul class="nav navbar-nav">
-                    <li ng-class="activeMenuClass()"><a href="#/"><i class="fa fa-home" aria-hidden="true"></i> Classes</a>
+                    <li ng-class="activeMenuClass()"><a href="#/"><i class="fa fa-object-group" aria-hidden="true"></i> Classes</a>
                     </li>
                     <li ng-class="activeMenuDomain()" ng-if="isAdmin()"><a href="#/domain"><i class="fa fa-users"
                                                                                               aria-hidden="true"></i>
@@ -22,9 +22,7 @@
                     <li ng-if="!loggedIn"><a href="/login">Login</a></li>
                     <li ng-if="loggedIn" class="navbar-text">
                         <i class="fa fa-user" aria-hidden="true"></i>
-                        <button uib-popover="{{dynamicPopover.content}}" popover-title="{{dynamicPopover.title}}"
-                                type="button" class="btn btn-default">{{ user.username }}
-                        </button>
+                        <span uib-tooltip-template="'test.html'">antonio</span>
                     </li>
                     <li ng-if="loggedIn"><a href="#" ng-click="doLogout()"><i class="fa fa-sign-in" aria-hidden="true">
                     </i> Logout</a></li>
