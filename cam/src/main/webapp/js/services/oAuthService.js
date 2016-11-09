@@ -5,6 +5,9 @@ camApp.factory('oAuth', function ($http, $window, $q, $cacheFactory) {
 
     var oAuthFactory = {};
     var cache = $cacheFactory('camCache');
+     oAuthFactory.mySelf = function () {
+            return 'oAuth';
+        }
     // log a user in
     oAuthFactory.login = function () {
         // return the promise object and its data

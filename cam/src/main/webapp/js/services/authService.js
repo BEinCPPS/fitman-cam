@@ -15,6 +15,10 @@ camApp
         var authFactory = {};
         var cache = $cacheFactory('camCache');
         // log a user in
+        authFactory.mySelf = function () {
+            return 'Auth';
+        }
+        
         authFactory.login = function (username, password) {
             // return the promise object and its data
             return $http.post(BACK_END_URL_CONST + '/authenticate', {

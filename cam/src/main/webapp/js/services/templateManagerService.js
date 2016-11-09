@@ -18,5 +18,8 @@ camApp.factory('templateManager', function ($http) {
     templateManager.getTreeView = function () {
         return $http.get('pages/templates/treeview.html');
     };
+    templateManager.getUserPopup = function () {
+        return $http.get('pages/templates/userPopupTemplate.html');
+    };
     return templateManager;
 });

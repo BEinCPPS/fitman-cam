@@ -22,9 +22,25 @@
                     <li ng-if="!loggedIn"><a href="/login">Login</a></li>
                     <li ng-if="loggedIn" class="navbar-text">
                         <i class="fa fa-user" aria-hidden="true"></i>
+<!--
                         <button uib-popover="{{dynamicPopover.content}}" popover-title="{{dynamicPopover.title}}"
                                 type="button" class="btn btn-default">{{ user.username }}
                         </button>
+-->  
+                           
+                          <span 
+                            popover-trigger="'mouseenter'"
+                            uib-popover-template="'userPopupTemplate.html'"
+                            popover-title="{{dynamicPopover.title}}" >
+                           {{ user.username }}
+                          </span>
+<!--
+                        <p style="margin-top: 5em;" 
+                           uib-tooltip-template="'userPopupTemplate.html'">
+                            A Thing With an HTML Tooltip
+                        </p>
+-->
+
                     </li>
                     <li ng-if="loggedIn"><a href="#" ng-click="doLogout()"><i class="fa fa-sign-in" aria-hidden="true">
                     </i> Logout</a></li>

@@ -10,8 +10,18 @@ camApp.controller('menuController', [
     '$location',
     'ngNotifier',
     '$window',
-    function ($scope, $rootScope, $location, Auth, Scopes, $location, ngNotifier, $window) {
+    'templateManager',
+    function ($scope, $rootScope, $location, Auth, Scopes, $location, ngNotifier, $window, templateManager) {
         var auth = Auth;
+        $scope.userDisplay={};
+        templateManager.getUserPopup().then(function (response) {
+            $scope.actionTemplate = response.data;
+        }, function (error) {
+            $scope.actionTemplate = '';
+            ngNotifier.error(error);
+            return null;
+        });
+
         Scopes.store('menuController', $scope);
         // get info if a person is logged in
         $scope.loggedIn = auth.isLoggedIn();
@@ -19,7 +29,30 @@ camApp.controller('menuController', [
         auth.getUser()
             .then(function (data) {
                 $scope.user = data.data;
-                console.log($scope.user);
+                console.log($scope.user)
+                
+                if(auth.mySelf()=='oAuth') {
+                    $scope.userDisplay = {
+                        name         : $scope.user.displayName,
+                        email        : $scope.user.email,
+                        roles        : $scope.user.roles,
+                        organizations: $scope.user.organizations
+                    }    
+                } else if(auth.mySelf()=='Auth'){
+                     $scope.userDisplay = {
+                        name         : $scope.user.id,
+                        email        : $scope.user.name,
+                        roles        : null,
+                        organizations: null
+                    }
+                }
+            console.log($scope.userDisplay)
+          
+            $scope.dynamicPopover = {            
+            title: $scope.userDisplay.name
+                
+        };
+                ;
             }, function (error) {
                 ngNotifier.error(error);
             });
@@ -80,10 +113,10 @@ camApp.controller('menuController', [
             else return '';
         }
 
-        $scope.dynamicPopover = {
-            content: 'Hello, World!',
-            templateUrl: 'myPopoverTemplate.html',
-            title: 'Title'
-        };
+//        $scope.dynamicPopover = {
+//            content: 'Hello, World!',
+//            templateUrl: 'myPopoverTemplate.html',
+//            title: 'User: ' + $scope.userDisplay.name
+//        };
 
     }]);
