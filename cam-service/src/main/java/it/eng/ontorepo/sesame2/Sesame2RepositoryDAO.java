@@ -503,7 +503,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         }
         className = Util.getGlobalName(getImplicitNamespace(), className);
         String qs = QUERY_INDIVIDUALS_BY_SUB_CLASSES.replace(VARTAG, className);
-        return doGetIndividuals(qs, className);
+        return doGetIndividuals(qs, null);
     }
 
     @Override
