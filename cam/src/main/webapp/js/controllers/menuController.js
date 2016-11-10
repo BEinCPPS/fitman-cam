@@ -36,8 +36,6 @@ camApp.controller('menuController', [
                         organizations: $scope.user.organizations
                     }
                 }
-                console.log($scope.userDisplay)
-
                 $scope.dynamicPopover = {
                     title: $scope.userDisplay.name
 

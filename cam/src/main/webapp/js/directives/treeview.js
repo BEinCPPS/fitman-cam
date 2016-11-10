@@ -1,5 +1,5 @@
 (function (l) {
-    l.module("angularTreeview", []).directive("treeModel", function ($compile) {
+    l.module("angularTreeview", []).directive("treeModel",['currentNode', '$compile', function (currentNode, $compile) {
         return {
             restrict: "A",
             link: function (a, g, c) {
@@ -28,7 +28,6 @@
                     "data-right-click-enabled=\""+l+"\" >" +
                     "</div>" +
                     "</li></ul>";
-                console.log(k);
                 e && e.length && (c.angularTreeview ? (a.$watch(e, function (m, b) {
                         g.empty().html($compile(k)(a))
                     }, !1),
@@ -48,6 +47,10 @@
                                 a.currentNode && a.currentNode.selected && (a.currentNode.selected = void 0);
                                 c.selected = "selected";
                                 a.currentNode = c;
+                                if(a.currentNode.className)
+                                    currentNode.setClass(a.currentNode);
+                                else if(a.currentNode.name)
+                                    currentNode.setDomain(a.currentNode);
                                 a.assetList = a.loadChildren(); //TODO
                             },
                         a.classRightClicked = function (event) {
@@ -63,7 +66,7 @@
                 ) : g.html($compile(k)(a)))
             }
         }
-    })
+    }])
 })(angular);
 
 
