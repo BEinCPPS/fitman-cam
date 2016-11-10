@@ -18,7 +18,7 @@ camApp
         authFactory.mySelf = function () {
             return 'Auth';
         }
-        
+
         authFactory.login = function (username, password) {
             // return the promise object and its data
             return $http.post(BACK_END_URL_CONST + '/authenticate', {
@@ -27,6 +27,7 @@ camApp
             }).success(function (data, status, headers) {
                 AuthToken.setToken(headers('X-Subject-Token'));
                 cache.remove('user');
+                authFactory.isInLogout = false;
                 return data;
             }).error(function (error) {
                 return error;
@@ -37,7 +38,15 @@ camApp
         authFactory.logout = function () {
             // clear the token
             AuthToken.setToken();
-            $location.path('/login');
+            authFactory.isInLogout = true;
+            //$location.path('/login');
+            authFactory.public();
+        };
+
+        authFactory.public = function () {
+            // clear the token
+            AuthToken.setToken();
+            $location.path('/');
         };
 
         // check if a user is logged in
@@ -52,10 +61,10 @@ camApp
         // get the logged in user
         authFactory.getUser = function () {
             if (AuthToken.getToken()) {
-                if(!cache.get('user')) {
+                if (!cache.get('user')) {
                     var promise = $http.get(BACK_END_URL_CONST + '/logged', {cache: false});
-                    cache.put('user',promise);
-                    return promise ;
+                    cache.put('user', promise);
+                    return promise;
                 }
                 else
                     return cache.get('user');
@@ -123,9 +132,12 @@ camApp
             // if our server returns a 403 forbidden response
             if (response.status == 403 || response.status == 401) {
                 AuthToken.setToken();
-                $location.path('/login');
+                //$location.path('/login');
+                if (response.config.url.indexOf('authenticate') > 0) {
+                    $location.path('/login');
+                }
+                else $location.path('/');
             }
-
             // return the errors from the server as a promise
             return $q.reject(response);
         };

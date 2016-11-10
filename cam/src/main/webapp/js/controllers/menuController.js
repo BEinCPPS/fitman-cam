@@ -38,16 +38,16 @@ camApp.controller('menuController', [
                 }
                 $scope.dynamicPopover = {
                     title: $scope.userDisplay.name
-
                 };
-                ;
+
             }, function (error) {
                 ngNotifier.error(error);
             });
         $rootScope.$on('$routeChangeStart', function () {
             $scope.loggedIn = auth.isLoggedIn();
-            if (!$scope.loggedIn && !auth.isInLogout)
+            if (!$scope.loggedIn && !auth.isInLogout) {
                 auth.login();
+            }
         });
 
         $scope.isAdmin = function () {
@@ -77,7 +77,7 @@ camApp.controller('menuController', [
                     // if a user successfully logs in, redirect to users page
                     if (data.token) {
                         $scope.user = undefined;
-                        $location.path('/');
+                        $location.path('/classes');
                     }
                     else
                         ngNotifier.info(data);
