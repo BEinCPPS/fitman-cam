@@ -81,6 +81,10 @@ a:link, a:visited, a:hover {
     color: red;
 }
 
+.list-style {
+    list-style-type: none;
+}
+
 .ui-helper-hidden {
     display: none;
 }
@@ -389,7 +393,7 @@ div#asset-detail {
 }
 
 div#button-tree-controllers {
-    margin-left: 40px;
+    margin-left: 25px;
     margin-bottom: 15px;
 }
 
