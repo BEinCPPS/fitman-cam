@@ -9,17 +9,12 @@ camApp.controller('domainController', [
     'ngNotifier',
     'templateManager',
     '$route',
-    function ($scope, Scopes, $q, $ngDialog, NgTableParams, entityManager, ngNotifier, templateManager, $route) {
+    'currentNode',
+    '$window',
+    function ($scope, Scopes, $q, $ngDialog, NgTableParams, entityManager, ngNotifier
+        , templateManager, $route, currentNode, $window) {
         Scopes.store('domainController', $scope);
-        $scope.assetList = [];
-        templateManager.getDomainAction().then(function (response) {
-            $scope.actionTemplate = response.data;
-        }, function (error) {
-            $scope.actionTemplate = '';
-            ngNotifier.error(error);
-            return null;
-        });
-
+        //Load Domains
         (function getDomains() {
             entityManager.getDomains().then(function (response) {
                 $scope.domainsList = [];
@@ -36,8 +31,35 @@ camApp.controller('domainController', [
                 })
             }, function (error) {
                 ngNotifier.error(error);
+            }).then(function () {
+                if (currentNode.getDomain().name) {
+                    $scope.currentNode = currentNode.getDomain();
+                    $scope.expandAncestors($scope.currentNode.name);
+                }
+            }, function (error) {
+                ngNotifier.error(error);
             });
         })();
+
+        $scope.expandAncestors = function (domainName) {
+            for (var i in $scope.domainsList) {
+                if ($scope.domainsList[i].name === domainName) {
+                    $scope.domainsList[i].selected = 'selected';
+                    $scope.selectNodeLabel($scope.domainsList[i], $window.event);
+                    return;
+                }
+            }
+        };
+
+        $scope.assetList = [];
+        templateManager.getDomainAction().then(function (response) {
+            $scope.actionTemplate = response.data;
+        }, function (error) {
+            $scope.actionTemplate = '';
+            ngNotifier.error(error);
+            return null;
+        });
+
 
         $scope.columnDefs = [
             {
@@ -147,11 +169,8 @@ camApp.controller('domainController', [
             });
         }
 
-
         $scope.closePanel = function () {
             $scope.asset = null;
             $ngDialog.close();
         }
-
-
     }]);

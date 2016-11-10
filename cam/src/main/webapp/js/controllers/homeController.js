@@ -9,18 +9,51 @@ camApp.controller('homeController', [
     'ngNotifier',
     'entityManager',
     'templateManager',
-    function ($scope, Scopes, $routeParams, $route, $q, $ngDialog, $timeout, ngNotifier, entityManager, templateManager) {
+    'currentNode',
+    '$window',
+    function ($scope, Scopes, $routeParams, $route, $q, $ngDialog, $timeout, ngNotifier, entityManager, templateManager
+        , currentNode, $window) {
         Scopes.store('homeController', $scope);
         $scope.getAssets = function (name, retrieveChildren) {
             entityManager.getAssets(name, retrieveChildren)
                 .then(function (response) {
                     //$scope.fetchAssetList(response.data, function (res) {
-                        $scope.assetList = $scope.formatAssetListTable(response.data, name);
+                    $scope.assetList = $scope.formatAssetListTable(response.data, name);
                     //});
                 }, function (error) {
                     ngNotifier.error(error);
                 });
         }
+
+        $scope.expandAncestors = function (elem) {
+            function search(array, name) {
+                for (var i in array) {
+                    if (array[i].className === name) {
+                        array[i].collapsed = false;
+                        if (isLeaf) {
+                            array[i].selected = 'selected';
+                            $scope.selectNodeLabel(array[i], $window.event);
+                        }
+                        return;
+                    }
+                    search(array[i].children, name);
+                }
+            }
+
+            var promise = entityManager.getAncestors(elem);
+            var isLeaf = false
+            promise.then(function (response) {
+                var dataStr = response.data + '';
+                var ancestors = dataStr.split(',');
+                for (var i = 0; i < ancestors.length; i++) {
+                    isLeaf = ancestors.length - 1 == i;
+                    search($scope.classList, ancestors[i]);
+                }
+            }, function (error) {
+                ngNotifier.error(error);
+            });
+
+        };
 
         if (!isEmpty($routeParams.className)) {
             setTimeout(function () { //CHIAMATA ASINCRONA PER RICARICARE GLI ASSET DELLA CLASSE
@@ -29,9 +62,15 @@ camApp.controller('homeController', [
                 $scope.getAssets($routeParams.className, true);
                 $scope.expandAncestors($routeParams.className);
                 $scope.newAssetVisible = true;
-            }, 0);
+            }, 10);
             $scope.newAssetVisible = true;
+        } else {
+            if (currentNode.getClass().className) {
+                $scope.currentNode = currentNode.getClass();
+                $scope.expandAncestors($scope.currentNode.className);
+            }
         }
+
 
         $scope.regexPattern = REGEX_PATTERN;
         $scope.invalidNameMsg = INVALID_NAME_MSG;
@@ -231,17 +270,6 @@ camApp.controller('homeController', [
             ngNotifier.error($scope.errorMsg);
         }
 
-        $scope.backToHomeWithExpandedTree = function (className) {
-            $scope.ancestorClassName = className;
-            entityManager.getAncestors(className).then(function (response) {
-                $route.reload();
-                $scope.init();
-            }, function (error) {
-                ngNotifier.error(error);
-            });
-
-        }
-
         $scope.collapseAllTreeNodes = function () {
             $scope.classList.forEach(function (elem) {
                 elem.collapsed = true;
@@ -281,34 +309,6 @@ camApp.controller('homeController', [
             $('[data-toggle="tooltip"]').tooltip();
         }
 
-
-        $scope.expandAncestors = function (elem) {
-            function search(array, name) {
-                for (var i in array) {
-                    if (array[i].className === name) {
-                        array[i].collapsed = false;
-                        if (isLeaf)
-                            array[i].selected = 'selected';
-                        return;
-                    }
-                    search(array[i].children, name);
-                }
-            }
-
-            var promise = entityManager.getAncestors(elem);
-            var isLeaf = false
-            promise.then(function (response) {
-                var dataStr = response.data + '';
-                var ancestors = dataStr.split(',');
-                for (var i = 0; i < ancestors.length; i++) {
-                    isLeaf = ancestors.length - 1 == i;
-                    search($scope.classList, ancestors[i]);
-                }
-            }, function (error) {
-                ngNotifier.error(error);
-            });
-
-        };
 
         templateManager.getAssetAction().then(function (response) {
             $scope.actionAssetTemplate = response.data;
