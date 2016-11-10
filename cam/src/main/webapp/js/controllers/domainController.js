@@ -81,6 +81,11 @@ camApp.controller('domainController', [
             "bDestroy": true,
             "oLanguage": {
                 "sSearch": "Filter: "
+            }, "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                if (aData[4] == "true") {
+                    var css = $(nRow).css();
+                    $(nRow).css('danger ' + css);
+                }
             },
             "fnDrawCallback": function () {
                 Scopes.get('homeController').addTooltipToAssetModel(); //TODO

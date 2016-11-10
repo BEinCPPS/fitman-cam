@@ -1,11 +1,14 @@
-<form class="form-inline">
-    <div class="form-group">
-        User: <b>{{userDisplay.name}}</b>
+<form class="form-horizontal">
+    <div class="form-group form-group-sm">
+        <label class="control-label col-xs-2">User:</label>
+        <div class="col-xs-10">
+            <p class="form-control-static"> {{userDisplay.name}}</p>
+        </div>
     </div>
-</form>
-<br>    
-<form class="form-inline">
-    <div class="form-group">
-        Email: <b>{{userDisplay.email}}</b>
-    </div>    
+    <div class="form-group form-group-sm">
+        <label class="control-label col-xs-2">Email:</label>
+        <div class="col-xs-10">
+            <p class="form-control-static">{{userDisplay.email}}</p>
+        </div>
+    </div>
 </form>

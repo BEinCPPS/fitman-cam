@@ -12,7 +12,8 @@
             </div>
             <div class="collapse navbar-collapse" id="navigationbar">
                 <ul class="nav navbar-nav">
-                    <li ng-class="activeMenuClass()"><a href="#/"><i class="fa fa-object-group" aria-hidden="true"></i> Classes</a>
+                    <li ng-class="activeMenuClass()"><a href="#/"><i class="fa fa-object-group" aria-hidden="true"></i>
+                        Classes</a>
                     </li>
                     <li ng-class="activeMenuDomain()" ng-if="isAdmin()"><a href="#/domain"><i class="fa fa-users"
                                                                                               aria-hidden="true"></i>
@@ -22,19 +23,13 @@
                     <li ng-if="!loggedIn"><a href="/login">Login</a></li>
                     <li ng-if="loggedIn" class="navbar-text">
                         <i class="fa fa-user" aria-hidden="true"></i>
-                           
-                          <span 
-                            popover-trigger="'mouseenter'"
-                            uib-popover-template="'userPopupTemplate.html'"
-                            popover-title="{{dynamicPopover.title}}" >
+
+                        <span
+                                popover-trigger="'mouseenter'" popover-placement="left"
+                                uib-popover-template="'userPopupTemplate.html'"
+                                popover-title="{{dynamicPopover.title}}">
                            {{ user.username }}
                           </span>
-<!--
-                        <p style="margin-top: 5em;" 
-                           uib-tooltip-template="'userPopupTemplate.html'">
-                            A Thing With an HTML Tooltip
-                        </p>
--->
 
                     </li>
                     <li ng-if="loggedIn"><a href="#" ng-click="doLogout()"><i class="fa fa-sign-in" aria-hidden="true">

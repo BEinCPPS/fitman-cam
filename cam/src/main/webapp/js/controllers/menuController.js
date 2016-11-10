@@ -9,21 +9,9 @@ camApp.controller('menuController', [
     'Scopes',
     'ngNotifier',
     '$window',
-    function ($scope, $rootScope, $location, Auth, Scopes, $location, ngNotifier, $window) {
+    function ($scope, $rootScope, $location, Auth, Scopes, ngNotifier, $window) {
         var auth = Auth;
-        $scope.userDisplay={};
-        templateManager.getUserPopup().then(function (response) {
-            $scope.actionTemplate = response.data;
-        }, function (error) {
-            $scope.actionTemplate = '';
-            ngNotifier.error(error);
-            return null;
-        });
-
-
-    function ($scope, $rootScope, $location, auth, Scopes, ngNotifier, $window) {
-        //var auth = Auth;
-
+        $scope.userDisplay = {};
         Scopes.store('menuController', $scope);
         // get info if a person is logged in
         $scope.loggedIn = auth.isLoggedIn();
@@ -32,28 +20,28 @@ camApp.controller('menuController', [
             .then(function (data) {
                 $scope.user = data.data;
                 console.log($scope.user)
-                
-                if(auth.mySelf()=='oAuth') {
+
+                if (auth.mySelf() == 'oAuth') {
                     $scope.userDisplay = {
-                        name         : $scope.user.displayName,
-                        email        : $scope.user.email,
-                        roles        : $scope.user.roles,
+                        name: $scope.user.displayName,
+                        email: $scope.user.email,
+                        roles: $scope.user.roles,
                         organizations: $scope.user.organizations
-                    }    
-                } else if(auth.mySelf()=='Auth'){
-                     $scope.userDisplay = {
-                        name         : $scope.user.id,
-                        email        : $scope.user.name,
-                        roles        : null,
+                    }
+                } else if (auth.mySelf() == 'Auth') {
+                    $scope.userDisplay = {
+                        name: $scope.user.id,
+                        email: $scope.user.name,
+                        roles: null,
                         organizations: null
                     }
                 }
-            console.log($scope.userDisplay)
-          
-            $scope.dynamicPopover = {            
-            title: $scope.userDisplay.name
-                
-        };
+                console.log($scope.userDisplay)
+
+                $scope.dynamicPopover = {
+                    title: $scope.userDisplay.name
+
+                };
                 ;
             }, function (error) {
                 ngNotifier.error(error);
@@ -115,10 +103,5 @@ camApp.controller('menuController', [
             else return '';
         }
 
-//        $scope.dynamicPopover = {
-//            content: 'Hello, World!',
-//            templateUrl: 'myPopoverTemplate.html',
-//            title: 'User: ' + $scope.userDisplay.name
-//        };
 
     }]);
