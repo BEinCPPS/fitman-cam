@@ -33,7 +33,7 @@ camApp.controller('menuController', [
                         name: $scope.user.id,
                         email: $scope.user.name,
                         roles: null,
-                        organizations: null
+                        organizations: $scope.user.organizations
                     }
                 }
                 console.log($scope.userDisplay)
