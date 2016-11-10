@@ -86,6 +86,8 @@ public interface RepositoryDAO {
      */
     public List<IndividualItem> getIndividuals() throws RuntimeException;
 
+    List<IndividualItem> getIndividualsForDomain(String domain) throws RuntimeException;
+
     /**
      * Reads all Individual declarations of a given Class from the Reference Ontology in
      * the Repository, and returns them as a flat list of items.

@@ -21,5 +21,6 @@ camApp.factory('templateManager', function ($http) {
     templateManager.getUserPopup = function () {
         return $http.get('pages/templates/userPopupTemplate.html');
     };
+=======
     return templateManager;
 });

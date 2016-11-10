@@ -133,12 +133,14 @@ div[data-tree-model] li .expanded {
     padding: 1px 10px;
     background-image: url("../img/arrow_down.png");
     background-repeat: no-repeat;
+    background-position: -5px;
 }
 
 div[data-tree-model] li .collapsed {
     padding: 1px 10px;
     background-image: url("../img/arrow_right.png");
     background-repeat: no-repeat;
+    background-position: -5px;
 }
 
 div[data-tree-model] li .normal {

@@ -1,9 +1,12 @@
 package it.eng.ontorepo;
 
+import it.eng.cam.rest.security.authentication.CAMPrincipal;
+import it.eng.cam.rest.security.authentication.CAMSecurityContext;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
+import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,16 +25,6 @@ public class IndividualtemToAssetTransformer {
         return doTransformAll(dao, individuals, false);
     }
 
-    private static List<Asset> doTransformAll(RepositoryDAO dao, List<IndividualItem> individuals, boolean lostDomain) throws java.text.ParseException {
-        List<Asset> individualItemWrappers = new ArrayList<>();
-        if (individuals == null) return null;
-        for (IndividualItem individual :
-                individuals) {
-            individualItemWrappers.add(transform(dao, individual, lostDomain));
-        }
-        return individualItemWrappers;
-    }
-
     public static Asset transform(RepositoryDAO dao, IndividualItem individual, boolean lostDomain) throws java.text.ParseException {
         return doTransform(dao, individual, lostDomain);
     }
@@ -40,11 +33,22 @@ public class IndividualtemToAssetTransformer {
         return doTransform(dao, individual, false);
     }
 
+    private static List<Asset> doTransformAll(RepositoryDAO dao, List<IndividualItem> individuals, boolean lostDomain) throws java.text.ParseException {
+        List<Asset> individualItemWrappers = new ArrayList<>();
+        if (individuals == null) return null;
+        for (IndividualItem individual :
+                individuals) {
+            individualItemWrappers.add(doTransform(dao, individual, lostDomain));
+        }
+        return individualItemWrappers;
+    }
+
+
     private static Asset doTransform(RepositoryDAO dao, IndividualItem individual, boolean lostDomain) throws java.text.ParseException {
         SesameRepoManager.releaseRepoDaoConn(dao);
         dao = SesameRepoManager.getRepoInstance(null);
         String domain = "";
-        String domainIri = ""; //TODO
+        String domainIri = "";
         String date = "";
         List<PropertyValueItem> individualAttributes = dao.getIndividualAttributes(individual.getIndividualName());
         for (PropertyValueItem attribute :

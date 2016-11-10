@@ -23,6 +23,7 @@ camApp.controller('confirmDeleteController', [
                         //$http.delete(BACK_END_URL_CONST + urlFragment + $scope.elementToDelete)
                         entityManager.deleteIndividual($scope.typeToDelete, $scope.elementToDelete, $scope.individualName)
                             .then(function (response) {
+                                ngNotifier.success();
                                 $ngDialog.close();
                                 $route.reload();
                                 $timeout(function () {
@@ -34,7 +35,7 @@ camApp.controller('confirmDeleteController', [
                             });
 
                     }, function (error) {
-                        console.log(error); //TODO ERROR
+                        ngNotifier.error(error);
                     });
             } else
                 entityManager.deleteIndividual($scope.typeToDelete, $scope.elementToDelete, $scope.individualName)

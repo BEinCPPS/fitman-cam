@@ -5,7 +5,7 @@ package it.eng.ontorepo;
  */
 public class Asset extends IndividualItem {
 
-    private String domain;
+    private String domain; //domainName
     private String domainIri;
     private String createdOn;
     private boolean lostDomain;

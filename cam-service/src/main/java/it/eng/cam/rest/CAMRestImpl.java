@@ -1,5 +1,6 @@
 package it.eng.cam.rest;
 
+import it.eng.cam.rest.security.authorization.AssetOwnershipFilter;
 import it.eng.cam.rest.security.project.Project;
 import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
@@ -10,6 +11,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +26,7 @@ public class CAMRestImpl {
         return dao.getClassHierarchy();
     }
 
-        public static List<ClassItem> getClasses(RepositoryDAO dao, boolean checkNormalizedName, boolean flat) {
+    public static List<ClassItem> getClasses(RepositoryDAO dao, boolean checkNormalizedName, boolean flat) {
         ClassItem root = getClassHierarchy(dao);
         List<ClassItem> subClasses = root.getSubClasses();
         if (!checkNormalizedName)
@@ -57,34 +59,6 @@ public class CAMRestImpl {
         return IndividualtemToAssetTransformer.transformAll(dao, dao.getIndividuals(className));
     }
 
-    private static void deepSearchFirstRecursive(RepositoryDAO dao, Map<String, Boolean> visited, ClassItem clazz,
-                                                 List results, boolean searchIndividuals) {
-        visited.put(clazz.getNormalizedName(), true);
-        int i = 0;
-        for (ClassItem cls : clazz.getSubClasses()) {
-            if (null == visited.get(cls.getNormalizedName()) || !visited.get(cls.getNormalizedName())) {
-                if (searchIndividuals) {
-                    if (i >= 0) {
-                        dao = releaseRepo(dao);
-                        i = 0;
-                    }
-                    results.addAll(dao.getIndividuals(cls.getNormalizedName()));
-                    i++;
-                } else {
-                    results.add(cls);
-                }
-                deepSearchFirstRecursive(dao, visited, cls, results, searchIndividuals);
-            }
-        }
-    }
-
-//    private static List<IndividualItem> deepSearchFirst(RepositoryDAO dao, ClassItem clazz) {
-//        List<IndividualItem> results = new ArrayList<>();
-//        Map<String, Boolean> visited = new HashMap<>(); // null
-//        results.addAll(dao.getIndividuals(clazz.getNormalizedName()));
-//        deepSearchFirstRecursive(dao, visited, clazz, results, true);
-//        return results;
-//    }
 
     public static ClassItem deepSearchClasses(List<ClassItem> items, String className) {
         ClassItem retval = null;
@@ -101,11 +75,8 @@ public class CAMRestImpl {
         return null;
     }
 
-    public static List<Asset> getIndividualsForChildren(RepositoryDAO dao, String className) throws Exception{
-        //List<ClassItem> classes = CAMRestImpl.getClasses(dao, false, false);
-        //ClassItem fatherClass = CAMRestImpl.deepSearchClasses(classes, className);
+    public static List<Asset> getIndividualsForChildren(RepositoryDAO dao, String className) throws Exception {
         return IndividualtemToAssetTransformer.transformAll(dao, dao.getIndividualsBySubClasses(className));
-        //deepSearchFirst(dao, fatherClass);
     }
 
     public static IndividualItem getIndividual(RepositoryDAO dao, String className) {
@@ -138,7 +109,6 @@ public class CAMRestImpl {
 
     public static void createAssetModel(RepositoryDAO dao, String name, String className, String domainName) {
         dao.createAssetModel(name, className, domainName);
-
     }
 
     public static void createAsset(RepositoryDAO dao, String name, String modelName, String domainName) {
@@ -171,19 +141,22 @@ public class CAMRestImpl {
             List<IndividualItem> individuals = dao.getIndividualsNoDomain();
             for (IndividualItem individual :
                     individuals) {
-                individualsToGive.add(IndividualtemToAssetTransformer.transform(dao, individual));
+                Asset asset = IndividualtemToAssetTransformer.transform(dao, individual);
+                if (asset != null)
+                    individualsToGive.add(asset);
             }
             dao = releaseRepo(dao);
             //Extract and insert Lost Domains assets!
             List<Project> projects = extractLostDomainProjects(dao);
             for (Project project :
                     projects) {
-                individualsToGive.addAll(IndividualtemToAssetTransformer.transformAll(dao,
-                        dao.getIndividuals(Constants.IDM_PROJECTS_PREFIX + project.getId()), true));
+                List<Asset> assets = IndividualtemToAssetTransformer.transformAll(dao,
+                        dao.getIndividualsForDomain(Constants.IDM_PROJECTS_PREFIX + "/" + project.getId()));
+                individualsToGive.addAll(assets);
             }
             return individualsToGive;
         } else
-            return IndividualtemToAssetTransformer.transformAll(dao, dao.getIndividuals(Constants.IDM_PROJECTS_PREFIX + domainId), false);
+            return IndividualtemToAssetTransformer.transformAll(dao, dao.getIndividualsForDomain(Constants.IDM_PROJECTS_PREFIX + "/" + domainId));
     }
 
     private static List<Project> extractLostDomainProjects(RepositoryDAO dao) {
@@ -273,6 +246,27 @@ public class CAMRestImpl {
             throw new WebApplicationException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
+    private static void deepSearchFirstRecursive(RepositoryDAO dao, Map<String, Boolean> visited, ClassItem clazz,
+                                                 List results, boolean searchIndividuals) {
+        visited.put(clazz.getNormalizedName(), true);
+        int i = 0;
+        for (ClassItem cls : clazz.getSubClasses()) {
+            if (null == visited.get(cls.getNormalizedName()) || !visited.get(cls.getNormalizedName())) {
+                if (searchIndividuals) {
+                    if (i >= 0) {
+                        dao = releaseRepo(dao);
+                        i = 0;
+                    }
+                    results.addAll(dao.getIndividuals(cls.getNormalizedName()));
+                    i++;
+                } else {
+                    results.add(cls);
+                }
+                deepSearchFirstRecursive(dao, visited, cls, results, searchIndividuals);
+            }
         }
     }
 

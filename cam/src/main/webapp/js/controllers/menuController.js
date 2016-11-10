@@ -5,13 +5,11 @@ camApp.controller('menuController', [
     '$scope',
     '$rootScope',
     '$location',
-    'Auth', //option oAuth or auth for Keystone
+    '${authentication.service}', //option oAuth or auth for Keystone
     'Scopes',
-    '$location',
     'ngNotifier',
     '$window',
-    'templateManager',
-    function ($scope, $rootScope, $location, Auth, Scopes, $location, ngNotifier, $window, templateManager) {
+    function ($scope, $rootScope, $location, Auth, Scopes, $location, ngNotifier, $window) {
         var auth = Auth;
         $scope.userDisplay={};
         templateManager.getUserPopup().then(function (response) {
@@ -21,6 +19,10 @@ camApp.controller('menuController', [
             ngNotifier.error(error);
             return null;
         });
+
+
+    function ($scope, $rootScope, $location, auth, Scopes, ngNotifier, $window) {
+        //var auth = Auth;
 
         Scopes.store('menuController', $scope);
         // get info if a person is logged in

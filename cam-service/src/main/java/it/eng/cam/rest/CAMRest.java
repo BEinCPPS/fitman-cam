@@ -1,6 +1,8 @@
 package it.eng.cam.rest;
 
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
+import it.eng.cam.rest.security.authorization.AssetOwnershipFilter;
+import it.eng.cam.rest.security.authorization.DomainOwnershipFilter;
 import it.eng.cam.rest.security.project.Project;
 import it.eng.cam.rest.security.service.AuthenticationService;
 import it.eng.cam.rest.security.service.Constants;
@@ -40,6 +42,8 @@ import java.util.stream.Collectors;
 @PermitAll
 public class CAMRest {
     private static final Logger logger = LogManager.getLogger(CAMRest.class.getName());
+    @Context
+    SecurityContext securityContext;
 
     public CAMRest() {
     }
@@ -172,7 +176,7 @@ public class CAMRest {
     public List<Asset> getAssetByName(@PathParam("assetName") String assetName) {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
         try {
-            List<Asset> assets = CAMRestImpl.getIndividuals(repoInstance);
+            List<Asset> assets = AssetOwnershipFilter.filterAll(CAMRestImpl.getIndividuals(repoInstance), securityContext);
             if (null == assetName || "".equals(assetName.trim()))
                 return assets.stream()
                         .filter(asset ->
@@ -199,8 +203,8 @@ public class CAMRest {
             if (null == className)
                 return getAssetByName(null);
             if (retrieveForChildren)
-                return CAMRestImpl.getIndividualsForChildren(repoInstance, className);
-            return CAMRestImpl.getIndividuals(repoInstance, className);
+                return AssetOwnershipFilter.filterAll(CAMRestImpl.getIndividualsForChildren(repoInstance, className), securityContext);
+            return AssetOwnershipFilter.filterAll(CAMRestImpl.getIndividuals(repoInstance, className), securityContext);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -562,7 +566,6 @@ public class CAMRest {
         }
     }
 
-
     @GET
     @Path("/models/{modelName}")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
@@ -570,7 +573,7 @@ public class CAMRest {
     public List<Asset> getModelByName(@PathParam("modelName") String modelName) {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
         try {
-            List<Asset> models = CAMRestImpl.getIndividuals(repoInstance);
+            List<Asset> models = AssetOwnershipFilter.filterAll(CAMRestImpl.getIndividuals(repoInstance), securityContext);
             if (null == modelName)
                 return models.stream()
                         .filter(asset -> CAMRestImpl.isModel(repoInstance, getClass(), asset.getIndividualName()))
@@ -596,7 +599,7 @@ public class CAMRest {
         try {
             if (null == className)
                 return getModelByName(null);
-            List<Asset> individuals = CAMRestImpl.getIndividuals(repoInstance, className);
+            List<Asset> individuals = AssetOwnershipFilter.filterAll(CAMRestImpl.getIndividuals(repoInstance, className), securityContext);
             return individuals.stream()
                     .filter(indiv -> CAMRestImpl.isModel(repoInstance, getClass(), indiv.getIndividualName()))
                     .collect(Collectors.toList());
@@ -947,12 +950,12 @@ public class CAMRest {
     // DOMAINS
     @GET
     @Path("/domains")
-    @RolesAllowed({Role.ADMIN})
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public List<Project> getDomains() {
         try {
             IDMKeystoneService idmService = new IDMKeystoneService();
-            return idmService.getProjects();
+            return DomainOwnershipFilter.filterAll(idmService.getProjects(), securityContext);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -961,13 +964,13 @@ public class CAMRest {
 
     @GET
     @Path("/domains/{domainId}/assets")
-    @RolesAllowed({Role.ADMIN})
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
     public List<Asset> getAssetsForDomain(@PathParam("domainId") String domainId) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            List<Asset> assets = CAMRestImpl.getAssetsForDomain(repoInstance, domainId);
+            List<Asset> assets = AssetOwnershipFilter.filterAll(CAMRestImpl.getAssetsForDomain(repoInstance, domainId), securityContext);
             return assets.stream()
                     .filter(asset ->
                             asset.getNamespace().equalsIgnoreCase(SesameRepoManager.getNamespace()))
@@ -995,8 +998,6 @@ public class CAMRest {
         }
     }
 
-    @Context
-    SecurityContext securityContext;
 
     @GET
     @Path("/logged")

@@ -134,6 +134,15 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             "). "
             + "} ORDER by ?name";
 
+    private static final String QUERY_INDIVIDUALS_FOR_DOMAIN = "SELECT DISTINCT ?name ?class "
+            + "WHERE { "
+            + "?name rdf:type ?class; rdf:type owl:NamedIndividual. "
+            + "?name <"+VARTAG+"> ?domain ."
+            + "FILTER(!(?class = owl:NamedIndividual)"
+            + " &&  regex(str(?domain), \"^"+VARTAG2+"\")" +
+            "). "
+            + "} ORDER by ?name";
+
     private static final String QUERY_ALL_DOMAINS_IDM_URI = "SELECT DISTINCT ?domain "
             + "WHERE { "
             + "?name <" + VARTAG + "> ?domain "
@@ -467,6 +476,13 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     public List<IndividualItem> getIndividualsNoDomain() throws RuntimeException {
         String query = QUERY_INDIVIDUALS_NO_DOMAIN.replace(VARTAG, BeInCpps.SYSTEM_NS + BeInCpps.ownedBy)
                 .replace(VARTAG2, SesameRepoManager.getNamespace());
+        return doGetIndividuals(query, null);
+    }
+
+    @Override
+    public List<IndividualItem> getIndividualsForDomain(String domain) throws RuntimeException {
+        String query = QUERY_INDIVIDUALS_FOR_DOMAIN.replace(VARTAG, BeInCpps.SYSTEM_NS + BeInCpps.ownedBy)
+                .replace(VARTAG2, domain);
         return doGetIndividuals(query, null);
     }
 
