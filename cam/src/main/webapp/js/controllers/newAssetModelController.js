@@ -5,13 +5,15 @@ camApp.controller('newAssetModelController', [
     'entityManager',
     'ngNotifier',
     '$route',
-    function ($scope, $q, $ngDialog, entityManager, ngNotifier, $route) {
+    'Scopes',
+    function ($scope, $q, $ngDialog, entityManager, ngNotifier, $route, Scopes) {
         $scope.invalidName = false;
         $scope.newAssetModel = {
             name: "",
             className: $scope.currentNode.className,
             domainName: ""
         };
+        $scope.domainsList = Scopes.get('homeController').domainsListNoDomain;
 
         $scope.closeNewAssetModelPanel = function () {
             $ngDialog.close();

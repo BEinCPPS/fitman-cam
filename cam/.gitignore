@@ -1,5 +1,4 @@
-target/*
-.idea/*
-.settings/*
 /target/
-pom.xml
+.idea/
+.settings/
+/CAM.iml

@@ -18,6 +18,7 @@ camApp.controller('domainController', [
         (function getDomains() {
             entityManager.getDomains().then(function (response) {
                 $scope.domainsList = [];
+                $scope.domainsListNoDomain = [];
                 var ownList = [];
                 angular.copy(response.data, ownList);
                 ownList.forEach(function (value) {
@@ -28,7 +29,10 @@ camApp.controller('domainController', [
                         description: value.description,
                     };
                     $scope.domainsList.push(domain);
-                })
+                    if (domain.name.toUpperCase().indexOf('NO NAME') === -1) {
+                        $scope.domainsListNoDomain.push(domain);
+                    }
+                });
             }, function (error) {
                 ngNotifier.error(error);
             }).then(function () {
@@ -40,6 +44,8 @@ camApp.controller('domainController', [
                 ngNotifier.error(error);
             });
         })();
+
+
 
         $scope.expandAncestors = function (domainName) {
             for (var i in $scope.domainsList) {

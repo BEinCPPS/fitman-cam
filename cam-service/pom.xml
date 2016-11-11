@@ -118,7 +118,8 @@
                     <artifactId>maven-war-plugin</artifactId>
                     <version>3.0.0</version>
                     <configuration>
-                        <outputDirectory>C:\Users\alberti\WORK\BEinCPPS\apache-tomcat-8.0.33\webapps</outputDirectory>
+                        <!--<outputDirectory>C:\Program Files\apache-tomcat-8.0.33\webapps</outputDirectory>-->
+                        <outputDirectory>C:\Program Files\apache-tomcat-8.0.33\webapps</outputDirectory>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -267,7 +268,6 @@
             <properties>
                 <version>${version}</version>
                 <artifact.id>${artifactId}</artifact.id>
-
                 <sesame.url>http://localhost:8080/rdf4j-server/</sesame.url>
                 <sesame.repository>CAM_REPO</sesame.repository>
                 <sesame.namespace>http://www.msee-ip.eu/ontology/beincppsns#</sesame.namespace>

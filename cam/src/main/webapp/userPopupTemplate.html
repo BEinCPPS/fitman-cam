@@ -14,8 +14,9 @@
     <div class="form-group form-group-sm">
         <label class="control-label col-xs-2">Organizations:</label>
         <div class="col-xs-10">
-            <ul class="list-style">
-                <li class="form-control-static" ng-repeat="organization in userDisplay.organizations">{{organization.name}}</li>
+            <ul class="list-style-none">
+                <li class="form-control-static"
+                    ng-repeat="organization in userDisplay.organizations">{{organization.name}}</li>
             </ul>  
         </div>
     </div>

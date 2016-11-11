@@ -90,16 +90,14 @@ camApp.controller('menuController', [
         };
 
         $scope.activeMenuClass = function () {
-            if ($location.url().indexOf('domain') > -1)
-                return '';
-            else return 'active';
-        }
-
-        $scope.activeMenuDomain = function () {
-            if ($location.url().indexOf('domain') > -1)
+            if ($location.url().indexOf('classes') > -1)
                 return 'active';
             else return '';
-        }
+        };
 
-
+        $scope.activeMenuDomain = function () {
+            if ($location.url().indexOf('domains') > -1)
+                return 'active';
+            else return '';
+        };
     }]);

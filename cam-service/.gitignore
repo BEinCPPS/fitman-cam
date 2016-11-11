@@ -1,5 +1,4 @@
-target/*
-.settings/*
-.idea/*
-/target/
-pom.xml
+.idea/
+.settings/
+/.gitignore
+/CAMService.iml

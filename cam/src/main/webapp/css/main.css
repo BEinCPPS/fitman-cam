@@ -81,7 +81,7 @@ a:link, a:visited, a:hover {
     color: red;
 }
 
-.list-style {
+.list-style-none {
     list-style-type: none;
 }
 

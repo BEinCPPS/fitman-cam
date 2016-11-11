@@ -6,19 +6,19 @@ camApp.factory('ngNotifier', function (toaster) {
 
     notifierFactory.success = function (msg) {
         if (!msg) msg = "Success!!!";
-        toaster.success(msg);
+        toaster.pop('success', 'Success', msg);
     };
     notifierFactory.error = function (error) {
         console.log(error);
         if (typeof error === 'object' && error.error)
             error = error.error.message;
         else if (typeof error === 'object' && error.statusText) {
-            error = error.statusText +' <br/> ' + error.data;
+            error = error.data + ' <br/> ' + error.statusTexts;
         }
-        toaster.error(error);
+        toaster.pop('error', 'Error', error);
     };
     notifierFactory.info = function (msg) {
-        toaster.info(msg);
+        toaster.pop('note', 'Info', msg);
     };
     return notifierFactory;
 });

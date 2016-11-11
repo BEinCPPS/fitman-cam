@@ -19,7 +19,7 @@
                         <i class="fa fa-users" aria-hidden="true"></i> Domains</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li ng-if="!loggedIn"><a href="#/login" >Login</a></li>
+                    <li ng-if="!loggedIn"><a href="#/login" ><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
                     <li ng-if="loggedIn" class="navbar-text">
                         <i class="fa fa-user" aria-hidden="true"></i>
                         <span
@@ -27,7 +27,7 @@
                                 uib-popover-template="'userPopupTemplate.html'"
                                 popover-title="{{dynamicPopover.title}}">
                            {{ user.username }}
-                          </span>
+                        </span>
 
                     </li>
                     <li ng-if="loggedIn"><a href="#" ng-click="doLogout()"><i class="fa fa-sign-in" aria-hidden="true">

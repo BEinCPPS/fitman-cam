@@ -166,7 +166,9 @@ camApp.controller('homeController', [
                             iri: value.links.self + '#' + value.name,
                             description: value.description,
                         };
-                        $scope.domainsList.push(domain);
+                        if (domain.name.toUpperCase().indexOf('NO NAME') === -1) {
+                            $scope.domainsList.push(domain);
+                        }
                     }
                     $ngDialog.open({
                         template: 'pages/newAssetModel.htm',
