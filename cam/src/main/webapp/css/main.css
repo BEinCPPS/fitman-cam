@@ -535,3 +535,16 @@ a[disabled="true"] {
 .login-help{
     font-size: 12px;
 }
+
+
+
+.text-bold {
+    font-size: 21px !important;
+    font-weight: bold;
+}
+
+.text-italic {
+    font-size: 21px !important;
+    font-style: italic;
+    font-weight: normal;
+}

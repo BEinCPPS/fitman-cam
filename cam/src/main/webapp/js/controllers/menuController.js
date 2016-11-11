@@ -100,4 +100,8 @@ camApp.controller('menuController', [
                 return 'active';
             else return '';
         };
+        
+        $scope.linkCamService = function () {
+            return BACK_END_URL_CONST;
+        };
     }]);
