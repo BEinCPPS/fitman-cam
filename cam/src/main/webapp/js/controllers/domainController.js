@@ -46,7 +46,6 @@ camApp.controller('domainController', [
         })();
 
 
-
         $scope.expandAncestors = function (domainName) {
             for (var i in $scope.domainsList) {
                 if ($scope.domainsList[i].name === domainName) {
@@ -109,13 +108,9 @@ camApp.controller('domainController', [
             "bDestroy": true,
             "oLanguage": {
                 "sSearch": "Filter: "
-            }, "fnRowCallback": function (nRow, aData, iDisplayIndex) {
-                if (aData[4] == "true") {
-                    var css = $(nRow).css();
-                    $(nRow).css('danger ' + css);
-                }
             },
-            "fnDrawCallback": function () {
+            "fnDrawCallback": function (obj) {
+                console.log(obj);
                 Scopes.get('homeController').addTooltipToAssetModel(); //TODO
             }
         };

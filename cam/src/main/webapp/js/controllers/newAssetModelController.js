@@ -13,7 +13,6 @@ camApp.controller('newAssetModelController', [
             className: $scope.currentNode.className,
             domainName: ""
         };
-        $scope.domainsList = Scopes.get('homeController').domainsListNoDomain;
 
         $scope.closeNewAssetModelPanel = function () {
             $ngDialog.close();

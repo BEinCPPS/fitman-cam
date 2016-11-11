@@ -71,7 +71,6 @@ camApp.controller('homeController', [
             }
         }
 
-
         $scope.regexPattern = REGEX_PATTERN;
         $scope.invalidNameMsg = INVALID_NAME_MSG;
         $scope.nameIsMandatory = NAME_IS_MANDATORY_MSG;
@@ -187,7 +186,16 @@ camApp.controller('homeController', [
             entityManager.getDomains().success(function (data) {
                 $scope.domainsList = [];
                 for (var i = 0; i < data.length; i++) {
-                    $scope.domainsList.push(data[i].name);
+                    var value = data[i];
+                    var domain = {
+                        name: value.name,
+                        id: value.id,
+                        iri: value.links.self + '#' + value.name,
+                        description: value.description,
+                    };
+                    if (domain.name.toUpperCase().indexOf('NO NAME') === -1) {
+                        $scope.domainsList.push(domain);
+                    }
                 }
                 $ngDialog.open({
                     template: 'pages/newAsset.htm',
@@ -199,9 +207,8 @@ camApp.controller('homeController', [
                     $scope.domainsList = [];
                     ngNotifier.error(error);
                 });
-
-
         }
+
         $scope.changeBackground = function (ev) {
             $('.ownselector').each(
                 function () {
@@ -220,6 +227,7 @@ camApp.controller('homeController', [
                 scope: $scope
             });
         }
+
         $scope.openConfirmDeleteClass = function (node) {
             $scope.elementToDelete = node.className;
             $scope.typeToDelete = 'class';
@@ -310,7 +318,6 @@ camApp.controller('homeController', [
             });
             $('[data-toggle="tooltip"]').tooltip();
         }
-
 
         templateManager.getAssetAction().then(function (response) {
             $scope.actionAssetTemplate = response.data;
