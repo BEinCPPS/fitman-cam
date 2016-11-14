@@ -112,6 +112,8 @@ camApp.controller('domainController', [
             "fnDrawCallback": function (obj) {
                 console.log(obj);
                 Scopes.get('homeController').addTooltipToAssetModel(); //TODO
+            }, "fnUpdate": function (obj) {
+                console.log(obj);
             }
         };
 

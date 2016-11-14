@@ -78,16 +78,18 @@ camApp.controller('newAttributeController', [
             //$http.post(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/attributes',   $scope.newAttribute)
             entityManager.createAttribute($scope.isModel, $scope.selectedAssetName, $scope.newAttribute)
                 .then(function (response) {
-                    Scopes.get('homeController').getAssetDetail($scope.selectedAssetName);
+                    Scopes.get('detailController').getAssetDetail($scope.selectedAssetName, ATTRIBUTES);
                     Scopes.get('detailController').getAttributes();
                     $ngDialog.close();
-                    ngNotifier.success();
-                    Scopes.get('detailController').getAssetDetail($scope.selectedAssetName, ATTRIBUTES);
                     $route.reload();
                 }, function (err) {
                     $ngDialog.close();
                     ngNotifier.error(err);
-                });
+                }).then(function () {
+                ngNotifier.success();
+            }, function (err) {
+                ngNotifier.error(err);
+            });
         };
         var detailController = Scopes.get('detailController');
         $scope.attributes = detailController.attributes;
