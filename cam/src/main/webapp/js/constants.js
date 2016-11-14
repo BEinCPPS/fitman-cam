@@ -21,3 +21,6 @@ var callback_uri = CAM_URL + '/oauth_callback.html';
 var OAUTH_LOGIN_URL = KEYROCK_URL + '/oauth2/authorize?response_type=token&client_id=' + client_id +
     '&redirect_uri=' + callback_uri;
 var OAUTH_USER_LOGGED_URL = KEYROCK_URL + '/user?access_token=';
+
+const EVERYTHING = '(EVERYTHING)';
+const NO_DOMAIN = 'NO DOMAIN';

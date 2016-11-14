@@ -1,6 +1,5 @@
 package it.eng.cam.rest;
 
-import it.eng.cam.rest.security.authorization.AssetOwnershipFilter;
 import it.eng.cam.rest.security.project.Project;
 import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
@@ -11,7 +10,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -135,7 +133,7 @@ public class CAMRestImpl {
     }
 
     public static List<Asset> getAssetsForDomain(RepositoryDAO dao, String domainId) throws Exception {
-        if (Constants.NO_NAME.equalsIgnoreCase(domainId)) {
+        if (Constants.NO_DOMAIN.equalsIgnoreCase(domainId)) {
             List<Asset> individualsToGive = new ArrayList<>();
             //Extract all asset without a domain with IDM IRI!
             List<IndividualItem> individuals = dao.getIndividualsNoDomain();

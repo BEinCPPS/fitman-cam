@@ -4,14 +4,13 @@ camApp.controller('domainController', [
     'Scopes',
     '$q',
     'ngDialog',
-    'NgTableParams',
     'entityManager',
     'ngNotifier',
     'templateManager',
     '$route',
     'currentNode',
     '$window',
-    function ($scope, Scopes, $q, $ngDialog, NgTableParams, entityManager, ngNotifier
+    function ($scope, Scopes, $q, $ngDialog, entityManager, ngNotifier
         , templateManager, $route, currentNode, $window) {
         Scopes.store('domainController', $scope);
         //Load Domains
@@ -29,7 +28,7 @@ camApp.controller('domainController', [
                         description: value.description,
                     };
                     $scope.domainsList.push(domain);
-                    if (domain.name.toUpperCase().indexOf('NO NAME') === -1) {
+                    if (domain.id.toUpperCase().indexOf(NO_DOMAIN) === -1) {
                         $scope.domainsListNoDomain.push(domain);
                     }
                 });
@@ -64,7 +63,6 @@ camApp.controller('domainController', [
             ngNotifier.error(error);
             return null;
         });
-
 
         $scope.columnDefs = [
             {
@@ -112,8 +110,6 @@ camApp.controller('domainController', [
             "fnDrawCallback": function (obj) {
                 console.log(obj);
                 Scopes.get('homeController').addTooltipToAssetModel(); //TODO
-            }, "fnUpdate": function (obj) {
-                console.log(obj);
             }
         };
 
@@ -137,7 +133,6 @@ camApp.controller('domainController', [
                 data[i].action =
                     $scope.actionTemplate.replaceAll("$value$", asset.individualName);
             }
-
             data.sort(function (a, b) {
                 return new Date(b.createdOn) - new Date(a.createdOn);
             });

@@ -3,7 +3,6 @@ package it.eng.cam.rest.security.service.impl;
 
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
 import it.eng.cam.rest.security.authentication.credentials.Credentials;
-import it.eng.cam.rest.security.authorization.DomainOwnershipFilter;
 import it.eng.cam.rest.security.project.Project;
 import it.eng.cam.rest.security.project.ProjectContainerJSON;
 import it.eng.cam.rest.security.project.ProjectsCacheManager;
@@ -19,7 +18,6 @@ import javax.json.JsonObject;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import java.util.*;
 
 /**
@@ -51,11 +49,13 @@ public class IDMKeystoneService implements IDMService {
         Response response = invocationBuilder.get();
         ProjectContainerJSON projectContainerJSON = response.readEntity(ProjectContainerJSON.class);
         List<Project> projects = projectContainerJSON.getProjects();
-        addNoNameProject(projects);
         if ((projects == null || projects.isEmpty()) && !ProjectsCacheManager.getInstance().getCache().isEmpty())
             return new ArrayList<>(ProjectsCacheManager.getInstance().getCache().values());
         buildProjectsCache(projects);
-        return projects;
+        List<Project> projectsToGive = new ArrayList<>();
+        addNoNameProject(projectsToGive);
+        projectsToGive.addAll(projects);
+        return projectsToGive;
     }
 
 
@@ -80,10 +80,10 @@ public class IDMKeystoneService implements IDMService {
 
     private void addNoNameProject(List<Project> projects) {
         Project noName = new Project();
-        noName.setId(Constants.NO_NAME);
-        noName.setName("NO NAME");
+        noName.setId(Constants.NO_DOMAIN);
+        noName.setName("(NOT SET)");
         noName.setLinks(new Project.Link(""));
-        noName.setDescription("No Name");
+        noName.setDescription("Not set domain");
         projects.add(noName);
     }
 

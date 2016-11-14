@@ -26,6 +26,7 @@ camApp.controller('homeController', [
         }
 
         $scope.expandAncestors = function (elem) {
+            if (elem.toUpperCase() == EVERYTHING) return;
             function search(array, name) {
                 for (var i in array) {
                     if (array[i].className === name) {
@@ -52,7 +53,6 @@ camApp.controller('homeController', [
             }, function (error) {
                 ngNotifier.error(error);
             });
-
         };
 
         if (!isEmpty($routeParams.className)) {
@@ -75,7 +75,6 @@ camApp.controller('homeController', [
         $scope.invalidNameMsg = INVALID_NAME_MSG;
         $scope.nameIsMandatory = NAME_IS_MANDATORY_MSG;
         $scope.keyrockSignupUrl = KEYROCK_SIGNUP_URL;
-
 
         $scope.columnDefs = [
             {
@@ -123,15 +122,18 @@ camApp.controller('homeController', [
         }, function (error) {
             ngNotifier.error(error);
         })
-
         $scope.newAssetVisible = false;
 
         //funzioni di utilità
         $scope.loadChildren = function () {
-            entityManager.getChildrenForClass($scope.currentNode.className)
+            var clsName = $scope.currentNode.className;
+            if ($scope.currentNode.className.toUpperCase() == EVERYTHING) {
+                clsName = '';
+            }
+            entityManager.getChildrenForClass(clsName)
                 .then(function (response) {
                     var dataNotMySelf = $scope.removeClassMySelf(response.data, $scope.currentNode.className);
-                    if (!isEmpty(dataNotMySelf)) {
+                    if (!isEmpty(dataNotMySelf) && $scope.currentNode.className !== EVERYTHING ) {
                         var classes = $scope.createClasses(dataNotMySelf);
                         $scope.currentNode.children = classes;
                     }
@@ -139,12 +141,16 @@ camApp.controller('homeController', [
                 }, function (error) {
                     ngNotifier.error(error);
                 });
-            //window.scroll(0, 0);
+            //$window.scroll(0, 0);
         }
 
         $scope.loadAsset = function () {
             if ($scope.currentNode.className) {
-                $scope.getAssets($scope.currentNode.className, true);
+                var clsName = $scope.currentNode.className;
+                if ($scope.currentNode.className.toUpperCase() == EVERYTHING) {
+                    clsName = '';
+                }
+                $scope.getAssets(clsName, true);
                 $scope.newAssetVisible = true;
             } else {
                 $scope.assetList = [];
@@ -165,7 +171,7 @@ camApp.controller('homeController', [
                             iri: value.links.self + '#' + value.name,
                             description: value.description,
                         };
-                        if (domain.name.toUpperCase().indexOf('NO NAME') === -1) {
+                        if (domain.id.toUpperCase().indexOf(NO_DOMAIN) === -1) {
                             $scope.domainsList.push(domain);
                         }
                     }
@@ -174,8 +180,7 @@ camApp.controller('homeController', [
                         controller: 'newAssetModelController',
                         scope: $scope
                     });
-                })
-                .error(function (error) {
+                }).error(function (error) {
                     $scope.domainsList = [];
                     ngNotifier.error(error);
                 });
@@ -193,7 +198,7 @@ camApp.controller('homeController', [
                         iri: value.links.self + '#' + value.name,
                         description: value.description,
                     };
-                    if (domain.name.toUpperCase().indexOf('NO NAME') === -1) {
+                    if (domain.id.toUpperCase().indexOf(NO_DOMAIN) === -1) {
                         $scope.domainsList.push(domain);
                     }
                 }
@@ -202,8 +207,7 @@ camApp.controller('homeController', [
                     controller: 'newAssetController',
                     scope: $scope
                 });
-            })
-                .error(function (error) {
+            }).error(function (error) {
                     $scope.domainsList = [];
                     ngNotifier.error(error);
                 });
@@ -337,10 +341,9 @@ camApp.controller('homeController', [
                 return [];
             for (var i = 0; i < data.length; i++) {
                 var elementType = 'asset';
-
                 data[i].action = (function () {
                     return $scope.actionAssetTemplate.replaceAll('$value$', data[i].individualName)
-                        .replaceAll('$element$', elementType).replaceAll('$className$', clazzName);
+                        .replaceAll('$element$', elementType).replaceAll('$className$', data[i].className);
 
                 })();
                 data[i].action += (function () {
@@ -355,26 +358,26 @@ camApp.controller('homeController', [
             return data;
         }
 
-
-        $scope.fetchAssetList = function (assetList, completeCallback) {
-            var result = [];
-
-            entityManager.getAssetsInfo(assetList, completeCallback, result)
-
-        }
-
-
         $scope.removeClassMySelf = function (data, className) {
             return entityManager.removeClassMySelf(data, className);
         }
 
-        $scope.createClasses = function (data) {
+        $scope.createClasses = function (data, isSubClass) {
             var classes = [];
+            if (typeof isSubClass === 'undefined') {
+                var everythingClass = {
+                    className: EVERYTHING,
+                    classId: EVERYTHING.toLowerCase(),
+                    children: [],
+                    collapsed: true,
+                };
+                classes.push(everythingClass);
+            }
             for (var i in data) {
                 var classItem = {
                     className: data[i].normalizedName,
                     classId: data[i].normalizedName,
-                    children: $scope.createClasses(data[i].subClasses),
+                    children: $scope.createClasses(data[i].subClasses, true),
                     collapsed: true,
                 }
                 classes.push(classItem);

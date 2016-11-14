@@ -104,4 +104,8 @@ camApp.controller('menuController', [
         $scope.linkCamService = function () {
             return BACK_END_URL_CONST;
         };
+
+        $scope.linkKeyrockSignup = function () {
+            return KEYROCK_SIGNUP_URL;
+        };
     }]);

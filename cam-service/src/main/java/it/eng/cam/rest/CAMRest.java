@@ -200,7 +200,7 @@ public class CAMRest {
                                          @QueryParam("retrieveForChildren") boolean retrieveForChildren) {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
         try {
-            if (null == className)
+            if (null == className || "".equals(className.trim()))
                 return getAssetByName(null);
             if (retrieveForChildren)
                 return AssetOwnershipFilter.filterAll(CAMRestImpl.getIndividualsForChildren(repoInstance, className), securityContext);
