@@ -74,22 +74,33 @@ camApp.controller('domainController', [
                 "aTargets": [1]
             }, {
                 "mDataProp": "domain",
-                "aTargets": [2]
+                "aTargets": [2],
+                "fnRender": function (data) {
+                    var retVal = data.aData.domain;
+                    if (data.aData.domain && data.aData.lostDomain) {
+                        return '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;' + retVal;
+                    } else if (data.aData.domain && !data.aData.lostDomain) {
+                        return '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp;' + retVal;
+                    } else
+                        return retVal;
+                }
             }, {
                 "mDataProp": "createdOn",
                 "aTargets": [3]
-            }, {
-                "mDataProp": "lostDomain",
-                "aTargets": [4],
-                "fnRender": function (data) {
-                    if (data.aData.lostDomain)
-                        return '<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>';
-                    else
-                        return '<i class="fa fa-thumbs-o-up" aria-hidden="true"></i>';
-                }
-            }, {
+            },
+            // {
+            //     "mDataProp": "lostDomain",
+            //     "aTargets": [4],
+            //     "fnRender": function (data) {
+            //         if (data.aData.lostDomain)
+            //             return '<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>';
+            //         else
+            //             return '<i class="fa fa-thumbs-o-up" aria-hidden="true"></i>';
+            //     }
+            // },
+            {
                 "mDataProp": "action",
-                "aTargets": [5],
+                "aTargets": [4],
                 "bSortable": false
             }];
 
@@ -108,8 +119,8 @@ camApp.controller('domainController', [
                 "sSearch": "Filter: "
             },
             "fnDrawCallback": function (obj) {
-                console.log(obj);
-                Scopes.get('homeController').addTooltipToAssetModel(); //TODO
+                if (typeof Scopes.get('homeController') !== 'undefined')
+                    Scopes.get('homeController').addTooltipToAssetModel();
             }
         };
 
