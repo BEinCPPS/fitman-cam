@@ -3,6 +3,9 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          id="WebApp_ID" version="3.0">
     <display-name>CamService</display-name>
+    <listener>
+        <listener-class>it.eng.cam.rest.security.authentication.InitAdminContextListener</listener-class>
+    </listener>
     <servlet>
         <servlet-name>Jersey REST Service</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>

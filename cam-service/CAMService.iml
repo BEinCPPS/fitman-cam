@@ -71,6 +71,8 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.7.5" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.1.7" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.1.7" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.rdf4j:rdf4j-rio-rdfxml:2.1" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.rdf4j:rdf4j-model:2.1" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.rdf4j:rdf4j-rio-api:2.1" level="project" />
@@ -149,8 +151,6 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.eclipse.rdf4j:rdf4j-sail-nativerdf:2.1" level="project" />
     <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-config:2.7.13" level="project" />
     <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-util:2.7.13" level="project" />
-    <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:0.9.28" level="project" />
-    <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:0.9.28" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.7.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.0" level="project" />
   </component>

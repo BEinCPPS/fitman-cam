@@ -26,6 +26,15 @@ import java.util.*;
 public class IDMKeystoneService implements IDMService {
     private static final Logger logger = LogManager.getLogger(IDMKeystoneService.class.getName());
 
+    public String getADMINToken(UserLoginJSON userLoginJSON) {
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(Constants.IDM_URL_KEYSTONE).path("auth").path("tokens");
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        Credentials principal = buildCredentials(userLoginJSON.getUsername(), userLoginJSON.getPassword(), null);
+        Response response = invocationBuilder.post(Entity.entity(principal, MediaType.APPLICATION_JSON));
+        final List<Object> objects = response.getHeaders().get(Constants.X_SUBJECT_TOKEN);
+        return objects.get(0).toString();
+    }
 
     public List<User> getUsers() {
         Client client = ClientBuilder.newClient();

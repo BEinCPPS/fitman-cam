@@ -73,6 +73,11 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.5</version>
         </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.7</version>
+        </dependency>
 
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
@@ -119,6 +124,7 @@
                     <version>3.0.0</version>
                     <configuration>
                         <outputDirectory>C:\Users\alberti\WORK\BEinCPPS\apache-tomcat-8.0.33\webapps</outputDirectory>
+                        <!--<outputDirectory>C:\Program Files\apache-tomcat-8.0.33\webapps</outputDirectory>-->
                     </configuration>
                 </plugin>
                 <plugin>
@@ -175,7 +181,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
                 <configuration>
-                    <exclude>it.eng.cam.test.rest.*</exclude>
+                    <excludes>
+                        <exclude>it.eng.cam.test.rest.*</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -255,10 +263,12 @@
                 <destination.url.integration>http://localhost:8080/${artifactId}/</destination.url.integration>
                 <!-- CORS API ENABLING true or false -->
                 <cors.api>true</cors.api>
+                <!-- KEYROCK IDM SECTION-->
                 <keyrock.url>http://161.27.159.76</keyrock.url>
-                <keyrock.admin.token>ADMIN</keyrock.admin.token>
+                <keyrock.admin.user></keyrock.admin.user> <!-- INSERT USER -->
+                <keyrock.admin.password></keyrock.admin.password> <!-- INSERT PASSWORD -->
                 <!-- OAUTH2, KEYSTONE Supported at the moment -->
-                <authentication.service>KEYSTONE</authentication.service>
+                <keyrock.authentication.service>KEYSTONE</keyrock.authentication.service>
             </properties>
         </profile>
         <!-- Production environment @ production server -->
@@ -267,7 +277,6 @@
             <properties>
                 <version>${version}</version>
                 <artifact.id>${artifactId}</artifact.id>
-
                 <sesame.url>http://localhost:8080/rdf4j-server/</sesame.url>
                 <sesame.repository>CAM_REPO</sesame.repository>
                 <sesame.namespace>http://www.msee-ip.eu/ontology/beincppsns#</sesame.namespace>
@@ -278,10 +287,12 @@
                 <destination.url.integration>http://localhost:8080/${artifactId}/</destination.url.integration>
                 <!-- CORS API ENABLING true or false -->
                 <cors.api>true</cors.api>
+                <!-- KEYROCK IDM SECTION-->
                 <keyrock.url>http://161.27.159.76</keyrock.url>
-                <keyrock.admin.token>ADMIN</keyrock.admin.token>
+                <keyrock.admin.user></keyrock.admin.user> <!-- INSERT USER -->
+                <keyrock.admin.password></keyrock.admin.password> <!-- INSERT PASSWORD -->
                 <!-- OAUTH2, KEYSTONE Supported at the moment -->
-                <authentication.service>KEYSTONE</authentication.service>
+                <keyrock.authentication.service>KEYSTONE</keyrock.authentication.service>
             </properties>
         </profile>
     </profiles>
