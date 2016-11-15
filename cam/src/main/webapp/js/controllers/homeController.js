@@ -114,11 +114,9 @@ camApp.controller('homeController', [
                 $scope.addTooltipToAssetModel();
             }
         };
-
-
         $scope.assetList = [];
         entityManager.getClasses().then(function (response) {
-            $scope.classList = $scope.createClasses(response.data);
+            $scope.classList = $scope.createClasses(response.data, false);
         }, function (error) {
             ngNotifier.error(error);
         })
@@ -134,7 +132,7 @@ camApp.controller('homeController', [
                 .then(function (response) {
                     var dataNotMySelf = $scope.removeClassMySelf(response.data, $scope.currentNode.className);
                     if (!isEmpty(dataNotMySelf) && $scope.currentNode.className !== EVERYTHING ) {
-                        var classes = $scope.createClasses(dataNotMySelf);
+                        var classes = $scope.createClasses(dataNotMySelf, true);
                         $scope.currentNode.children = classes;
                     }
                     $scope.loadAsset();
@@ -364,7 +362,7 @@ camApp.controller('homeController', [
 
         $scope.createClasses = function (data, isSubClass) {
             var classes = [];
-            if (typeof isSubClass === 'undefined') {
+            if (typeof isSubClass !== 'undefined' && !isSubClass) {
                 var everythingClass = {
                     className: EVERYTHING,
                     classId: EVERYTHING.toLowerCase(),

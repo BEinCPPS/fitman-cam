@@ -178,9 +178,9 @@ public class CAMRest {
         try {
             List<Asset> assets = AssetOwnershipFilter.filterAll(CAMRestImpl.getIndividuals(repoInstance), securityContext);
             if (null == assetName || "".equals(assetName.trim()))
-                return assets.parallelStream()
+                return assets.stream()
                         .filter(asset ->
-                                asset.getNamespace().equalsIgnoreCase(SesameRepoManager.getNamespace()))
+                                asset.getNamespace()!= null && asset.getNamespace().equalsIgnoreCase(SesameRepoManager.getNamespace()))
                         .collect(Collectors.toList());
             return assets.stream().filter(asset -> asset.getNormalizedName().equalsIgnoreCase(assetName))
                     .collect(Collectors.toList());

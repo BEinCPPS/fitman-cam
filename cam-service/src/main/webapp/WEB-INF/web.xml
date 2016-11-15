@@ -4,7 +4,7 @@
          id="WebApp_ID" version="3.0">
     <display-name>CamService</display-name>
     <listener>
-        <listener-class>it.eng.cam.rest.security.authentication.InitAdminContextListener</listener-class>
+        <listener-class>it.eng.cam.rest.security.authentication.credentials.admin.InitAdminContextListener</listener-class>
     </listener>
     <servlet>
         <servlet-name>Jersey REST Service</servlet-name>

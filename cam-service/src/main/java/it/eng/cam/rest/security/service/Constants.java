@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
  * Created by ascatolo on 26/10/2016.
  */
 public class Constants {
+    public static final String DATE_PATTERN_DATE_TIME_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
     public static ResourceBundle finder = ResourceBundle.getBundle("cam-service");
     public static final String IDM_URL = finder.getString("keyrock.url");
     public static final String IDM_URL_KEYSTONE = IDM_URL + ":8080/v3";

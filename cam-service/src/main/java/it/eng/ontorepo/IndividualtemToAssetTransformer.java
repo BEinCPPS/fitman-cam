@@ -1,5 +1,6 @@
 package it.eng.ontorepo;
 
+import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -59,9 +60,10 @@ public class IndividualtemToAssetTransformer {
                 domain = split[1];
                 domainIri = attribute.getPropertyValue();
             } else if (attribute.getNormalizedName().contains(BeInCpps.createdOn)) {
-                Date data = DateUtils.parseDate(attribute.getPropertyValue(), "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+                Date data = DateUtils.parseDate(attribute.getPropertyValue(), Constants.DATE_PATTERN_DATE_TIME_TIMEZONE);
                 date = DateFormatUtils.format(data, "dd/MM/yyyy");
             }
+
 
         }
         Asset asset = new Asset(individual, domain, date, lostDomain);
