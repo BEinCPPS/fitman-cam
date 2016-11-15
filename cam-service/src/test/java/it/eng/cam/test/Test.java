@@ -71,15 +71,6 @@ public class Test extends Assert {
       
     }
 
-    //
-//	@org.junit.Test
-//	public void getDomains() {
-//		List<OntoDomain> domains = CAMRestImpl.getDomains(dao);
-//		assertNotNull("Null domains list", domains);
-//		// Onwers empty is not problem
-//		// assertFalse(domains.isEmpty());
-//	}
-
     // TODO Always Fail :-(
     // @org.junit.Test
     public void getIndividualForClassAndAsset() {
@@ -179,12 +170,6 @@ public class Test extends Assert {
         } catch (Exception e) {
             assertFalse(e.getMessage(), true);
         }
-//		String domainName = "Jack_Frost_" + getNextRandom();
-//		try {
-//			CAMRestImpl.createDomain(dao, domainName);
-//		} catch (Exception e) {
-//			assertFalse(e.getMessage(), true);
-//		}
         tearDown();
         setUp();
         String assetModelName = "MyAsset_" + getNextRandom();
@@ -214,12 +199,6 @@ public class Test extends Assert {
         } catch (Exception e) {
             assertFalse(e.getMessage(), true);
         }
-        String domainName = "NewDomain_" + getNextRandom();
-//        try {
-//            CAMRestImpl.createDomain(dao, domainName);
-//        } catch (Exception e) {
-//            assertFalse(e.getMessage(), true);
-//        }
         tearDown();
         setUp();
         String assetModelName = "NewAssetModelName_" + getNextRandom();
@@ -257,12 +236,6 @@ public class Test extends Assert {
         } catch (Exception e) {
             assertFalse(e.getMessage(), true);
         }
-//        String domainName = "NewDomain_" + getNextRandom();
-//        try {
-//            CAMRestImpl.createDomain(dao, domainName);
-//        } catch (Exception e) {
-//            assertFalse(e.getMessage(), true);
-//        }
         tearDown();
         setUp();
         String assetModelName = "NewAssetModelName_" + getNextRandom();
@@ -306,12 +279,6 @@ public class Test extends Assert {
         } catch (Exception e) {
             assertFalse(e.getMessage(), true);
         }
-//        String domainName = "NewDomain_" + getNextRandom();
-//        try {
-//            CAMRestImpl.createDomain(dao, domainName);
-//        } catch (Exception e) {
-//            assertFalse(e.getMessage(), true);
-//        }
         tearDown();
         setUp();
         String assetModelName = "NewAssetModelName_" + getNextRandom();
@@ -356,21 +323,6 @@ public class Test extends Assert {
         assertTrue("Relationship exists!", thrown);
     }
 
-//	@org.junit.Test
-//	public void createDomain() {
-//		String domainName = "MyDomain_" + getNextRandom();
-//		try {
-//			CAMRestImpl.createDomain(dao, domainName);
-//		} catch (Exception e) {
-//			assertFalse(e.getMessage(), true);
-//		}
-//		List<OntoDomain> domains = CAMRestImpl.getDomains(dao);
-//		List<OntoDomain> domainsFiltered = domains.stream().filter(own -> own.getName().equals(domainName)).collect(Collectors.toList());
-//
-//		assertNotNull("Create domain: domain (null) not retrieved for domainName: " + domainName, domainsFiltered);
-//		assertFalse("Create domain: domain (empty) not retrieved for domainName: " + domainName, domainsFiltered.isEmpty());
-//		assertTrue("Create domain: domain created :-)", domainsFiltered.size() == 1);
-//	}
 
     @org.junit.Test
     public void getIndividualsForClass() {
@@ -381,12 +333,6 @@ public class Test extends Assert {
         } catch (Exception e) {
             assertFalse(e.getMessage(), true);
         }
-//        String domainName = "NewDomain_" + getNextRandom();
-//        try {
-//            CAMRestImpl.createDomain(dao, domainName);
-//        } catch (Exception e) {
-//            assertFalse(e.getMessage(), true);
-//        }
         tearDown();
         setUp();
         String assetModelName = "MyAsset_" + getNextRandom();

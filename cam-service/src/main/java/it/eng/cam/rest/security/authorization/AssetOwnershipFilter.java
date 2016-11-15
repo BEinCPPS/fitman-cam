@@ -1,7 +1,6 @@
 package it.eng.cam.rest.security.authorization;
 
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
-import it.eng.cam.rest.security.authentication.CAMSecurityContext;
 import it.eng.ontorepo.Asset;
 
 import javax.ws.rs.core.SecurityContext;
@@ -17,11 +16,9 @@ public class AssetOwnershipFilter {
     public static List<Asset> filterAll(List<Asset> assets, SecurityContext securityContext) {
         if (assets == null || assets.isEmpty() || securityContext == null) return assets;
         List<Asset> assetsToGive = new ArrayList<>();
-        for (Asset asset :
-                assets) {
-            if (filter(asset, securityContext) != null)
-                assetsToGive.add(asset);
-        }
+        assets.parallelStream().forEach(asset -> {
+                assetsToGive.add(filter(asset, securityContext));
+        });
         return assetsToGive;
     }
 

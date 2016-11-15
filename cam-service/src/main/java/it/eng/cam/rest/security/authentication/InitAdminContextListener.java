@@ -13,6 +13,7 @@ import javax.servlet.ServletContextListener;
  * Created by ascatolo on 15/11/2016.
  */
 public class InitAdminContextListener implements ServletContextListener {
+    public static final String FATAL_ADMIN_TOKEN_IS_NOT_SET = "FATAL!!! ADMIN TOKEN IS NOT SET!!!";
     private static final Logger logger = LogManager.getLogger(InitAdminContextListener.class.getName());
 
     @Override
@@ -22,12 +23,12 @@ public class InitAdminContextListener implements ServletContextListener {
             user.setPassword(Constants.ADMIN_PASSWORD);
             IDMKeystoneService idmKeystoneService = new IDMKeystoneService();
             String adminToken = idmKeystoneService.getADMINToken(user);
-            if (adminToken == null || adminToken.isEmpty()) throw new RuntimeException("FATAL!!! ADMIN TOKEN IS NOT SET!!!");
+            if (adminToken == null || adminToken.isEmpty()) throw new RuntimeException(FATAL_ADMIN_TOKEN_IS_NOT_SET);
             Constants.ADMIN_TOKEN = adminToken;
         } catch (RuntimeException e) {
-            logger.error("FATAL!!! ADMIN TOKEN IS NOT SET!!!");
+            logger.error(FATAL_ADMIN_TOKEN_IS_NOT_SET);
         } catch (Exception e) {
-            logger.error("FATAL!!! ADMIN TOKEN IS NOT SET!!!");
+            logger.error(FATAL_ADMIN_TOKEN_IS_NOT_SET);
         }
     }
 

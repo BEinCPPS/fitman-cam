@@ -1,7 +1,6 @@
 package it.eng.cam.rest.security.authorization;
 
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
-import it.eng.cam.rest.security.authentication.CAMSecurityContext;
 import it.eng.cam.rest.security.project.Project;
 
 import javax.ws.rs.core.SecurityContext;
@@ -17,11 +16,9 @@ public class DomainOwnershipFilter {
     public static List<Project> filterAll(List<Project> projects, SecurityContext securityContext) {
         if (projects == null || projects.isEmpty() || securityContext == null) return projects;
         List<Project> projectsToGive = new ArrayList<>();
-        for (Project project :
-                projects) {
-            if (filter(project, securityContext) != null)
-                projectsToGive.add(project);
-        }
+        projects.parallelStream().forEach(project -> {
+            projectsToGive.add(filter(project, securityContext));
+        });
         return projectsToGive;
     }
 

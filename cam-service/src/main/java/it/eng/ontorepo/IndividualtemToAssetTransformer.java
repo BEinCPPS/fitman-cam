@@ -1,12 +1,10 @@
 package it.eng.ontorepo;
 
-import it.eng.cam.rest.security.authentication.CAMPrincipal;
-import it.eng.cam.rest.security.authentication.CAMSecurityContext;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
-import javax.ws.rs.core.SecurityContext;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,10 +34,13 @@ public class IndividualtemToAssetTransformer {
     private static List<Asset> doTransformAll(RepositoryDAO dao, List<IndividualItem> individuals, boolean lostDomain) throws java.text.ParseException {
         List<Asset> individualItemWrappers = new ArrayList<>();
         if (individuals == null) return null;
-        for (IndividualItem individual :
-                individuals) {
-            individualItemWrappers.add(doTransform(dao, individual, lostDomain));
-        }
+        individuals.parallelStream().forEach(individualItem -> {
+            try {
+                individualItemWrappers.add(doTransform(dao, individualItem, lostDomain));
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        });
         return individualItemWrappers;
     }
 
