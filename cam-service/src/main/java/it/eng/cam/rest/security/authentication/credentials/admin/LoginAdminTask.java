@@ -35,7 +35,7 @@ public class LoginAdminTask extends TimerTask {
             Constants.ADMIN_TOKEN = adminToken;
             Date date = extractExpiresDate(response);
             Timer timer = new Timer();
-            timer.schedule(new LoginAdminTask(), subtractSeconds(date, 30));
+            timer.schedule(new LoginAdminTask(), subtractSeconds(date, 15));
         } catch (RuntimeException e) {
             logger.error(e.getMessage());
         } catch (Exception e) {
@@ -70,7 +70,6 @@ public class LoginAdminTask extends TimerTask {
     }
 
     public static void main(String[] args) {
-        doRun("idm", "fiware");
     }
 
 }
