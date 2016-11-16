@@ -20,7 +20,6 @@ camApp.controller('confirmDeleteController', [
                     .then(function (response) {
                         var dataStr = response.data + "";
                         var ancestors = dataStr.split(',');
-                        //$http.delete(BACK_END_URL_CONST + urlFragment + $scope.elementToDelete)
                         entityManager.deleteIndividual($scope.typeToDelete, $scope.elementToDelete, $scope.individualName)
                             .then(function (response) {
                                 ngNotifier.success();
@@ -50,6 +49,5 @@ camApp.controller('confirmDeleteController', [
                     $ngDialog.close();
                     ngNotifier.error(err);
                 });
-
         }
     }]);

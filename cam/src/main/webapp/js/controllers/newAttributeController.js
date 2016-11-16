@@ -75,7 +75,6 @@ camApp.controller('newAttributeController', [
         };
 
         $scope.saveNewAttribute = function () {
-            //$http.post(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/attributes',   $scope.newAttribute)
             entityManager.createAttribute($scope.isModel, $scope.selectedAssetName, $scope.newAttribute)
                 .then(function (response) {
                     Scopes.get('detailController').getAssetDetail($scope.selectedAssetName, ATTRIBUTES);

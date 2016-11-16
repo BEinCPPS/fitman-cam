@@ -7,8 +7,6 @@ camApp.controller('newAssetController', [
     '$route',
     'ngNotifier',
     function ($scope, $http, $q, entityManager, $ngDialog, $route, ngNotifier) {
-        //$scope.elementToDelete;
-        //$scope.typetoDelete;
         $scope.invalidName = false;
         $scope.closeNewAssetPanel = function () {
             $ngDialog.close();

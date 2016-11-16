@@ -68,7 +68,6 @@ camApp.controller('newRelationshipController', [
                     ngNotifier.error(err);
                 });
             } else {
-                //$http.post(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/relationships', $scope.newRelationship)
                 entityManager.createRelationship($scope.selectedAssetName, $scope.newRelationship)
                     .success(function (data, status) {
                         entityManager.getAssetDetail($scope.selectedAssetName);

@@ -29,7 +29,6 @@ camApp.controller('newAssetModelController', [
                 $scope.invalidName = true;
                 return;
             }
-            // $http.post(BACK_END_URL_CONST + '/models', $scope.newAssetModel)
             entityManager.createModel($scope.newAssetModel)
                 .success(function (data, status) {
                     $scope.loadChildren();

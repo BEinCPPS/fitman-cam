@@ -24,8 +24,6 @@ camApp.controller('attributeDetailController', [
         $scope.updateValueType = function () {
             $scope.newAttribute.value = '';
         }
-
-        //$http.get(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/attributes/' + $scope.attributeName)
         entityManager.getAttribute($scope.isModel, $scope.selectedAssetName, $scope.attributeName)
             .success(function (data) {
                 $scope.newAttribute = {
