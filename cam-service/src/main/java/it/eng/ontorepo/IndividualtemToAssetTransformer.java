@@ -63,8 +63,6 @@ public class IndividualtemToAssetTransformer {
                 Date data = DateUtils.parseDate(attribute.getPropertyValue(), Constants.DATE_PATTERN_DATE_TIME_TIMEZONE);
                 date = DateFormatUtils.format(data, "dd/MM/yyyy");
             }
-
-
         }
         Asset asset = new Asset(individual, domain, date, lostDomain);
         asset.setDomainIri(domainIri);

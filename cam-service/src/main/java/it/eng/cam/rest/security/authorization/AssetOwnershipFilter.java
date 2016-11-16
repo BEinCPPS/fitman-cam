@@ -16,7 +16,7 @@ public class AssetOwnershipFilter {
     public static List<Asset> filterAll(List<Asset> assets, SecurityContext securityContext) {
         if (assets == null || assets.isEmpty() || securityContext == null) return assets;
         List<Asset> assetsToGive = new ArrayList<>();
-        assets.parallelStream().forEach(asset -> {
+        assets.stream().forEach(asset -> {
                 assetsToGive.add(filter(asset, securityContext));
         });
         return assetsToGive;

@@ -16,7 +16,7 @@ public class DomainOwnershipFilter {
     public static List<Project> filterAll(List<Project> projects, SecurityContext securityContext) {
         if (projects == null || projects.isEmpty() || securityContext == null) return projects;
         List<Project> projectsToGive = new ArrayList<>();
-        projects.parallelStream().forEach(project -> {
+        projects.stream().forEach(project -> {
             projectsToGive.add(filter(project, securityContext));
         });
         return projectsToGive;

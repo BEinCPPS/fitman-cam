@@ -177,11 +177,12 @@ public class CAMRest {
         final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
         try {
             List<Asset> assets = AssetOwnershipFilter.filterAll(CAMRestImpl.getIndividuals(repoInstance), securityContext);
-            if (null == assetName || "".equals(assetName.trim()))
+            if (null == assetName || "".equals(assetName.trim())) {
                 return assets.stream()
                         .filter(asset ->
-                                asset.getNamespace()!= null && asset.getNamespace().equalsIgnoreCase(SesameRepoManager.getNamespace()))
+                                null != asset.getNamespace() && SesameRepoManager.getNamespace().equalsIgnoreCase(asset.getNamespace()))
                         .collect(Collectors.toList());
+            }
             return assets.stream().filter(asset -> asset.getNormalizedName().equalsIgnoreCase(assetName))
                     .collect(Collectors.toList());
         } catch (Exception e) {

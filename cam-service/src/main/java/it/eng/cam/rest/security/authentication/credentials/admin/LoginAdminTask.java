@@ -17,11 +17,15 @@ public class LoginAdminTask extends TimerTask {
     private static final String FATAL_ADMIN_TOKEN_IS_NOT_SET = "FATAL!!! ADMIN TOKEN IS NOT SET!!!";
 
     public void run() {
+        doRun(Constants.ADMIN_USER, Constants.ADMIN_PASSWORD);
+    }
+
+    private static void doRun(String username, String password) {
         try {
             System.setProperty(ClientBuilder.JAXRS_DEFAULT_CLIENT_BUILDER_PROPERTY, "org.glassfish.jersey.client.JerseyClientBuilder");
             UserLoginJSON user = new UserLoginJSON();
-            user.setUsername(Constants.ADMIN_USER);
-            user.setPassword(Constants.ADMIN_PASSWORD);
+            user.setUsername(username);
+            user.setPassword(password);
             IDMKeystoneService idmKeystoneService = new IDMKeystoneService();
             Response response = idmKeystoneService.getADMINToken(user);
             final List<Object> objects = response.getHeaders().get(Constants.X_SUBJECT_TOKEN);
@@ -31,41 +35,42 @@ public class LoginAdminTask extends TimerTask {
             Constants.ADMIN_TOKEN = adminToken;
             Date date = extractExpiresDate(response);
             Timer timer = new Timer();
-            timer.schedule(new LoginAdminTask(), subtract1Minute(date));
+            timer.schedule(new LoginAdminTask(), subtractSeconds(date, 30));
         } catch (RuntimeException e) {
-            logger.error(e);
-        }  catch (Exception e) {
+            logger.error(e.getMessage());
+        } catch (Exception e) {
             logger.error(e);
             Timer timer = new Timer();
-            timer.schedule(new LoginAdminTask(), addTenMinutes(new Date())); //after 10 minutes
+            timer.schedule(new LoginAdminTask(), addMinutes(new Date(), 2)); //after 10 minutes
         }
     }
 
-    private Date subtract1Minute(Date data) {
+    private static Date subtractSeconds(Date data, int seconds) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(data);
-        calendar.add(Calendar.MINUTE, -1);
+        int negSeconds = seconds * -1;
+        calendar.add(Calendar.SECOND, negSeconds);
         return calendar.getTime();
     }
 
-    private Date addTenMinutes(Date data) {
+    private static Date addMinutes(Date data, int minutes) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(data);
-        calendar.add(Calendar.MINUTE, 10);
+        calendar.add(Calendar.MINUTE, minutes);
         return calendar.getTime();
     }
 
-    private Date extractExpiresDate(Response response) throws java.text.ParseException {
+    private static Date extractExpiresDate(Response response) throws java.text.ParseException {
         final JsonObject dataJson = response.readEntity(JsonObject.class);
         final JsonObject tokenJson = dataJson.getJsonObject("token");
         String expiresAt = tokenJson.getString("expires_at");
-        System.out.println("DATE EXPIRES AT: "+expiresAt);
+        System.out.println("DATE EXPIRES AT: " + expiresAt);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
         return dateFormat.parse(expiresAt);
     }
 
     public static void main(String[] args) {
-
+        doRun("idm", "fiware");
     }
 
 }
