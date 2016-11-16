@@ -559,3 +559,24 @@ a[disabled="true"] {
     animation: fadeOut 1s;
 }
 
+.label-header-detail {
+    font-size: 14px;
+    background-color: #8cacb5;
+}
+
+.header-page-table-right {
+    margin: 10px 0px 30px 0;
+    padding: 10px;
+    background-color: #EEEEEE;
+    border-radius: 5px;
+    font: 12px Tahoma;
+}
+
+
+.header-page-table-left {
+    margin: 10px 10px 30px 0;
+    padding: 10px;
+    background-color: #EEEEEE;
+    border-radius: 5px;
+    font: 12px Tahoma;
+}

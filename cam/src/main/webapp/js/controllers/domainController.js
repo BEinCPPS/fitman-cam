@@ -44,7 +44,6 @@ camApp.controller('domainController', [
             });
         })();
 
-
         $scope.expandAncestors = function (domainName) {
             for (var i in $scope.domainsList) {
                 if ($scope.domainsList[i].name === domainName) {
@@ -54,7 +53,6 @@ camApp.controller('domainController', [
                 }
             }
         };
-
         $scope.assetList = [];
         templateManager.getDomainAction().then(function (response) {
             $scope.actionTemplate = response.data;
@@ -88,16 +86,6 @@ camApp.controller('domainController', [
                 "mDataProp": "createdOn",
                 "aTargets": [3]
             },
-            // {
-            //     "mDataProp": "lostDomain",
-            //     "aTargets": [4],
-            //     "fnRender": function (data) {
-            //         if (data.aData.lostDomain)
-            //             return '<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>';
-            //         else
-            //             return '<i class="fa fa-thumbs-o-up" aria-hidden="true"></i>';
-            //     }
-            // },
             {
                 "mDataProp": "action",
                 "aTargets": [4],

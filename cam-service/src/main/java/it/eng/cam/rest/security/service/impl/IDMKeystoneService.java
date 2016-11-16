@@ -60,7 +60,7 @@ public class IDMKeystoneService implements IDMService {
             return new ArrayList<>(ProjectsCacheManager.getInstance().getCache().values());
         buildProjectsCache(projects);
         List<Project> projectsToGive = new ArrayList<>();
-        addNoNameProject(projectsToGive);
+        addNoDomainProject(projectsToGive);
         projectsToGive.addAll(projects);
         return projectsToGive;
     }
@@ -85,7 +85,7 @@ public class IDMKeystoneService implements IDMService {
     }
 
 
-    private void addNoNameProject(List<Project> projects) {
+    private void addNoDomainProject(List<Project> projects) {
         Project noName = new Project();
         noName.setId(Constants.NO_DOMAIN);
         noName.setName("(NOT SET)");
