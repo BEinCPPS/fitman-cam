@@ -148,13 +148,14 @@ public class CAMRestImpl {
             List<Project> projects = extractLostDomainProjects(dao);
             for (Project project :
                     projects) {
+                dao = releaseRepo(dao);
                 List<Asset> assets = IndividualtemToAssetTransformer.transformAll(dao,
-                        dao.getIndividualsForDomain(Constants.IDM_PROJECTS_PREFIX + "/" + project.getId()));
+                        dao.getIndividualsForDomain(Constants.IDM_PROJECTS_PREFIX_WITH_SLASH + project.getId()), true);
                 individualsToGive.addAll(assets);
             }
             return individualsToGive;
         } else
-            return IndividualtemToAssetTransformer.transformAll(dao, dao.getIndividualsForDomain(Constants.IDM_PROJECTS_PREFIX + "/" + domainId));
+            return IndividualtemToAssetTransformer.transformAll(dao, dao.getIndividualsForDomain(Constants.IDM_PROJECTS_PREFIX_WITH_SLASH + domainId));
     }
 
     private static List<Project> extractLostDomainProjects(RepositoryDAO dao) {
@@ -162,7 +163,7 @@ public class CAMRestImpl {
         IDMKeystoneService idmKeystoneService = new IDMKeystoneService();
         final List<Project> projects = idmKeystoneService.getProjects();
         return projectsFromAssets.stream()
-                .filter(projects::contains)
+                .filter(project -> !projects.contains(project))
                 .collect(Collectors.toList());
     }
 
@@ -280,7 +281,7 @@ public class CAMRestImpl {
             if (domain.contains("#")) {
                 String[] split = domain.split("#");
                 String domainUri = split[0];
-                String id = StringUtils.replace(domainUri, Constants.IDM_PROJECTS_PREFIX, "");
+                String id = StringUtils.replace(domainUri, Constants.IDM_PROJECTS_PREFIX_WITH_SLASH, "");
                 Project project = new Project();
                 project.setId(id);
                 project.setName(split[1]);

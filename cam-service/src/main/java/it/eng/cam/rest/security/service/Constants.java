@@ -19,6 +19,7 @@ public class Constants {
     public static final RoleManager roleManager = new RoleManager();
     public static final String AUTHENTICATION_SERVICE = finder.getString("keyrock.authentication.service");
     public static final String IDM_PROJECTS_PREFIX = IDM_URL_KEYSTONE + "/projects";
+    public static final String IDM_PROJECTS_PREFIX_WITH_SLASH = Constants.IDM_PROJECTS_PREFIX + "/";
     public static final String NO_DOMAIN = "NO_DOMAIN";
     public static String ADMIN_TOKEN;
 }

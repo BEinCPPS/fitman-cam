@@ -76,9 +76,9 @@ camApp.controller('domainController', [
                 "fnRender": function (data) {
                     var retVal = data.aData.domain;
                     if (data.aData.domain && data.aData.lostDomain) {
-                        return '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;' + retVal;
+                        return '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-lost-domain="true"></span>&nbsp;' + retVal;
                     } else if (data.aData.domain && !data.aData.lostDomain) {
-                        return '<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp;' + retVal;
+                        return '<span class="glyphicon glyphicon-ok" aria-hidden="true" data-lost-domain="false"></span>&nbsp;' + retVal;
                     } else
                         return retVal;
                 }
@@ -106,10 +106,20 @@ camApp.controller('domainController', [
             "oLanguage": {
                 "sSearch": "Filter: "
             },
-            "fnDrawCallback": function (obj) {
+            "fnDrawCallback": function () {
                 if (typeof Scopes.get('homeController') !== 'undefined')
                     Scopes.get('homeController').addTooltipToAssetModel();
-            }
+                var lostDomainArr = angular.element("[data-lost-domain='true']");
+                angular.forEach(lostDomainArr, function (value) {
+                    var elem = angular.element(value);
+                    var row = elem.parent().parent();
+                    if (row.is('tr')) {
+                        var css = row.prop('class');
+                        css = 'danger ' + css;
+                        row.prop('class', css);
+                    }
+                });
+            },
         };
 
         $scope.loadChildren = function () {
