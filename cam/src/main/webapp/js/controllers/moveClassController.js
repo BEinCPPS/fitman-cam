@@ -37,12 +37,9 @@ camApp.controller('moveClassController', [
             //$http.put(BACK_END_URL_CONST + '/classes/' + $scope.newClass.name, $scope.newClass)
             entityManager.updateClass($scope.newClass.name, $scope.newClass)
                 .then(function (data) {
-                    // $ngDialog.close();
-                    // $route.reload();
-                    // $timeout(function () {
-                    //     Scopes.get('homeController').expandAncestors($scope.newClass.parentName);
-                    // }, 1000);
-                    ngNotifier.success('Success');
+                    $ngDialog.close();
+                    ngNotifier.success();
+                    $route.reload();
                 }, function (error) {
                     $ngDialog.close();
                     ngNotifier.error(error);

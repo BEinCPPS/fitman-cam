@@ -33,8 +33,8 @@ camApp.controller('newAssetModelController', [
                 .success(function (data, status) {
                     $scope.loadChildren();
                     $ngDialog.close();
-                    ngNotifier.success();
                     $route.reload();
+                    ngNotifier.success();
                 }).error(function (err) {
                 $ngDialog.close();
                 ngNotifier.error(err);

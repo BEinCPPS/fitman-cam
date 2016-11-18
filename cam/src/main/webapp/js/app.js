@@ -1,6 +1,6 @@
 // MODULE
 var camApp = angular.module('camApp', ['ngRoute', 'ngResource', 'angularTreeview', 'ngDialog', 'ngContextMenu',
-    'toaster', 'ngAnimate','ui.bootstrap', 'angular-loading-bar']);
+    'toastr', 'ngAnimate','ui.bootstrap', 'angular-loading-bar']);
 
 camApp.config(['ngDialogProvider', function (ngDialogProvider) {
     ngDialogProvider.setDefaults({
@@ -36,5 +36,20 @@ camApp.config(function ($httpProvider) {
     });
     $httpProvider.interceptors.push('${authentication.service}Interceptor'); //option oAuthInterceptor
     $httpProvider.defaults.cache = false;
+});
+
+camApp.config(function(toastrConfig) {
+    //Info on params and configuration here -> https://github.com/Foxandxss/angular-toastr
+    angular.extend(toastrConfig, {
+        allowHtml: true,
+        autoDismiss: false,
+        containerId: 'toast-container',
+        maxOpened: 2,
+        newestOnTop: true,
+        positionClass: 'toast-top-right',
+        preventDuplicates: false,
+        preventOpenDuplicates: false,
+        target: 'body'
+    });
 });
 

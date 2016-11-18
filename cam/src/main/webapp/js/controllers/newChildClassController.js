@@ -38,18 +38,16 @@ camApp.controller('newChildClassController', [
             }
             entityManager.createClass($scope.newClass)
                 .then(function (response) {
-                    $ngDialog.close();
-                    ngNotifier.success()
                     entityManager.getClasses(false).then(function () {
                         $route.reload();
                     }, function (error) {
                         ngNotifier.error(error);
-                    })
+                    });
+                    $ngDialog.close();
+                    ngNotifier.success()
                 }, function (error) {
                     $ngDialog.close();
-                    $scope.openErrorPanel(error);
-                }).then(function (response) {
-                Scopes.get('homeController').expandAncestors($scope.className);
-            });
+                    ngNotifier.error(error);
+                });
         }
     }]);

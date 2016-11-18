@@ -1,12 +1,12 @@
 /**
  * Created by ascatolo on 18/10/2016.
  */
-camApp.factory('ngNotifier', function (toaster) {
+camApp.factory('ngNotifier', function (toastr) {
     var notifierFactory = {};
 
     notifierFactory.success = function (msg) {
         if (!msg) msg = "Success!!!";
-        toaster.success(msg);
+        toastr.success(msg);
     };
     notifierFactory.error = function (error) {
         console.log(error);
@@ -15,10 +15,10 @@ camApp.factory('ngNotifier', function (toaster) {
         else if (typeof error === 'object' && error.statusText) {
             error = error.data + ' <br/> ' + error.statusText;
         }
-        toaster.error(error);
+        toastr.error(error);
     };
     notifierFactory.info = function (msg) {
-        toaster.info(msg);
+        toastr.info(msg);
     };
     return notifierFactory;
 });

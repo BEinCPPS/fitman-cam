@@ -55,8 +55,6 @@ camApp.controller('newRelationshipController', [
 
         $scope.saveNewRelationship = function () {
             if ($scope.attributeName) {
-                //$http.put(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/relationships/' + $scope.attributeName,
-                //  $scope.newRelationship)
                 entityManager.updateRelationship($scope.selectedAssetName, $scope.attributeName, $scope.newRelationship)
                     .success(function (data, status) {
                         entityManager.getAssetDetail($scope.selectedAssetName);

@@ -40,10 +40,13 @@ camApp.controller('confirmDeleteController', [
                 entityManager.deleteIndividual($scope.typeToDelete, $scope.elementToDelete, $scope.individualName)
                     .success(function (data, status) {
                         if ($scope.detail) {
+                            ngNotifier.success();
                             $route.reload();
                             $scope.entityManager.getAssetDetail($scope.individualName);
-                        } else
+                        } else {
+                            ngNotifier.success();
                             $scope.loadChildren();
+                        }
                         $ngDialog.closeAll();
                     }).error(function (err) {
                     $ngDialog.close();

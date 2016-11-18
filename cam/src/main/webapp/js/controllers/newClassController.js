@@ -40,7 +40,7 @@ camApp.controller('newClassController', [
                 .success(function (data, status) {
                     $ngDialog.close();
                     ngNotifier.success();
-                    entityManager.getClasses(false).then(function () {
+                    entityManager.getClasses().then(function () {
                         $route.reload();
                     }, function (error) {
                         ngNotifier.error(error)

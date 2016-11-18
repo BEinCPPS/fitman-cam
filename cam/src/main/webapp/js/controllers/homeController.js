@@ -14,17 +14,16 @@ camApp.controller('homeController', [
     function ($scope, Scopes, $routeParams, $route, $q, $ngDialog, $timeout, ngNotifier, entityManager, templateManager
         , currentNode, $window) {
         Scopes.store('homeController', $scope);
+        $scope.assetList = [];
+
         $scope.getAssets = function (name, retrieveChildren) {
             entityManager.getAssets(name, retrieveChildren)
                 .then(function (response) {
-                    //$scope.fetchAssetList(response.data, function (res) {
                     $scope.assetList = $scope.formatAssetListTable(response.data, name);
-                    //});
                 }, function (error) {
                     ngNotifier.error(error);
                 });
         }
-
         $scope.expandAncestors = function (elem) {
             if (elem.toUpperCase() == EVERYTHING) return;
             function search(array, name) {
@@ -55,21 +54,27 @@ camApp.controller('homeController', [
             });
         };
 
-        if (!isEmpty($routeParams.className)) {
-            setTimeout(function () { //CHIAMATA ASINCRONA PER RICARICARE GLI ASSET DELLA CLASSE
+        entityManager.getClasses()
+            .then(function (response) {
+                $scope.classList = $scope.createClasses(response.data, false);
+            }, function (error) {
+                ngNotifier.error(error);
+            }).then(function () {
+            if (!isEmpty($routeParams.className)) {
                 $scope.currentNode = {};
-                $scope.currentNode.className = $routeParams.className;
+                $scope.currentNode.className = currentNode.getClass().className;
+                // $routeParams.className;
                 $scope.getAssets($routeParams.className, true);
-                $scope.expandAncestors($routeParams.className);
-                $scope.newAssetVisible = true;
-            }, 10);
-            $scope.newAssetVisible = true;
-        } else {
-            if (currentNode.getClass().className) {
-                $scope.currentNode = currentNode.getClass();
                 $scope.expandAncestors($scope.currentNode.className);
+                $scope.newAssetVisible = true;
+                $scope.newAssetVisible = true;
+            } else {
+                if (currentNode.getClass().className) {
+                    $scope.currentNode = currentNode.getClass();
+                    $scope.expandAncestors($scope.currentNode.className);
+                }
             }
-        }
+        });
 
         $scope.regexPattern = REGEX_PATTERN;
         $scope.invalidNameMsg = INVALID_NAME_MSG;
@@ -114,12 +119,6 @@ camApp.controller('homeController', [
                 $scope.addTooltipToAssetModel();
             }
         };
-        $scope.assetList = [];
-        entityManager.getClasses().then(function (response) {
-            $scope.classList = $scope.createClasses(response.data, false);
-        }, function (error) {
-            ngNotifier.error(error);
-        })
         $scope.newAssetVisible = false;
 
         //funzioni di utilità
@@ -131,7 +130,7 @@ camApp.controller('homeController', [
             entityManager.getChildrenForClass(clsName)
                 .then(function (response) {
                     var dataNotMySelf = $scope.removeClassMySelf(response.data, $scope.currentNode.className);
-                    if (!isEmpty(dataNotMySelf) && $scope.currentNode.className !== EVERYTHING ) {
+                    if (!isEmpty(dataNotMySelf) && $scope.currentNode.className !== EVERYTHING) {
                         var classes = $scope.createClasses(dataNotMySelf, true);
                         $scope.currentNode.children = classes;
                     }
@@ -179,11 +178,10 @@ camApp.controller('homeController', [
                         scope: $scope
                     });
                 }).error(function (error) {
-                    $scope.domainsList = [];
-                    ngNotifier.error(error);
-                });
+                $scope.domainsList = [];
+                ngNotifier.error(error);
+            });
         }
-
         $scope.openNewAssetPanel = function (selectedModel) {
             $scope.selectedModel = selectedModel;
             entityManager.getDomains().success(function (data) {
@@ -206,11 +204,10 @@ camApp.controller('homeController', [
                     scope: $scope
                 });
             }).error(function (error) {
-                    $scope.domainsList = [];
-                    ngNotifier.error(error);
-                });
+                $scope.domainsList = [];
+                ngNotifier.error(error);
+            });
         }
-
         $scope.changeBackground = function (ev) {
             $('.ownselector').each(
                 function () {
@@ -219,7 +216,6 @@ camApp.controller('homeController', [
                 });
             ev.target.className += ' selected ownselector';
         }
-
         $scope.openRemoveAssetPanel = function (elementToDelete, typeToDelete) {
             $scope.elementToDelete = elementToDelete;
             $scope.typeToDelete = typeToDelete;
@@ -239,7 +235,6 @@ camApp.controller('homeController', [
                 scope: $scope
             });
         }
-
         $scope.openAddChildPanel = function (node) {
             $scope.className = node.className;
             $scope.title = 'Add child class to ';
@@ -249,7 +244,6 @@ camApp.controller('homeController', [
                 scope: $scope
             });
         }
-
         $scope.openMoveClassPanel = function (node) {
             $scope.className = node.className;
             $scope.title = 'Move class';
@@ -259,7 +253,6 @@ camApp.controller('homeController', [
                 scope: $scope
             });
         }
-
         $scope.openNewClassPanel = function () {
             $scope.title = 'Create class';
             $ngDialog.open({
@@ -268,7 +261,6 @@ camApp.controller('homeController', [
                 scope: $scope
             });
         }
-
         $scope.openErrorPanel = function (err) {
             $scope.errorMsg = err;
             // $ngDialog.open({
