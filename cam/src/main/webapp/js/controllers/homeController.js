@@ -91,7 +91,16 @@ camApp.controller('homeController', [
                 "aTargets": [1]
             }, {
                 "mDataProp": "domain",
-                "aTargets": [2]
+                "aTargets": [2],
+                "fnRender": function (data) {
+                    var retVal = data.aData.domain;
+                    if (data.aData.domain && data.aData.lostDomain) {
+                        return '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-lost-domain="true"></span>&nbsp;' + retVal;
+                    } else if (data.aData.domain && !data.aData.lostDomain) {
+                        return '<span class="glyphicon glyphicon-ok" aria-hidden="true" data-lost-domain="false"></span>&nbsp;' + retVal;
+                    } else
+                        return retVal;
+                }
             }, {
                 "mDataProp": "createdOn",
                 "aTargets": [3]
@@ -116,6 +125,20 @@ camApp.controller('homeController', [
                 "sSearch": "Filter: "
             },
             "fnDrawCallback": function () {
+                function colorToRed() {
+                    var lostDomainArr = angular.element("[data-lost-domain='true']");
+                    angular.forEach(lostDomainArr, function (value) {
+                        var elem = angular.element(value);
+                        var row = elem.parent();
+                        if (row.is('td')) {
+                            var css = row.prop('class');
+                            css = 'danger ' + css;
+                            row.prop('class', css);
+                        }
+                    });
+                }
+
+                colorToRed();
                 $scope.addTooltipToAssetModel();
             }
         };
@@ -293,13 +316,14 @@ camApp.controller('homeController', [
 
         $scope.addTooltipToAssetModel = function () {
             function addTooltip(htmlObj, maxLenght) {
+                var valueOrig = htmlObj.text();
                 var value = htmlObj.text();
                 htmlObj.attr('data-toggle', 'tooltip');
                 htmlObj.attr('data-container', 'body');
                 htmlObj.attr('title', value);
                 if (value && value.length > maxLenght) {
                     value = value.substring(0, maxLenght).concat('...');
-                    htmlObj.text(value);
+                    htmlObj.html().replace(valueOrig, value);
                 }
             }
 

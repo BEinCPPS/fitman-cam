@@ -107,18 +107,21 @@ camApp.controller('domainController', [
                 "sSearch": "Filter: "
             },
             "fnDrawCallback": function () {
+                function colorToRed() {
+                    var lostDomainArr = angular.element("[data-lost-domain='true']");
+                    angular.forEach(lostDomainArr, function (value) {
+                        var elem = angular.element(value);
+                        var row = elem.parent().parent();
+                        if (row.is('tr')) {
+                            var css = row.prop('class');
+                            css = 'danger ' + css;
+                            row.prop('class', css);
+                        }
+                    });
+                }
+                colorToRed();
                 if (typeof Scopes.get('homeController') !== 'undefined')
                     Scopes.get('homeController').addTooltipToAssetModel();
-                var lostDomainArr = angular.element("[data-lost-domain='true']");
-                angular.forEach(lostDomainArr, function (value) {
-                    var elem = angular.element(value);
-                    var row = elem.parent().parent();
-                    if (row.is('tr')) {
-                        var css = row.prop('class');
-                        css = 'danger ' + css;
-                        row.prop('class', css);
-                    }
-                });
             },
         };
 
