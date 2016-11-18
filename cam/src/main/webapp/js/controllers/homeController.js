@@ -314,8 +314,8 @@ camApp.controller('homeController', [
             var tableAssetElems = angular.element('tr.ng-scope');
             angular.forEach(tableAssetElems, function (value, key) {
                 var children = angular.element(value).children();
-                addTooltip(angular.element(children[0]), 20); //asset
-                addTooltip(angular.element(children[1]), 15); //class
+                addTooltip(angular.element(children[0]), 25); //asset
+                addTooltip(angular.element(children[1]), 25); //class
                 addTooltip(angular.element(children[2]), 20); //owner group
             });
             $('[data-toggle="tooltip"]').tooltip();

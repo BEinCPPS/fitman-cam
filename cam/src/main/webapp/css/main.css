@@ -561,8 +561,12 @@ a[disabled="true"] {
 
 .label-header-detail {
     font-size: 14px;
-    background-color: #EEEEEE;
+    background-color: #597087;
     font-weight: 200;
+}
+
+.label {
+    padding: .4em .4em .4em;
 }
 
 .header-page-table-right {

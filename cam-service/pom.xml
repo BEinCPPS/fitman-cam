@@ -289,8 +289,8 @@
                 <cors.api>true</cors.api>
                 <!-- KEYROCK IDM SECTION-->
                 <keyrock.url>http://161.27.159.76</keyrock.url>
-                <keyrock.admin.user></keyrock.admin.user> <!-- INSERT USER -->
-                <keyrock.admin.password></keyrock.admin.password> <!-- INSERT PASSWORD -->
+                <keyrock.admin.user>idm</keyrock.admin.user> <!-- INSERT USER -->
+                <keyrock.admin.password>fiware</keyrock.admin.password> <!-- INSERT PASSWORD -->
                 <!-- OAUTH2, KEYSTONE Supported at the moment -->
                 <keyrock.authentication.service>KEYSTONE</keyrock.authentication.service>
             </properties>
