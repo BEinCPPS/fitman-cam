@@ -51,43 +51,43 @@ public class RestTestIT extends Assert {
 		assertOk(response);
 		assertTrue(response.getBody(), true);
 	}
-
-	@HttpTest(method = Method.GET, path = "/classes", order = 2)
-	public void testGetClasses() {
-		try {
-			assertOk(response);
-		} catch (Exception e) {
-			assertFalse(e.getMessage(), true);
-		}
-	}
-
-	@HttpTest(method = Method.GET, path = "/classes/{rootName}", order = 3)
-	public void testGetIndividualsByClass() {
-		assertOk(response);
-	}
-
-	// WARNING FAKE CONTENT IS NECESSARY for restfuse library more info at
-	// https://github.com/eclipsesource/restfuse/issues/42
-	@HttpTest(method = Method.POST, path = "/classes", order = 4, type = MediaType.APPLICATION_JSON, content = "{\"name\":\"New_Class_2\",\"parentName\":\"Thing\"}")
-	public void testCreateClass() {
-		assertOk(response);
-	}
+//
+//	@HttpTest(method = Method.GET, path = "/classes", order = 2)
+//	public void testGetClasses() {
+//		try {
+//			assertOk(response);
+//		} catch (Exception e) {
+//			assertFalse(e.getMessage(), true);
+//		}
+//	}
+//
+//	@HttpTest(method = Method.GET, path = "/classes/{rootName}", order = 3)
+//	public void testGetIndividualsByClass() {
+//		assertOk(response);
+//	}
+//
+//	// WARNING FAKE CONTENT IS NECESSARY for restfuse library more info at
+//	// https://github.com/eclipsesource/restfuse/issues/42
+//	@HttpTest(method = Method.POST, path = "/classes", order = 4, type = MediaType.APPLICATION_JSON, content = "{\"name\":\"New_Class_2\",\"parentName\":\"Thing\"}")
+//	public void testCreateClass() {
+//		assertOk(response);
+//	}
 
 //	@HttpTest(method = Method.POST, path = "/classes", order = 5, type = MediaType.APPLICATION_JSON, content = "{\"name\":\"{testClass}\",\"parentName\":\"Thing\"}")
 //	public void testCreateClass2() {
 //		assertOk(response);
 //	}
-
-	@HttpTest(method = Method.PUT, path = "/classes/{classNameCreated}", order = 6, type = MediaType.APPLICATION_JSON, content = "{\"name\":\"New_Class_3\",\"parentName\":\"Thing\"}")
-	public void testMoveClass() {
-		assertOk(response);
-	}
-
-	@HttpTest(method = Method.DELETE, path = "/classes/{classNameMoved}", order = 7)
-	public void testDeleteClass() {
-		assertOk(response);
-	}
 //
+//	@HttpTest(method = Method.PUT, path = "/classes/{classNameCreated}", order = 6, type = MediaType.APPLICATION_JSON, content = "{\"name\":\"New_Class_3\",\"parentName\":\"Thing\"}")
+//	public void testMoveClass() {
+//		assertOk(response);
+//	}
+//
+//	@HttpTest(method = Method.DELETE, path = "/classes/{classNameMoved}", order = 7)
+//	public void testDeleteClass() {
+//		assertOk(response);
+//	}
+////
 //	@HttpTest(method = Method.GET, path = "/classes/{classNameCreated}", order = 8)
 //	public void testGetIndividual() {
 //		assertOk(response);
