@@ -129,11 +129,11 @@ camApp.controller('homeController', [
                     var lostDomainArr = angular.element("[data-lost-domain='true']");
                     angular.forEach(lostDomainArr, function (value) {
                         var elem = angular.element(value);
-                        var row = elem.parent();
-                        if (row.is('td')) {
-                            var css = row.prop('class');
+                        var cell = elem.parent();
+                        if (cell.is('td')) {
+                            var css = cell.prop('class');
                             css = 'danger ' + css;
-                            row.prop('class', css);
+                            cell.prop('class', css);
                         }
                     });
                 }
