@@ -3,7 +3,6 @@ package it.eng.cam.test;
 import it.eng.cam.rest.CAMRestImpl;
 import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.sesame.SesameRepoManager;
-import it.eng.ontorepo.Asset;
 import it.eng.ontorepo.ClassItem;
 import it.eng.ontorepo.IndividualItem;
 import it.eng.ontorepo.RepositoryDAO;
@@ -59,9 +58,9 @@ public class Test extends Assert {
 
     @org.junit.Test
     public void getIndividuals() {
-        List<Asset> individuals;
+        List<IndividualItem> individuals;
 		try {
-			individuals = CAMRestImpl.getIndividuals(dao);
+			individuals = dao.getIndividuals();
 			  assertNotNull("Null individuals", individuals);
 		      assertFalse("Empty indivduals list", individuals.isEmpty());
 		} catch (Exception e) {
@@ -349,9 +348,9 @@ public class Test extends Assert {
         } catch (Exception e) {
             assertFalse(e.getMessage(), true);
         }
-        List<Asset> individuals;
+        List<IndividualItem> individuals;
 		try {
-			individuals = CAMRestImpl.getIndividuals(dao, className);
+			individuals = dao.getIndividuals();
 			assertNotNull("individuals for class " + className + " are null", individuals);
 	        assertFalse("Empty individuals list", individuals.isEmpty());
 		} catch (Exception e) {
