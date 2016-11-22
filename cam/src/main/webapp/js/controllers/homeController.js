@@ -32,7 +32,13 @@ camApp.controller('homeController', [
                         array[i].collapsed = false;
                         if (isLeaf) {
                             array[i].selected = 'selected';
-                            $scope.selectNodeLabel(array[i], $window.event);
+                            var eventFake = new MouseEvent('click', {
+                                'view': $window,
+                                'bubbles': true,
+                                'cancelable': true
+                              });
+                             var event =  $window.event || eventFake;
+                            $scope.selectNodeLabel(array[i], event);
                         }
                         return;
                     }
@@ -85,25 +91,30 @@ camApp.controller('homeController', [
             {
                 "mDataProp": "individualName",
                 "aTargets": [0],
+                "bSearchable": true
             },
             {
                 "mDataProp": "className",
-                "aTargets": [1]
+                "aTargets": [1],
+                "bSearchable": true
             }, {
                 "mDataProp": "domain",
                 "aTargets": [2],
+                "bSearchable": true,
                 "fnRender": function (data) {
                     var retVal = data.aData.domain;
-                    if (data.aData.domain && data.aData.lostDomain) {
-                        return '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-lost-domain="true"></span>&nbsp;' + retVal;
-                    } else if (data.aData.domain && !data.aData.lostDomain) {
-                        return '<span class="glyphicon glyphicon-ok" aria-hidden="true" data-lost-domain="false"></span>&nbsp;' + retVal;
-                    } else
-                        return retVal;
+//                    if (data.aData.domain && data.aData.lostDomain) {
+//                        return '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-lost-domain="true"></span>&nbsp;' + retVal;
+//                    } else if (data.aData.domain && !data.aData.lostDomain) {
+//                        return '<span class="glyphicon glyphicon-ok" aria-hidden="true" data-lost-domain="false"></span>&nbsp;' + retVal;
+//                    } else
+//                        return retVal;
+                      return '<span aria-hidden="true" ></span>&nbsp;' + retVal;
                 }
             }, {
                 "mDataProp": "createdOn",
-                "aTargets": [3]
+                "aTargets": [3],
+                "bSortable": false
             }, {
                 "mDataProp": "action",
                 "aTargets": [4],
@@ -123,24 +134,24 @@ camApp.controller('homeController', [
             "bDestroy": true,
             "oLanguage": {
                 "sSearch": "Filter: "
-            },
-            "fnDrawCallback": function () {
-                function colorToRed() {
-                    var lostDomainArr = angular.element("[data-lost-domain='true']");
-                    angular.forEach(lostDomainArr, function (value) {
-                        var elem = angular.element(value);
-                        var cell = elem.parent();
-                        if (cell.is('td')) {
-                            var css = cell.prop('class');
-                            css = 'danger ' + css;
-                            cell.prop('class', css);
-                        }
-                    });
-                }
-
-                colorToRed();
-                $scope.addTooltipToAssetModel();
             }
+//            "fnDrawCallback": function () {
+//                function colorToRed() {
+//                    var lostDomainArr = angular.element("[data-lost-domain='true']");
+//                    angular.forEach(lostDomainArr, function (value) {
+//                        var elem = angular.element(value);
+//                        var cell = elem.parent();
+//                        if (cell.is('td')) {
+//                            var css = cell.prop('class');
+//                            css = 'danger ' + css;
+//                            cell.prop('class', css);
+//                        }
+//                    });
+//                }
+//
+//                colorToRed();
+//                $scope.addTooltipToAssetModel();
+//            }
         };
         $scope.newAssetVisible = false;
 

@@ -80,7 +80,7 @@ camApp.controller('domainController', [
                     } else if (data.aData.domain && !data.aData.lostDomain) {
                         return '<span class="glyphicon glyphicon-ok" aria-hidden="true" data-lost-domain="false"></span>&nbsp;' + retVal;
                     } else
-                        return retVal;
+                        return '<span aria-hidden="true" ></span>&nbsp;' + retVal;
                 }
             }, {
                 "mDataProp": "createdOn",
@@ -129,6 +129,7 @@ camApp.controller('domainController', [
             entityManager.getAssetsFromDomain($scope.currentNode.id)
                 .then(function (response) {
                     $scope.assetList = $scope.formatAssetListTable(response.data);
+                    console.log("Assets List", $scope.assetList);
                 }, function (error) {
                     ngNotifier.error(error);
                 });
