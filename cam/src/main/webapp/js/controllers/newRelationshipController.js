@@ -2,11 +2,11 @@ camApp.controller('newRelationshipController', [
     '$scope',
     'Scopes',
     '$q',
-    'ngDialog',
+    'ngDialogManager',
     'ngNotifier',
     'entityManager',
     '$route',
-    function ($scope, Scopes,  $q, $ngDialog, ngNotifier, entityManager, $route) {
+    function ($scope, Scopes,  $q, ngDialogManager, ngNotifier, entityManager, $route) {
         Scopes.store('newRelationshipController', $scope);
         $scope.relPanelTitle = "Add Relationship";
         $scope.valueIsMandatoryMsg = "Referred name is mandatory";
@@ -45,7 +45,7 @@ camApp.controller('newRelationshipController', [
 
         $scope.closeNewRelationshipPanel = function () {
             $scope.attributeName = null;
-            $ngDialog.close();
+            ngDialogManager.close();
         };
 
         $scope.select = {
@@ -58,22 +58,22 @@ camApp.controller('newRelationshipController', [
                 entityManager.updateRelationship($scope.selectedAssetName, $scope.attributeName, $scope.newRelationship)
                     .success(function (data, status) {
                         entityManager.getAssetDetail($scope.selectedAssetName);
-                        $ngDialog.close();
+                        ngDialogManager.close();
                         ngNotifier.success();
                         $route.reload();
                     }).error(function (err) {
-                    $ngDialog.close();
+                    ngDialogManager.close();
                     ngNotifier.error(err);
                 });
             } else {
                 entityManager.createRelationship($scope.selectedAssetName, $scope.newRelationship)
                     .success(function (data, status) {
                         entityManager.getAssetDetail($scope.selectedAssetName);
-                        $ngDialog.close();
+                        ngDialogManager.close();
                         ngNotifier.success();
                         $route.reload();
                     }).error(function (err) {
-                    $ngDialog.close();
+                    ngDialogManager.close();
                    ngNotifier.error(err);
                 });
             }
@@ -93,7 +93,7 @@ camApp.controller('newRelationshipController', [
                 return;
             }
             $scope.typeToAdd = 'relationship';
-            $ngDialog.open({
+            ngDialogManager.open({
                 template: 'pages/confirmNewOperation.htm',
                 controller: 'confirmNewOperationController',
                 scope: $scope

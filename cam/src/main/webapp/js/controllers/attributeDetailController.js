@@ -2,11 +2,11 @@ camApp.controller('attributeDetailController', [
     '$scope',
     'Scopes',
     '$q',
-    'ngDialog',
+    'ngDialogManager',
     'entityManager',
     '$route',
     'ngNotifier',
-    function ($scope, Scopes, $q, $ngDialog, entityManager, $route, ngNotifier) {
+    function ($scope, Scopes, $q, ngDialogManager, entityManager, $route, ngNotifier) {
         Scopes.store('attributeDetailController', $scope);
 
         $scope.typeIsMandatoryMsg = "Type is mandatory";
@@ -38,7 +38,7 @@ camApp.controller('attributeDetailController', [
 
 
         $scope.closeNewAttributePanel = function () {
-            $ngDialog.close();
+            ngDialogManager.close();
         }
 
         $scope.$watch('newAttribute.name', function () {
@@ -80,14 +80,12 @@ camApp.controller('attributeDetailController', [
             entityManager.updateAttribute($scope.isModel, $scope.selectedAssetName, $scope.newAttribute.name, $scope.newAttribute)
                 .success(function (data, status) {
                     Scopes.get('detailController').getAssetDetail($scope.selectedAssetName, ATTRIBUTES);
-                    $ngDialog.close();
+                    ngDialogManager.close();
                     ngNotifier.success();
                     $route.reload();
                 }).error(function (err) {
-                $ngDialog.close();
+                ngDialogManager.close();
                 ngNotifier.error(err);
             });
         };
-
-
     }]);

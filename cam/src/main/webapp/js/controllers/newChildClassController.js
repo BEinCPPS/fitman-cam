@@ -2,17 +2,17 @@ camApp.controller('newChildClassController', [
     '$scope',
     'Scopes',
     '$q',
-    'ngDialog',
+    'ngDialogManager',
     '$route',
     '$timeout',
     'entityManager',
     'ngNotifier',
-    function ($scope, Scopes, $q, $ngDialog, $route, $timeout, entityManager, ngNotifier) {
+    function ($scope, Scopes, $q, ngDialogManager, $route, $timeout, entityManager, ngNotifier) {
         $scope.isNewClassReadonly = false;
         $scope.isParentNameReadonly = true;
         $scope.closeCreateClassPanel = function () {
             $scope.attributeName = null;
-            $ngDialog.close();
+            ngDialogManager.close();
         };
         $scope.newClass = {
             name: "",
@@ -43,10 +43,10 @@ camApp.controller('newChildClassController', [
                     }, function (error) {
                         ngNotifier.error(error);
                     });
-                    $ngDialog.close();
+                    ngDialogManager.close();
                     ngNotifier.success()
                 }, function (error) {
-                    $ngDialog.close();
+                    ngDialogManager.close();
                     ngNotifier.error(error);
                 });
         }
