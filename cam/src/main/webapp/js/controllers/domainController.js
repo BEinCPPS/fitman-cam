@@ -48,7 +48,13 @@ camApp.controller('domainController', [
             for (var i in $scope.domainsList) {
                 if ($scope.domainsList[i].name === domainName) {
                     $scope.domainsList[i].selected = 'selected';
-                    $scope.selectNodeLabel($scope.domainsList[i], $window.event);
+                    var eventFake = new MouseEvent('click', {
+                                                    'view': $window,
+                                                    'bubbles': true,
+                                                    'cancelable': true
+                                                  });
+                    var event =  $window.event || eventFake;
+                    $scope.selectNodeLabel($scope.domainsList[i], event);
                     return;
                 }
             }
