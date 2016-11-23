@@ -2,16 +2,16 @@ camApp.controller('confirmDeleteController', [
     '$scope',
     'Scopes',
     '$q',
-    'ngDialog',
+    'ngDialogManager',
     '$route',
     '$timeout',
     'entityManager',
     'ngNotifier',
-    function ($scope, Scopes, $q, $ngDialog, $route, $timeout, entityManager, ngNotifier) {
+    function ($scope, Scopes, $q, ngDialogManager, $route, $timeout, entityManager, ngNotifier) {
         Scopes.store('confirmDeleteController', $scope);
 
         $scope.closeConfirmDeletePanel = function () {
-            $ngDialog.close();
+            ngDialogManager.close();
         }
         $scope.confirmDelete = function () {
 
@@ -23,13 +23,13 @@ camApp.controller('confirmDeleteController', [
                         entityManager.deleteIndividual($scope.typeToDelete, $scope.elementToDelete, $scope.individualName)
                             .then(function (response) {
                                 ngNotifier.success();
-                                $ngDialog.close();
+                                ngDialogManager.close();
                                 $route.reload();
                                 $timeout(function () {
                                     Scopes.get('homeController').expandAncestors(ancestors[ancestors.length - 2]);
                                 }, 1000);
                             }, function (error) {
-                                $ngDialog.close();
+                                ngDialogManager.close();
                                 ngNotifier.error(error);
                             });
 
@@ -47,9 +47,9 @@ camApp.controller('confirmDeleteController', [
                             ngNotifier.success();
                             $scope.loadChildren();
                         }
-                        $ngDialog.closeAll();
+                        ngDialogManager.closeAll();
                     }).error(function (err) {
-                    $ngDialog.close();
+                    ngDialogManager.close();
                     ngNotifier.error(err);
                 });
         }

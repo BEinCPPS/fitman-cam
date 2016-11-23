@@ -2,12 +2,12 @@ camApp.controller('newAttributeController', [
     '$scope',
     'Scopes',
     '$q',
-    'ngDialog',
+    'ngDialogManager',
     '$timeout',
     'entityManager',
     '$route',
     'ngNotifier',
-    function ($scope, Scopes, $q, $ngDialog, $timeout, entityManager, $route, ngNotifier) {
+    function ($scope, Scopes, $q, ngDialogManager, $timeout, entityManager, $route, ngNotifier) {
         Scopes.store('newAttributeController', $scope);
         $scope.typeIsMandatoryMsg = "Type is mandatory";
         $scope.valueIsMandatoryMsg = "Value is mandatory";
@@ -39,7 +39,7 @@ camApp.controller('newAttributeController', [
         }
 
         $scope.closeNewAttributePanel = function () {
-            $ngDialog.closeAll();
+            ngDialogManager.closeAll();
         }
         var urlFragment = '/assets/';
 
@@ -79,10 +79,10 @@ camApp.controller('newAttributeController', [
                 .then(function (response) {
                     Scopes.get('detailController').getAssetDetail($scope.selectedAssetName, ATTRIBUTES);
                     Scopes.get('detailController').getAttributes();
-                    $ngDialog.close();
+                    ngDialogManager.close();
                     $route.reload();
                 }, function (err) {
-                    $ngDialog.close();
+                    ngDialogManager.close();
                     ngNotifier.error(err);
                 }).then(function () {
                 ngNotifier.success();
@@ -113,7 +113,7 @@ camApp.controller('newAttributeController', [
                 $scope.operationMessage = 'Are you sure you want to select this ';
                 $scope.titleOperationMessage = 'Select this ';
             }
-            $ngDialog.open({
+            ngDialogManager.open({
                 template: 'pages/confirmNewOperation.htm',
                 controller: 'confirmNewOperationController',
                 scope: $scope

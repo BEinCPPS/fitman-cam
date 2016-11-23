@@ -3,14 +3,14 @@ camApp.controller('domainController', [
     '$scope',
     'Scopes',
     '$q',
-    'ngDialog',
+    'ngDialogManager',
     'entityManager',
     'ngNotifier',
     'templateManager',
     '$route',
     'currentNode',
     '$window',
-    function ($scope, Scopes, $q, $ngDialog, entityManager, ngNotifier
+    function ($scope, Scopes, $q, ngDialogManager, entityManager, ngNotifier
         , templateManager, $route, currentNode, $window) {
         Scopes.store('domainController', $scope);
         //Load Domains
@@ -179,7 +179,7 @@ camApp.controller('domainController', [
         $scope.openUpdateDomainPanel = function (assetName) {
             $scope.asset = $scope.assetMap[assetName];
             $scope.title = 'Update domain';
-            $ngDialog.open({
+            ngDialogManager.open({
                 template: 'pages/updateDomain.htm',
                 controller: 'domainController',
                 scope: $scope
@@ -188,6 +188,6 @@ camApp.controller('domainController', [
 
         $scope.closePanel = function () {
             $scope.asset = null;
-            $ngDialog.close();
+            ngDialogManager.close();
         }
     }]);

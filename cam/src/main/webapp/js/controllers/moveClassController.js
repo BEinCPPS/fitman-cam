@@ -2,18 +2,18 @@ camApp.controller('moveClassController', [
     '$scope',
     'Scopes',
     '$q',
-    'ngDialog',
+    'ngDialogManager',
     '$timeout',
     '$route',
     'entityManager',
     'ngNotifier',
-    function ($scope, Scopes, $q, $ngDialog, $timeout, $route, entityManager, ngNotifier) {
+    function ($scope, Scopes, $q, ngDialogManager, $timeout, $route, entityManager, ngNotifier) {
         $scope.isNewClassNameReadonly = true;
         $scope.isParentNameReadonly = false;
         $scope.isNewRootClass = false;
         $scope.closeCreateClassPanel = function () {
 
-            $ngDialog.close();
+            ngDialogManager.close();
         };
         $scope.newClass = {
             name: $scope.className,
@@ -37,14 +37,14 @@ camApp.controller('moveClassController', [
             //$http.put(BACK_END_URL_CONST + '/classes/' + $scope.newClass.name, $scope.newClass)
             entityManager.updateClass($scope.newClass.name, $scope.newClass)
                 .then(function (data) {
-                    $ngDialog.close();
+                    ngDialogManager.close();
                     ngNotifier.success();
                     $route.reload();
                 }, function (error) {
-                    $ngDialog.close();
+                    ngDialogManager.close();
                     ngNotifier.error(error);
                 }).then(function (data) {
-                $ngDialog.close();
+                ngDialogManager.close();
                 $route.reload();
                 $timeout(function () {
                     Scopes.get('homeController').expandAncestors($scope.newClass.parentName);

@@ -1,12 +1,12 @@
 camApp.controller('newAssetModelController', [
     '$scope',
     '$q',
-    'ngDialog',
+    'ngDialogManager',
     'entityManager',
     'ngNotifier',
     '$route',
     'Scopes',
-    function ($scope, $q, $ngDialog, entityManager, ngNotifier, $route, Scopes) {
+    function ($scope, $q, ngDialogManager, entityManager, ngNotifier, $route, Scopes) {
         $scope.invalidName = false;
         $scope.newAssetModel = {
             name: "",
@@ -15,7 +15,7 @@ camApp.controller('newAssetModelController', [
         };
 
         $scope.closeNewAssetModelPanel = function () {
-            $ngDialog.close();
+            ngDialogManager.close();
         }
 
         $scope.$watch('newAssetModel.name', function () {
@@ -32,11 +32,11 @@ camApp.controller('newAssetModelController', [
             entityManager.createModel($scope.newAssetModel)
                 .success(function (data, status) {
                     $scope.loadChildren();
-                    $ngDialog.close();
+                    ngDialogManager.close();
                     $route.reload();
                     ngNotifier.success();
                 }).error(function (err) {
-                $ngDialog.close();
+                ngDialogManager.close();
                 ngNotifier.error(err);
             });
         }

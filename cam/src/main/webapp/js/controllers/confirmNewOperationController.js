@@ -3,12 +3,12 @@ camApp.controller('confirmNewOperationController', [
     'Scopes',
     '$http',
     '$q',
-    'ngDialog',
+    'ngDialogManager',
     '$route',
     '$timeout',
-    function ($scope, Scopes, $http, $q, $ngDialog, $route, $timeout) {
+    function ($scope, Scopes, $http, $q, ngDialogManager, $route, $timeout) {
         $scope.closeConfirmNewOperationPanel = function () {
-            $ngDialog.close($ngDialog.getOpenDialogs()[1]);
+            ngDialogManager.close(ngDialogManager.getOpenDialogs()[1]);
         };
 
         $scope.confirmNewOperation = function () {
@@ -19,6 +19,6 @@ camApp.controller('confirmNewOperationController', [
             } else if($scope.typeToAdd == 'domain'){
                 Scopes.get('newDomainController').saveNewDomain();
             }
-            $ngDialog.closeAll();
+            ngDialogManager.closeAll();
         };
     }]);

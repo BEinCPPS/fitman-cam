@@ -4,14 +4,14 @@ camApp.controller('homeController', [
     '$routeParams',
     '$route',
     '$q',
-    'ngDialog',
+    'ngDialogManager',
     '$timeout',
     'ngNotifier',
     'entityManager',
     'templateManager',
     'currentNode',
     '$window',
-    function ($scope, Scopes, $routeParams, $route, $q, $ngDialog, $timeout, ngNotifier, entityManager, templateManager
+    function ($scope, Scopes, $routeParams, $route, $q, ngDialogManager, $timeout, ngNotifier, entityManager, templateManager
         , currentNode, $window) {
         Scopes.store('homeController', $scope);
         $scope.assetList = [];
@@ -206,7 +206,7 @@ camApp.controller('homeController', [
                             $scope.domainsList.push(domain);
                         }
                     }
-                    $ngDialog.open({
+                    ngDialogManager.open({
                         template: 'pages/newAssetModel.htm',
                         controller: 'newAssetModelController',
                         scope: $scope
@@ -232,7 +232,7 @@ camApp.controller('homeController', [
                         $scope.domainsList.push(domain);
                     }
                 }
-                $ngDialog.open({
+                ngDialogManager.open({
                     template: 'pages/newAsset.htm',
                     controller: 'newAssetController',
                     scope: $scope
@@ -253,7 +253,7 @@ camApp.controller('homeController', [
         $scope.openRemoveAssetPanel = function (elementToDelete, typeToDelete) {
             $scope.elementToDelete = elementToDelete;
             $scope.typeToDelete = typeToDelete;
-            $ngDialog.open({
+            ngDialogManager.open({
                 template: 'pages/confirmDelete.htm',
                 controller: 'confirmDeleteController',
                 scope: $scope
@@ -263,7 +263,7 @@ camApp.controller('homeController', [
         $scope.openConfirmDeleteClass = function (node) {
             $scope.elementToDelete = node.className;
             $scope.typeToDelete = 'class';
-            $ngDialog.open({
+            ngDialogManager.open({
                 template: 'pages/confirmDelete.htm',
                 controller: 'confirmDeleteController',
                 scope: $scope
@@ -272,7 +272,7 @@ camApp.controller('homeController', [
         $scope.openAddChildPanel = function (node) {
             $scope.className = node.className;
             $scope.title = 'Add child class to ';
-            $ngDialog.open({
+            ngDialogManager.open({
                 template: 'pages/newClass.htm',
                 controller: 'newChildClassController',
                 scope: $scope
@@ -281,7 +281,7 @@ camApp.controller('homeController', [
         $scope.openMoveClassPanel = function (node) {
             $scope.className = node.className;
             $scope.title = 'Move class';
-            $ngDialog.open({
+            ngDialogManager.open({
                 template: 'pages/newClass.htm',
                 controller: 'moveClassController',
                 scope: $scope
@@ -289,7 +289,7 @@ camApp.controller('homeController', [
         }
         $scope.openNewClassPanel = function () {
             $scope.title = 'Create class';
-            $ngDialog.open({
+            ngDialogManager.open({
                 template: 'pages/newClass.htm',
                 controller: 'newClassController',
                 scope: $scope
@@ -297,7 +297,7 @@ camApp.controller('homeController', [
         }
         $scope.openErrorPanel = function (err) {
             $scope.errorMsg = err;
-            // $ngDialog.open({
+            // ngDialogManager.open({
             //     template: 'pages/error.htm',
             //     controller: 'openErrorController',
             //     scope: $scope

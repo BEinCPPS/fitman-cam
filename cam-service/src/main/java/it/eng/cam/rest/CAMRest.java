@@ -242,39 +242,23 @@ public class CAMRest {
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             individualAttributes = CAMRestImpl.getIndividualAttributes(repoInstance, assetName);
+            if (individualAttributes != null) {
+                repoInstance = SesameRepoManager.getRepoInstance(getClass());
+                CAMRestImpl.deleteIndividual(repoInstance, assetName);
+                repoInstance = SesameRepoManager.getRepoInstance(getClass());
+                CAMRestImpl.createAsset(repoInstance, asset.getName(), asset.getModelName(), asset.getDomainName());
+                return Response.ok("Asset with name '" + asset.getName() + "' for Model '" + asset.getModelName()
+                        + "' for Domain '" + asset.getDomainName() + "' was successfully updated!").build();
+            } else {
+                return Response.notModified("Asset with name '" + asset.getName() + "' for Model '" + asset.getModelName()
+                        + "' for Domain '" + asset.getDomainName() + "' does not exist").build();
+            }
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
-        if (individualAttributes != null) {
-            try {
-                repoInstance = SesameRepoManager.getRepoInstance(getClass());
-                CAMRestImpl.deleteIndividual(repoInstance, assetName);
-            } catch (Exception e) {
-                logger.error(e);
-                throw new CAMServiceWebException(e.getMessage());
-            } finally {
-                SesameRepoManager.releaseRepoDaoConn(repoInstance);
-            }
-            try {
-                repoInstance = SesameRepoManager.getRepoInstance(getClass());
-                CAMRestImpl.createAsset(repoInstance, asset.getName(), asset.getModelName(), asset.getDomainName());
-                return Response.ok("Asset with name '" + asset.getName() + "' for Model '" + asset.getModelName()
-                        + "' for Domain '" + asset.getDomainName() + "' was successfully updated!").build();
-
-            } catch (Exception e) {
-                logger.error(e);
-                throw new CAMServiceWebException(e.getMessage());
-            } finally {
-                SesameRepoManager.releaseRepoDaoConn(repoInstance);
-            }
-        } else {
-            return Response.notModified("Asset with name '" + asset.getName() + "' for Model '" + asset.getModelName()
-                    + "' for Domain '" + asset.getDomainName() + "' does not exist").build();
-        }
-
     }
 
     @DELETE
@@ -379,13 +363,6 @@ public class CAMRest {
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             CAMRestImpl.removeProperty(repoInstance, assetName, attributeName);
-        } catch (Exception e) {
-            logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
-        }
-        try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             CAMRestImpl.setAttribute(repoInstance, attribute.getName(), assetName, attribute.getValue(),
                     attribute.getType());
@@ -641,26 +618,12 @@ public class CAMRest {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(repoInstance, modelName);
             if (individualAttributes != null) {
-                try {
-                    CAMRestImpl.deleteIndividual(repoInstance, modelName);
-                } catch (Exception e) {
-                    logger.error(e);
-                    throw new CAMServiceWebException(e.getMessage());
-                } finally {
-                    SesameRepoManager.releaseRepoDaoConn(repoInstance);
-                }
-                try {
-                    repoInstance = SesameRepoManager.getRepoInstance(getClass());
-                    CAMRestImpl.createAssetModel(repoInstance, model.getName(), model.getClassName(),
-                            model.getDomainName());
-                    return Response.ok("Model with name '" + model.getName() + "' for Model '" + model.getClassName()
-                            + "' for Domain '" + model.getDomainName() + "' was successfully updated!").build();
-                } catch (Exception e) {
-                    logger.error(e);
-                    throw new CAMServiceWebException(e.getMessage());
-                } finally {
-                    SesameRepoManager.releaseRepoDaoConn(repoInstance);
-                }
+                CAMRestImpl.deleteIndividual(repoInstance, modelName);
+                repoInstance = SesameRepoManager.getRepoInstance(null);
+                CAMRestImpl.createAssetModel(repoInstance, model.getName(), model.getClassName(),
+                        model.getDomainName());
+                return Response.ok("Model with name '" + model.getName() + "' for Model '" + model.getClassName()
+                        + "' for Domain '" + model.getDomainName() + "' was successfully updated!").build();
             } else {
                 return Response.notModified("Model with name '" + model.getName() + "' for Model '"
                         + model.getClassName() + "' for Domain '" + model.getDomainName() + "' does not exist").build();
