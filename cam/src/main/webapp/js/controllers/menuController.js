@@ -21,14 +21,14 @@ camApp.controller('menuController', [
                 $scope.user = data.data;
                 console.log($scope.user)
 
-                if (auth.mySelf() == 'oAuth') {
+                if (auth.mySelf() == OAUTH) {
                     $scope.userDisplay = {
                         name: $scope.user.displayName,
                         email: $scope.user.email,
                         roles: $scope.user.roles,
                         organizations: $scope.user.organizations
                     }
-                } else if (auth.mySelf() == 'Auth') {
+                } else if (auth.mySelf() == AUTH) {
                     $scope.userDisplay = {
                         name: $scope.user.id,
                         email: $scope.user.name,
@@ -43,10 +43,14 @@ camApp.controller('menuController', [
             }, function (error) {
                 ngNotifier.error(error);
             });
-        $rootScope.$on('$routeChangeStart', function () {
+        $rootScope.$on('$routeChangeStart', function (event, next, current) {
             $scope.loggedIn = auth.isLoggedIn();
+            var nextPath = next.$$route.originalPath;
             if (!$scope.loggedIn && !auth.isInLogout) {
-                auth.login();
+                if (nextPath && nextPath.indexOf('login') < 0)
+                    auth.login();
+            } else if (!$scope.loggedIn && auth.isInLogout) {
+                $location.path('/');
             }
         });
 
@@ -64,6 +68,14 @@ camApp.controller('menuController', [
         $scope.doLogout = function () {
             $scope.user = '';
             auth.logout();
+        };
+
+        $scope.login = function () {
+            if (auth.mySelf() == OAUTH) {
+                auth.login();
+            } else if (auth.mySelf() == AUTH) {
+                $location.path('/');
+            }
         };
 
         //NOT USED with OAuth2
@@ -85,7 +97,6 @@ camApp.controller('menuController', [
                 if (error) {
                     ngNotifier.error("User and/or password are invalid!");
                 }
-
             });
         };
 
@@ -100,7 +111,7 @@ camApp.controller('menuController', [
                 return 'active';
             else return '';
         };
-        
+
         $scope.linkCamService = function () {
             return BACK_END_URL_CONST;
         };
@@ -108,4 +119,5 @@ camApp.controller('menuController', [
         $scope.linkKeyrockSignup = function () {
             return KEYROCK_SIGNUP_URL;
         };
-    }]);
+    }
+]);

@@ -16,7 +16,7 @@ camApp
         var cache = $cacheFactory('camCache');
         // log a user in
         authFactory.mySelf = function () {
-            return 'Auth';
+            return AUTH;
         }
 
         authFactory.login = function (username, password) {
@@ -134,9 +134,8 @@ camApp
                 AuthToken.setToken();
                 //$location.path('/login');
                 if (response.config.url.indexOf('authenticate') > 0) {
-                    $location.path('/login');
+                    $location.path('/');
                 }
-                else $location.path('/');
             }
             // return the errors from the server as a promise
             return $q.reject(response);

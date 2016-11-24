@@ -585,3 +585,8 @@ div.ng-leave {
     border-radius: 5px;
     font: 12px Tahoma;
 }
+
+#login-password {
+    height: 34px;
+    margin-top: 10px;
+}

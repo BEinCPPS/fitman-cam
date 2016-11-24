@@ -1,7 +1,7 @@
 /**
  * Created by ascatolo on 18/10/2016.
  */
-camApp.factory('ngNotifier', function (toastr) {
+camApp.factory('ngNotifier', ['toastr', '${authentication.service}', function (toastr, auth) {
     var notifierFactory = {};
 
     notifierFactory.success = function (msg) {
@@ -21,4 +21,4 @@ camApp.factory('ngNotifier', function (toastr) {
         toastr.info(msg);
     };
     return notifierFactory;
-});
+}]);
