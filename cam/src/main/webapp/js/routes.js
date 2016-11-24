@@ -16,10 +16,12 @@ camApp.config(function ($routeProvider) {
     }).when('/domains', {
         templateUrl: 'pages/domain.htm',
         controller: 'domainController'
-    }).when('/login', {
-        templateUrl: 'pages/login.html',
-        controller: 'menuController'
-    }).otherwise({
+    })
+    //     .when('/login', {
+    //     templateUrl: 'pages/login.html',
+    //     controller: 'menuController'
+    // })
+        .otherwise({
         redirectTo: '/'
     });
 });

@@ -24,3 +24,5 @@ var OAUTH_USER_LOGGED_URL = KEYROCK_URL + '/user?access_token=';
 
 const EVERYTHING = '(EVERYTHING)';
 const NO_DOMAIN = 'NO_DOMAIN';
+const OAUTH = 'oAuth';
+const AUTH = 'auth';
