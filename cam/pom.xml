@@ -36,7 +36,7 @@
                             </resource>
                         </webResources>
 <!--                         <outputDirectory>C:\Program Files\apache-tomcat-8.0.33\webapps</outputDirectory> -->
-                        <outputDirectory>C:\Users\alberti\WORK\BEinCPPS\apache-tomcat-8.0.33\webapps</outputDirectory>
+                        <outputDirectory>/Users/ascatox/Documents/Servers/apache-tomcat-8.0.33/webapps</outputDirectory>
                     </configuration>
                 </plugin>
             </plugins>
