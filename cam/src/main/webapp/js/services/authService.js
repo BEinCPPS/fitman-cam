@@ -69,7 +69,7 @@ camApp
                 else
                     return cache.get('user');
             }
-            return $q.reject({message: 'User has no token.'});
+            return $q.reject({message: 'ERROR_NOT_LOGGED: User has no token.'});
         };
 
 

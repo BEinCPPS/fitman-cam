@@ -1,132 +1,209 @@
 /**
  * Created by ascatolo on 10/10/2016.
  */
-camApp.factory('entityManager', function ($http) {
+camApp.factory('entityManager', ['$q','$http', '${authentication.service}', function ($q, $http, auth) {
 
     // create a new object
     var entityManager = {};
 
+    function rejectNotLoggedCall() {
+        var defer = $q.defer();
+        defer.reject({message: 'ERROR_NOT_LOGGED: You are not logged in. Please login!'});
+        return defer.promise;
+    }
+
     // get a single user
     entityManager.getAssets = function (name, retrieveForChildren) {
-        var assetsForChildren = '';
-        if (retrieveForChildren)
-            assetsForChildren = '&&retrieveForChildren=true';
-        return $http.get(BACK_END_URL_CONST + '/assets?className=' + name + assetsForChildren);
+        if (auth.isLoggedIn()) {
+            var assetsForChildren = '';
+            if (retrieveForChildren)
+                assetsForChildren = '&&retrieveForChildren=true';
+            return $http.get(BACK_END_URL_CONST + '/assets?className=' + name + assetsForChildren);
+        } else
+            return rejectNotLoggedCall();
     };
 
     entityManager.getClasses = function () {
-        return $http.get(BACK_END_URL_CONST + '/classes');
+        if (auth.isLoggedIn())
+            return $http.get(BACK_END_URL_CONST + '/classes');
+        else
+            return rejectNotLoggedCall();
     }
 
     entityManager.getChildrenForClass = function (className) {
-        return $http.get(BACK_END_URL_CONST + '/classes/' + className);
+        if (auth.isLoggedIn())
+            return $http.get(BACK_END_URL_CONST + '/classes/' + className);
+        else
+            return rejectNotLoggedCall();
     }
 
     entityManager.getAssetDetail = function (name, type) {
+        if (auth.isLoggedIn())
         //type attributes or relationships
-        return $http.get(BACK_END_URL_CONST + '/assets/' + name + '/' + type)
+            return $http.get(BACK_END_URL_CONST + '/assets/' + name + '/' + type)
+        else
+            return rejectNotLoggedCall();
     }
 
     entityManager.getDomains = function () {
-        var cache = {cache: true};
-        return $http.get(BACK_END_URL_CONST + '/domains', cache);
+        if (auth.isLoggedIn()) {
+            var cache = {cache: true};
+            return $http.get(BACK_END_URL_CONST + '/domains', cache);
+        } else
+            return rejectNotLoggedCall();
     }
 
     entityManager.getAncestors = function (className) {
-        return $http.get(BACK_END_URL_CONST + '/classes/ancestors/' + className);
+        if (auth.isLoggedIn())
+            return $http.get(BACK_END_URL_CONST + '/classes/ancestors/' + className);
+        else
+            return rejectNotLoggedCall();
     }
 
     entityManager.getAttributes = function () {
-        return $http.get(BACK_END_URL_CONST + '/attributes');
+        if (auth.isLoggedIn())
+            return $http.get(BACK_END_URL_CONST + '/attributes');
+        else
+            return rejectNotLoggedCall();
     }
 
     entityManager.getAttributesForIndividual = function (individualName) {
-        return $http.get(BACK_END_URL_CONST + '/assets/' + individualName + '/attributes')
+        if (auth.isLoggedIn())
+            return $http.get(BACK_END_URL_CONST + '/assets/' + individualName + '/attributes')
+        else
+            return rejectNotLoggedCall();
     }
 
     entityManager.getAttribute = function (isModel, assetName, attributeName) {
-        var urlFragment = '/assets/';
-        if (isModel)
-            urlFragment = '/models/'
-        return $http.get(BACK_END_URL_CONST + urlFragment + assetName + '/attributes/' + attributeName);
+        if (auth.isLoggedIn()) {
+            var urlFragment = '/assets/';
+            if (isModel)
+                urlFragment = '/models/'
+            return $http.get(BACK_END_URL_CONST + urlFragment + assetName + '/attributes/' + attributeName);
+        } else
+            return rejectNotLoggedCall();
     }
 
     entityManager.deleteIndividual = function (typeToDelete, elementToDelete, individualName) {
-        var urlFragment = '/assets/';
-        if (typeToDelete == 'model')
-            urlFragment = '/models/';
-        else if (typeToDelete == 'attribute')
-            urlFragment = '/assets/' + individualName + '/attributes/';
-        else if (typeToDelete == 'relationship')
-            urlFragment = '/assets/' + individualName + '/relationships/';
-        else if (typeToDelete == 'class')
-            urlFragment = '/classes/';
-        else if (typeToDelete == 'domain')
-            urlFragment = '/owners/';
+        if (auth.isLoggedIn()) {
+            var urlFragment = '/assets/';
+            if (typeToDelete == 'model')
+                urlFragment = '/models/';
+            else if (typeToDelete == 'attribute')
+                urlFragment = '/assets/' + individualName + '/attributes/';
+            else if (typeToDelete == 'relationship')
+                urlFragment = '/assets/' + individualName + '/relationships/';
+            else if (typeToDelete == 'class')
+                urlFragment = '/classes/';
+            else if (typeToDelete == 'domain')
+                urlFragment = '/owners/';
 
-        return $http.delete(BACK_END_URL_CONST + urlFragment + elementToDelete);
+            return $http.delete(BACK_END_URL_CONST + urlFragment + elementToDelete);
+        } else
+            return rejectNotLoggedCall();
     }
 
     entityManager.removeClassMySelf = function (data, className) {
-        var classes = [];
-        if (!data) return classes;
-        for (var i in data) {
-            if (data[i].className != className)
-                classes.push(data[i]);
-        }
-        return classes;
+        if (auth.isLoggedIn()) {
+            var classes = [];
+            if (!data) return classes;
+            for (var i in data) {
+                if (data[i].className != className)
+                    classes.push(data[i]);
+            }
+            return classes;
+        } else
+            return rejectNotLoggedCall();
     }
+
     entityManager.updateClass = function (name, newClass) {
-        return $http.put(BACK_END_URL_CONST + '/classes/' + name, newClass);
+        if (auth.isLoggedIn())
+            return $http.put(BACK_END_URL_CONST + '/classes/' + name, newClass);
+        else
+            return rejectNotLoggedCall();
     }
+
     entityManager.createAsset = function (newAsset) {
-        return $http.post(BACK_END_URL_CONST + '/assets', newAsset);
+        if (auth.isLoggedIn())
+            return $http.post(BACK_END_URL_CONST + '/assets', newAsset);
+        else
+            return rejectNotLoggedCall();
     }
+
     entityManager.createModel = function (newModel) {
-        return $http.post(BACK_END_URL_CONST + '/models', newModel);
+        if (auth.isLoggedIn())
+            return $http.post(BACK_END_URL_CONST + '/models', newModel);
+        else
+            return rejectNotLoggedCall();
     }
+
     entityManager.createClass = function (newClass) {
-        return $http.post(BACK_END_URL_CONST + '/classes', newClass);
+        if (auth.isLoggedIn())
+            return $http.post(BACK_END_URL_CONST + '/classes', newClass);
+        else
+            return rejectNotLoggedCall();
     }
+
     entityManager.createAttribute = function (isModel, individualName, attribute) {
-        var urlFragment = '/assets/';
-        if (isModel)
-            urlFragment = '/models/';
-        return $http.post(BACK_END_URL_CONST + urlFragment + individualName + '/attributes',
+        if (auth.isLoggedIn()) {
+            var urlFragment = '/assets/';
+            if (isModel)
+                urlFragment = '/models/';
+            return $http.post(BACK_END_URL_CONST + urlFragment + individualName + '/attributes',
             attribute);
+        } else
+            return rejectNotLoggedCall();
     }
 
     entityManager.getRelationship = function (individualName, attributeName) {
-        return $http.get(BACK_END_URL_CONST + '/assets/' + individualName + '/relationships/' + attributeName);
+        if (auth.isLoggedIn())
+            return $http.get(BACK_END_URL_CONST + '/assets/' + individualName + '/relationships/' + attributeName);
+        else
+            return rejectNotLoggedCall();
     }
 
     entityManager.createRelationship = function (individualName, newRelationship) {
-        return $http.post(BACK_END_URL_CONST + '/assets/' + individualName + '/relationships', newRelationship);
+        if (auth.isLoggedIn())
+            return $http.post(BACK_END_URL_CONST + '/assets/' + individualName + '/relationships', newRelationship);
+        else
+            return rejectNotLoggedCall();
     }
 
     entityManager.updateRelationship = function (individualName, attributeName, newRelationship) {
-        return $http.put(BACK_END_URL_CONST + '/assets/' + individualName + '/relationships/' + attributeName,
-            newRelationship);
+        if (auth.isLoggedIn())
+            return $http.put(BACK_END_URL_CONST + '/assets/' + individualName + '/relationships/' + attributeName,
+                newRelationship);
+        else
+             return rejectNotLoggedCall();
     }
 
     entityManager.updateAttribute = function (isModel, individualName, attributeName, attribute) {
-        var urlFragment = '/assets/';
-        if (isModel)
-            urlFragment = '/models/';
-        return $http.put(BACK_END_URL_CONST + urlFragment + individualName + '/attributes/' + attributeName, attribute);
+        if (auth.isLoggedIn()) {
+            var urlFragment = '/assets/';
+            if (isModel)
+                urlFragment = '/models/';
+            return $http.put(BACK_END_URL_CONST + urlFragment + individualName + '/attributes/' + attributeName, attribute);
+        } else
+            return rejectNotLoggedCall();
     }
 
     entityManager.getAssetsFromDomain = function (domainId) {
-        return $http.get(BACK_END_URL_CONST + '/domains/' + domainId + '/assets');
+        if (auth.isLoggedIn())
+            return $http.get(BACK_END_URL_CONST + '/domains/' + domainId + '/assets');
+        else
+            return rejectNotLoggedCall();
     }
 
 
     entityManager.updateAsset = function (individualName, asset) {
-        return $http.put(BACK_END_URL_CONST + '/models/' + individualName,
+        if (auth.isLoggedIn())
+            return $http.put(BACK_END_URL_CONST + '/models/' + individualName,
             asset);
+        else
+            return rejectNotLoggedCall();
     }
 
     // return our entire userFactory object
     return entityManager;
 
-});
+}]);
