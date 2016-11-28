@@ -8,7 +8,8 @@ camApp.controller('confirmNewOperationController', [
     '$timeout',
     function ($scope, Scopes, $http, $q, ngDialogManager, $route, $timeout) {
         $scope.closeConfirmNewOperationPanel = function () {
-            ngDialogManager.close(ngDialogManager.getOpenDialogs()[1]);
+         var ngDialog=ngDialogManager.getNgDialog();
+           ngDialog.close(ngDialog.getOpenDialogs()[1]);
         };
 
         $scope.confirmNewOperation = function () {
