@@ -44,13 +44,14 @@ camApp.controller('menuController', [
             });
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
             $scope.loggedIn = auth.isLoggedIn();
-            var nextPath = next.$$route.originalPath;
-            if (!$scope.loggedIn && !auth.isInLogout) {
-                if (nextPath && nextPath.indexOf('login') < 0)
-                    auth.login();
-            } else if (!$scope.loggedIn && auth.isInLogout) {
-                $location.path('/');
-            }
+             if (!$scope.loggedIn)
+                $scope.login();
+//            var nextPath = next.$$route.originalPath;
+//            if (!$scope.loggedIn && !auth.isInLogout) {
+//              $scope.login();
+//            } else if (!$scope.loggedIn && auth.isInLogout) {
+//                $location.path('/');
+//            }
         });
 
         $scope.isAdmin = function () {
@@ -60,7 +61,8 @@ camApp.controller('menuController', [
                     if (roles[i] == 'ADMIN')
                         return true;
                 }
-            }
+        
+    }
             return false;
         }
         // function to handle logging out

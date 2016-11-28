@@ -15,11 +15,10 @@ camApp.factory('ngNotifier', ['toastr', '${authentication.service}', function (t
         else if (typeof error === 'object' && error.statusText) {
             error = error.data + ' <br/> ' + error.statusText;
         }
-
         if (typeof error === 'object' && error.message.indexOf('ERROR_NOT_LOGGED') === -1)
-//        if (error.message != 'ERROR_NOT_LOGGED: You are not logged in. Please login!' &&
-//            error.message != 'ERROR_NOT_LOGGED: User has no token.')
-            toastr.error(error.message);
+            error = error.message;
+
+        toastr.error(error);
     };
     notifierFactory.info = function (msg) {
         toastr.info(msg);
