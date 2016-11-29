@@ -1,6 +1,6 @@
 package it.eng.cam.rest.security.authentication;
 
-import it.eng.cam.rest.security.service.Constants;
+import it.eng.cam.rest.Constants;
 import it.eng.cam.rest.security.service.impl.IDMService;
 import it.eng.cam.rest.security.service.IDMServiceManager;
 import org.apache.commons.lang3.StringUtils;

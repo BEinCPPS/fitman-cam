@@ -6,7 +6,7 @@ import it.eng.cam.rest.security.authentication.credentials.Credentials;
 import it.eng.cam.rest.security.project.Project;
 import it.eng.cam.rest.security.project.ProjectContainerJSON;
 import it.eng.cam.rest.security.project.ProjectsCacheManager;
-import it.eng.cam.rest.security.service.Constants;
+import it.eng.cam.rest.Constants;
 import it.eng.cam.rest.security.user.User;
 import it.eng.cam.rest.security.user.UserContainerJSON;
 import it.eng.cam.rest.security.user.UserLoginJSON;

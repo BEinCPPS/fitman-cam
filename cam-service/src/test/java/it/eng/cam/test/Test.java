@@ -1,7 +1,7 @@
 package it.eng.cam.test;
 
 import it.eng.cam.rest.CAMRestImpl;
-import it.eng.cam.rest.security.service.Constants;
+import it.eng.cam.rest.Constants;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.ClassItem;
 import it.eng.ontorepo.IndividualItem;
