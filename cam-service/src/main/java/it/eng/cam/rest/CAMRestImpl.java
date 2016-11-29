@@ -1,15 +1,20 @@
 package it.eng.cam.rest;
 
+import it.eng.cam.rest.orion.AssetToContextTrasformer;
+import it.eng.cam.rest.orion.OrionRestClient;
+import it.eng.cam.rest.orion.context.ContextElement;
 import it.eng.cam.rest.security.project.Project;
 import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
 import it.eng.cam.rest.sesame.SesameRepoManager;
+import it.eng.cam.rest.sesame.dto.AssetJSON;
 import it.eng.ontorepo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.WebApplicationException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -245,6 +250,17 @@ public class CAMRestImpl {
             throw new WebApplicationException(e.getMessage());
         } finally {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
+
+    public static void createContexts(RepositoryDAO dao, List<AssetJSON> assetJSONs) throws ParseException {
+        if (assetJSONs == null || assetJSONs.isEmpty()) throw new IllegalArgumentException("No assets in input.");
+        List<ContextElement> contextElements = AssetToContextTrasformer.transformAll(dao, assetJSONs);
+        if (null == contextElements || contextElements.isEmpty())
+            throw new IllegalStateException("No assets transformed in contexts.");
+        for (ContextElement contextElement : contextElements) {
+            OrionRestClient.createContext(contextElement);
         }
     }
 

@@ -593,7 +593,7 @@ public class CAMRest {
     @Path("/models")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createAssetModel(AssetModelJSON model) {
+    public Response createAssetModel(AssetJSON model) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
@@ -612,7 +612,7 @@ public class CAMRest {
     @Path("/models/{modelName}")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateAssetModel(@PathParam("modelName") String modelName, AssetModelJSON model) {
+    public Response updateAssetModel(@PathParam("modelName") String modelName, AssetJSON model) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
@@ -870,13 +870,6 @@ public class CAMRest {
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             CAMRestImpl.removeProperty(repoInstance, modelName, relationshipName);
-        } catch (Exception e) {
-            logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
-        }
-        try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             CAMRestImpl.setRelationship(repoInstance, relationship.getName(), modelName,
                     relationship.getReferredName());
@@ -974,6 +967,24 @@ public class CAMRest {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
         }
+    }
+
+    @POST
+    @Path("/orion/contexts")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createContexts(List<AssetJSON> assetJSONs){
+            RepositoryDAO repoInstance = null;
+            try {
+                repoInstance = SesameRepoManager.getRepoInstance(getClass());
+                CAMRestImpl.createContexts(repoInstance, assetJSONs);
+                return Response.ok("Contexts successfully created in Orion Context Broker").build();
+            } catch (Exception e) {
+                logger.error(e);
+                throw new CAMServiceWebException(e.getMessage());
+            } finally {
+                SesameRepoManager.releaseRepoDaoConn(repoInstance);
+            }
     }
 
     @GET
