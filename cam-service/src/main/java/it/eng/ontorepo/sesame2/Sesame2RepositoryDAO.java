@@ -805,14 +805,14 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         if (!Util.isLocalName(name)) {
             throw new IllegalArgumentException("Class name must not be qualified by a namespace: " + name);
         }
-
+        String shortName = name;
         name = Util.getGlobalName(getImplicitNamespace(), name);
         if (getClassDeclarationCount(name) == 0) {
-            throw new IllegalArgumentException("Class " + name + " does not exist");
+            throw new IllegalArgumentException("Class " + shortName + " does not exist");
         }
 
         if (getDependencyCount(name) > 0) {
-            throw new IllegalStateException("Class " + name + " cannot be deleted as it is referenced somewhere else");
+            throw new IllegalStateException("Class " + shortName + " cannot be deleted as it is referenced somewhere else");
         }
 
         URI classUri = vf.createURI(name);

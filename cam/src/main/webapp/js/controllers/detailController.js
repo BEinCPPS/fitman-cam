@@ -62,7 +62,7 @@ camApp.controller('detailController',
                                             month = '0' + month;
                                         while (day.length < 2)
                                             day = '0' + day;
-                                        created = day + "/" + month + "/" + myDate.getFullYear();
+                                        created = myDate.getFullYear() + "-" + month + "-" + day;
                                     } else
                                         attrs.push($scope.formatAssetDetailTableRow(data[i]));
                                 }
