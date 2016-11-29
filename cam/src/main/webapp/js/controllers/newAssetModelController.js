@@ -8,6 +8,7 @@ camApp.controller('newAssetModelController', [
     'Scopes',
     function ($scope, $q, ngDialogManager, entityManager, ngNotifier, $route, Scopes) {
         $scope.invalidName = false;
+        $scope.newAssetModel = {name:""};
         $scope.newAssetModel = {
             name: "",
             className: $scope.currentNode.className,

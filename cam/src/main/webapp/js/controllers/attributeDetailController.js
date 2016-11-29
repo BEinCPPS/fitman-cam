@@ -11,6 +11,13 @@ camApp.controller('attributeDetailController', [
 
         $scope.typeIsMandatoryMsg = "Type is mandatory";
         $scope.valueIsMandatoryMsg = "Value is mandatory";
+         $scope.newAttribute = {
+                    name: "",
+                    value: "",
+                    type: ""
+                };
+//        $scope.newAttribute = {name:""};
+//        $scope.newAttribute = {value:""};
 
         $scope.attrPanelTitle = "Edit Attribute";
         $scope.invalidName = false;

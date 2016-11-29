@@ -8,6 +8,7 @@ camApp.controller('newAssetController', [
     'ngNotifier',
     function ($scope, $http, $q, entityManager, ngDialogManager, $route, ngNotifier) {
         $scope.invalidName = false;
+        $scope.newAsset = {name:""};
         $scope.closeNewAssetPanel = function () {
             ngDialogManager.close();
         }

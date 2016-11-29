@@ -71,7 +71,8 @@ camApp.controller('homeController', [
                 $scope.currentNode.className = currentNode.getClass().className;
                 // $routeParams.className;
                 $scope.getAssets($routeParams.className, true);
-                $scope.expandAncestors($scope.currentNode.className);
+                if($scope.currentNode && $scope.currentNode.className)
+                    $scope.expandAncestors($scope.currentNode.className);
                 $scope.newAssetVisible = true;
                 $scope.newAssetVisible = true;
             } else {
@@ -368,7 +369,7 @@ camApp.controller('homeController', [
                 var elementType = 'asset';
                 data[i].action = (function () {
                     return $scope.actionAssetTemplate.replaceAll('$value$', data[i].individualName)
-                        .replaceAll('$element$', elementType).replaceAll('$className$', data[i].className);
+                        .replaceAll('$elementType$', elementType).replaceAll('$className$', data[i].className);
 
                 })();
                 data[i].action += (function () {
