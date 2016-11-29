@@ -133,9 +133,9 @@ camApp
             if (response.status == 403 || response.status == 401) {
                 AuthToken.setToken();
                 //$location.path('/login');
-                if (response.config.url.indexOf('authenticate') > 0) {
+//                if (response.config.url.indexOf('authenticate') > 0) {
                     $location.path('/');
-                }
+//                }
             }
             // return the errors from the server as a promise
             return $q.reject(response);

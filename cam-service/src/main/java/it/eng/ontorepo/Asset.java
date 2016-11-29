@@ -1,5 +1,9 @@
 package it.eng.ontorepo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.util.Date;
+
 /**
  * Created by ascatolo on 04/11/2016.
  */
@@ -7,7 +11,8 @@ public class Asset extends IndividualItem {
 
     private String domain; //domainName
     private String domainIri;
-    private String createdOn;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="CET")
+    private Date createdOn;
     private boolean lostDomain;
 
     public boolean isLostDomain() {
@@ -27,7 +32,7 @@ public class Asset extends IndividualItem {
         this.lostDomain = lostDomain;
     }
 
-    public Asset(IndividualItem individualItem, String domain, String createdOn, boolean lostDomain) {
+    public Asset(IndividualItem individualItem, String domain, Date createdOn, boolean lostDomain) {
         super(individualItem.getNamespace(), individualItem.getIndividualName(), individualItem.getClassName());
         this.lostDomain = lostDomain;
         this.createdOn = createdOn;
@@ -42,11 +47,11 @@ public class Asset extends IndividualItem {
         this.domain = domain;
     }
 
-    public String getCreatedOn() {
+    public Date getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(String createdOn) {
+    public void setCreatedOn(Date createdOn) {
         this.createdOn = createdOn;
     }
 

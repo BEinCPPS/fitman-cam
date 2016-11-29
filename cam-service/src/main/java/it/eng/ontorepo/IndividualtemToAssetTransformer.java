@@ -51,7 +51,7 @@ public class IndividualtemToAssetTransformer {
         dao = SesameRepoManager.getRepoInstance(null);
         String domain = "";
         String domainIri = "";
-        String date = "";
+        Date date = null;
         List<PropertyValueItem> individualAttributes = dao.getIndividualAttributes(individual.getIndividualName());
         for (PropertyValueItem attribute :
                 individualAttributes) {
@@ -60,8 +60,8 @@ public class IndividualtemToAssetTransformer {
                 domain = split[1];
                 domainIri = attribute.getPropertyValue();
             } else if (attribute.getNormalizedName().contains(BeInCpps.createdOn)) {
-                Date data = DateUtils.parseDate(attribute.getPropertyValue(), Constants.DATE_PATTERN_DATE_TIME_TIMEZONE);
-                date = DateFormatUtils.format(data, "dd/MM/yyyy");
+                date = DateUtils.parseDate(attribute.getPropertyValue(), Constants.DATE_PATTERN_DATE_TIME_TIMEZONE);
+//                date = DateFormatUtils.format(data, "dd/MM/yyyy");
             }
         }
         Asset asset = new Asset(individual, domain, date, lostDomain);
