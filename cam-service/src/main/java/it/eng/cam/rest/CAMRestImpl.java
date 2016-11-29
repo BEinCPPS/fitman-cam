@@ -4,6 +4,7 @@ import it.eng.cam.rest.orion.AssetToContextTrasformer;
 import it.eng.cam.rest.orion.OrionRestClient;
 import it.eng.cam.rest.orion.context.ContextElement;
 import it.eng.cam.rest.security.project.Project;
+import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.cam.rest.sesame.dto.AssetJSON;
@@ -253,7 +254,7 @@ public class CAMRestImpl {
     }
 
 
-    public static List<ContextElement> createContexts(RepositoryDAO dao, List<AssetJSON> assetJSONs) throws ParseException {
+    public static void createContexts(RepositoryDAO dao, List<AssetJSON> assetJSONs) throws ParseException {
         if (assetJSONs == null || assetJSONs.isEmpty()) throw new IllegalArgumentException("No assets in input.");
         List<ContextElement> contextElements = AssetToContextTrasformer.transformAll(dao, assetJSONs);
         if (null == contextElements || contextElements.isEmpty())
@@ -261,7 +262,6 @@ public class CAMRestImpl {
         for (ContextElement contextElement : contextElements) {
             OrionRestClient.createContext(contextElement);
         }
-        return contextElements;
     }
 
     private static void deepSearchFirstRecursive(RepositoryDAO dao, Map<String, Boolean> visited, ClassItem clazz,

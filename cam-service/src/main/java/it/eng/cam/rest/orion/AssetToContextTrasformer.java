@@ -3,7 +3,7 @@ package it.eng.cam.rest.orion;
 import it.eng.cam.rest.orion.context.Attribute;
 import it.eng.cam.rest.orion.context.ContextElement;
 import it.eng.cam.rest.sesame.dto.AssetJSON;
-import it.eng.ontorepo.BeInCpps;
+import it.eng.ontorepo.Asset;
 import it.eng.ontorepo.PropertyValueItem;
 import it.eng.ontorepo.RepositoryDAO;
 
@@ -39,20 +39,16 @@ public class AssetToContextTrasformer {
     }
 
     private static ContextElement doTransform(RepositoryDAO dao, AssetJSON asset) throws java.text.ParseException {
-        if (asset == null) throw new IllegalArgumentException("No asset in input.");
+        if (asset == null) return null;
         ContextElement contextElement = new ContextElement();
         contextElement.setId(asset.getName());
         contextElement.setType(asset.getClassName());
         List<PropertyValueItem> propertyValueItems = dao.getIndividualAttributes(asset.getName());
         if (null == propertyValueItems || propertyValueItems.isEmpty()) return contextElement;
         for (PropertyValueItem propertyValueItem : propertyValueItems) {
-            if (propertyValueItem.getNormalizedName().contains(BeInCpps.ownedBy)
-                    || propertyValueItem.getNormalizedName().contains(BeInCpps.createdOn)
-                    || propertyValueItem.getNormalizedName().contains(BeInCpps.instanceOf)
-                    ) continue;
             Attribute attribute = new Attribute();
-            attribute.setName(propertyValueItem.getOriginalName());
-            attribute.setType(propertyValueItem.getPropertyType().getSimpleName().toLowerCase());
+            attribute.setName(propertyValueItem.getNormalizedName());
+            attribute.setType(propertyValueItem.getPropertyType().toString());
             attribute.setValue(propertyValueItem.getPropertyOriginalValue());
             contextElement.getAttributes().add(attribute);
         }

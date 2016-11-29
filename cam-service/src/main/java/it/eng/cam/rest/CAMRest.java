@@ -1,11 +1,11 @@
 package it.eng.cam.rest;
 
-import it.eng.cam.rest.orion.context.ContextElement;
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
 import it.eng.cam.rest.security.authorization.AssetOwnershipFilter;
 import it.eng.cam.rest.security.authorization.DomainOwnershipFilter;
 import it.eng.cam.rest.security.project.Project;
 import it.eng.cam.rest.security.service.AuthenticationService;
+import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
 import it.eng.cam.rest.sesame.dto.*;
 import it.eng.cam.rest.exception.CAMServiceWebException;
@@ -973,17 +973,18 @@ public class CAMRest {
     @Path("/orion/contexts")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ContextElement> createContexts(List<AssetJSON> assetJSONs) {
-        RepositoryDAO repoInstance = null;
-        try {
-            repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            return CAMRestImpl.createContexts(repoInstance, assetJSONs);
-        } catch (Exception e) {
-            logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
-        }
+    public Response createContexts(List<AssetJSON> assetJSONs){
+            RepositoryDAO repoInstance = null;
+            try {
+                repoInstance = SesameRepoManager.getRepoInstance(getClass());
+                CAMRestImpl.createContexts(repoInstance, assetJSONs);
+                return Response.ok("Contexts successfully created in Orion Context Broker").build();
+            } catch (Exception e) {
+                logger.error(e);
+                throw new CAMServiceWebException(e.getMessage());
+            } finally {
+                SesameRepoManager.releaseRepoDaoConn(repoInstance);
+            }
     }
 
     @GET
