@@ -1,4 +1,4 @@
-package it.eng.cam.rest.security.service;
+package it.eng.cam.rest;
 
 import it.eng.cam.rest.security.roles.RoleManager;
 
@@ -22,4 +22,14 @@ public class Constants {
     public static final String IDM_PROJECTS_PREFIX_WITH_SLASH = Constants.IDM_PROJECTS_PREFIX + "/";
     public static final String NO_DOMAIN = "NO_DOMAIN";
     public static String ADMIN_TOKEN;
+    /**
+     * Orion Context Broker
+     **/
+    public static final String SUBSERVICE_HEADER = finder.getString("orion.service.sub.header");
+    public static final String SERVICE_HEADER = finder.getString("orion.service.header");
+    public static final String ORION_URL = finder.getString("orion.service.header");
+    public static final String ORION_API_URL = ORION_URL + "/v1";
+    public static final String DEFAULT_SERVICE = finder.getString("orion.service.default");
+    public static final String DEFAULT_SUB_SERVICE = finder.getString("orion.service.sub.default");
+
 }

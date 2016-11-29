@@ -33,6 +33,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <!-- if your container implements Servlet API older than 3.0, use "jersey-container-servlet-core" -->
             <artifactId>jersey-container-servlet</artifactId>
@@ -293,6 +298,12 @@
                 <keyrock.admin.password>fiware</keyrock.admin.password> <!-- INSERT PASSWORD -->
                 <!-- OAUTH2, KEYSTONE Supported at the moment -->
                 <keyrock.authentication.service>KEYSTONE</keyrock.authentication.service>
+                <!-- ORION CONFIGURATION-->
+                <orion.url>http://161.27.159.64:8080</orion.url>
+                <orion.service.header>Fiware-Service</orion.service.header>
+                <orion.service.sub.header>Fiware-ServicePath</orion.service.sub.header>
+                <orion.service.default>camService</orion.service.default>
+                <orion.service.sub.default>/camSubService</orion.service.sub.default>
             </properties>
         </profile>
     </profiles>

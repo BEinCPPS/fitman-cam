@@ -1,5 +1,6 @@
 package it.eng.cam.rest.security.service;
 
+import it.eng.cam.rest.Constants;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
 import it.eng.cam.rest.security.service.impl.IDMOauth2Service;
 import it.eng.cam.rest.security.service.impl.IDMService;

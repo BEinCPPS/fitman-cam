@@ -38,7 +38,7 @@ public class ContextToAssetTransformer {
     }
 
     private static Asset doTransform(RepositoryDAO dao, ContextElement contextElement) throws java.text.ParseException {
-        if (contextElement == null) return null;
+        if (contextElement == null) throw new IllegalArgumentException("No context in input.");
         Asset asset = new Asset(dao.getImplicitNamespace(), contextElement.getId(), contextElement.getType());
         asset.setCreatedOn(new Date());
         if (null == contextElement.getAttributes() || contextElement.getAttributes().isEmpty())
