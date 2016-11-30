@@ -281,7 +281,6 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
      * with the Sesame API, but anyhow you should declare your implicit
      * namespace in the 3-argument constructor: don't use the 2-argument one!
      *
-     * @param (Optional) dataDir is the directory where to save the memory store files.
      * @param namespace  the namespace to be used as the implicit namespace, or null if
      *                   the default namespace declared in the Reference Ontology
      *                   should be used as the implicit namespace
@@ -361,8 +360,6 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
      * Add a file in format RDF to the repository.
      *
      * @param rdfFile    The file xml RDF containing Ontology
-     * @param (optional) The Base URI where to contain the definitions in file (ex.
-     *                   http://example.org/example/local)
      * @param forceAdd   Add file RDF content also if the repo in not empty
      * @author ascatox at 2016-04-26
      */
@@ -808,14 +805,14 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         if (!Util.isLocalName(name)) {
             throw new IllegalArgumentException("Class name must not be qualified by a namespace: " + name);
         }
-
+        String shortName = name;
         name = Util.getGlobalName(getImplicitNamespace(), name);
         if (getClassDeclarationCount(name) == 0) {
-            throw new IllegalArgumentException("Class " + name + " does not exist");
+            throw new IllegalArgumentException("Class " + shortName + " does not exist");
         }
 
         if (getDependencyCount(name) > 0) {
-            throw new IllegalStateException("Class " + name + " cannot be deleted as it is referenced somewhere else");
+            throw new IllegalStateException("Class " + shortName + " cannot be deleted as it is referenced somewhere else");
         }
 
         URI classUri = vf.createURI(name);
@@ -1177,12 +1174,13 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         }
 
         String ns = system ? BeInCpps.SYSTEM_NS : getImplicitNamespace();
+        String shortName = name;
         name = Util.getGlobalName(ns, name);
         IndividualItem indiv = getIndividualDeclaration(name);
         if (indiv != null) {
             List<BindingSet> dependencies = getDependencies(name);
             if (dependencies.size() > 0) {
-                String msg = "Individual " + name + " cannot be deleted as it is referenced by: ";
+                String msg = "Individual " + shortName + " cannot be deleted as it is referenced by: ";
                 for (BindingSet bindingSet : dependencies) {
                     String depName = bindingSet.getValue("name").stringValue();
                     if (depName.contains("#")) {

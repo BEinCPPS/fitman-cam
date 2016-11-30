@@ -61,7 +61,7 @@ camApp.controller('menuController', [
                     if (roles[i] == 'ADMIN')
                         return true;
                 }
-        
+
     }
             return false;
         }
