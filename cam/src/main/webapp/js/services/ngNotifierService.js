@@ -9,7 +9,7 @@ camApp.factory('ngNotifier', ['toastr', '${authentication.service}', function (t
         toastr.success(msg);
     };
     notifierFactory.error = function (error) {
-
+        console.log(error);
         if (typeof error === 'object' && error.error)
             error = error.error.message;
         else if (typeof error === 'object' && error.statusText) {

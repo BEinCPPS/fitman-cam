@@ -20,7 +20,7 @@
                         <i class="fa fa-users" aria-hidden="true"></i> Domains</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li ng-if="!loggedIn">
+                    <li ng-if="!loggedIn && !isOAuth">
                         <form class="form-inline" ng-controller="menuController" ng-submit="doLogin()">
                             <label class="sr-only" for="login-email">Email address</label>
                             <input type="email" class="form-control" id="login-email"
@@ -31,6 +31,11 @@
                             <button type="submit" class="btn btn-sm btn-primary">Sign in</button>
                         </form>
                     </li>
+
+                    <li ng-if="!loggedIn && isOAuth">
+                            <button type="button"   ng-click="login()" class="btn btn-sm btn-primary">Sign in</button>
+                    </li>
+
                     <li ng-if="loggedIn" class="navbar-text">
                         <i class="fa fa-user" aria-hidden="true"></i>
                         <span

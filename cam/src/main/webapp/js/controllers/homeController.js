@@ -110,7 +110,7 @@ camApp.controller('homeController', [
 //                        return '<span class="glyphicon glyphicon-ok" aria-hidden="true" data-lost-domain="false"></span>&nbsp;' + retVal;
 //                    } else
 //                        return retVal;
-                      return '<span aria-hidden="true" ></span>&nbsp;' + retVal;
+                      return '<span aria-hidden="true" >'+retVal+'</span>&nbsp;';
                 }
             }, {
                 "mDataProp": "createdOn",
@@ -135,24 +135,10 @@ camApp.controller('homeController', [
             "bDestroy": true,
             "oLanguage": {
                 "sSearch": "Filter: "
+            },
+            "fnDrawCallback": function () {
+                $scope.addTooltipToAssetModel();
             }
-//            "fnDrawCallback": function () {
-//                function colorToRed() {
-//                    var lostDomainArr = angular.element("[data-lost-domain='true']");
-//                    angular.forEach(lostDomainArr, function (value) {
-//                        var elem = angular.element(value);
-//                        var cell = elem.parent();
-//                        if (cell.is('td')) {
-//                            var css = cell.prop('class');
-//                            css = 'danger ' + css;
-//                            cell.prop('class', css);
-//                        }
-//                    });
-//                }
-//
-//                colorToRed();
-//                $scope.addTooltipToAssetModel();
-//            }
         };
         $scope.newAssetVisible = false;
 
@@ -330,12 +316,14 @@ camApp.controller('homeController', [
             function addTooltip(htmlObj, maxLenght) {
                 var valueOrig = htmlObj.text();
                 var value = htmlObj.text();
-                htmlObj.attr('data-toggle', 'tooltip');
-                htmlObj.attr('data-container', 'body');
-                htmlObj.attr('title', value);
-                if (value && value.length > maxLenght) {
-                    value = value.substring(0, maxLenght).concat('...');
-                    htmlObj.html().replace(valueOrig, value);
+                if(value && value.trim().length > 0 ) {
+                    htmlObj.attr('data-toggle', 'tooltip');
+                    htmlObj.attr('data-container', 'body');
+                    htmlObj.attr('title', value);
+                    if (value && value.length > maxLenght) {
+                        value = value.substring(0, maxLenght).concat('...');
+                        htmlObj.html().replace(valueOrig, value);
+                    }
                 }
             }
 

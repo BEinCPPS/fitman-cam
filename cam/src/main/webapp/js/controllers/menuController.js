@@ -15,6 +15,7 @@ camApp.controller('menuController', [
         Scopes.store('menuController', $scope);
         // get info if a person is logged in
         $scope.loggedIn = auth.isLoggedIn();
+
         // check to see if a user is logged in on every request$scope
         auth.getUser()
             .then(function (data) {
@@ -78,6 +79,9 @@ camApp.controller('menuController', [
                 $location.path('/');
             }
         };
+
+         $scope.isOAuth = auth.mySelf() == OAUTH;
+
 
         //NOT USED with OAuth2
         $scope.doLogin = function () {

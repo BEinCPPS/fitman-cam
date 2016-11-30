@@ -590,3 +590,7 @@ div.ng-leave {
     height: 34px;
     margin-top: 10px;
 }
+
+.navbar-nav {
+     margin: 10px;
+}
