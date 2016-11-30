@@ -15,6 +15,11 @@ camApp.controller('homeController', [
         , currentNode, $window) {
         Scopes.store('homeController', $scope);
         $scope.assetList = [];
+        $scope.regexPattern = REGEX_PATTERN;
+        $scope.invalidNameMsg = INVALID_NAME_MSG;
+        $scope.nameIsMandatory = NAME_IS_MANDATORY_MSG;
+        $scope.keyrockSignupUrl = KEYROCK_SIGNUP_URL;
+        var assetsCounter = 0;
 
         $scope.getAssets = function (name, retrieveChildren) {
             entityManager.getAssets(name, retrieveChildren)
@@ -36,8 +41,8 @@ camApp.controller('homeController', [
                                 'view': $window,
                                 'bubbles': true,
                                 'cancelable': true
-                              });
-                             var event =  $window.event || eventFake;
+                            });
+                            var event = $window.event || eventFake;
                             $scope.selectNodeLabel(array[i], event);
                         }
                         return;
@@ -47,7 +52,7 @@ camApp.controller('homeController', [
             }
 
             var promise = entityManager.getAncestors(elem);
-            var isLeaf = false
+            var isLeaf = false;
             promise.then(function (response) {
                 var dataStr = response.data + '';
                 var ancestors = dataStr.split(',');
@@ -71,7 +76,7 @@ camApp.controller('homeController', [
                 $scope.currentNode.className = currentNode.getClass().className;
                 // $routeParams.className;
                 $scope.getAssets($routeParams.className, true);
-                if($scope.currentNode && $scope.currentNode.className)
+                if ($scope.currentNode && $scope.currentNode.className)
                     $scope.expandAncestors($scope.currentNode.className);
                 $scope.newAssetVisible = true;
                 $scope.newAssetVisible = true;
@@ -82,43 +87,40 @@ camApp.controller('homeController', [
                 }
             }
         });
-
-        $scope.regexPattern = REGEX_PATTERN;
-        $scope.invalidNameMsg = INVALID_NAME_MSG;
-        $scope.nameIsMandatory = NAME_IS_MANDATORY_MSG;
-        $scope.keyrockSignupUrl = KEYROCK_SIGNUP_URL;
-
         $scope.columnDefs = [
             {
-                "mDataProp": "individualName",
+                "mDataProp": "select",
                 "aTargets": [0],
+                "bSearchable": false,
+                "bSortable": false,
+                "fnRender": function (data) {
+                    return '<input type="checkbox" ng-model="assetList[' + assetsCounter++ + '].selected"/>';
+                }
+            },
+            {
+                "mDataProp": "individualName",
+                "aTargets": [1],
                 "bSearchable": true
             },
             {
                 "mDataProp": "className",
-                "aTargets": [1],
+                "aTargets": [2],
                 "bSearchable": true
             }, {
                 "mDataProp": "domain",
-                "aTargets": [2],
+                "aTargets": [3],
                 "bSearchable": true,
                 "fnRender": function (data) {
                     var retVal = data.aData.domain;
-//                    if (data.aData.domain && data.aData.lostDomain) {
-//                        return '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-lost-domain="true"></span>&nbsp;' + retVal;
-//                    } else if (data.aData.domain && !data.aData.lostDomain) {
-//                        return '<span class="glyphicon glyphicon-ok" aria-hidden="true" data-lost-domain="false"></span>&nbsp;' + retVal;
-//                    } else
-//                        return retVal;
-                      return '<span aria-hidden="true" ></span>&nbsp;' + retVal;
+                    return '<span aria-hidden="true" ></span>&nbsp;' + retVal;
                 }
             }, {
                 "mDataProp": "createdOn",
-                "aTargets": [3],
+                "aTargets": [4],
                 "bSortable": false
             }, {
                 "mDataProp": "action",
-                "aTargets": [4],
+                "aTargets": [5],
                 "bSortable": false
             }];
 
@@ -136,23 +138,6 @@ camApp.controller('homeController', [
             "oLanguage": {
                 "sSearch": "Filter: "
             }
-//            "fnDrawCallback": function () {
-//                function colorToRed() {
-//                    var lostDomainArr = angular.element("[data-lost-domain='true']");
-//                    angular.forEach(lostDomainArr, function (value) {
-//                        var elem = angular.element(value);
-//                        var cell = elem.parent();
-//                        if (cell.is('td')) {
-//                            var css = cell.prop('class');
-//                            css = 'danger ' + css;
-//                            cell.prop('class', css);
-//                        }
-//                    });
-//                }
-//
-//                colorToRed();
-//                $scope.addTooltipToAssetModel();
-//            }
         };
         $scope.newAssetVisible = false;
 
@@ -177,6 +162,7 @@ camApp.controller('homeController', [
         }
 
         $scope.loadAsset = function () {
+            assetsCounter = 0;
             if ($scope.currentNode.className) {
                 var clsName = $scope.currentNode.className;
                 if ($scope.currentNode.className.toUpperCase() == EVERYTHING) {
@@ -411,4 +397,26 @@ camApp.controller('homeController', [
             return classes;
         }
 
+        $scope.sendAssetsToOCB = function () {
+            console.log($scope.assetList);
+            var selectedAssets = $scope.assetList.filter(function (asset) {
+                return asset.selected;
+            });
+            var selectedAssetsJson = [];
+            angular.forEach(selectedAssets, function (asset) {
+                var assetJSON = {
+                    name: asset.individualName,
+                    className: asset.className,
+                    domainName: asset.domain
+                };
+                selectedAssetsJson.push(assetJSON);
+            });
+            entityManager.sendAssetsToOCB(selectedAssetsJson)
+                .then(function (response) {
+                ngNotifier.success("Assets added to the OCB: <br/>"+JSON.stringify(response.data));
+            }, function (error) {
+                ngNotifier.error(error);
+            });
+
+        }
     }]);
