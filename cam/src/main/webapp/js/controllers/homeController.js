@@ -406,10 +406,9 @@ camApp.controller('homeController', [
                 ngNotifier.warn("Select assets please!");
                 return;
             }
-
             $scope.typeToAdd = 'Orion Context Broker';
             $scope.titleOperationMessage = 'Create assets to the ';
-            $scope.operationMessage = 'Are you sure you want to create these assets to the ';
+            $scope.operationMessage = 'Are you sure you want to create these '+$scope.selectedOcbAssets.length+' assets into the ';
             ngDialogManager.open({
                 template: 'pages/confirmNewOperation.htm',
                 controller: 'confirmNewOperationController',
