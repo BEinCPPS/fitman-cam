@@ -79,7 +79,6 @@ camApp.controller('homeController', [
                 if ($scope.currentNode && $scope.currentNode.className)
                     $scope.expandAncestors($scope.currentNode.className);
                 $scope.newAssetVisible = true;
-                $scope.newAssetVisible = true;
             } else {
                 if (currentNode.getClass().className) {
                     $scope.currentNode = currentNode.getClass();
