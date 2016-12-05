@@ -6,10 +6,10 @@ camApp.factory('ngNotifier', ['toastr', '${authentication.service}', function (t
 
     notifierFactory.success = function (msg) {
         if (!msg) msg = "Success!!!";
-        toastr.success(msg);
+        toastr.success(msg, 'Success');
     };
     notifierFactory.error = function (error) {
-
+        console.log(error);
         if (typeof error === 'object' && error.error)
             error = error.error.message;
         else if (typeof error === 'object' && error.statusText) {
@@ -18,10 +18,13 @@ camApp.factory('ngNotifier', ['toastr', '${authentication.service}', function (t
         if (typeof error === 'object' && error.message.indexOf('ERROR_NOT_LOGGED') != -1)
             return;
 
-        toastr.error(error);
+        toastr.error(error, 'Error');
     };
     notifierFactory.info = function (msg) {
-        toastr.info(msg);
+        toastr.info(msg, 'Information');
+    };
+    notifierFactory.warn = function (msg) {
+        toastr.warning(msg, 'Warning');
     };
     return notifierFactory;
 }]);

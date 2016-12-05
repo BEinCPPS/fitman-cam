@@ -328,9 +328,9 @@ camApp.controller('homeController', [
             var tableAssetElems = angular.element('tr.ng-scope');
             angular.forEach(tableAssetElems, function (value, key) {
                 var children = angular.element(value).children();
-                addTooltip(angular.element(children[0]), 25); //asset
-                addTooltip(angular.element(children[1]), 25); //class
-                addTooltip(angular.element(children[2]), 20); //owner group
+                addTooltip(angular.element(children[1]), 25); //asset
+                addTooltip(angular.element(children[2]), 25); //class
+                addTooltip(angular.element(children[3]), 20); //owner group
             });
             $('[data-toggle="tooltip"]').tooltip();
         }
@@ -397,13 +397,29 @@ camApp.controller('homeController', [
             return classes;
         }
 
-        $scope.sendAssetsToOCB = function () {
-            console.log($scope.assetList);
-            var selectedAssets = $scope.assetList.filter(function (asset) {
+        $scope.selectedOcbAssets = [];
+        $scope.openConfirmOperationPanel = function () {
+            $scope.selectedOcbAssets = $scope.assetList.filter(function (asset) {
                 return asset.selected;
             });
+            if (isEmpty($scope.selectedOcbAssets)) {
+                ngNotifier.warn("Select assets please!");
+                return;
+            }
+
+            $scope.typeToAdd = 'Orion Context Broker';
+            $scope.titleOperationMessage = 'Create assets to the ';
+            $scope.operationMessage = 'Are you sure you want to create these assets to the ';
+            ngDialogManager.open({
+                template: 'pages/confirmNewOperation.htm',
+                controller: 'confirmNewOperationController',
+                scope: $scope
+            });
+        };
+
+        $scope.createAssetsToOCB = function () {
             var selectedAssetsJson = [];
-            angular.forEach(selectedAssets, function (asset) {
+            angular.forEach($scope.selectedOcbAssets, function (asset) {
                 var assetJSON = {
                     name: asset.individualName,
                     className: asset.className,
@@ -413,10 +429,11 @@ camApp.controller('homeController', [
             });
             entityManager.sendAssetsToOCB(selectedAssetsJson)
                 .then(function (response) {
-                ngNotifier.success("Assets added to the OCB: <br/>"+JSON.stringify(response.data));
-            }, function (error) {
-                ngNotifier.error(error);
-            });
-
+                    console.log(JSON.stringify(response.data));
+                    ngNotifier.success("Assets correctly added to the Orion Context Broker");
+                }, function (error) {
+                    ngNotifier.error(error);
+                });
         }
+
     }]);

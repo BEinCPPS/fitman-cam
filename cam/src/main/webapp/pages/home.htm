@@ -53,9 +53,9 @@
                                     ng-click="openNewAssetModelPanel()" ng-show="newAssetVisible">
                                 <i class="fa fa-plus" data-toggle="modal" data-target="#newAttributeLabel"/> New Asset
                             </button>
-                            <button type="button" data-toggle="tooltip" title="Send to OCB"
+                            <button type="button" data-toggle="tooltip"  title="Send to OCB"
                                     class="cam-btn-add-container  float-left"
-                                    ng-click="sendAssetsToOCB()" ng-show="newAssetVisible">
+                                    ng-click="openConfirmOperationPanel()" ng-show="newAssetVisible">
                                 <i class="fa fa-globe" data-toggle="modal" data-target="#newAttributeLabel"/> Send to OCB
                             </button>
                         </div>
@@ -63,7 +63,7 @@
                                ao-column-defs="columnDefs" class="table table-striped cam-data-table">
                             <thead>
                             <tr>
-                                <th style="width:1%"></th>
+                                <th style="width: 1%">Select</th>
                                 <th style="width: 27%">Asset</th>
                                 <th style="width: 25%">Class</th>
                                 <th style="width: 20%">Domain</th>

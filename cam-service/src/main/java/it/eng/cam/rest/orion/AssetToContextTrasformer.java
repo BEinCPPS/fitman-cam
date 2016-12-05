@@ -41,6 +41,7 @@ public class AssetToContextTrasformer {
     private static ContextElement doTransform(RepositoryDAO dao, AssetJSON asset) throws java.text.ParseException {
         if (asset == null) throw new IllegalArgumentException("No asset in input.");
         ContextElement contextElement = new ContextElement();
+
         contextElement.setId(asset.getName());
         contextElement.setType(asset.getClassName());
         List<PropertyValueItem> propertyValueItems = dao.getIndividualAttributes(asset.getName());
@@ -51,7 +52,7 @@ public class AssetToContextTrasformer {
                     || propertyValueItem.getNormalizedName().contains(BeInCpps.instanceOf)
                     ) continue;
             Attribute attribute = new Attribute();
-            attribute.setName(propertyValueItem.getOriginalName());
+            attribute.setName(propertyValueItem.getNormalizedName());
             attribute.setType(propertyValueItem.getPropertyType().getSimpleName().toLowerCase());
             attribute.setValue(propertyValueItem.getPropertyOriginalValue());
             contextElement.getAttributes().add(attribute);
