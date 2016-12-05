@@ -434,6 +434,11 @@ camApp.controller('homeController', [
                 }, function (error) {
                     ngNotifier.error(error);
                 });
-        }
+        };
+
+        $scope.selectAllAssetsForOCB = function () {
+           for(var i in $scope.assetList)
+               $scope.assetList[i].selected = $scope.flagSelectAll;
+        };
 
     }]);
