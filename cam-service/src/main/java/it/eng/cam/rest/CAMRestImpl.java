@@ -259,9 +259,10 @@ public class CAMRestImpl {
             throw new IllegalStateException("No assets transformed in contexts.");
 
         for (ContextElement contextElement : contextElements) {
-            Optional<OrionConfig> configFound = orionConfigs.stream().filter(cfg -> cfg.getId().equals(contextElement.getOrionConfigId())).findAny();
-            if (!configFound.isPresent())
-                continue;
+            Optional<OrionConfig> configFound = orionConfigs.stream()
+                    .filter(cfg -> cfg.getId().equals(contextElement.getOrionConfigId())).findAny();
+            if (!configFound.isPresent() || configFound.get().isEmpty())
+                throw new IllegalArgumentException("Orion configuration '"+contextElement.getOrionConfigId()+"' not exists.");
             OrionRestClient.createContext(configFound.get(), contextElement);
             dao.syncIndividualToOrionConfig(contextElement.getOriginalAssetName(), contextElement.getOrionConfigId());
             contextElementsCreated.add(contextElement);
