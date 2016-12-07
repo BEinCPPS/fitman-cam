@@ -262,7 +262,7 @@ public class CAMRestImpl {
             Optional<OrionConfig> configFound = orionConfigs.stream()
                     .filter(cfg -> cfg.getId().equals(contextElement.getOrionConfigId())).findAny();
             if (!configFound.isPresent() || configFound.get().isEmpty())
-                throw new IllegalArgumentException("Orion configuration '"+contextElement.getOrionConfigId()+"' not exists.");
+                throw new IllegalStateException("Orion configuration '"+contextElement.getOrionConfigId()+"' not exists.");
             OrionRestClient.createContext(configFound.get(), contextElement);
             dao.syncIndividualToOrionConfig(contextElement.getOriginalAssetName(), contextElement.getOrionConfigId());
             contextElementsCreated.add(contextElement);
