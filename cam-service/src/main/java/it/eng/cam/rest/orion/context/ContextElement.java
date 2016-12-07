@@ -10,6 +10,8 @@ public class ContextElement {
     private String type;
     private ArrayList<Attribute> attributes;
     private String isPattern;
+    private String originalAssetName;
+    private String orionConfigId;
 
     public ContextElement(String id, String type, ArrayList<Attribute> attributes, String isPattern) {
         this.attributes = new ArrayList<>();
@@ -74,6 +76,14 @@ public class ContextElement {
         this.attributes = attributes;
     }
 
+    public String getOrionConfigId() {
+        return orionConfigId;
+    }
+
+    public void setOrionConfigId(String orionConfigId) {
+        this.orionConfigId = orionConfigId;
+    }
+
     public String getIsPattern() {
         return this.isPattern;
     }
@@ -82,6 +92,12 @@ public class ContextElement {
         this.isPattern = isPattern;
     }
 
+    public String getOriginalAssetName() {
+        return originalAssetName;
+    }
 
-    
+    public void setOriginalAssetName(String originalAssetName) {
+        this.originalAssetName = originalAssetName;
+    }
+
 }

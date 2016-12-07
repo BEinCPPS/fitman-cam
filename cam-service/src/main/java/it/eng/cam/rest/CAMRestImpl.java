@@ -14,10 +14,7 @@ import org.apache.log4j.Logger;
 
 import javax.ws.rs.WebApplicationException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CAMRestImpl {
@@ -255,13 +252,21 @@ public class CAMRestImpl {
 
     public static List<ContextElement> createContexts(RepositoryDAO dao, List<AssetJSON> assetJSONs) throws ParseException {
         if (assetJSONs == null || assetJSONs.isEmpty()) throw new IllegalArgumentException("No assets in input.");
+        List<OrionConfig> orionConfigs = getOrionConfigs(dao);
         List<ContextElement> contextElements = AssetToContextTrasformer.transformAll(dao, assetJSONs);
+        List<ContextElement> contextElementsCreated = new ArrayList<>();
         if (null == contextElements || contextElements.isEmpty())
             throw new IllegalStateException("No assets transformed in contexts.");
+
         for (ContextElement contextElement : contextElements) {
-            OrionRestClient.createContext(contextElement);
+            Optional<OrionConfig> configFound = orionConfigs.stream().filter(cfg -> cfg.getId().equals(contextElement.getOrionConfigId())).findAny();
+            if (!configFound.isPresent())
+                continue;
+            OrionRestClient.createContext(configFound.get(), contextElement);
+            dao.syncIndividualToOrionConfig(contextElement.getOriginalAssetName(), contextElement.getOrionConfigId());
+            contextElementsCreated.add(contextElement);
         }
-        return contextElements;
+        return contextElementsCreated;
     }
 
     private static void deepSearchFirstRecursive(RepositoryDAO dao, Map<String, Boolean> visited, ClassItem clazz,
@@ -305,6 +310,48 @@ public class CAMRestImpl {
             }
         }
         return projects;
+    }
+
+    public static List<OrionConfig> getOrionConfigs(RepositoryDAO dao) {
+        List<String> orionConfigIds = dao.getOrionConfigs();
+        List<OrionConfig> orionConfigs = new ArrayList<>();
+        if (null != orionConfigIds && orionConfigIds.size() > 0) {
+            for (String orionConfigId : orionConfigIds) {
+                OrionConfig orionConfig = new OrionConfig();
+                orionConfig.setId(orionConfigId);
+                dao = releaseRepo(dao);
+                List<PropertyValueItem> attributesByNS = dao.getAttributesByNS(orionConfigId, BeInCpps.SYSTEM_NS);
+                if (null != attributesByNS && attributesByNS.size() > 0) {
+                    for (PropertyValueItem attribute : attributesByNS) {
+                        if (attribute.getNormalizedName().equals(OrionConfig.hasURL))
+                            orionConfig.setUrl(attribute.getPropertyValue());
+                        else if (attribute.getNormalizedName().equals(OrionConfig.hasService))
+                            orionConfig.setService(attribute.getPropertyValue());
+                        else if (attribute.getNormalizedName().equals(OrionConfig.hasServicePath))
+                            orionConfig.setServicePath(attribute.getPropertyValue());
+                    }
+                }
+                orionConfigs.add(orionConfig);
+            }
+        }
+        return orionConfigs;
+    }
+
+    public static List<OrionConfig> createOrionConfigs(RepositoryDAO dao, List<OrionConfig> orionConfigs) {
+        List<OrionConfig> orionConfigsCreated = new ArrayList<>();
+        if (orionConfigs == null || orionConfigs.size() == 0)
+            throw new IllegalArgumentException("No orion configurations in input");
+        for (OrionConfig orionConfig : orionConfigs) {
+            if (orionConfig == null || orionConfig.isEmpty()) continue;
+            dao.createOrionConfig(orionConfig);
+            orionConfigsCreated.add(orionConfig);
+        }
+
+        return orionConfigsCreated;
+    }
+
+    public static void deleteOrionConfig(RepositoryDAO dao, String orionConfigId) {
+        dao.deleteOrionConfig(orionConfigId);
     }
 
     private static String normalizeClassName(String normName) {

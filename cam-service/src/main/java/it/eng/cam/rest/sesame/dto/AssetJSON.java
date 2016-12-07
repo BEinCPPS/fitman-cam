@@ -10,6 +10,7 @@ public class AssetJSON implements Serializable {
     private String className;
     private String modelName;
     private String domainName;
+    private String orionConfigId;
 
     public String getName() {
         return name;
@@ -17,6 +18,14 @@ public class AssetJSON implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getOrionConfigId() {
+        return orionConfigId;
+    }
+
+    public void setOrionConfigId(String orionConfigId) {
+        this.orionConfigId = orionConfigId;
     }
 
     public String getModelName() {

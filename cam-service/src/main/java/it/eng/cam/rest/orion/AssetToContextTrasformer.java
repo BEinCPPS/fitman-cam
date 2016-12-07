@@ -44,6 +44,8 @@ public class AssetToContextTrasformer {
 
         contextElement.setId(asset.getName());
         contextElement.setType(asset.getClassName());
+        contextElement.setOriginalAssetName(asset.getName());
+        contextElement.setOrionConfigId(asset.getOrionConfigId());
         List<PropertyValueItem> propertyValueItems = dao.getIndividualAttributes(asset.getName());
         if (null == propertyValueItems || propertyValueItems.isEmpty()) return contextElement;
         for (PropertyValueItem propertyValueItem : propertyValueItems) {

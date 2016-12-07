@@ -129,17 +129,17 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             + "WHERE { "
             + "?name rdf:type ?class; rdf:type owl:NamedIndividual. "
             + "FILTER(!(?class = owl:NamedIndividual)" +
-            " && NOT EXISTS {?name <"+VARTAG+"> ?domain }" +
-            " &&  regex(str(?name), \"^"+VARTAG2+"\")" +
+            " && NOT EXISTS {?name <" + VARTAG + "> ?domain }" +
+            " &&  regex(str(?name), \"^" + VARTAG2 + "\")" +
             "). "
             + "} ORDER by ?name";
 
     private static final String QUERY_INDIVIDUALS_FOR_DOMAIN = "SELECT DISTINCT ?name ?class "
             + "WHERE { "
             + "?name rdf:type ?class; rdf:type owl:NamedIndividual. "
-            + "?name <"+VARTAG+"> ?domain ."
+            + "?name <" + VARTAG + "> ?domain ."
             + "FILTER(!(?class = owl:NamedIndividual)"
-            + " &&  regex(str(?domain), \"^"+VARTAG2+"\")" +
+            + " &&  regex(str(?domain), \"^" + VARTAG2 + "\")" +
             "). "
             + "} ORDER by ?name";
 
@@ -281,9 +281,9 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
      * with the Sesame API, but anyhow you should declare your implicit
      * namespace in the 3-argument constructor: don't use the 2-argument one!
      *
-     * @param namespace  the namespace to be used as the implicit namespace, or null if
-     *                   the default namespace declared in the Reference Ontology
-     *                   should be used as the implicit namespace
+     * @param namespace the namespace to be used as the implicit namespace, or null if
+     *                  the default namespace declared in the Reference Ontology
+     *                  should be used as the implicit namespace
      * @throws RuntimeException      if the Repository cannot be accessed, or the Reference
      *                               Ontology cannot be read for any reason
      * @throws IllegalStateException if no namespace argument was provided, and the Reference
@@ -359,8 +359,8 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     /**
      * Add a file in format RDF to the repository.
      *
-     * @param rdfFile    The file xml RDF containing Ontology
-     * @param forceAdd   Add file RDF content also if the repo in not empty
+     * @param rdfFile  The file xml RDF containing Ontology
+     * @param forceAdd Add file RDF content also if the repo in not empty
      * @author ascatox at 2016-04-26
      */
 
@@ -526,11 +526,23 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 
     @Override
     public List<PropertyValueItem> getIndividualAttributes(String name) throws RuntimeException {
+        return doGetIndividualAttributes(name, getImplicitNamespace());
+    }
+
+    @Override
+    public List<PropertyValueItem> getIndividualAttributesByNS(String name, String namespace) throws RuntimeException {
+        return doGetIndividualAttributes(name, namespace);
+    }
+
+    public List<PropertyValueItem> doGetIndividualAttributes(String namespace, String name) throws RuntimeException {
         if (null == name || name.length() == 0) {
             throw new IllegalArgumentException("Individual name is mandatory");
         }
+        if (null == namespace || namespace.length() == 0)
+            namespace = getImplicitNamespace();
+
         List<PropertyValueItem> items = new ArrayList<PropertyValueItem>();
-        name = Util.getGlobalName(getImplicitNamespace(), name);
+        name = Util.getGlobalName(namespace, name);
         // System.out.println("VARTAG: "+name);
         String qs = QUERY_PROPS_FOR_INDIVIDUAL.replace(VARTAG, name);
         String lastName = null;
@@ -677,8 +689,68 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         statements.add(vf.createStatement(assetUri, RDF.TYPE, classUri));
         statements.add(vf.createStatement(assetUri, RDF.TYPE, ni));
         addStatements(statements);
+    }
+
+    @Override
+    public void syncIndividualToOrionConfig(String individualName, String orionConfigId) {
+        if (individualName == null || individualName.length() == 0)
+            throw new IllegalArgumentException("Individual name is mandatory");
+        if (orionConfigId == null || orionConfigId.isEmpty())
+            throw new IllegalArgumentException("Orion config is mandatory");
+
+        List<Statement> statements = new ArrayList<Statement>();
+        URI assetUri = vf.createURI(individualName);
+        URI instanceUri = vf.createURI(BeInCpps.SYSTEM_NS, BeInCpps.syncTo);
+        URI orionConfigIdUri = vf.createURI(orionConfigId);
+        statements.add(vf.createStatement(assetUri, instanceUri, orionConfigIdUri));
+        addStatements(statements);
+    }
+
+    @Override
+    public List<String> getOrionConfigs() throws RuntimeException {
+        List<String> names = new ArrayList<>();
+        for (IndividualItem item : getIndividuals(BeInCpps.ORION_CONFIG_CLASS)) {
+            names.add(BeInCpps.getLocalName(item.getIndividualName()));
+        }
+        return names;
+    }
+
+    @Override
+    public void createOrionConfig(OrionConfig orionConfig) {
+        if (null == orionConfig || null == orionConfig.getId() || orionConfig.getId().length() == 0) {
+            throw new IllegalArgumentException("Orion Context Broker Id is mandatory");
+        }
+        if (null == orionConfig || orionConfig.isEmpty()) {
+            throw new IllegalArgumentException("Orion Context Broker URL is mandatory");
+        }
+        if (!Util.isValidURL(orionConfig.getUrl())) {
+            throw new IllegalArgumentException("A well formed URL is required: " + orionConfig.getUrl());
+        }
+        String orionConfigId = Util.getGlobalName(BeInCpps.SYSTEM_NS, orionConfig.getId());
+        if (getIndividualDeclarationCount(orionConfigId) > 0) {
+            throw new IllegalArgumentException("Orion Context Broker configuration " + orionConfigId + " already exists");
+        }
+        List<Statement> statements = new ArrayList<>();
+        URI assetUri = vf.createURI(orionConfigId);
+        URI classUri = vf.createURI(BeInCpps.ORION_CONFIG_CLASS);
+        statements.add(vf.createStatement(assetUri, RDF.TYPE, classUri));
+        statements.add(vf.createStatement(assetUri, RDF.TYPE, ni));
+        addStatements(statements);
+        setAttribute(OrionConfig.hasURL, orionConfig.getId(), orionConfig.getUrl());
+        if (null != orionConfig.getService() && orionConfig.getService().length() > 0) {
+            setAttribute(OrionConfig.hasService, orionConfig.getId(), orionConfig.getService());
+        }
+        if (null != orionConfig.getServicePath() && orionConfig.getServicePath().length() > 0) {
+            setAttribute(OrionConfig.hasServicePath, orionConfig.getId(), orionConfig.getServicePath());
+        }
 
     }
+
+    @Override
+    public void deleteOrionConfig(String orionConfigId) {
+        doDeleteIndividual(orionConfigId, true);
+    }
+
 
     @Override
     public void deleteDomain(String name) throws IllegalArgumentException, IllegalStateException, RuntimeException {
