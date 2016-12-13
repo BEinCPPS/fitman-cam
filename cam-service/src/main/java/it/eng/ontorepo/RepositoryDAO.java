@@ -224,7 +224,9 @@ public interface RepositoryDAO {
     void createUser(String id) throws IllegalArgumentException,
             RuntimeException;
 
-    void syncIndividualToOrionConfig(String individualName, String orionConfigId);
+    void connectIndividualToOrionConfig(String individualName, String orionConfigId);
+
+    void disconnectIndividualFromOrionConfig(String individualName);
 
     List<String> getOrionConfigs() throws RuntimeException;
 

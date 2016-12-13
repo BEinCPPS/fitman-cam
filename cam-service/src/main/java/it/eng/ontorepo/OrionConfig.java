@@ -15,6 +15,7 @@ public class OrionConfig implements Serializable {
     private String service;
     private String servicePath;
 
+    //Constants
     public static final String hasURL = "hasURL";
     public static final String hasService = "hasService";
     public static final String hasServicePath = "hasServicePath";

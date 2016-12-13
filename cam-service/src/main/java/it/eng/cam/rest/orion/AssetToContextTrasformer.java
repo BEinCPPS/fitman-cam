@@ -2,6 +2,7 @@ package it.eng.cam.rest.orion;
 
 import it.eng.cam.rest.orion.context.Attribute;
 import it.eng.cam.rest.orion.context.ContextElement;
+import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.cam.rest.sesame.dto.AssetJSON;
 import it.eng.ontorepo.BeInCpps;
 import it.eng.ontorepo.PropertyValueItem;
@@ -41,11 +42,13 @@ public class AssetToContextTrasformer {
     private static ContextElement doTransform(RepositoryDAO dao, AssetJSON asset) throws java.text.ParseException {
         if (asset == null) throw new IllegalArgumentException("No asset in input.");
         ContextElement contextElement = new ContextElement();
-
+        //TODO Complete URI
         contextElement.setId(asset.getName());
         contextElement.setType(asset.getClassName());
         contextElement.setOriginalAssetName(asset.getName());
         contextElement.setOrionConfigId(asset.getOrionConfigId());
+        SesameRepoManager.releaseRepoDaoConn(dao);
+        dao = SesameRepoManager.getRepoInstance(null);
         List<PropertyValueItem> propertyValueItems = dao.getIndividualAttributes(asset.getName());
         if (null == propertyValueItems || propertyValueItems.isEmpty()) return contextElement;
         for (PropertyValueItem propertyValueItem : propertyValueItems) {

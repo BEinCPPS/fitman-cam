@@ -1,0 +1,59 @@
+<div ng-include="'pages/notification.html'"></div>
+<div ng-include="'pages/mainMenu.html'"></div>
+<div id="panel-container" class="panel panel-default panel-height">
+    <div id="orion-config" class="panel-body">
+        <div class="row-fluid">
+            <div class="cam-tree-container">
+                <div class="header-page-table-left">
+                    <span><b>Orion Configurations</b></span>
+                </div>
+                <div class="tree-nodes-container"
+                     data-angular-treeview="true"
+                     data-tree-model="orionConfigsList"
+                     data-node-id="id"
+                     data-node-label="id"
+                     data-node-children=""
+                     data-tree-id="configOrionTreeId"
+                     data-right-click-enabled="false"
+                     data-icon-class-name="fa fa-globe"
+                >
+                </div>
+            </div>
+            <div name="asset-table-container" class="cam-table-container">
+                <div class="header-page-table-right">
+                    <span><b>{{selectedConfig.id}}</b></span>
+                </div>
+                <form>
+                    <div class="form-group row">
+                        <label for="orion-config-form-id" class="col-xs-1 col-form-label">Id</label>
+                        <div class="col-xs-10">
+                            <input class="form-control" type="text" value="{{selectedConfig.id}}"
+                                   id="orion-config-form-id" ng-disabled="true">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="orion-config-form-url" class="col-xs-1 col-form-label">Url</label>
+                        <div class="col-xs-10">
+                            <input class="form-control form-control-sm" type="text" value="{{selectedConfig.url}}"
+                                   id="orion-config-form-url" ng-disabled="true">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="orion-config-form-service" class="col-xs-1 col-form-label">Service</label>
+                        <div class="col-xs-10">
+                            <input class="form-control form-control-sm" type="text"
+                                   value="{{selectedConfig.service}}" id="orion-config-form-service" ng-disabled="true">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="orion-config-form-service-path" class="col-xs-1 col-form-label">Service Path</label>
+                        <div class="col-xs-10">
+                            <input class="form-control form-control-sm" type="text"
+                                   value="{{selectedConfig.servicePath}}" id="orion-config-form-service-path" ng-disabled="true">
+                        </div>
+                    </div>
+                 </form>
+            </div>
+        </div>
+    </div>
+</div>

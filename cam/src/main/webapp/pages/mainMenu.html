@@ -18,6 +18,8 @@
                     </li>
                     <li ng-class="activeMenuDomain()" ng-if="isAdmin()"><a href="#/domains">
                         <i class="fa fa-users" aria-hidden="true"></i> Domains</a></li>
+                    <li ng-class="activeMenuOrionConfig()" ng-if="isAdmin()"><a href="#/orion">
+                        <i class="fa fa-globe" aria-hidden="true"></i> Orion Config</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li ng-if="!loggedIn">

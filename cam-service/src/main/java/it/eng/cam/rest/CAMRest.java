@@ -987,6 +987,23 @@ public class CAMRest {
         }
     }
 
+    @PUT
+    @Path("/orion/contexts")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
+    public Response disconnect(List<AssetJSON> assetJSONs){
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            CAMRestImpl.disconnectAssetsFromOrion(repoInstance, assetJSONs);
+            return Response.ok("Assets disconnected successfully from Orion Context Broker").build();
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
     @POST
     @Path("/orion/config")
     @RolesAllowed({Role.BASIC, Role.ADMIN})

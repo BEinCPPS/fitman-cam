@@ -1,4 +1,3 @@
-//TODO
 camApp.controller('domainController', [
     '$scope',
     'Scopes',

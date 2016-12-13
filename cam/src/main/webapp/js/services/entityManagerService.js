@@ -210,6 +210,10 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
             return rejectNotLoggedCall();
     }
 
+    entityManager.getOrionConfigs = function(){
+        return $http.get(BACK_END_URL_CONST+ '/orion/config');
+    }
+
     // return our entire userFactory object
     return entityManager;
 

@@ -51,6 +51,7 @@ public class IndividualtemToAssetTransformer {
         String domain = "";
         String domainIri = "";
         Date date = null;
+        boolean connectedToOrion = false;
         List<PropertyValueItem> individualAttributes = dao.getIndividualAttributes(individual.getIndividualName());
         for (PropertyValueItem attribute :
                 individualAttributes) {
@@ -61,10 +62,13 @@ public class IndividualtemToAssetTransformer {
             } else if (attribute.getNormalizedName().contains(BeInCpps.createdOn)) {
                 date = DateUtils.parseDate(attribute.getPropertyValue(), Constants.DATE_PATTERN_DATE_TIME_TIMEZONE);
                 //date = DateFormatUtils.format(data, "dd/MM/yyyy");
+            }else if (attribute.getNormalizedName().contains(BeInCpps.syncTo)) {
+                connectedToOrion = true;
             }
         }
         Asset asset = new Asset(individual, domain, date, lostDomain);
         asset.setDomainIri(domainIri);
+        asset.setConnectedToOrion(connectedToOrion);
         return asset;
     }
 

@@ -118,8 +118,20 @@ camApp.controller('homeController', [
                 "aTargets": [4],
                 "bSortable": false
             }, {
-                "mDataProp": "action",
+                "mDataProp": "connectedToOrion",
                 "aTargets": [5],
+                "bSortable": false,
+                "fnRender": function (data) {
+                    var connected = data.aData.connectedToOrion;
+                    if (connected)
+                        return '<i class="fa fa-link" aria-hidden="true"></i>';
+                    else
+                        return '<i class="fa fa-chain-broken" aria-hidden="true"></i>';
+
+                }
+            }, {
+                "mDataProp": "action",
+                "aTargets": [6],
                 "bSortable": false
             }];
 
@@ -407,7 +419,7 @@ camApp.controller('homeController', [
             }
             $scope.typeToAdd = 'Orion Context Broker';
             $scope.titleOperationMessage = 'Create assets to the ';
-            $scope.operationMessage = 'Are you sure you want to create these '+$scope.selectedOcbAssets.length+' assets into the ';
+            $scope.operationMessage = 'Are you sure you want to create these ' + $scope.selectedOcbAssets.length + ' assets into the ';
             ngDialogManager.open({
                 template: 'pages/confirmNewOperation.htm',
                 controller: 'confirmNewOperationController',
@@ -435,8 +447,8 @@ camApp.controller('homeController', [
         };
 
         $scope.selectAllAssetsForOCB = function () {
-           for(var i in $scope.assetList)
-               $scope.assetList[i].selected = $scope.flagSelectAll;
+            for (var i in $scope.assetList)
+                $scope.assetList[i].selected = $scope.flagSelectAll;
         };
 
     }]);

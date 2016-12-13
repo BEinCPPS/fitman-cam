@@ -113,6 +113,12 @@ camApp.controller('menuController', [
             else return '';
         };
 
+        $scope.activeMenuOrionConfig = function () {
+            if ($location.url().indexOf('orion') > -1)
+                return 'active';
+            else return '';
+        };
+
         $scope.linkCamService = function () {
             return BACK_END_URL_CONST;
         };

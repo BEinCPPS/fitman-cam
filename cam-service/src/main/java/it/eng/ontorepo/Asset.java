@@ -16,6 +16,7 @@ public class Asset extends IndividualItem {
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="CET")
     private Date createdOn;
     private boolean lostDomain;
+    private boolean connectedToOrion;
     private List<PropertyValueItem> attributes;
 
     public boolean isLostDomain() {
@@ -54,6 +55,14 @@ public class Asset extends IndividualItem {
         return domain;
     }
 
+    public boolean isConnectedToOrion() {
+        return connectedToOrion;
+    }
+
+    public void setConnectedToOrion(boolean connectedToOrion) {
+        this.connectedToOrion = connectedToOrion;
+    }
+
     public void setDomain(String domain) {
         this.domain = domain;
     }
@@ -73,4 +82,5 @@ public class Asset extends IndividualItem {
     public void setDomainIri(String domainIri) {
         this.domainIri = domainIri;
     }
+
 }

@@ -692,7 +692,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     }
 
     @Override
-    public void syncIndividualToOrionConfig(String individualName, String orionConfigId) {
+    public void connectIndividualToOrionConfig(String individualName, String orionConfigId) {
         if (individualName == null || individualName.length() == 0)
             throw new IllegalArgumentException("Individual name is mandatory");
         if (orionConfigId == null || orionConfigId.isEmpty())
@@ -704,6 +704,13 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         URI orionConfigIdUri = vf.createURI(orionConfigId);
         statements.add(vf.createStatement(assetUri, instanceUri, orionConfigIdUri));
         addStatements(statements);
+    }
+
+    @Override
+    public void disconnectIndividualFromOrionConfig(String individualName) {
+        if (individualName == null || individualName.length() == 0)
+            throw new IllegalArgumentException("Individual name is mandatory");
+        removeProperty(individualName, BeInCpps.syncTo);
     }
 
     @Override

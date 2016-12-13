@@ -262,12 +262,20 @@ public class CAMRestImpl {
             Optional<OrionConfig> configFound = orionConfigs.stream()
                     .filter(cfg -> cfg.getId().equals(contextElement.getOrionConfigId())).findAny();
             if (!configFound.isPresent() || configFound.get().isEmpty())
-                throw new IllegalStateException("Orion configuration '"+contextElement.getOrionConfigId()+"' not exists.");
+                throw new IllegalStateException("Orion configuration '" + contextElement.getOrionConfigId() + "' not exists.");
             OrionRestClient.createContext(configFound.get(), contextElement);
-            dao.syncIndividualToOrionConfig(contextElement.getOriginalAssetName(), contextElement.getOrionConfigId());
+            dao.connectIndividualToOrionConfig(contextElement.getOriginalAssetName(), contextElement.getOrionConfigId());
             contextElementsCreated.add(contextElement);
         }
         return contextElementsCreated;
+    }
+
+    public static void disconnectAssetsFromOrion(RepositoryDAO dao, List<AssetJSON> assetJSONs) {
+        if (assetJSONs == null || assetJSONs.isEmpty()) throw new IllegalArgumentException("No assets in input.");
+        for (AssetJSON assetJSON : assetJSONs) {
+            dao = releaseRepo(dao);
+            dao.disconnectIndividualFromOrionConfig(assetJSON.getName());
+        }
     }
 
     private static void deepSearchFirstRecursive(RepositoryDAO dao, Map<String, Boolean> visited, ClassItem clazz,
