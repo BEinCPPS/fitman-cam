@@ -1,11 +1,17 @@
 <div ng-include="'pages/notification.html'"></div>
 <div ng-include="'pages/mainMenu.html'"></div>
 <div id="panel-container" class="panel panel-default panel-height">
-    <div id="orion-config" class="panel-body">
+    <div id="orion-config" class="panel-body" ng-controller="orionConfigController">
         <div class="row-fluid">
             <div class="cam-tree-container">
                 <div class="header-page-table-left">
                     <span><b>Orion Configurations</b></span>
+                </div>
+                <div id="button-tree-controllers" class="btn-toolbar">
+                    <button type="button" class="btn-mini" data-toggle="tooltip" title="Add"
+                            ng-click="enterEdit(event, true)">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
                 </div>
                 <div class="tree-nodes-container"
                      data-angular-treeview="true"
@@ -14,7 +20,7 @@
                      data-node-label="id"
                      data-node-children=""
                      data-tree-id="configOrionTreeId"
-                     data-right-click-enabled="false"
+                     data-right-click-enabled="true"
                      data-icon-class-name="fa fa-globe"
                 >
                 </div>
@@ -23,36 +29,55 @@
                 <div class="header-page-table-right">
                     <span><b>{{selectedConfig.id}}</b></span>
                 </div>
-                <form>
+                <form class="form-horizontal" ng-submit="edit()" name="orionConfigForm">
                     <div class="form-group row">
-                        <label for="orion-config-form-id" class="col-xs-1 col-form-label">Id</label>
-                        <div class="col-xs-10">
-                            <input class="form-control" type="text" value="{{selectedConfig.id}}"
-                                   id="orion-config-form-id" ng-disabled="true">
+                        <label for="orion-config-form-id" class="col-xs-1 control-label">Id</label>
+                        <div class="col-xs-11">
+                            <input class="form-control" ng-model="selectedConfig.id" type="text"
+                                   value="{{selectedConfig.id}}"
+                                   name="id"
+                                   id="orion-config-form-id"
+                                   ng-required="isEditing && orionConfigForm.id.dirty"
+                                   ng-readonly="!isNew">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="orion-config-form-url" class="col-xs-1 col-form-label">Url</label>
-                        <div class="col-xs-10">
-                            <input class="form-control form-control-sm" type="text" value="{{selectedConfig.url}}"
-                                   id="orion-config-form-url" ng-disabled="true">
+                        <label for="orion-config-form-url" class="col-xs-1 control-label">Url</label>
+                        <div class="col-xs-11">
+                            <input class="form-control form-control-sm" ng-model="selectedConfig.url" type="url"
+                                   value="{{selectedConfig.url}}"
+                                   name="url"
+                                   id="orion-config-form-url"
+                                   ng-required="isEditing && orionConfigForm.url.dirty"
+                                   ng-pattern="regexUrlValidator"
+                                   ng-disabled="!isEditing">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="orion-config-form-service" class="col-xs-1 col-form-label">Service</label>
-                        <div class="col-xs-10">
-                            <input class="form-control form-control-sm" type="text"
-                                   value="{{selectedConfig.service}}" id="orion-config-form-service" ng-disabled="true">
+                        <label for="orion-config-form-service" class="col-xs-1 control-label">Service</label>
+                        <div class="col-xs-11">
+                            <input class="form-control form-control-sm" ng-model="selectedConfig.service" type="text"
+                                   value="{{selectedConfig.service}}"
+                                   id="orion-config-form-service"
+                                   ng-disabled="!isEditing">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="orion-config-form-service-path" class="col-xs-1 col-form-label">Service Path</label>
-                        <div class="col-xs-10">
-                            <input class="form-control form-control-sm" type="text"
-                                   value="{{selectedConfig.servicePath}}" id="orion-config-form-service-path" ng-disabled="true">
+                        <label for="orion-config-form-service-path" class="col-xs-1 control-label">Service Path</label>
+                        <div class="col-xs-11">
+                            <input class="form-control form-control-sm" ng-model="selectedConfig.servicePath" type="text"
+                                   value="{{selectedConfig.servicePath}}"
+                                   id="orion-config-form-service-path"
+                                   ng-disabled="!isEditing">
                         </div>
                     </div>
-                 </form>
+                    <div class="form-group" ng-if="isEditing">
+                        <div class="col-sm-5 col-lg-5 col-sm-offset-2 pull-right">
+                            <button type="submit" class="btn btn-primary pull-right">Save</button>
+                            <button type="button" ng-click="enterEdit(event)" class="btn btn-default pull-right">Cancel</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

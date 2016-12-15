@@ -1021,6 +1021,23 @@ public class CAMRest {
         }
     }
 
+    @PUT
+    @Path("/orion/config")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<OrionConfig> editOrionConfigs(List<OrionConfig> orionConfigs) {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            return CAMRestImpl.editOrionConfigs(repoInstance, orionConfigs);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
     @GET
     @Path("/orion/config")
     @RolesAllowed({Role.BASIC, Role.ADMIN})

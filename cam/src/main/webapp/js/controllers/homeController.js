@@ -19,6 +19,8 @@ camApp.controller('homeController', [
         $scope.invalidNameMsg = INVALID_NAME_MSG;
         $scope.nameIsMandatory = NAME_IS_MANDATORY_MSG;
         $scope.keyrockSignupUrl = KEYROCK_SIGNUP_URL;
+        $scope.enableContextMenuEntry = true;
+
         var assetsCounter = 0;
 
         $scope.getAssets = function (name, retrieveChildren) {
@@ -248,6 +250,7 @@ camApp.controller('homeController', [
                 });
             ev.target.className += ' selected ownselector';
         }
+
         $scope.openRemoveAssetPanel = function (elementToDelete, typeToDelete) {
             $scope.elementToDelete = elementToDelete;
             $scope.typeToDelete = typeToDelete;
@@ -258,7 +261,7 @@ camApp.controller('homeController', [
             });
         }
 
-        $scope.openConfirmDeleteClass = function (node) {
+        $scope.openConfirmDeleteElement = function (node) {
             $scope.elementToDelete = node.className;
             $scope.typeToDelete = 'class';
             ngDialogManager.open({

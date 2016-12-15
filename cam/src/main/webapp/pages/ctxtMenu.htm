@@ -1,13 +1,18 @@
 <ul class="contextMenu">
-    <li>
+    <li ng-if="enableContextMenuEntry">
         <button ng-click="openAddChildPanel(node)"><i class="fa fa-plus"></i> New Child</button>
     </li>
-    <li>
+    <li ng-if="enableContextMenuEntry">
         <button ng-click="openMoveClassPanel(node)"><i class="fa fa-arrows"></i>
             Move
         </button>
     </li>
+    <li ng-if="true">
+        <button ng-click="enterEdit(event)"><i class="fa fa-arrows"></i>
+            Edit
+        </button>
+    </li>
     <li>
-        <button ng-click="openConfirmDeleteClass(node)"><i class="fa fa-trash"></i> Delete</button>
+        <button ng-click="openConfirmDeleteElement(node)"><i class="fa fa-trash"></i> Delete</button>
     </li>
 </ul>

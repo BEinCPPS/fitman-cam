@@ -363,6 +363,22 @@ public class CAMRestImpl {
         dao.deleteOrionConfig(orionConfigId);
     }
 
+    public static List<OrionConfig> editOrionConfigs(RepositoryDAO dao, List<OrionConfig> orionConfigs) {
+        List<OrionConfig> orionConfigsCreated = new ArrayList<>();
+        if (orionConfigs == null || orionConfigs.size() == 0)
+            throw new IllegalArgumentException("No orion configurations in input");
+        for (OrionConfig orionConfig : orionConfigs) {
+            if (orionConfig == null || orionConfig.isEmpty()) continue;
+            List<OrionConfig> orionConfigs1 = new ArrayList<>();
+            orionConfigs1.add(orionConfig);
+            dao.deleteOrionConfig(orionConfig.getId());
+            dao.createOrionConfig(orionConfig);
+            orionConfigsCreated.add(orionConfig);
+        }
+        return orionConfigsCreated;
+    }
+
+
     private static String normalizeClassName(String normName) {
         if (null != normName && normName.contains("#") && !normName.contains("system"))
             return normName.substring(normName.indexOf("#") + 1);
