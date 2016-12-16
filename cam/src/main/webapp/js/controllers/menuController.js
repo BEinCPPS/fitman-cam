@@ -23,8 +23,8 @@ camApp.controller('menuController', [
 
                 if (auth.mySelf() == OAUTH) {
                     $scope.userDisplay = {
-                        name: $scope.user.displayName,
-                        email: $scope.user.email,
+                        name: $scope.user.username,
+                        email: $scope.user.name,
                         roles: $scope.user.roles,
                         organizations: $scope.user.organizations
                     }

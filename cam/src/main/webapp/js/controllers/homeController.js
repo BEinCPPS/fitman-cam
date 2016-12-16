@@ -183,6 +183,8 @@ camApp.controller('homeController', [
                     $scope.domainsList.push('');
                     for (var i = 0; i < data.length; i++) {
                         var value = data[i];
+                        if (isEmpty(value))
+                            continue;
                         var domain = {
                             name: value.name,
                             id: value.id,
@@ -354,18 +356,26 @@ camApp.controller('homeController', [
             if (!data)
                 return [];
             for (var i = 0; i < data.length; i++) {
+                if (isEmpty(data[i]))
+                    continue;
                 var elementType = 'asset';
+                var individualName = '';
+                if (!isEmpty(data[i].individualName))
+                    individualName = data[i].individualName;
+
                 data[i].action = (function () {
-                    return $scope.actionAssetTemplate.replaceAll('$value$', data[i].individualName)
+                    return $scope.actionAssetTemplate.replaceAll('$value$', individualName)
                         .replaceAll('$elementType$', elementType).replaceAll('$className$', data[i].className);
 
                 })();
                 data[i].action += (function () {
-                    return $scope.actionAssetButtonTemplate.replaceAll('$value$', data[i].individualName);
+                    return $scope.actionAssetButtonTemplate.replaceAll('$value$', individualName);
                 })();
             }
 
             data.sort(function (a, b) {
+                if (isEmpty(a)||isEmpty(b))
+                    return;
                 return new Date(b.createdOn) - new Date(a.createdOn);
             });
 
