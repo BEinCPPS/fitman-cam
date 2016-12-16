@@ -49,11 +49,11 @@ camApp.controller('domainController', [
                 if ($scope.domainsList[i].name === domainName) {
                     $scope.domainsList[i].selected = 'selected';
                     var eventFake = new MouseEvent('click', {
-                                                    'view': $window,
-                                                    'bubbles': true,
-                                                    'cancelable': true
-                                                  });
-                    var event =  $window.event || eventFake;
+                        'view': $window,
+                        'bubbles': true,
+                        'cancelable': true
+                    });
+                    var event = $window.event || eventFake;
                     $scope.selectNodeLabel($scope.domainsList[i], event);
                     return;
                 }
@@ -82,11 +82,11 @@ camApp.controller('domainController', [
                 "fnRender": function (data) {
                     var retVal = data.aData.domain;
                     if (data.aData.domain && data.aData.lostDomain) {
-                        return '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-lost-domain="true"><span>'+ retVal+'</span></span>';
+                        return '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-lost-domain="true"><span>' + retVal + '</span></span>';
                     } else if (data.aData.domain && !data.aData.lostDomain) {
-                        return '<span class="glyphicon glyphicon-ok" aria-hidden="true" data-lost-domain="false"><span>'+ retVal+'</span></span>';
+                        return '<span class="glyphicon glyphicon-ok" aria-hidden="true" data-lost-domain="false"><span>' + retVal + '</span></span>';
                     } else
-                        return '<span aria-hidden="true" ><span>'+ retVal+'</span></span>';
+                        return '<span aria-hidden="true" ><span>' + retVal + '</span></span>';
                 }
             }, {
                 "mDataProp": "createdOn",
@@ -125,6 +125,7 @@ camApp.controller('domainController', [
                         }
                     });
                 }
+
                 colorToRed();
                 if (typeof Scopes.get('homeController') !== 'undefined')
                     Scopes.get('homeController').addTooltipToAssetModel();
@@ -149,8 +150,12 @@ camApp.controller('domainController', [
                 var asset;
                 asset = angular.copy(data[i]);
                 $scope.assetMap[asset.individualName] = asset;
+                var putDisabled = '';
+                if ($scope.domainsListNoDomain.length === 0)
+                    putDisabled = 'disabled';
                 data[i].action =
-                    $scope.actionTemplate.replaceAll("$value$", asset.individualName);
+                    $scope.actionTemplate.replaceAll("$value$", asset.individualName)
+                        .replaceAll("$disabled$", putDisabled);
             }
             data.sort(function (a, b) {
                 return new Date(b.createdOn) - new Date(a.createdOn);

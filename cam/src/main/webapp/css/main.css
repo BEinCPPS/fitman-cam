@@ -592,5 +592,10 @@ div.ng-leave {
 }
 
 .navbar-nav {
-     margin: 10px;
+    margin: 10px;
+}
+
+button[disabled] {
+    cursor: default;
+    color: grey;
 }

@@ -2,6 +2,7 @@ package it.eng.cam.rest.security.authorization;
 
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
 import it.eng.ontorepo.Asset;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
@@ -17,7 +18,9 @@ public class AssetOwnershipFilter {
         if (assets == null || assets.isEmpty() || securityContext == null) return assets;
         List<Asset> assetsToGive = new ArrayList<>();
         assets.stream().forEach(asset -> {
-                assetsToGive.add(filter(asset, securityContext));
+            Asset filter = filter(asset, securityContext);
+            if (filter != null)
+                assetsToGive.add(filter);
         });
         return assetsToGive;
     }
@@ -26,6 +29,8 @@ public class AssetOwnershipFilter {
         if (asset == null || securityContext == null) return null;
         CAMPrincipal principal = (CAMPrincipal) securityContext.getUserPrincipal();
         if (principal.isAdmin()) return asset;
+        if (StringUtils.isEmpty(asset.getDomain()) && StringUtils.isEmpty(asset.getDomainIri()))
+            return asset;
         for (CAMPrincipal.Organization organization :
                 principal.getOrganizations()) {
             if (organization.getName().equals(asset.getDomain()))
