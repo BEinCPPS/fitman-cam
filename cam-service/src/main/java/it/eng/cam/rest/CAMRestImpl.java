@@ -264,6 +264,7 @@ public class CAMRestImpl {
             if (!configFound.isPresent() || configFound.get().isEmpty())
                 throw new IllegalStateException("Orion configuration '" + contextElement.getOrionConfigId() + "' not exists.");
             OrionRestClient.createContext(configFound.get(), contextElement);
+            dao = releaseRepo(dao);
             dao.connectIndividualToOrionConfig(contextElement.getOriginalAssetName(), contextElement.getOrionConfigId());
             contextElementsCreated.add(contextElement);
         }
@@ -351,7 +352,8 @@ public class CAMRestImpl {
         if (orionConfigs == null || orionConfigs.size() == 0)
             throw new IllegalArgumentException("No orion configurations in input");
         for (OrionConfig orionConfig : orionConfigs) {
-            if (orionConfig == null || orionConfig.isEmpty()) continue;
+            if (orionConfig == null || orionConfig.isEmpty())
+                throw new IllegalStateException("Orion configuration is not correct");
             dao.createOrionConfig(orionConfig);
             orionConfigsCreated.add(orionConfig);
         }
@@ -368,7 +370,8 @@ public class CAMRestImpl {
         if (orionConfigs == null || orionConfigs.size() == 0)
             throw new IllegalArgumentException("No orion configurations in input");
         for (OrionConfig orionConfig : orionConfigs) {
-            if (orionConfig == null || orionConfig.isEmpty()) continue;
+            if (orionConfig == null || orionConfig.isEmpty())
+                throw new IllegalStateException("Orion configuration is not correct");
             List<OrionConfig> orionConfigs1 = new ArrayList<>();
             orionConfigs1.add(orionConfig);
             dao.deleteOrionConfig(orionConfig.getId());

@@ -697,13 +697,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             throw new IllegalArgumentException("Individual name is mandatory");
         if (orionConfigId == null || orionConfigId.isEmpty())
             throw new IllegalArgumentException("Orion config is mandatory");
-
-        List<Statement> statements = new ArrayList<Statement>();
-        URI assetUri = vf.createURI(individualName);
-        URI instanceUri = vf.createURI(BeInCpps.SYSTEM_NS, BeInCpps.syncTo);
-        URI orionConfigIdUri = vf.createURI(orionConfigId);
-        statements.add(vf.createStatement(assetUri, instanceUri, orionConfigIdUri));
-        addStatements(statements);
+        setAttribute(BeInCpps.syncTo, individualName, orionConfigId);
     }
 
     @Override

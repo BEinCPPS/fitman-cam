@@ -7,12 +7,23 @@ camApp.controller('orionConfigController', [
     'ngNotifier',
     '$route',
     '$window',
-    function ($scope, Scopes, $q, ngDialogManager, entityManager, ngNotifier, $route, $window) {
+    'currentNode',
+    function ($scope, Scopes, $q, ngDialogManager, entityManager, ngNotifier, $route, $window, currentNode) {
         Scopes.store('orionConfigController', $scope);
         $scope.orionConfigsList = [];
         (function getOrionConfigs() {
             entityManager.getOrionConfigs().then(function (response) {
                 $scope.orionConfigsList = response.data;
+            }, function (error) {
+                ngNotifier.error(error);
+            }).then(function () {
+                if (currentNode.getOrionConfig().id) {
+                    $scope.currentNode = currentNode.getOrionConfig();
+                    $scope.expandAncestors($scope.currentNode.id);
+                } else {
+                    if ($scope.orionConfigsList.length > 0)
+                        $scope.expandAncestors($scope.orionConfigsList[0].id);
+                }
             }, function (error) {
                 ngNotifier.error(error);
             });
@@ -22,7 +33,8 @@ camApp.controller('orionConfigController', [
         $scope.isEditing = false;
         $scope.isNew = false;
         $scope.enableContextMenuEntry = false;
-        $scope.regexUrlValidator = $scope.isEditing ? '/https?\:\/\/\w+((\:\d+)?\/\S*)?/' : '';
+        $scope.regexUrlValidator = $scope.isEditing ? '/https?\:\/\/\w+((\:\d+)?\/\S*)?/' : ''; //TODO
+
         $scope.loadChildren = function () {
             angular.forEach($scope.orionConfigsList, function (value) {
                 if (value && value.id == $scope.currentNode.id) {
@@ -30,32 +42,40 @@ camApp.controller('orionConfigController', [
                 }
             });
         }
-        $scope.enterEdit = function (ev, isNew) {
-            $scope.isEditing = !$scope.isEditing;
+        $scope.enterEdit = function (isNew) {
+            $scope.isEditing = true;
+            $scope.isNew = false;
             if (isNew) {
                 $scope.isNew = true;
                 $scope.selectedConfig = {};
             }
-            ev.preventDefault();
-
         }
 
-        $scope.edit = function () {
+        $scope.save = function () {
+            if($scope.isNew)
+                $scope.create();
+            else
+                $scope.update();
+        }
+
+        $scope.update = function () {
             var selectedConfigs = [];
-            selectedConfigs.push($scope.selectedConfig);
+            selectedConfigs.push(removeSelectedPropFromObj($scope.selectedConfig));
             entityManager.editOrionConfigs(selectedConfigs)
                 .then(function () {
+                    ngNotifier.success();
                     $route.reload();
                 }, function (error) {
                     ngNotifier.error(error);
                 });
         }
-
         $scope.create = function () {
             var selectedConfigs = [];
-            selectedConfigs.push($scope.selectedConfig);
-            entityManager.createOrio(selectedConfigs)
+            selectedConfigs.push(removeSelectedPropFromObj($scope.selectedConfig));
+            entityManager.createOrionConfigs(selectedConfigs)
                 .then(function () {
+                    ngNotifier.success();
+                    $scope.isNew = false;
                     $route.reload();
                 }, function (error) {
                     ngNotifier.error(error);
@@ -81,8 +101,31 @@ camApp.controller('orionConfigController', [
             ev.target.className += ' selected ownselector';
         }
 
-        $scope.addOrionConfig = function () {
+        $scope.expandAncestors = function (orionConfigId) {
+            for (var i in $scope.orionConfigsList) {
+                if ($scope.orionConfigsList[i].id === orionConfigId) {
+                    $scope.orionConfigsList[i].selected = 'selected';
+                    var eventFake = new MouseEvent('click', {
+                        'view': $window,
+                        'bubbles': true,
+                        'cancelable': true
+                    });
+                    var event = $window.event || eventFake;
+                    if ($scope.selectNodeLabel)
+                        $scope.selectNodeLabel($scope.orionConfigsList[i], event);
+                    return;
+                }
+            }
+        }
 
+        $scope.cancel = function () {
+            $route.reload();
+        }
+
+        function removeSelectedPropFromObj(selectedOrionConfig) {
+            if (selectedOrionConfig && selectedOrionConfig.hasOwnProperty("selected"))
+                delete selectedOrionConfig.selected;
+            return selectedOrionConfig;
         }
 
     }]);

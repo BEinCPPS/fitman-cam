@@ -20,7 +20,7 @@ camApp.controller('confirmNewOperationController', [
             } else if($scope.typeToAdd == 'domain'){
                 Scopes.get('newDomainController').saveNewDomain();
             } else if($scope.typeToAdd == 'Orion Context Broker'){
-                Scopes.get('homeController').createAssetsToOCB();
+                Scopes.get('homeController').createAssetsToOCB($scope.selectedOrionConfigId);
             }
             ngDialogManager.closeAll();
         };

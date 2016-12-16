@@ -7,6 +7,7 @@ camApp.factory('currentNode', function () {
     var currentNode = {};
     currentNode.domainNode = {};
     currentNode.classNode = {};
+    currentNode.orionConfigNode = {};
 
     currentNode.setDomain = function (node) {
         currentNode.domainNode = node;
@@ -22,6 +23,14 @@ camApp.factory('currentNode', function () {
 
     currentNode.getClass = function () {
         return currentNode.classNode;
+    }
+
+    currentNode.setOrionConfig = function (node) {
+        currentNode.orionConfigNode = node;
+    }
+
+    currentNode.getOrionConfig = function () {
+        return currentNode.orionConfigNode;
     }
 
     return currentNode;

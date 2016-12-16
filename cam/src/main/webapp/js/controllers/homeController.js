@@ -420,23 +420,30 @@ camApp.controller('homeController', [
                 ngNotifier.warn("Select assets please!");
                 return;
             }
+            entityManager.getOrionConfigs().then(function (response) {
+                $scope.orionConfigsList = response.data;
+            }, function (error) {
+                ngNotifier.error(error);
+            });
             $scope.typeToAdd = 'Orion Context Broker';
             $scope.titleOperationMessage = 'Create assets to the ';
             $scope.operationMessage = 'Are you sure you want to create these ' + $scope.selectedOcbAssets.length + ' assets into the ';
             ngDialogManager.open({
-                template: 'pages/confirmNewOperation.htm',
+                template: 'pages/createContexts.htm',
                 controller: 'confirmNewOperationController',
                 scope: $scope
             });
         };
 
-        $scope.createAssetsToOCB = function () {
+        $scope.selectedOrionConfigId = null;
+        $scope.createAssetsToOCB = function (selectedOrionConfigId) {
             var selectedAssetsJson = [];
             angular.forEach($scope.selectedOcbAssets, function (asset) {
                 var assetJSON = {
                     name: asset.individualName,
                     className: asset.className,
-                    domainName: asset.domain
+                    domainName: asset.domain,
+                    orionConfigId: selectedOrionConfigId
                 };
                 selectedAssetsJson.push(assetJSON);
             });

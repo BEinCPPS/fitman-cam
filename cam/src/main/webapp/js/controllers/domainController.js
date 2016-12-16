@@ -43,7 +43,7 @@ camApp.controller('domainController', [
             }, function (error) {
                 ngNotifier.error(error);
             });
-        })();
+        })()
 
         $scope.expandAncestors = function (domainName) {
             for (var i in $scope.domainsList) {
@@ -59,7 +59,8 @@ camApp.controller('domainController', [
                     return;
                 }
             }
-        };
+        }
+
         $scope.assetList = [];
         templateManager.getDomainAction().then(function (response) {
             $scope.actionTemplate = response.data;
@@ -140,7 +141,7 @@ camApp.controller('domainController', [
                 if (typeof Scopes.get('homeController') !== 'undefined')
                     Scopes.get('homeController').addTooltipToAssetModel();
             },
-        };
+        }
 
         $scope.loadChildren = function () {
             entityManager.getAssetsFromDomain($scope.currentNode.id)
@@ -171,8 +172,8 @@ camApp.controller('domainController', [
 
             return data;
         }
-        $scope.panelTitle = 'Update Domain';
 
+        $scope.panelTitle = 'Update Domain';
         $scope.updateAssetDomain = function () {
             var assetToSend = {
                 name: $scope.asset.individualName,
@@ -221,7 +222,7 @@ camApp.controller('domainController', [
                 controller: 'confirmNewOperationController',
                 scope: $scope
             });
-        };
+        }
 
         $scope.createAssetsToOCB = function () {
             var selectedAssetsJson = [];
@@ -240,11 +241,11 @@ camApp.controller('domainController', [
                 }, function (error) {
                     ngNotifier.error(error);
                 });
-        };
+        }
 
         $scope.selectAllAssetsForOCB = function () {
             for (var i in $scope.assetList)
                 $scope.assetList[i].selected = $scope.flagSelectAll;
-        };
+        }
 
     }]);
