@@ -38,8 +38,8 @@ public class OrionRestClient {
         return contextContainerJSON.getContextResponses();
     }
 
-    public static ContextElement createContext(OrionConfig config,
-                                               ContextElement context) {
+    public static ContextElement sendContext(OrionConfig config,
+                                             ContextElement context) {
         if (null == context) return null;
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(config.getUrl()).path("contextEntities");

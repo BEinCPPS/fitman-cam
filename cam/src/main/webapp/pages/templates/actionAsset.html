@@ -1,10 +1,19 @@
 <div class="inline-flex-item">
-    <button class="cam-table-button"
-            ng-click="openRemoveAssetPanel('$value$', '$elementType$')"><i
-            data-toggle="tooltip" title="Delete asset" class="fa fa-trash cam-table-button"></i></button>
     <a class="cam-icon-a" href="#/detail/$value$/$className$">
         <i data-toggle="tooltip"
            title="Open detail"
            class="fa fa-arrow-circle-right cam-table-button"></i>
     </a>
+    <button class="cam-table-button"
+            ng-click="openRemoveAssetPanel('$value$', '$elementType$')"><i
+            data-toggle="tooltip" title="Delete asset" class="fa fa-trash cam-table-button"></i>
+    </button>
+    <button class="cam-table-button" ng-click="openNewAssetPanel('$value$')">
+        <i data-toggle="tooltip" title="Create new asset from this model"
+           class="fa fa-plus cam-table-button"></i>
+    </button>
+    <button class="cam-table-button" $visibility$
+            ng-click="openDisconnectFromOCB('$value$')"><i
+            data-toggle="tooltip" title="Disconnect from Orion" class="fa fa-chain-broken cam-table-button"></i>
+    </button>
 </div>

@@ -177,6 +177,7 @@ public class CAMRestImpl {
             throw new RuntimeException("This individual already has the property " + name);
         }
         dao.setAttribute(name, individualName, value, Class.forName(type));
+        sendContext(dao, individualName);
     }
 
     public static boolean isModel(RepositoryDAO dao, Class clazz, String individualName) {
@@ -250,26 +251,54 @@ public class CAMRestImpl {
     }
 
 
-    public static List<ContextElement> createContexts(RepositoryDAO dao, List<AssetJSON> assetJSONs) throws ParseException {
+    public static List<ContextElement> sendContexts(RepositoryDAO dao, List<AssetJSON> assetJSONs,
+                                                    boolean isNew) {
         if (assetJSONs == null || assetJSONs.isEmpty()) throw new IllegalArgumentException("No assets in input.");
         List<OrionConfig> orionConfigs = getOrionConfigs(dao);
-        List<ContextElement> contextElements = AssetToContextTrasformer.transformAll(dao, assetJSONs);
+        List<ContextElement> contextElements = null;
+        try {
+            contextElements = AssetToContextTrasformer.transformAll(dao, assetJSONs);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
         List<ContextElement> contextElementsCreated = new ArrayList<>();
         if (null == contextElements || contextElements.isEmpty())
             throw new IllegalStateException("No assets transformed in contexts.");
-
         for (ContextElement contextElement : contextElements) {
             Optional<OrionConfig> configFound = orionConfigs.stream()
                     .filter(cfg -> cfg.getId().equals(contextElement.getOrionConfigId())).findAny();
             if (!configFound.isPresent() || configFound.get().isEmpty())
                 throw new IllegalStateException("Orion configuration '" + contextElement.getOrionConfigId() + "' not exists.");
-            OrionRestClient.createContext(configFound.get(), contextElement);
+            OrionRestClient.sendContext(configFound.get(), contextElement);
             dao = releaseRepo(dao);
-            dao.connectIndividualToOrionConfig(contextElement.getOriginalAssetName(), contextElement.getOrionConfigId());
+            if (!dao.isIndividualConnectedToOrionConfig(contextElement.getOriginalAssetName(),
+                    contextElement.getOrionConfigId()) && isNew)
+                dao.connectIndividualToOrionConfig(contextElement.getOriginalAssetName(), contextElement.getOrionConfigId());
             contextElementsCreated.add(contextElement);
         }
         return contextElementsCreated;
     }
+
+
+    public static void sendContext(RepositoryDAO dao, String individualName) throws RuntimeException {
+        if (StringUtils.isBlank(individualName))
+            throw new IllegalArgumentException("No asset in input.");
+        dao = releaseRepo(dao);
+        IndividualItem individual = dao.getIndividual(individualName);
+        if (null == individual) throw new IllegalStateException("Individual " + individualName + " not found.");
+        AssetJSON assetJSON = new AssetJSON();
+        assetJSON.setClassName(individual.getClassName());
+        assetJSON.setName(individual.getIndividualName());
+        String individualOrionConfig = dao.getIndividualOrionConfig(individualName);
+        if (null == individualOrionConfig)
+            throw new IllegalStateException("Individual " + individualName + " not connected to Orion.");
+        assetJSON.setOrionConfigId(individualOrionConfig);
+        List<AssetJSON> assets = new ArrayList<>();
+        assets.add(assetJSON);
+        dao = releaseRepo(dao);
+        sendContexts(dao, assets, false);
+    }
+
 
     public static void disconnectAssetsFromOrion(RepositoryDAO dao, List<AssetJSON> assetJSONs) {
         if (assetJSONs == null || assetJSONs.isEmpty()) throw new IllegalArgumentException("No assets in input.");

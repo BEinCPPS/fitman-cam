@@ -226,6 +226,10 @@ public interface RepositoryDAO {
 
     void connectIndividualToOrionConfig(String individualName, String orionConfigId);
 
+    boolean isIndividualConnectedToOrionConfig(String individualName, String orionConfigId);
+
+    String getIndividualOrionConfig(String individualName);
+
     void disconnectIndividualFromOrionConfig(String individualName);
 
     List<String> getOrionConfigs() throws RuntimeException;

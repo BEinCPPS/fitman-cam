@@ -12,9 +12,6 @@ camApp.factory('templateManager', function ($http) {
     templateManager.getAssetAction = function () {
         return $http.get('pages/templates/actionAsset.html');
     };
-    templateManager.getAssetButtonAction = function () {
-        return $http.get('pages/templates/actionAssetButton.html');
-    };
     templateManager.getTreeView = function () {
         return $http.get('pages/templates/treeview.html');
     };

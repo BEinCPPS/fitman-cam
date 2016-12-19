@@ -234,7 +234,7 @@ camApp.controller('domainController', [
                 };
                 selectedAssetsJson.push(assetJSON);
             });
-            entityManager.sendAssetsToOCB(selectedAssetsJson)
+            entityManager.createAssetsToOCB(selectedAssetsJson)
                 .then(function (response) {
                     console.log(JSON.stringify(response.data));
                     ngNotifier.success("Assets correctly added to the Orion Context Broker");

@@ -8,19 +8,25 @@ camApp.controller('confirmNewOperationController', [
     '$timeout',
     function ($scope, Scopes, $http, $q, ngDialogManager, $route, $timeout) {
         $scope.closeConfirmNewOperationPanel = function () {
-         var ngDialog=ngDialogManager.getNgDialog();
-           ngDialog.close(ngDialog.getOpenDialogs()[1]);
+            var ngDialog = ngDialogManager.getNgDialog();
+            ngDialog.close(ngDialog.getOpenDialogs()[1]);
         };
 
         $scope.confirmNewOperation = function () {
+            if ($scope.subTypeToAdd)
+                $scope.typeToAdd = $scope.subTypeToAdd;
             if ($scope.typeToAdd == 'attribute') {
                 Scopes.get('newAttributeController').saveNewAttribute();
-            } else if($scope.typeToAdd == 'relationship'){
+            } else if ($scope.typeToAdd == 'relationship') {
                 Scopes.get('newRelationshipController').saveNewRelationship();
-            } else if($scope.typeToAdd == 'domain'){
+            } else if ($scope.typeToAdd == 'domain') {
                 Scopes.get('newDomainController').saveNewDomain();
-            } else if($scope.typeToAdd == 'Orion Context Broker'){
+            } else if ($scope.typeToAdd == 'createInOCB') {
+                $scope.typeToAdd = "Orion Context Broker";
                 Scopes.get('homeController').createAssetsToOCB($scope.selectedOrionConfigId);
+            } else if ($scope.typeToAdd == 'disconnectFromOCB') {
+                $scope.typeToAdd = "Orion Context Broker";
+                Scopes.get('homeController').disconnectAssetFromOCB();
             }
             ngDialogManager.closeAll();
         };

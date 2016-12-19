@@ -31,18 +31,22 @@
                 </div>
                 <form class="form-horizontal" ng-submit="save()" name="orionConfigForm">
                     <div class="form-group row">
-                        <label for="orion-config-form-id" class="col-xs-1 control-label">Id</label>
+                        <label for="orion-config-form-id" class="col-xs-1 control-label">Id<span
+                                ng-show="isEditing">*</span></label>
                         <div class="col-xs-11">
                             <input class="form-control" ng-model="selectedConfig.id" type="text"
                                    value="{{selectedConfig.id}}"
                                    name="id"
                                    id="orion-config-form-id"
                                    ng-required="isEditing"
-                                   ng-readonly="!isNew">
+                                   ng-readonly="!isNew"
+                                   placeholder="Enter Id"
+                            >
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="orion-config-form-url" class="col-xs-1 control-label">Url</label>
+                        <label for="orion-config-form-url" class="col-xs-1 control-label">Url<span
+                                ng-show="isEditing">*</span></label>
                         <div class="col-xs-11">
                             <input class="form-control form-control-sm" ng-model="selectedConfig.url" type="url"
                                    value="{{selectedConfig.url}}"
@@ -50,7 +54,9 @@
                                    id="orion-config-form-url"
                                    ng-required="isEditing"
                                    ng-pattern="regexUrlValidator"
-                                   ng-disabled="!isEditing">
+                                   ng-disabled="!isEditing"
+                                   placeholder="Enter valid URL"
+                            >
                         </div>
                     </div>
                     <div class="form-group row">
@@ -60,7 +66,9 @@
                                    ng-model="selectedConfig.service" type="text"
                                    value="{{selectedConfig.service}}"
                                    id="orion-config-form-service"
-                                   ng-disabled="!isEditing">
+                                   ng-disabled="!isEditing"
+                                   placeholder="Enter Service"
+                            >
                         </div>
                     </div>
                     <div class="form-group row">
@@ -70,7 +78,9 @@
                                    ng-model="selectedConfig.servicePath" type="text"
                                    value="{{selectedConfig.servicePath}}"
                                    id="orion-config-form-service-path"
-                                   ng-disabled="!isEditing">
+                                   ng-disabled="!isEditing"
+                                   placeholder="Enter Service Path"
+                            >
                         </div>
                     </div>
                     <div class="form-group" ng-if="isEditing">

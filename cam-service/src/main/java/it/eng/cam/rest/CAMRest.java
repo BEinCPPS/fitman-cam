@@ -13,7 +13,6 @@ import it.eng.cam.rest.security.user.UserLoginJSON;
 import it.eng.cam.rest.security.roles.Role;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.*;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
@@ -978,7 +977,7 @@ public class CAMRest {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            return CAMRestImpl.createContexts(repoInstance, assetJSONs);
+            return CAMRestImpl.sendContexts(repoInstance, assetJSONs, true);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -990,7 +989,24 @@ public class CAMRest {
     @PUT
     @Path("/orion/contexts")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
-    public Response disconnect(List<AssetJSON> assetJSONs){
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<ContextElement> updateContexts(List<AssetJSON> assetJSONs) {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            return CAMRestImpl.sendContexts(repoInstance, assetJSONs, false);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
+    @DELETE
+    @Path("/orion/contexts")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
+    public Response disconnectFromContexts(List<AssetJSON> assetJSONs) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());

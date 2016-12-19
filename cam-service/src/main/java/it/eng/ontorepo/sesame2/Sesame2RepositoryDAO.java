@@ -701,6 +701,35 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     }
 
     @Override
+    public boolean isIndividualConnectedToOrionConfig(String individualName, String orionConfigId) {
+        if (individualName == null || individualName.length() == 0)
+            throw new IllegalArgumentException("Individual name is mandatory");
+        if (orionConfigId == null || orionConfigId.isEmpty())
+            throw new IllegalArgumentException("Orion config is mandatory");
+        List<PropertyValueItem> attributesByNS = getAttributesByNS(individualName, getImplicitNamespace());
+        for (PropertyValueItem attribute : attributesByNS) {
+            if (attribute.getNormalizedName().equals(BeInCpps.syncTo)) {
+                if (attribute.getPropertyValue().equals(orionConfigId))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String getIndividualOrionConfig(String individualName) {
+        if (individualName == null || individualName.length() == 0)
+            throw new IllegalArgumentException("Individual name is mandatory");
+        List<PropertyValueItem> attributesByNS = getAttributesByNS(individualName, getImplicitNamespace());
+        for (PropertyValueItem attribute : attributesByNS) {
+            if (attribute.getNormalizedName().equals(BeInCpps.syncTo)) {
+                   return attribute.getPropertyValue();
+            }
+        }
+        return null;
+    }
+
+    @Override
     public void disconnectIndividualFromOrionConfig(String individualName) {
         if (individualName == null || individualName.length() == 0)
             throw new IllegalArgumentException("Individual name is mandatory");
@@ -744,7 +773,6 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         if (null != orionConfig.getServicePath() && orionConfig.getServicePath().length() > 0) {
             setAttribute(OrionConfig.hasServicePath, orionConfig.getId(), orionConfig.getServicePath());
         }
-
     }
 
     @Override

@@ -203,27 +203,41 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
             return rejectNotLoggedCall();
     }
 
-    entityManager.sendAssetsToOCB = function (selectedAssets) {
+    entityManager.createAssetsToOCB = function (selectedAssets) {
         if (auth.isLoggedIn())
             return $http.post(BACK_END_URL_CONST + '/orion/contexts', selectedAssets);
         else
             return rejectNotLoggedCall();
     }
 
-    entityManager.getOrionConfigs = function(){
-        return $http.get(BACK_END_URL_CONST+ '/orion/config');
+    entityManager.updateAssetsToOCB = function (selectedAssets) {
+        if (auth.isLoggedIn())
+            return $http.put(BACK_END_URL_CONST + '/orion/contexts', selectedAssets);
+        else
+            return rejectNotLoggedCall();
     }
-    
+
+    entityManager.disconnectAssetsFromOCB = function (selectedAssets) {
+        if (auth.isLoggedIn())
+            return $http.delete(BACK_END_URL_CONST + '/orion/contexts', selectedAssets);
+        else
+            return rejectNotLoggedCall();
+    }
+
+    entityManager.getOrionConfigs = function () {
+        return $http.get(BACK_END_URL_CONST + '/orion/config');
+    }
+
     entityManager.editOrionConfigs = function (selectedOrionConfigs) {
-        return $http.put(BACK_END_URL_CONST+ '/orion/config', selectedOrionConfigs);
+        return $http.put(BACK_END_URL_CONST + '/orion/config', selectedOrionConfigs);
     }
 
     entityManager.createOrionConfigs = function (selectedOrionConfigs) {
-        return $http.post(BACK_END_URL_CONST+ '/orion/config', selectedOrionConfigs);
+        return $http.post(BACK_END_URL_CONST + '/orion/config', selectedOrionConfigs);
     }
 
     entityManager.deleteOrionConfig = function (configId) {
-        return $http.delete(BACK_END_URL_CONST+ '/orion/config/'+configId);
+        return $http.delete(BACK_END_URL_CONST + '/orion/config/' + configId);
     }
 
     // return our entire userFactory object
