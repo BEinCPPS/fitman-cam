@@ -132,12 +132,12 @@ camApp.controller('orionConfigController', [
             return selectedOrionConfig;
         }
 
-        $scope.$watch("isEditing", function(newValue, oldValue) {
-            if(newValue) {
+        $scope.$watch("isEditing", function (newValue, oldValue) {
+            if (newValue) {
                 $scope.placeholderService = 'Enter Service';
                 $scope.placeholderServicePath = 'Enter Service Path';
 
-            }else{
+            } else {
                 $scope.placeholderService = '';
                 $scope.placeholderServicePath = '';
             }
