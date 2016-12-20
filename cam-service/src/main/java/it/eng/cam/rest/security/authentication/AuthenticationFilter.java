@@ -1,8 +1,9 @@
 package it.eng.cam.rest.security.authentication;
 
-import it.eng.cam.rest.security.service.Constants;
+import it.eng.cam.rest.Constants;
 import it.eng.cam.rest.security.service.impl.IDMService;
 import it.eng.cam.rest.security.service.IDMServiceManager;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
@@ -28,7 +29,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         String path = requestContext.getUriInfo().getPath();
         if (path.isEmpty() || path.contains("authenticate") || path.contains("authorize")) return;
         String token = requestContext.getHeaderString(Constants.X_AUTH_TOKEN);
-        if (null == token || token.isEmpty()) {
+        if (StringUtils.isBlank(token)) {
             requestContext.abortWith(Response
                     .status(Response.Status.UNAUTHORIZED)
                     .entity("User cannot access the resource.").type(MediaType.TEXT_PLAIN)

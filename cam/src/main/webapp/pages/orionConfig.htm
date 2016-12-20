@@ -1,0 +1,96 @@
+<div ng-include="'pages/notification.html'"></div>
+<div ng-include="'pages/mainMenu.html'"></div>
+<div id="panel-container" class="panel panel-default panel-height">
+    <div id="orion-config" class="panel-body" ng-controller="orionConfigController">
+        <div class="row-fluid">
+            <div class="cam-tree-container">
+                <div class="header-page-table-left">
+                    <span><b>Orion Configurations</b></span>
+                </div>
+                <div id="button-tree-controllers" class="btn-toolbar">
+                    <button type="button" class="btn-mini" data-toggle="tooltip" title="Add"
+                            ng-click="enterEdit(true)">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="tree-nodes-container"
+                     data-angular-treeview="true"
+                     data-tree-model="orionConfigsList"
+                     data-node-id="id"
+                     data-node-label="id"
+                     data-node-children=""
+                     data-tree-id="configOrionTreeId"
+                     data-right-click-enabled="true"
+                     data-icon-class-name="fa fa-globe"
+                >
+                </div>
+            </div>
+            <div name="asset-table-container" class="cam-table-container">
+                <div class="header-page-table-right">
+                    <span><b>{{selectedConfig.id}}</b></span>
+                </div>
+                <form class="form-horizontal" ng-submit="save()" name="orionConfigForm">
+                    <div class="form-group row">
+                        <label for="orion-config-form-id" class="col-xs-1 control-label">Id<span
+                                ng-show="isEditing">*</span></label>
+                        <div class="col-xs-11">
+                            <input class="form-control" ng-model="selectedConfig.id" type="text"
+                                   value="{{selectedConfig.id}}"
+                                   name="id"
+                                   id="orion-config-form-id"
+                                   ng-required="isEditing"
+                                   ng-readonly="!isNew"
+                                   placeholder="Enter Id"
+                            >
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="orion-config-form-url" class="col-xs-1 control-label">Url<span
+                                ng-show="isEditing">*</span></label>
+                        <div class="col-xs-11">
+                            <input class="form-control form-control-sm" ng-model="selectedConfig.url" type="url"
+                                   value="{{selectedConfig.url}}"
+                                   name="url"
+                                   id="orion-config-form-url"
+                                   ng-required="isEditing"
+                                   ng-pattern="regexUrlValidator"
+                                   ng-disabled="!isEditing"
+                                   placeholder="Enter valid URL"
+                            >
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="orion-config-form-service" class="col-xs-1 control-label">Service</label>
+                        <div class="col-xs-11">
+                            <input class="form-control form-control-sm"
+                                   ng-model="selectedConfig.service" type="text"
+                                   value="{{selectedConfig.service}}"
+                                   id="orion-config-form-service"
+                                   ng-disabled="!isEditing"
+                                   placeholder="Enter Service"
+                            >
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="orion-config-form-service-path" class="col-xs-1 control-label">Service Path</label>
+                        <div class="col-xs-11">
+                            <input class="form-control form-control-sm"
+                                   ng-model="selectedConfig.servicePath" type="text"
+                                   value="{{selectedConfig.servicePath}}"
+                                   id="orion-config-form-service-path"
+                                   ng-disabled="!isEditing"
+                                   placeholder="Enter Service Path"
+                            >
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="isEditing">
+                        <div class="col-sm-5 col-lg-5 col-sm-offset-2 pull-right">
+                            <button type="submit" class="btn btn-primary pull-right">Save</button>
+                            <button type="button" ng-click="cancel()" class="btn btn-default pull-right">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

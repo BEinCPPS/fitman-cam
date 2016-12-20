@@ -224,6 +224,20 @@ public interface RepositoryDAO {
     void createUser(String id) throws IllegalArgumentException,
             RuntimeException;
 
+    void connectIndividualToOrionConfig(String individualName, String orionConfigId);
+
+    boolean isIndividualConnectedToOrionConfig(String individualName, String orionConfigId);
+
+    String getIndividualOrionConfig(String individualName);
+
+    void disconnectIndividualFromOrionConfig(String individualName);
+
+    List<String> getOrionConfigs() throws RuntimeException;
+
+    void createOrionConfig(OrionConfig orionConfig);
+
+    void deleteOrionConfig(String id);
+
     /**
      * Deletes an existing Domain from the Reference Ontology.
      * <p/>
@@ -457,6 +471,8 @@ public interface RepositoryDAO {
      * @throws RuntimeException
      */
     public List<PropertyValueItem> getAttributesByNS(String name, String namespace) throws RuntimeException;
+
+    List<PropertyValueItem> getIndividualAttributesByNS(String name, String namespace) throws RuntimeException;
 
     /**
      * Gives the list of attributes from Individual in implicit namespace

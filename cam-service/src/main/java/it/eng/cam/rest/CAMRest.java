@@ -1,11 +1,11 @@
 package it.eng.cam.rest;
 
+import it.eng.cam.rest.orion.context.ContextElement;
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
 import it.eng.cam.rest.security.authorization.AssetOwnershipFilter;
 import it.eng.cam.rest.security.authorization.DomainOwnershipFilter;
 import it.eng.cam.rest.security.project.Project;
 import it.eng.cam.rest.security.service.AuthenticationService;
-import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
 import it.eng.cam.rest.sesame.dto.*;
 import it.eng.cam.rest.exception.CAMServiceWebException;
@@ -593,7 +593,7 @@ public class CAMRest {
     @Path("/models")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createAssetModel(AssetModelJSON model) {
+    public Response createAssetModel(AssetJSON model) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
@@ -612,7 +612,7 @@ public class CAMRest {
     @Path("/models/{modelName}")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateAssetModel(@PathParam("modelName") String modelName, AssetModelJSON model) {
+    public Response updateAssetModel(@PathParam("modelName") String modelName, AssetJSON model) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
@@ -870,13 +870,6 @@ public class CAMRest {
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             CAMRestImpl.removeProperty(repoInstance, modelName, relationshipName);
-        } catch (Exception e) {
-            logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
-        }
-        try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             CAMRestImpl.setRelationship(repoInstance, relationship.getName(), modelName,
                     relationship.getReferredName());
@@ -973,6 +966,127 @@ public class CAMRest {
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
+        }
+    }
+
+    @POST
+    @Path("/orion/contexts")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<ContextElement> createContexts(List<AssetJSON> assetJSONs) {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            return CAMRestImpl.sendContexts(repoInstance, assetJSONs, true);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
+    @PUT
+    @Path("/orion/contexts")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<ContextElement> updateContexts(List<AssetJSON> assetJSONs) {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            return CAMRestImpl.sendContexts(repoInstance, assetJSONs, false);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
+    @DELETE
+    @Path("/orion/contexts")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
+    public Response disconnectFromContexts(List<AssetJSON> assetJSONs) {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            CAMRestImpl.disconnectAssetsFromOrion(repoInstance, assetJSONs);
+            return Response.ok("Assets disconnected successfully from Orion Context Broker").build();
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
+    @POST
+    @Path("/orion/config")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<OrionConfig> createOrionConfigs(List<OrionConfig> orionConfigs) {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            return CAMRestImpl.createOrionConfigs(repoInstance, orionConfigs);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
+    @PUT
+    @Path("/orion/config")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<OrionConfig> editOrionConfigs(List<OrionConfig> orionConfigs) {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            return CAMRestImpl.editOrionConfigs(repoInstance, orionConfigs);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
+    @GET
+    @Path("/orion/config")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<OrionConfig> getOrionConfigs() {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            return CAMRestImpl.getOrionConfigs(repoInstance);
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
+    @DELETE
+    @Path("/orion/config/{configId}")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
+    public Response deleteOrionConfig(@PathParam("configId") String orionConfigId) {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            CAMRestImpl.deleteOrionConfig(repoInstance, orionConfigId);
+            return Response.ok(
+                    "Orion Context Broker configuration with id '" + orionConfigId + "' was successfully deleted!")
+                    .build();
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
     }
 

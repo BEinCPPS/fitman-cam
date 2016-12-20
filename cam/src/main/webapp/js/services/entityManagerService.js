@@ -1,7 +1,7 @@
 /**
  * Created by ascatolo on 10/10/2016.
  */
-camApp.factory('entityManager', ['$q','$http', '${authentication.service}', function ($q, $http, auth) {
+camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', function ($q, $http, auth) {
 
     // create a new object
     var entityManager = {};
@@ -150,7 +150,7 @@ camApp.factory('entityManager', ['$q','$http', '${authentication.service}', func
             if (isModel)
                 urlFragment = '/models/';
             return $http.post(BACK_END_URL_CONST + urlFragment + individualName + '/attributes',
-            attribute);
+                attribute);
         } else
             return rejectNotLoggedCall();
     }
@@ -174,7 +174,7 @@ camApp.factory('entityManager', ['$q','$http', '${authentication.service}', func
             return $http.put(BACK_END_URL_CONST + '/assets/' + individualName + '/relationships/' + attributeName,
                 newRelationship);
         else
-             return rejectNotLoggedCall();
+            return rejectNotLoggedCall();
     }
 
     entityManager.updateAttribute = function (isModel, individualName, attributeName, attribute) {
@@ -198,9 +198,46 @@ camApp.factory('entityManager', ['$q','$http', '${authentication.service}', func
     entityManager.updateAsset = function (individualName, asset) {
         if (auth.isLoggedIn())
             return $http.put(BACK_END_URL_CONST + '/models/' + individualName,
-            asset);
+                asset);
         else
             return rejectNotLoggedCall();
+    }
+
+    entityManager.createAssetsToOCB = function (selectedAssets) {
+        if (auth.isLoggedIn())
+            return $http.post(BACK_END_URL_CONST + '/orion/contexts', selectedAssets);
+        else
+            return rejectNotLoggedCall();
+    }
+
+    entityManager.updateAssetsToOCB = function (selectedAssets) {
+        if (auth.isLoggedIn())
+            return $http.put(BACK_END_URL_CONST + '/orion/contexts', selectedAssets);
+        else
+            return rejectNotLoggedCall();
+    }
+
+    entityManager.disconnectAssetsFromOCB = function (selectedAssets) {
+        if (auth.isLoggedIn())
+            return $http.delete(BACK_END_URL_CONST + '/orion/contexts', selectedAssets);
+        else
+            return rejectNotLoggedCall();
+    }
+
+    entityManager.getOrionConfigs = function () {
+        return $http.get(BACK_END_URL_CONST + '/orion/config');
+    }
+
+    entityManager.editOrionConfigs = function (selectedOrionConfigs) {
+        return $http.put(BACK_END_URL_CONST + '/orion/config', selectedOrionConfigs);
+    }
+
+    entityManager.createOrionConfigs = function (selectedOrionConfigs) {
+        return $http.post(BACK_END_URL_CONST + '/orion/config', selectedOrionConfigs);
+    }
+
+    entityManager.deleteOrionConfig = function (configId) {
+        return $http.delete(BACK_END_URL_CONST + '/orion/config/' + configId);
     }
 
     // return our entire userFactory object

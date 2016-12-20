@@ -1,19 +1,20 @@
 package it.eng.cam.rest;
 
+import it.eng.cam.rest.orion.AssetToContextTrasformer;
+import it.eng.cam.rest.orion.OrionRestClient;
+import it.eng.cam.rest.orion.context.ContextElement;
 import it.eng.cam.rest.security.project.Project;
-import it.eng.cam.rest.security.service.Constants;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
 import it.eng.cam.rest.sesame.SesameRepoManager;
+import it.eng.cam.rest.sesame.dto.AssetJSON;
 import it.eng.ontorepo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.ws.rs.WebApplicationException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CAMRestImpl {
@@ -176,6 +177,7 @@ public class CAMRestImpl {
             throw new RuntimeException("This individual already has the property " + name);
         }
         dao.setAttribute(name, individualName, value, Class.forName(type));
+        sendContext(dao, individualName);
     }
 
     public static boolean isModel(RepositoryDAO dao, Class clazz, String individualName) {
@@ -248,6 +250,64 @@ public class CAMRestImpl {
         }
     }
 
+
+    public static List<ContextElement> sendContexts(RepositoryDAO dao, List<AssetJSON> assetJSONs,
+                                                    boolean isNew) {
+        if (assetJSONs == null || assetJSONs.isEmpty()) throw new IllegalArgumentException("No assets in input.");
+        List<OrionConfig> orionConfigs = getOrionConfigs(dao);
+        List<ContextElement> contextElements = null;
+        try {
+            contextElements = AssetToContextTrasformer.transformAll(dao, assetJSONs);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        List<ContextElement> contextElementsCreated = new ArrayList<>();
+        if (null == contextElements || contextElements.isEmpty())
+            throw new IllegalStateException("No assets transformed in contexts.");
+        for (ContextElement contextElement : contextElements) {
+            Optional<OrionConfig> configFound = orionConfigs.stream()
+                    .filter(cfg -> cfg.getId().equals(contextElement.getOrionConfigId())).findAny();
+            if (!configFound.isPresent() || configFound.get().isEmpty())
+                throw new IllegalStateException("Orion configuration '" + contextElement.getOrionConfigId() + "' not exists.");
+            OrionRestClient.sendContext(configFound.get(), contextElement);
+            dao = releaseRepo(dao);
+            if (!dao.isIndividualConnectedToOrionConfig(contextElement.getOriginalAssetName(),
+                    contextElement.getOrionConfigId()) && isNew)
+                dao.connectIndividualToOrionConfig(contextElement.getOriginalAssetName(), contextElement.getOrionConfigId());
+            contextElementsCreated.add(contextElement);
+        }
+        return contextElementsCreated;
+    }
+
+
+    public static void sendContext(RepositoryDAO dao, String individualName) throws RuntimeException {
+        if (StringUtils.isBlank(individualName))
+            throw new IllegalArgumentException("No asset in input.");
+        dao = releaseRepo(dao);
+        IndividualItem individual = dao.getIndividual(individualName);
+        if (null == individual) throw new IllegalStateException("Individual " + individualName + " not found.");
+        AssetJSON assetJSON = new AssetJSON();
+        assetJSON.setClassName(individual.getClassName());
+        assetJSON.setName(individual.getIndividualName());
+        String individualOrionConfig = dao.getIndividualOrionConfig(individualName);
+        if (null == individualOrionConfig)
+            throw new IllegalStateException("Individual " + individualName + " not connected to Orion.");
+        assetJSON.setOrionConfigId(individualOrionConfig);
+        List<AssetJSON> assets = new ArrayList<>();
+        assets.add(assetJSON);
+        dao = releaseRepo(dao);
+        sendContexts(dao, assets, false);
+    }
+
+
+    public static void disconnectAssetsFromOrion(RepositoryDAO dao, List<AssetJSON> assetJSONs) {
+        if (assetJSONs == null || assetJSONs.isEmpty()) throw new IllegalArgumentException("No assets in input.");
+        for (AssetJSON assetJSON : assetJSONs) {
+            dao = releaseRepo(dao);
+            dao.disconnectIndividualFromOrionConfig(assetJSON.getName());
+        }
+    }
+
     private static void deepSearchFirstRecursive(RepositoryDAO dao, Map<String, Boolean> visited, ClassItem clazz,
                                                  List results, boolean searchIndividuals) {
         visited.put(clazz.getNormalizedName(), true);
@@ -290,6 +350,66 @@ public class CAMRestImpl {
         }
         return projects;
     }
+
+    public static List<OrionConfig> getOrionConfigs(RepositoryDAO dao) {
+        List<String> orionConfigIds = dao.getOrionConfigs();
+        List<OrionConfig> orionConfigs = new ArrayList<>();
+        if (null != orionConfigIds && orionConfigIds.size() > 0) {
+            for (String orionConfigId : orionConfigIds) {
+                OrionConfig orionConfig = new OrionConfig();
+                orionConfig.setId(orionConfigId);
+                dao = releaseRepo(dao);
+                List<PropertyValueItem> attributesByNS = dao.getAttributesByNS(orionConfigId, BeInCpps.SYSTEM_NS);
+                if (null != attributesByNS && attributesByNS.size() > 0) {
+                    for (PropertyValueItem attribute : attributesByNS) {
+                        if (attribute.getNormalizedName().equals(OrionConfig.hasURL))
+                            orionConfig.setUrl(attribute.getPropertyValue());
+                        else if (attribute.getNormalizedName().equals(OrionConfig.hasService))
+                            orionConfig.setService(attribute.getPropertyValue());
+                        else if (attribute.getNormalizedName().equals(OrionConfig.hasServicePath))
+                            orionConfig.setServicePath(attribute.getPropertyValue());
+                    }
+                }
+                orionConfigs.add(orionConfig);
+            }
+        }
+        return orionConfigs;
+    }
+
+    public static List<OrionConfig> createOrionConfigs(RepositoryDAO dao, List<OrionConfig> orionConfigs) {
+        List<OrionConfig> orionConfigsCreated = new ArrayList<>();
+        if (orionConfigs == null || orionConfigs.size() == 0)
+            throw new IllegalArgumentException("No orion configurations in input");
+        for (OrionConfig orionConfig : orionConfigs) {
+            if (orionConfig == null || orionConfig.isEmpty())
+                throw new IllegalStateException("Orion configuration is not correct");
+            dao.createOrionConfig(orionConfig);
+            orionConfigsCreated.add(orionConfig);
+        }
+
+        return orionConfigsCreated;
+    }
+
+    public static void deleteOrionConfig(RepositoryDAO dao, String orionConfigId) {
+        dao.deleteOrionConfig(orionConfigId);
+    }
+
+    public static List<OrionConfig> editOrionConfigs(RepositoryDAO dao, List<OrionConfig> orionConfigs) {
+        List<OrionConfig> orionConfigsCreated = new ArrayList<>();
+        if (orionConfigs == null || orionConfigs.size() == 0)
+            throw new IllegalArgumentException("No orion configurations in input");
+        for (OrionConfig orionConfig : orionConfigs) {
+            if (orionConfig == null || orionConfig.isEmpty())
+                throw new IllegalStateException("Orion configuration is not correct");
+            List<OrionConfig> orionConfigs1 = new ArrayList<>();
+            orionConfigs1.add(orionConfig);
+            dao.deleteOrionConfig(orionConfig.getId());
+            dao.createOrionConfig(orionConfig);
+            orionConfigsCreated.add(orionConfig);
+        }
+        return orionConfigsCreated;
+    }
+
 
     private static String normalizeClassName(String normName) {
         if (null != normName && normName.contains("#") && !normName.contains("system"))

@@ -1,8 +1,8 @@
 package it.eng.ontorepo;
 
-import it.eng.cam.rest.security.service.Constants;
+import it.eng.cam.rest.Constants;
+import it.eng.cam.rest.security.project.Project;
 import it.eng.cam.rest.sesame.SesameRepoManager;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.text.ParseException;
@@ -52,7 +52,9 @@ public class IndividualtemToAssetTransformer {
         String domain = "";
         String domainIri = "";
         Date date = null;
-        List<PropertyValueItem> individualAttributes = dao.getIndividualAttributes(individual.getIndividualName());
+        String connectedToOrion = "";
+        List<PropertyValueItem> individualAttributes = dao.getAttributesByNS(individual.getIndividualName(),
+                dao.getImplicitNamespace());
         for (PropertyValueItem attribute :
                 individualAttributes) {
             if (attribute.getNormalizedName().contains(BeInCpps.ownedBy)) {
@@ -61,11 +63,14 @@ public class IndividualtemToAssetTransformer {
                 domainIri = attribute.getPropertyValue();
             } else if (attribute.getNormalizedName().contains(BeInCpps.createdOn)) {
                 date = DateUtils.parseDate(attribute.getPropertyValue(), Constants.DATE_PATTERN_DATE_TIME_TIMEZONE);
-//                date = DateFormatUtils.format(data, "dd/MM/yyyy");
+                //date = DateFormatUtils.format(data, "dd/MM/yyyy");
+            } else if (attribute.getNormalizedName().contains(BeInCpps.syncTo)) {
+                connectedToOrion = attribute.getPropertyValue();
             }
         }
         Asset asset = new Asset(individual, domain, date, lostDomain);
         asset.setDomainIri(domainIri);
+        asset.setConnectedToOrion(connectedToOrion);
         return asset;
     }
 

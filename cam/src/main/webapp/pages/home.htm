@@ -53,16 +53,23 @@
                                     ng-click="openNewAssetModelPanel()" ng-show="newAssetVisible">
                                 <i class="fa fa-plus" data-toggle="modal" data-target="#newAttributeLabel"/> New Asset
                             </button>
+                            <button type="button" data-toggle="tooltip"  title="Send to Orion Context Broker"
+                                    class="cam-btn-add-container  float-left"
+                                    ng-click="openConfirmOperationPanel()" ng-show="newAssetVisible">
+                                <i class="fa fa-globe" data-toggle="modal" data-target="#newAttributeLabel"/> Send to Orion Context Broker
+                            </button>
                         </div>
                         <table asset-table="overrideOptions" aa-data="assetList"
                                ao-column-defs="columnDefs" class="table table-striped cam-data-table">
                             <thead>
                             <tr>
-                                <th style="width: 25%">Asset</th>
-                                <th style="width: 25%">Class</th>
-                                <th style="width: 20%">Domain</th>
-                                <th style="width: 15%">Created</th>
-                                <th style="width: 15%">Action</th>
+                                <th style="width: 9%"><input type="checkbox" ng-click="selectAllAssetsForOCB()" ng-model="flagSelectAll" style="margin-right: 5px;"/> Select</th>
+                                <th style="width: 20%">Asset</th>
+                                <th style="width: 18%">Class</th>
+                                <th style="width: 17%">Domain</th>
+                                <th style="width: 11%">Created</th>
+                                <th style="width: 3%">Connected</th>
+                                <th style="width: 18%">Action</th>
                             </tr>
                             </thead>
                         </table>

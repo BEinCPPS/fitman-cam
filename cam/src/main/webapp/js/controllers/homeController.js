@@ -15,6 +15,13 @@ camApp.controller('homeController', [
         , currentNode, $window) {
         Scopes.store('homeController', $scope);
         $scope.assetList = [];
+        $scope.regexPattern = REGEX_PATTERN;
+        $scope.invalidNameMsg = INVALID_NAME_MSG;
+        $scope.nameIsMandatory = NAME_IS_MANDATORY_MSG;
+        $scope.keyrockSignupUrl = KEYROCK_SIGNUP_URL;
+        $scope.enableContextMenuEntry = true;
+
+        var assetsCounter = 0;
 
         $scope.getAssets = function (name, retrieveChildren) {
             entityManager.getAssets(name, retrieveChildren)
@@ -36,8 +43,8 @@ camApp.controller('homeController', [
                                 'view': $window,
                                 'bubbles': true,
                                 'cancelable': true
-                              });
-                             var event =  $window.event || eventFake;
+                            });
+                            var event = $window.event || eventFake;
                             $scope.selectNodeLabel(array[i], event);
                         }
                         return;
@@ -47,7 +54,7 @@ camApp.controller('homeController', [
             }
 
             var promise = entityManager.getAncestors(elem);
-            var isLeaf = false
+            var isLeaf = false;
             promise.then(function (response) {
                 var dataStr = response.data + '';
                 var ancestors = dataStr.split(',');
@@ -71,9 +78,8 @@ camApp.controller('homeController', [
                 $scope.currentNode.className = currentNode.getClass().className;
                 // $routeParams.className;
                 $scope.getAssets($routeParams.className, true);
-                if($scope.currentNode && $scope.currentNode.className)
+                if ($scope.currentNode && $scope.currentNode.className)
                     $scope.expandAncestors($scope.currentNode.className);
-                $scope.newAssetVisible = true;
                 $scope.newAssetVisible = true;
             } else {
                 if (currentNode.getClass().className) {
@@ -82,43 +88,52 @@ camApp.controller('homeController', [
                 }
             }
         });
-
-        $scope.regexPattern = REGEX_PATTERN;
-        $scope.invalidNameMsg = INVALID_NAME_MSG;
-        $scope.nameIsMandatory = NAME_IS_MANDATORY_MSG;
-        $scope.keyrockSignupUrl = KEYROCK_SIGNUP_URL;
-
         $scope.columnDefs = [
             {
-                "mDataProp": "individualName",
+                "mDataProp": "select",
                 "aTargets": [0],
+                "bSearchable": false,
+                "bSortable": false,
+                "fnRender": function (data) {
+                    return '<input type="checkbox" ng-model="assetList[' + assetsCounter++ + '].selected"/>';
+                }
+            },
+            {
+                "mDataProp": "individualName",
+                "aTargets": [1],
                 "bSearchable": true
             },
             {
                 "mDataProp": "className",
-                "aTargets": [1],
+                "aTargets": [2],
                 "bSearchable": true
             }, {
                 "mDataProp": "domain",
-                "aTargets": [2],
+                "aTargets": [3],
                 "bSearchable": true,
                 "fnRender": function (data) {
                     var retVal = data.aData.domain;
-//                    if (data.aData.domain && data.aData.lostDomain) {
-//                        return '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-lost-domain="true"></span>&nbsp;' + retVal;
-//                    } else if (data.aData.domain && !data.aData.lostDomain) {
-//                        return '<span class="glyphicon glyphicon-ok" aria-hidden="true" data-lost-domain="false"></span>&nbsp;' + retVal;
-//                    } else
-//                        return retVal;
-                      return '<span aria-hidden="true" >'+retVal+'</span>&nbsp;';
+                    return '<span aria-hidden="true" ></span>&nbsp;' + retVal;
                 }
             }, {
                 "mDataProp": "createdOn",
-                "aTargets": [3],
+                "aTargets": [4],
                 "bSortable": false
             }, {
+                "mDataProp": "connectedToOrion",
+                "aTargets": [5],
+                "bSortable": false,
+                "fnRender": function (data) {
+                    var connectedTo = data.aData.connectedToOrion;
+                    if (!isEmpty(connectedTo))
+                        return '<i class="fa fa-link" aria-hidden="true" data-toggle="tooltip" data-original-title="' + connectedTo + '"></i>';
+                    else
+                        return '<i class="fa fa-chain-broken" aria-hidden="true"></i>';
+
+                }
+            }, {
                 "mDataProp": "action",
-                "aTargets": [4],
+                "aTargets": [6],
                 "bSortable": false
             }];
 
@@ -135,9 +150,6 @@ camApp.controller('homeController', [
             "bDestroy": true,
             "oLanguage": {
                 "sSearch": "Filter: "
-            },
-            "fnDrawCallback": function () {
-                $scope.addTooltipToAssetModel();
             }
         };
         $scope.newAssetVisible = false;
@@ -163,6 +175,7 @@ camApp.controller('homeController', [
         }
 
         $scope.loadAsset = function () {
+            assetsCounter = 0;
             if ($scope.currentNode.className) {
                 var clsName = $scope.currentNode.className;
                 if ($scope.currentNode.className.toUpperCase() == EVERYTHING) {
@@ -183,8 +196,6 @@ camApp.controller('homeController', [
                     $scope.domainsList.push('');
                     for (var i = 0; i < data.length; i++) {
                         var value = data[i];
-                        if (isEmpty(value))
-                            continue;
                         var domain = {
                             name: value.name,
                             id: value.id,
@@ -239,6 +250,7 @@ camApp.controller('homeController', [
                 });
             ev.target.className += ' selected ownselector';
         }
+
         $scope.openRemoveAssetPanel = function (elementToDelete, typeToDelete) {
             $scope.elementToDelete = elementToDelete;
             $scope.typeToDelete = typeToDelete;
@@ -249,7 +261,7 @@ camApp.controller('homeController', [
             });
         }
 
-        $scope.openConfirmDeleteClass = function (node) {
+        $scope.openConfirmDeleteElement = function (node) {
             $scope.elementToDelete = node.className;
             $scope.typeToDelete = 'class';
             ngDialogManager.open({
@@ -318,23 +330,21 @@ camApp.controller('homeController', [
             function addTooltip(htmlObj, maxLenght) {
                 var valueOrig = htmlObj.text();
                 var value = htmlObj.text();
-                if(value && value.trim().length > 0 ) {
-                    htmlObj.attr('data-toggle', 'tooltip');
-                    htmlObj.attr('data-container', 'body');
-                    htmlObj.attr('title', value);
-                    if (value && value.length > maxLenght) {
-                        value = value.substring(0, maxLenght).concat('...');
-                        htmlObj.html().replace(valueOrig, value);
-                    }
+                htmlObj.attr('data-toggle', 'tooltip');
+                htmlObj.attr('data-container', 'body');
+                htmlObj.attr('title', value);
+                if (value && value.length > maxLenght) {
+                    value = value.substring(0, maxLenght).concat('...');
+                    htmlObj.html().replace(valueOrig, value);
                 }
             }
 
             var tableAssetElems = angular.element('tr.ng-scope');
             angular.forEach(tableAssetElems, function (value, key) {
                 var children = angular.element(value).children();
-                addTooltip(angular.element(children[0]), 25); //asset
-                addTooltip(angular.element(children[1]), 25); //class
-                addTooltip(angular.element(children[2]), 20); //owner group
+                addTooltip(angular.element(children[1]), 25); //asset
+                addTooltip(angular.element(children[2]), 25); //class
+                addTooltip(angular.element(children[3]), 20); //owner group
             });
             $('[data-toggle="tooltip"]').tooltip();
         }
@@ -345,37 +355,24 @@ camApp.controller('homeController', [
             $scope.actionAssetTemplate = '';
             ngNotifier.error(error);
         });
-        templateManager.getAssetButtonAction().then(function (response) {
-            $scope.actionAssetButtonTemplate = response.data;
-        }, function (error) {
-            $scope.actionAssetButtonTemplate = '';
-            ngNotifier.error(error);
-        });
+
 
         $scope.formatAssetListTable = function (data, clazzName) {
             if (!data)
                 return [];
             for (var i = 0; i < data.length; i++) {
-                if (isEmpty(data[i]))
-                    continue;
                 var elementType = 'asset';
-                var individualName = '';
-                if (!isEmpty(data[i].individualName))
-                    individualName = data[i].individualName;
-
                 data[i].action = (function () {
-                    return $scope.actionAssetTemplate.replaceAll('$value$', individualName)
-                        .replaceAll('$elementType$', elementType).replaceAll('$className$', data[i].className);
+                    var visibility = isEmpty(data[i].connectedToOrion) ? 'style = "visibility:hidden;"' : '';
+                    return $scope.actionAssetTemplate.replaceAll('$value$', data[i].individualName)
+                        .replaceAll('$elementType$', elementType).replaceAll('$className$', data[i].className)
+                        .replaceAll('$visibility$', visibility);
 
                 })();
-                data[i].action += (function () {
-                    return $scope.actionAssetButtonTemplate.replaceAll('$value$', individualName);
-                })();
+
             }
 
             data.sort(function (a, b) {
-                if (isEmpty(a)||isEmpty(b))
-                    return;
                 return new Date(b.createdOn) - new Date(a.createdOn);
             });
 
@@ -408,5 +405,85 @@ camApp.controller('homeController', [
             }
             return classes;
         }
+
+        $scope.selectedOcbAssets = [];
+        $scope.openConfirmOperationPanel = function () {
+            $scope.selectedOcbAssets = $scope.assetList.filter(function (asset) {
+                return asset.selected;
+            });
+            if (isEmpty($scope.selectedOcbAssets)) {
+                ngNotifier.warn("Select assets please!");
+                return;
+            }
+            entityManager.getOrionConfigs().then(function (response) {
+                $scope.orionConfigsList = response.data;
+            }, function (error) {
+                ngNotifier.error(error);
+            });
+            $scope.typeToAdd = 'Orion Context Broker';
+            $scope.subTypeToAdd = 'createInOCB';
+            $scope.titleOperationMessage = 'Create assets to the ';
+            $scope.operationMessage = 'Are you sure you want to create these ' + $scope.selectedOcbAssets.length + ' assets into the ';
+            ngDialogManager.open({
+                template: 'pages/createContexts.htm',
+                controller: 'confirmNewOperationController',
+                scope: $scope
+            });
+        }
+
+        $scope.selectedOrionConfigId = null;
+        $scope.createAssetsToOCB = function (selectedOrionConfigId) {
+            var selectedAssetsJson = [];
+            angular.forEach($scope.selectedOcbAssets, function (asset) {
+                var assetJSON = {
+                    name: asset.individualName,
+                    className: asset.className,
+                    domainName: asset.domain,
+                    orionConfigId: selectedOrionConfigId
+                };
+                selectedAssetsJson.push(assetJSON);
+            });
+            entityManager.createAssetsToOCB(selectedAssetsJson)
+                .then(function (response) {
+                    console.log(JSON.stringify(response.data));
+                    ngNotifier.success("Assets correctly added to the Orion Context Broker");
+                }, function (error) {
+                    ngNotifier.error(error);
+                });
+        }
+
+        $scope.selectAllAssetsForOCB = function () {
+            for (var i in $scope.assetList)
+                $scope.assetList[i].selected = $scope.flagSelectAll;
+        }
+        $scope.selectedAssetNameToDisconnect = null;
+        $scope.openDisconnectFromOCB = function (assetName) {
+            $scope.selectedAssetNameToDisconnect = assetName;
+            $scope.typeToAdd = 'Orion Context Broker';
+            $scope.subTypeToAdd = 'disconnectFromOCB';
+            $scope.titleOperationMessage = 'Disconnect asset from the ';
+            $scope.operationMessage = 'Are you sure you want to disconnect this asset from the ';
+            $scope.operationName = "Disconnect";
+            ngDialogManager.open({
+                template: 'pages/confirmNewOperation.htm',
+                controller: 'confirmNewOperationController',
+                scope: $scope
+            });
+        }
+
+        $scope.disconnectAssetFromOCB = function () {
+            var selectedAssetsJson = [];
+            var assetJSON = {
+                name: selectedAssetNameToDisconnect
+            };
+            selectedAssetsJson.put(assetJSON);
+            entityManager.disconnectAssetsFromOCB(selectedAssetsJson)
+                .then(function (response) {
+                    ngNotifier.success('Asset ' + selectedAssetNameToDisconnect + ' correctly disconnected from the Orion Context Broker');
+                }, function (error) {
+                    ngNotifier.error(error);
+                });
+        }
+
 
     }]);

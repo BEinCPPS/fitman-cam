@@ -2,7 +2,7 @@ package it.eng.cam.rest.security.service.impl;
 
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
 import it.eng.cam.rest.security.roles.Role;
-import it.eng.cam.rest.security.service.Constants;
+import it.eng.cam.rest.Constants;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 

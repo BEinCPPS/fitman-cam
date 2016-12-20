@@ -1,4 +1,3 @@
-//TODO
 camApp.controller('domainController', [
     '$scope',
     'Scopes',
@@ -14,6 +13,8 @@ camApp.controller('domainController', [
         , templateManager, $route, currentNode, $window) {
         Scopes.store('domainController', $scope);
         //Load Domains
+        var assetsCounter = 0;
+
         (function getDomains() {
             entityManager.getDomains().then(function (response) {
                 $scope.domainsList = [];
@@ -42,7 +43,7 @@ camApp.controller('domainController', [
             }, function (error) {
                 ngNotifier.error(error);
             });
-        })();
+        })()
 
         $scope.expandAncestors = function (domainName) {
             for (var i in $scope.domainsList) {
@@ -58,7 +59,8 @@ camApp.controller('domainController', [
                     return;
                 }
             }
-        };
+        }
+
         $scope.assetList = [];
         templateManager.getDomainAction().then(function (response) {
             $scope.actionTemplate = response.data;
@@ -70,15 +72,24 @@ camApp.controller('domainController', [
 
         $scope.columnDefs = [
             {
-                "mDataProp": "individualName",
+                "mDataProp": "select",
                 "aTargets": [0],
+                "bSearchable": false,
+                "bSortable": false,
+                "fnRender": function (data) {
+                    return '<input type="checkbox" ng-model="assetList[' + assetsCounter++ + '].selected"/>';
+                }
+            },
+            {
+                "mDataProp": "individualName",
+                "aTargets": [1],
             },
             {
                 "mDataProp": "className",
-                "aTargets": [1]
+                "aTargets": [2]
             }, {
                 "mDataProp": "domain",
-                "aTargets": [2],
+                "aTargets": [3],
                 "fnRender": function (data) {
                     var retVal = data.aData.domain;
                     if (data.aData.domain && data.aData.lostDomain) {
@@ -90,11 +101,11 @@ camApp.controller('domainController', [
                 }
             }, {
                 "mDataProp": "createdOn",
-                "aTargets": [3]
+                "aTargets": [4]
             },
             {
                 "mDataProp": "action",
-                "aTargets": [4],
+                "aTargets": [5],
                 "bSortable": false
             }];
 
@@ -130,13 +141,15 @@ camApp.controller('domainController', [
                 if (typeof Scopes.get('homeController') !== 'undefined')
                     Scopes.get('homeController').addTooltipToAssetModel();
             },
-        };
+        }
 
         $scope.loadChildren = function () {
             entityManager.getAssetsFromDomain($scope.currentNode.id)
                 .then(function (response) {
+                    assetsCounter = 0;
                     $scope.assetList = $scope.formatAssetListTable(response.data);
                     console.log("Assets List", $scope.assetList);
+                    $scope.createOCBVisible = true;
                 }, function (error) {
                     ngNotifier.error(error);
                 });
@@ -163,8 +176,8 @@ camApp.controller('domainController', [
 
             return data;
         }
-        $scope.panelTitle = 'Update Domain';
 
+        $scope.panelTitle = 'Update Domain';
         $scope.updateAssetDomain = function () {
             var assetToSend = {
                 name: $scope.asset.individualName,
@@ -195,4 +208,48 @@ camApp.controller('domainController', [
             $scope.asset = null;
             ngDialogManager.close();
         }
+
+        $scope.selectedOcbAssets = [];
+        $scope.openConfirmOperationPanel = function () {
+            $scope.selectedOcbAssets = $scope.assetList.filter(function (asset) {
+                return asset.selected;
+            });
+            if (isEmpty($scope.selectedOcbAssets)) {
+                ngNotifier.warn("Select assets please!");
+                return;
+            }
+            $scope.typeToAdd = 'Orion Context Broker';
+            $scope.titleOperationMessage = 'Create assets to the ';
+            $scope.operationMessage = 'Are you sure you want to create these ' + $scope.selectedOcbAssets.length + ' assets into the ';
+            ngDialogManager.open({
+                template: 'pages/confirmNewOperation.htm',
+                controller: 'confirmNewOperationController',
+                scope: $scope
+            });
+        }
+
+        $scope.createAssetsToOCB = function () {
+            var selectedAssetsJson = [];
+            angular.forEach($scope.selectedOcbAssets, function (asset) {
+                var assetJSON = {
+                    name: asset.individualName,
+                    className: asset.className,
+                    domainName: asset.domain
+                };
+                selectedAssetsJson.push(assetJSON);
+            });
+            entityManager.createAssetsToOCB(selectedAssetsJson)
+                .then(function (response) {
+                    console.log(JSON.stringify(response.data));
+                    ngNotifier.success("Assets correctly added to the Orion Context Broker");
+                }, function (error) {
+                    ngNotifier.error(error);
+                });
+        }
+
+        $scope.selectAllAssetsForOCB = function () {
+            for (var i in $scope.assetList)
+                $scope.assetList[i].selected = $scope.flagSelectAll;
+        }
+
     }]);

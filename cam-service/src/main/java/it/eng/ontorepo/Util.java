@@ -1,9 +1,10 @@
 package it.eng.ontorepo;
 
-import it.eng.cam.rest.security.service.Constants;
-import org.apache.commons.lang3.StringUtils;
+import it.eng.cam.rest.Constants;
 
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.regex.Pattern;
 
@@ -200,14 +201,29 @@ public class Util {
 
     /**
      * The Domain is a referenced URI from IDM Keyrock management system
-     * @author ascatox
+     *
      * @param domainName
      * @return
+     * @author ascatox
      */
     public static boolean isValidDomainURI(String domainName) {
         if (!domainName.contains(Constants.IDM_PROJECTS_PREFIX)) return false;
-        else if(!domainName.contains("#")) return false;
+        else if (!domainName.contains("#")) return false;
         return true;
+    }
+
+    /**
+     * Checks if a given string is a valid URL
+     * @param url
+     * @return
+     */
+    public static boolean isValidURL(String url) {
+        try {
+            URL url_ = new URL(url);
+            return true;
+        } catch (MalformedURLException e) {
+            return false;
+        }
     }
 
 

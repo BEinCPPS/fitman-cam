@@ -1,6 +1,6 @@
 package it.eng.cam.rest.security.authentication.credentials.admin;
 
-import it.eng.cam.rest.security.service.Constants;
+import it.eng.cam.rest.Constants;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
 import it.eng.cam.rest.security.user.UserLoginJSON;
 import org.apache.log4j.LogManager;

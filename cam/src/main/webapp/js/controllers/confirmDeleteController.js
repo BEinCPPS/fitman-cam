@@ -36,7 +36,19 @@ camApp.controller('confirmDeleteController', [
                     }, function (error) {
                         ngNotifier.error(error);
                     });
-            } else
+            }
+            else if ($scope.typeToDelete == 'orionConfig') {
+                entityManager.deleteOrionConfig($scope.elementToDelete)
+                    .then(function (response) {
+                        ngNotifier.success();
+                        ngDialogManager.close();
+                        $route.reload();
+                    }, function (error) {
+                        ngDialogManager.close();
+                        ngNotifier.error(error);
+                    });
+            }
+            else {
                 entityManager.deleteIndividual($scope.typeToDelete, $scope.elementToDelete, $scope.individualName)
                     .success(function (data, status) {
                         if ($scope.detail) {
@@ -52,5 +64,8 @@ camApp.controller('confirmDeleteController', [
                     ngDialogManager.close();
                     ngNotifier.error(err);
                 });
+            }
         }
-    }]);
+    }
+])
+;
