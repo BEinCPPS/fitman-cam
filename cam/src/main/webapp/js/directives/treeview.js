@@ -51,8 +51,11 @@
                                     currentNode.setClass(a.currentNode);
                                 else if(a.currentNode.name)
                                     currentNode.setDomain(a.currentNode);
-                                else if(a.currentNode.id)
+                                else if(a.currentNode.id) {
                                     currentNode.setOrionConfig(a.currentNode);
+                                    a.isEditing = false;
+                                    a.isNew = false;
+                                }
                                 a.assetList = a.loadChildren(); //TODO
                             },
                         a.classRightClicked = function (event) {

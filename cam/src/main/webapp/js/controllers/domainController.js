@@ -160,7 +160,7 @@ camApp.controller('domainController', [
                 .then(function (response) {
                     assetsCounter = 0;
                     $scope.assetList = $scope.formatAssetListTable(response.data);
-                    console.log("Assets List", $scope.assetList);
+                    //console.log("Assets List", $scope.assetList);
                     $scope.createOCBVisible = true;
                 }, function (error) {
                     ngNotifier.error(error);
