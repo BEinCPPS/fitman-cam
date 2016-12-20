@@ -2,7 +2,7 @@ package it.eng.cam.rest.security.authorization;
 
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
 import it.eng.cam.rest.security.project.Project;
-import it.eng.cam.rest.security.service.Constants;
+import it.eng.cam.rest.Constants;
 
 import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
