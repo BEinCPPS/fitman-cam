@@ -217,9 +217,9 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
             return rejectNotLoggedCall();
     }
 
-    entityManager.disconnectAssetsFromOCB = function (selectedAssets) {
+    entityManager.disconnectAssetsFromOCB = function (selectedAsset) {
         if (auth.isLoggedIn())
-            return $http.delete(BACK_END_URL_CONST + '/orion/contexts', selectedAssets);
+            return $http.delete(BACK_END_URL_CONST + '/orion/contexts/'+selectedAsset);
         else
             return rejectNotLoggedCall();
     }

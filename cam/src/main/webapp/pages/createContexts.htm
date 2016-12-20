@@ -8,9 +8,11 @@
         </div>
         <div class="modal-body">
             <span>{{operationMessage}} {{typeToAdd}}?</span>
-            <br>
+            <br/>
+            <br/>
             <div class="row-fluid"><label>Select Orion Context Broker</label>
                 <select ng-model="selectedOrionConfigId" class="form-control" ng-init="orionConfigsList[0].id">
+                    <option style="display:none" value=""></option>
                     <option ng-repeat="orionConfig in orionConfigsList" value="{{orionConfig.id}}">
                         {{orionConfig.id}}
                     </option>

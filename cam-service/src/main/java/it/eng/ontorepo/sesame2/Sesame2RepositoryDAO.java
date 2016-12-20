@@ -723,7 +723,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         List<PropertyValueItem> attributesByNS = getAttributesByNS(individualName, getImplicitNamespace());
         for (PropertyValueItem attribute : attributesByNS) {
             if (attribute.getNormalizedName().equals(BeInCpps.syncTo)) {
-                   return attribute.getPropertyValue();
+                return attribute.getPropertyValue();
             }
         }
         return null;
@@ -733,7 +733,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     public void disconnectIndividualFromOrionConfig(String individualName) {
         if (individualName == null || individualName.length() == 0)
             throw new IllegalArgumentException("Individual name is mandatory");
-        removeProperty(individualName, BeInCpps.syncTo);
+        removeProperty(BeInCpps.syncTo, individualName);
     }
 
     @Override

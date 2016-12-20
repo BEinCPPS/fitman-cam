@@ -300,12 +300,10 @@ public class CAMRestImpl {
     }
 
 
-    public static void disconnectAssetsFromOrion(RepositoryDAO dao, List<AssetJSON> assetJSONs) {
-        if (assetJSONs == null || assetJSONs.isEmpty()) throw new IllegalArgumentException("No assets in input.");
-        for (AssetJSON assetJSON : assetJSONs) {
-            dao = releaseRepo(dao);
-            dao.disconnectIndividualFromOrionConfig(assetJSON.getName());
-        }
+    public static void disconnectAssetsFromOrion(RepositoryDAO dao, String assetName) {
+        if (assetName == null || assetName.isEmpty()) throw new IllegalArgumentException("No asset in input.");
+        dao = releaseRepo(dao);
+        dao.disconnectIndividualFromOrionConfig(assetName);
     }
 
     private static void deepSearchFirstRecursive(RepositoryDAO dao, Map<String, Boolean> visited, ClassItem clazz,

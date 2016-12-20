@@ -126,9 +126,9 @@ camApp.controller('homeController', [
                 "fnRender": function (data) {
                     var connectedTo = data.aData.connectedToOrion;
                     if (!isEmpty(connectedTo))
-                        return '<i class="fa fa-link" aria-hidden="true" data-toggle="tooltip" data-original-title="' + connectedTo + '"></i>';
+                        return '<i class="fa fa-globe" aria-hidden="true" data-toggle="tooltip" data-original-title="' + connectedTo + '"></i>';
                     else
-                        return '<i class="fa fa-chain-broken" aria-hidden="true"></i>';
+                        return '';
 
                 }
             }, {
@@ -430,8 +430,7 @@ camApp.controller('homeController', [
                 scope: $scope
             });
         }
-
-        $scope.selectedOrionConfigId = null;
+        $scope.originalController = Scopes.get('homeController');
         $scope.createAssetsToOCB = function (selectedOrionConfigId) {
             var selectedAssetsJson = [];
             angular.forEach($scope.selectedOcbAssets, function (asset) {
@@ -446,7 +445,8 @@ camApp.controller('homeController', [
             entityManager.createAssetsToOCB(selectedAssetsJson)
                 .then(function (response) {
                     console.log(JSON.stringify(response.data));
-                    ngNotifier.success("Assets correctly added to the Orion Context Broker");
+                    ngNotifier.success("Assets correctly added to the Orion Context Broker.");
+                    $route.reload();
                 }, function (error) {
                     ngNotifier.error(error);
                 });
@@ -472,14 +472,10 @@ camApp.controller('homeController', [
         }
 
         $scope.disconnectAssetFromOCB = function () {
-            var selectedAssetsJson = [];
-            var assetJSON = {
-                name: selectedAssetNameToDisconnect
-            };
-            selectedAssetsJson.put(assetJSON);
-            entityManager.disconnectAssetsFromOCB(selectedAssetsJson)
+            entityManager.disconnectAssetsFromOCB( $scope.selectedAssetNameToDisconnect)
                 .then(function (response) {
-                    ngNotifier.success('Asset ' + selectedAssetNameToDisconnect + ' correctly disconnected from the Orion Context Broker');
+                    ngNotifier.success('Asset correctly disconnected from the Orion Context Broker.');
+                    $route.reload();
                 }, function (error) {
                     ngNotifier.error(error);
                 });

@@ -6,6 +6,7 @@ var CAM_URL = PROTOCOL + window.location.host + '/CAM';
 var INVALID_NAME_MSG = 'Please insert valid name"'
 var NAME_IS_MANDATORY_MSG = 'Name is mandatory';
 var REGEX_PATTERN = "^d*[A-Za-z0-9_@\/+-]*$";
+var REGEX_URL_VALIDATOR = '/https?\:\/\/\w+((\:\d+)?\/\S*)?/';
 var HTTP_TIMEOUT = 20000; //expressed in milliseconds
 var HTTP_TIMEOUT_EXPIRED_MSG = 'System not available at the moment!\nPlease try later!';
 var ATTRIBUTES = 'attributes';

@@ -33,7 +33,11 @@ camApp.controller('orionConfigController', [
         $scope.isEditing = false;
         $scope.isNew = false;
         $scope.enableContextMenuEntry = false;
-        $scope.regexUrlValidator = $scope.isEditing ? '/https?\:\/\/\w+((\:\d+)?\/\S*)?/' : ''; //TODO
+        $scope.REGEX_URL_VALIDATOR = $scope.isEditing ? REGEX_URL_VALIDATOR : ''; //TODO
+        $scope.REGEX_PATTERN = REGEX_PATTERN;
+        $scope.placeholderService = $scope.isEditing ? "Enter Service" : '';
+        $scope.placeholderServicePath = $scope.isEditing ? "Enter Service Path" : '';
+
 
         $scope.loadChildren = function () {
             angular.forEach($scope.orionConfigsList, function (value) {
@@ -52,7 +56,7 @@ camApp.controller('orionConfigController', [
         }
 
         $scope.save = function () {
-            if($scope.isNew)
+            if ($scope.isNew)
                 $scope.create();
             else
                 $scope.update();
@@ -127,5 +131,15 @@ camApp.controller('orionConfigController', [
                 delete selectedOrionConfig.selected;
             return selectedOrionConfig;
         }
+
+        $scope.$watch("isEditing", function(newValue, oldValue) {
+            if(newValue) {
+                $scope.placeholderService = 'Enter Service'
+                $scope.placeholderServicePath = 'Enter Service Path'
+
+            }
+
+
+        });
 
     }]);

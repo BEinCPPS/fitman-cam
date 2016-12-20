@@ -40,6 +40,7 @@
                                    id="orion-config-form-id"
                                    ng-required="isEditing"
                                    ng-readonly="!isNew"
+                                   ng-pattern="REGEX_PATTERN"
                                    placeholder="Enter Id"
                             >
                         </div>
@@ -53,7 +54,7 @@
                                    name="url"
                                    id="orion-config-form-url"
                                    ng-required="isEditing"
-                                   ng-pattern="regexUrlValidator"
+                                   ng-pattern="REGEX_URL_VALIDATOR"
                                    ng-disabled="!isEditing"
                                    placeholder="Enter valid URL"
                             >
@@ -67,7 +68,7 @@
                                    value="{{selectedConfig.service}}"
                                    id="orion-config-form-service"
                                    ng-disabled="!isEditing"
-                                   placeholder="Enter Service"
+                                   placeholder="{{placeholderService}}"
                             >
                         </div>
                     </div>
@@ -79,7 +80,7 @@
                                    value="{{selectedConfig.servicePath}}"
                                    id="orion-config-form-service-path"
                                    ng-disabled="!isEditing"
-                                   placeholder="Enter Service Path"
+                                   placeholder="{{placeholderServicePath}}"
                             >
                         </div>
                     </div>

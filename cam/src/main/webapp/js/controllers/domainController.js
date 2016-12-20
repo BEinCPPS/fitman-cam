@@ -102,10 +102,22 @@ camApp.controller('domainController', [
             }, {
                 "mDataProp": "createdOn",
                 "aTargets": [4]
+            }, {
+                "mDataProp": "connectedToOrion",
+                "aTargets": [5],
+                "bSortable": false,
+                "fnRender": function (data) {
+                    var connectedTo = data.aData.connectedToOrion;
+                    if (!isEmpty(connectedTo))
+                        return '<i class="fa fa-globe" aria-hidden="true" data-toggle="tooltip" data-original-title="' + connectedTo + '"></i>';
+                    else
+                        return '';
+
+                }
             },
             {
                 "mDataProp": "action",
-                "aTargets": [5],
+                "aTargets": [6],
                 "bSortable": false
             }];
 
@@ -166,9 +178,10 @@ camApp.controller('domainController', [
                 var putDisabled = '';
                 if ($scope.domainsListNoDomain.length === 0)
                     putDisabled = 'disabled';
+                var visibility = isEmpty(data[i].connectedToOrion) ? 'style = "visibility:hidden;"' : '';
                 data[i].action =
                     $scope.actionTemplate.replaceAll("$value$", asset.individualName)
-                        .replaceAll("$disabled$", putDisabled);
+                        .replaceAll("$disabled$", putDisabled).replaceAll('$visibility$', visibility);
             }
             data.sort(function (a, b) {
                 return new Date(b.createdOn) - new Date(a.createdOn);
@@ -208,7 +221,7 @@ camApp.controller('domainController', [
             $scope.asset = null;
             ngDialogManager.close();
         }
-
+        $scope.originalController = Scopes.get('domainController');
         $scope.selectedOcbAssets = [];
         $scope.openConfirmOperationPanel = function () {
             $scope.selectedOcbAssets = $scope.assetList.filter(function (asset) {
@@ -218,23 +231,30 @@ camApp.controller('domainController', [
                 ngNotifier.warn("Select assets please!");
                 return;
             }
+            entityManager.getOrionConfigs().then(function (response) {
+                $scope.orionConfigsList = response.data;
+            }, function (error) {
+                ngNotifier.error(error);
+            });
             $scope.typeToAdd = 'Orion Context Broker';
+            $scope.subTypeToAdd = 'createInOCB';
             $scope.titleOperationMessage = 'Create assets to the ';
             $scope.operationMessage = 'Are you sure you want to create these ' + $scope.selectedOcbAssets.length + ' assets into the ';
             ngDialogManager.open({
-                template: 'pages/confirmNewOperation.htm',
+                template: 'pages/createContexts.htm',
                 controller: 'confirmNewOperationController',
                 scope: $scope
             });
         }
-
-        $scope.createAssetsToOCB = function () {
+        //TODO Code Duplication between Controllers
+        $scope.createAssetsToOCB = function (selectedOrionConfigId) {
             var selectedAssetsJson = [];
             angular.forEach($scope.selectedOcbAssets, function (asset) {
                 var assetJSON = {
                     name: asset.individualName,
                     className: asset.className,
-                    domainName: asset.domain
+                    domainName: asset.domain,
+                    orionConfigId: selectedOrionConfigId
                 };
                 selectedAssetsJson.push(assetJSON);
             });
@@ -242,6 +262,7 @@ camApp.controller('domainController', [
                 .then(function (response) {
                     console.log(JSON.stringify(response.data));
                     ngNotifier.success("Assets correctly added to the Orion Context Broker");
+                    $route.reload();
                 }, function (error) {
                     ngNotifier.error(error);
                 });
@@ -250,6 +271,30 @@ camApp.controller('domainController', [
         $scope.selectAllAssetsForOCB = function () {
             for (var i in $scope.assetList)
                 $scope.assetList[i].selected = $scope.flagSelectAll;
+        }
+        $scope.selectedAssetNameToDisconnect = null;
+        $scope.openDisconnectFromOCB = function (assetName) {
+            $scope.selectedAssetNameToDisconnect = assetName;
+            $scope.typeToAdd = 'Orion Context Broker';
+            $scope.subTypeToAdd = 'disconnectFromOCB';
+            $scope.titleOperationMessage = 'Disconnect asset from the ';
+            $scope.operationMessage = 'Are you sure you want to disconnect this asset from the ';
+            $scope.operationName = "Disconnect";
+            ngDialogManager.open({
+                template: 'pages/confirmNewOperation.htm',
+                controller: 'confirmNewOperationController',
+                scope: $scope
+            });
+        }
+
+        $scope.disconnectAssetFromOCB = function () {
+            entityManager.disconnectAssetsFromOCB( $scope.selectedAssetNameToDisconnect)
+                .then(function (response) {
+                    ngNotifier.success('Asset correctly disconnected from the Orion Context Broker.');
+                    $route.reload();
+                }, function (error) {
+                    ngNotifier.error(error);
+                });
         }
 
     }]);
