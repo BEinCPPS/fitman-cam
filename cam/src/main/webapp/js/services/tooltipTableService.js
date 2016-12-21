@@ -10,7 +10,7 @@ camApp.factory('tooltipTable', function () {
             htmlObj.attr('title', value);
             if (value && value.length > maxLenght) {
                 value = value.substring(0, maxLenght).concat('...');
-                htmlObj.html().replace(valueOrig, value);
+                htmlObj.text(value);
             }
         }
 
@@ -19,7 +19,7 @@ camApp.factory('tooltipTable', function () {
             var children = angular.element(value).children();
             addTooltip(angular.element(children[1]), 25); //asset
             addTooltip(angular.element(children[2]), 25); //class
-            addTooltip(angular.element(children[3]), 20); //owner group
+            //addTooltip(angular.element(children[3]), 20); //domain //TODO
         });
         $('[data-toggle="tooltip"]').tooltip();
     }
@@ -27,3 +27,6 @@ camApp.factory('tooltipTable', function () {
     return tooltipTable;
 
 });
+/**
+ * Created by ascatox on 21/12/16.
+ */

@@ -94,9 +94,11 @@ camApp.controller('domainController', [
                 "fnRender": function (data) {
                     var retVal = data.aData.domain;
                     if (data.aData.domain && data.aData.lostDomain) {
-                        return '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-lost-domain="true"><span>' + retVal + '</span></span>';
+                        return '<span class="glyphicon glyphicon-remove" aria-hidden="true" ' +
+                            'data-lost-domain="true"><span>' + retVal + '</span></span>';
                     } else if (data.aData.domain && !data.aData.lostDomain) {
-                        return '<span class="glyphicon glyphicon-ok" aria-hidden="true" data-lost-domain="false"><span>' + retVal + '</span></span>';
+                        return '<span class="glyphicon glyphicon-ok" aria-hidden="true" ' +
+                            'data-lost-domain="false"><span>' + retVal + '</span></span>';
                     } else
                         return '<span aria-hidden="true" ><span>' + retVal + '</span></span>';
                 }
