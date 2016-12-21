@@ -1,5 +1,7 @@
 package it.eng.cam.rest.orion.context;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import java.util.ArrayList;
@@ -10,7 +12,9 @@ public class ContextElement {
     private String type;
     private ArrayList<Attribute> attributes;
     private String isPattern;
+    @JsonIgnore
     private String originalAssetName;
+    @JsonIgnore
     private String orionConfigId;
 
     public ContextElement(String id, String type, ArrayList<Attribute> attributes, String isPattern) {
