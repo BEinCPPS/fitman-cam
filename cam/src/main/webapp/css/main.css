@@ -35,9 +35,15 @@ th {
     text-align: left !important;
 }
 
+
+
 td {
     /*font-family: "Times New Roman", Times, serif;*/
     text-align: left;
+}
+
+td i {
+    padding-left: 40%;
 }
 
 table {

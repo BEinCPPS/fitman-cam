@@ -126,7 +126,7 @@ camApp.controller('homeController', [
                 "fnRender": function (data) {
                     var connectedTo = data.aData.connectedToOrion;
                     if (!isEmpty(connectedTo))
-                        return '<i class="fa fa-globe" aria-hidden="true" data-toggle="tooltip" data-original-title="' + connectedTo + '"></i>';
+                        return '<i class="fa fa-globe" aria-hidden="true" data-toggle="tooltip" data-original-title="Connected with ' + connectedTo + '"></i>';
                     else
                         return '';
 
@@ -150,7 +150,11 @@ camApp.controller('homeController', [
             "bDestroy": true,
             "oLanguage": {
                 "sSearch": "Filter: "
-            }
+            },
+             "fnDrawCallback": function () {
+                           if (typeof Scopes.get('homeController') !== 'undefined')
+                                Scopes.get('homeController').addTooltipToAssetModel();
+                        },
         };
         $scope.newAssetVisible = false;
 
