@@ -1,3 +1,6 @@
+/**
+ * Created by ascatox on 21/12/16.
+ */
 camApp.factory('tooltipTable', function () {
 
     var tooltipTable = {};
@@ -27,6 +30,3 @@ camApp.factory('tooltipTable', function () {
     return tooltipTable;
 
 });
-/**
- * Created by ascatox on 21/12/16.
- */
