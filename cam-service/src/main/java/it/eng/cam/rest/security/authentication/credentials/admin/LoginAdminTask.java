@@ -3,6 +3,7 @@ package it.eng.cam.rest.security.authentication.credentials.admin;
 import it.eng.cam.rest.Constants;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
 import it.eng.cam.rest.security.user.UserLoginJSON;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -24,6 +25,8 @@ public class LoginAdminTask extends TimerTask {
         try {
             System.setProperty(ClientBuilder.JAXRS_DEFAULT_CLIENT_BUILDER_PROPERTY, "org.glassfish.jersey.client.JerseyClientBuilder");
             UserLoginJSON user = new UserLoginJSON();
+            if(StringUtils.isBlank(username) || StringUtils.isBlank(password))
+                throw new IllegalArgumentException("Configure user and password of ADMIN into properties file.");
             user.setUsername(username);
             user.setPassword(password);
             IDMKeystoneService idmKeystoneService = new IDMKeystoneService();

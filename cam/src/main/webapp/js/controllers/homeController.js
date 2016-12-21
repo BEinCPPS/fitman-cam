@@ -11,8 +11,10 @@ camApp.controller('homeController', [
     'templateManager',
     'currentNode',
     '$window',
+    '$location',
+    'tooltipTable',
     function ($scope, Scopes, $routeParams, $route, $q, ngDialogManager, $timeout, ngNotifier, entityManager, templateManager
-        , currentNode, $window) {
+        ,currentNode, $window, $location, tooltipTable) {
         Scopes.store('homeController', $scope);
         $scope.assetList = [];
         $scope.regexPattern = REGEX_PATTERN;
@@ -153,7 +155,7 @@ camApp.controller('homeController', [
             },
              "fnDrawCallback": function () {
                            if (typeof Scopes.get('homeController') !== 'undefined')
-                                Scopes.get('homeController').addTooltipToAssetModel();
+                                tooltipTable.addTooltipToAssetModel();
                         },
         };
         $scope.newAssetVisible = false;
@@ -330,29 +332,6 @@ camApp.controller('homeController', [
             }
         }
 
-        $scope.addTooltipToAssetModel = function () {
-            function addTooltip(htmlObj, maxLenght) {
-                var valueOrig = htmlObj.text();
-                var value = htmlObj.text();
-                htmlObj.attr('data-toggle', 'tooltip');
-                htmlObj.attr('data-container', 'body');
-                htmlObj.attr('title', value);
-                if (value && value.length > maxLenght) {
-                    value = value.substring(0, maxLenght).concat('...');
-                    htmlObj.html().replace(valueOrig, value);
-                }
-            }
-
-            var tableAssetElems = angular.element('tr.ng-scope');
-            angular.forEach(tableAssetElems, function (value, key) {
-                var children = angular.element(value).children();
-                addTooltip(angular.element(children[1]), 25); //asset
-                addTooltip(angular.element(children[2]), 25); //class
-                addTooltip(angular.element(children[3]), 20); //owner group
-            });
-            $('[data-toggle="tooltip"]').tooltip();
-        }
-
         templateManager.getAssetAction().then(function (response) {
             $scope.actionAssetTemplate = response.data;
         }, function (error) {
@@ -483,6 +462,10 @@ camApp.controller('homeController', [
                 }, function (error) {
                     ngNotifier.error(error);
                 });
+        }
+
+        $scope.openDetail = function(value, className){
+            $location.path('/detail/'+value+'/'+className );
         }
 
 

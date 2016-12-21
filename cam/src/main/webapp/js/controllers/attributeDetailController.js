@@ -16,9 +16,6 @@ camApp.controller('attributeDetailController', [
                     value: "",
                     type: ""
                 };
-//        $scope.newAttribute = {name:""};
-//        $scope.newAttribute = {value:""};
-
         $scope.attrPanelTitle = "Edit Attribute";
         $scope.invalidName = false;
         $scope.isEditing = true;
@@ -83,7 +80,6 @@ camApp.controller('attributeDetailController', [
                 $scope.valueIsMandatory = true;
                 return;
             }
-            //$http.put(BACK_END_URL_CONST + urlFragment + $scope.selectedAssetName + '/attributes/' + $scope.newAttribute.name, $scope.newAttribute)
             entityManager.updateAttribute($scope.isModel, $scope.selectedAssetName, $scope.newAttribute.name, $scope.newAttribute)
                 .success(function (data, status) {
                     Scopes.get('detailController').getAssetDetail($scope.selectedAssetName, ATTRIBUTES);

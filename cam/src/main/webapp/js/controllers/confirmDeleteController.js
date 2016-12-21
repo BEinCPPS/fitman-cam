@@ -14,7 +14,6 @@ camApp.controller('confirmDeleteController', [
             ngDialogManager.close();
         }
         $scope.confirmDelete = function () {
-
             if ($scope.typeToDelete == 'class') {
                 entityManager.getAncestors($scope.elementToDelete)
                     .then(function (response) {

@@ -5,6 +5,7 @@ import it.eng.cam.rest.Constants;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.ClassItem;
 import it.eng.ontorepo.IndividualItem;
+import it.eng.ontorepo.OrionConfig;
 import it.eng.ontorepo.RepositoryDAO;
 import org.junit.*;
 import org.w3c.dom.Document;
@@ -13,6 +14,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -59,15 +61,15 @@ public class Test extends Assert {
     @org.junit.Test
     public void getIndividuals() {
         List<IndividualItem> individuals;
-		try {
-			individuals = dao.getIndividuals();
-			  assertNotNull("Null individuals", individuals);
-		      assertFalse("Empty indivduals list", individuals.isEmpty());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-      
+        try {
+            individuals = dao.getIndividuals();
+            assertNotNull("Null individuals", individuals);
+            assertFalse("Empty indivduals list", individuals.isEmpty());
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
     // TODO Always Fail :-(
@@ -349,15 +351,50 @@ public class Test extends Assert {
             assertFalse(e.getMessage(), true);
         }
         List<IndividualItem> individuals;
-		try {
-			individuals = dao.getIndividuals();
-			assertNotNull("individuals for class " + className + " are null", individuals);
-	        assertFalse("Empty individuals list", individuals.isEmpty());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
+        try {
+            individuals = dao.getIndividuals();
+            assertNotNull("individuals for class " + className + " are null", individuals);
+            assertFalse("Empty individuals list", individuals.isEmpty());
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    @org.junit.Test
+    public void createOrionConfigs() {
+        try {
+            List<OrionConfig> orionConfigs = new ArrayList<>();
+            OrionConfig orionConfig = new OrionConfig();
+            orionConfig.setId("orionConfig_" + getNextRandom());
+            orionConfig.setUrl("http://orion.fiware.org");
+            orionConfigs.add(orionConfig);
+            List<OrionConfig> orionConfigsRet = CAMRestImpl.createOrionConfigs(dao, orionConfigs);
+            assertNotNull("Orion Context Broker configurations are null", orionConfigsRet);
+            assertFalse("Empty Orion Context Broker configurations list", orionConfigsRet.isEmpty());
+            assertSame(orionConfig, orionConfigsRet.get(0));
+        } catch (Exception e) {
+            assertFalse(e.getMessage(), true);
+        }
+    }
+
+    @org.junit.Test
+    public void deleteOrionConfig(){
+        try {
+            List<OrionConfig> orionConfigs = new ArrayList<>();
+            OrionConfig orionConfig = new OrionConfig();
+            orionConfig.setId("orionConfig_" + getNextRandom());
+            orionConfig.setUrl("http://orion.fiware.org");
+            orionConfigs.add(orionConfig);
+            List<OrionConfig> orionConfigsRet = CAMRestImpl.createOrionConfigs(dao, orionConfigs);
+            tearDown();
+            setUp();
+            CAMRestImpl.deleteOrionConfig(dao,orionConfig.getId());
+        } catch (Exception e) {
+            assertFalse(e.getMessage(), true);
+        }
+
     }
 
     private int getNextRandom() {
