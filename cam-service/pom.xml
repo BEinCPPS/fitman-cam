@@ -299,7 +299,6 @@
                 <!-- OAUTH2, KEYSTONE Supported at the moment -->
                 <keyrock.authentication.service>KEYSTONE</keyrock.authentication.service>
                 <!-- ORION CONFIGURATION-->
-                <orion.url>http://161.27.159.64:8080</orion.url>
                 <orion.service.header>Fiware-Service</orion.service.header>
                 <orion.service.sub.header>Fiware-ServicePath</orion.service.sub.header>
                 <orion.service.default>camService</orion.service.default>
