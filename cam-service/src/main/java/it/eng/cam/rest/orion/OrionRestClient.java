@@ -59,9 +59,9 @@ public class OrionRestClient {
         else
             invocationBuilder.header(Constants.SERVICE_HEADER, Constants.DEFAULT_SERVICE);
         if (StringUtils.isNotBlank(subService))
-            invocationBuilder.header(Constants.SUBSERVICE_HEADER, subService);
+            invocationBuilder.header(Constants.SUB_SERVICE_HEADER, subService);
         else
-            invocationBuilder.header(Constants.SUBSERVICE_HEADER, Constants.DEFAULT_SUB_SERVICE);
+            invocationBuilder.header(Constants.SUB_SERVICE_HEADER, Constants.DEFAULT_SUB_SERVICE);
     }
 
 }
