@@ -1006,7 +1006,7 @@ public class CAMRest {
     @DELETE
     @Path("/orion/contexts/{name}")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
-    public Response disconnectFromContexts(@PathParam("name") String assetName) {
+    public Response disconnectFromContext(@PathParam("name") String assetName) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
