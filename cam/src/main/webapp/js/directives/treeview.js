@@ -56,6 +56,7 @@
                                     a.isEditing = false;
                                     a.isNew = false;
                                 }
+                                a.flagSelectAll = false;
                                 a.assetList = a.loadChildren(); //TODO
                             },
                         a.classRightClicked = function (event) {
