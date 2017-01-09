@@ -21,12 +21,14 @@ public class OrionRestClient {
 
     private static final Logger logger = LogManager.getLogger(OrionRestClient.class.getName());
 
-    public static List<ContextResponse> getContexts(String service, String subService, String contextName) {
+    public static List<ContextResponse> getContexts(OrionConfig config, String contextName) {
+        if(null == config || config.isEmpty())
+            throw new IllegalArgumentException("Orion configuration is mandatory.");
         Client client = ClientBuilder.newClient();
         if (null == contextName) contextName = "";
-        WebTarget webTarget = client.target(Constants.ORION_API_URL).path("contextEntities").path(contextName);
+        WebTarget webTarget = client.target(config.getUrl()).path("contextEntities").path(contextName);
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        addServiceHeaders(service, subService, invocationBuilder);
+        addServiceHeaders(config.getService(), config.getServicePath(), invocationBuilder);
         Response response = invocationBuilder.get();
         ContextContainerJSON contextContainerJSON = response.readEntity(ContextContainerJSON.class);
         if (null == contextContainerJSON
@@ -59,9 +61,9 @@ public class OrionRestClient {
         else
             invocationBuilder.header(Constants.SERVICE_HEADER, Constants.DEFAULT_SERVICE);
         if (StringUtils.isNotBlank(subService))
-            invocationBuilder.header(Constants.SUBSERVICE_HEADER, subService);
+            invocationBuilder.header(Constants.SUB_SERVICE_HEADER, subService);
         else
-            invocationBuilder.header(Constants.SUBSERVICE_HEADER, Constants.DEFAULT_SUB_SERVICE);
+            invocationBuilder.header(Constants.SUB_SERVICE_HEADER, Constants.DEFAULT_SUB_SERVICE);
     }
 
 }

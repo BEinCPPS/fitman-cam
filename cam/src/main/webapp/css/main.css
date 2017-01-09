@@ -609,3 +609,7 @@ button[disabled] {
     cursor: default;
     color: grey;
 }
+
+input[disabled] {
+    cursor: default;
+}

@@ -25,10 +25,8 @@ public class Constants {
     /**
      * Orion Context Broker
      **/
-    public static final String SUBSERVICE_HEADER = finder.getString("orion.service.sub.header");
+    public static final String SUB_SERVICE_HEADER = finder.getString("orion.service.sub.header");
     public static final String SERVICE_HEADER = finder.getString("orion.service.header");
-    public static final String ORION_URL = finder.getString("orion.url");
-    public static final String ORION_API_URL = ORION_URL + "/v1";
     public static final String DEFAULT_SERVICE = finder.getString("orion.service.default");
     public static final String DEFAULT_SUB_SERVICE = finder.getString("orion.service.sub.default");
 
