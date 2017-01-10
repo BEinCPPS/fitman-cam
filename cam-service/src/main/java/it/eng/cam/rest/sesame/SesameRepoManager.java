@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import it.eng.cam.rest.Constants;
+import it.eng.ontorepo.BeInCpps;
 import org.apache.log4j.Logger;
 
 import it.eng.ontorepo.RepositoryDAO;
@@ -53,7 +55,7 @@ public class SesameRepoManager {
     }
 
     public static RepositoryDAO getRepoInstanceImpl(Class<?> clazz) {
-        RepositoryDAO repoInstance = new Sesame2RepositoryDAO(SESAME_REPO_URL, SESAME_REPO_NAME, SESAME_REPO_NAMESPACE);
+        RepositoryDAO repoInstance = new Sesame2RepositoryDAO(SESAME_REPO_URL, SESAME_REPO_NAME, getNamespace());
         if (null != clazz)
             addRdfFileToInstance(repoInstance, clazz, false);
         return repoInstance;
@@ -71,7 +73,7 @@ public class SesameRepoManager {
         } catch (URISyntaxException e) {
             logger.error(e);
         }
-        repoInstance = new Sesame2RepositoryDAO(dataDir, SESAME_REPO_NAMESPACE);
+        repoInstance = new Sesame2RepositoryDAO(dataDir, getNamespace());
         addRdfFileToInstance(repoInstance, clazz, false);
 
         return repoInstance;
@@ -101,6 +103,6 @@ public class SesameRepoManager {
     }
 
     public static String getNamespace() {
-        return SESAME_REPO_NAMESPACE;
+        return BeInCpps.NS + "/ontology/" + SESAME_REPO_NAMESPACE + "#";
     }
 }
