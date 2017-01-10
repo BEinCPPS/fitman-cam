@@ -58,7 +58,7 @@ public class Test extends Assert {
         assertFalse("Empty classes list", classes.isEmpty());
     }
 
-    @org.junit.Test
+    //@org.junit.Test
     public void getIndividuals() {
         List<IndividualItem> individuals;
         try {
