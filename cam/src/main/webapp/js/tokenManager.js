@@ -2,7 +2,6 @@
 var TokenManager = (function () {
 
     var getToken = function () {
-        console.log(window.sessionStorage.getItem('token'));
         return window.sessionStorage.getItem('token');
     }
 

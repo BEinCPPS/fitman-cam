@@ -613,3 +613,18 @@ button[disabled] {
 input[disabled] {
     cursor: default;
 }
+
+button#orionConfigButton {
+    margin-left: 5px;
+}
+
+div#orionConfigFormGroup {
+    margin-right: 15px;
+    margin-top: 20px;
+}
+
+.form-horizontal .form-group {
+    margin-right: 0px;
+    margin-left: 0px;
+    margin-top: 15px;
+}

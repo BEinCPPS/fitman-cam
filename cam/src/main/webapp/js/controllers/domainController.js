@@ -83,7 +83,7 @@ camApp.controller('domainController', [
             },
             {
                 "mDataProp": "individualName",
-                "aTargets": [1],
+                "aTargets": [1]
             },
             {
                 "mDataProp": "className",
@@ -135,6 +135,7 @@ camApp.controller('domainController', [
             "bFilter": true,
             "bInfo": true,
             "bDestroy": true,
+            "bAutoWidth": false,
             "oLanguage": {
                 "sSearch": "Filter: "
             },
