@@ -30,6 +30,9 @@ public class Asset extends IndividualItem {
     public Asset(String namespace, String name, String clazz) {
         super(namespace, name, clazz);
         this.attributes = new ArrayList<>();
+//        TODO Errore in compilazione.
+        prova
+
     }
 
     public List<PropertyValueItem> getAttributes() {
