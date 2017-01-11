@@ -104,15 +104,14 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     private static final String QUERY_INDIVIDUALS = "SELECT DISTINCT ?name ?class " + "WHERE { ?name rdf:type ?class; "
             + "              rdf:type owl:NamedIndividual. " + "FILTER(!(?class = owl:NamedIndividual)" +
             " && " + FILTER_BY_NS_CONTENT +
-            ") } "
+            ")} "
             + "ORDER BY ?name";
 
     private static final String QUERY_SINGLE_INDIVIDUAL = "SELECT DISTINCT ?class " + "WHERE { <" + VARTAG
             + "> rdf:type ?class; " + // replace VARTAG by qualified individual
             // name
             " rdf:type owl:NamedIndividual. " + "FILTER(!(?class = owl:NamedIndividual)" +
-            " && " + FILTER_BY_NS_CONTENT +
-            ") } ";
+            ")} ";
 
     private static final String QUERY_INDIVIDUALS_FOR_CLASS = "SELECT DISTINCT ?name " + "WHERE { ?name rdf:type <"
             + VARTAG + "> " +
@@ -126,11 +125,10 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             "?name rdf:type ?type. " + "OPTIONAL { ?name rdfs:range ?range } " + "FILTER(!(?name = rdf:type)) "
             + "FILTER(!(?type= owl:FunctionalProperty)" +
             " && " + FILTER_BY_NS_CONTENT +
-            ") }" + "ORDER BY ?name";
+            ")}" + "ORDER BY ?name";
 
     private static final String QUERY_PROP_FOR_INDIVIDUAL = "SELECT ?value " + "WHERE { <" + VARTAG + "> <" + VARTAG2
             + "> ?value. " +
-            FILTER_BY_NS +
             "} "; // replace VARTAG & VARTAG2 by qualified
     // individual name and property name
 
@@ -182,7 +180,6 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             + "WHERE { "
             + "?name <" + VARTAG + "> ?domain "
             + "FILTER (regex( str(?domain ), \"^" + VARTAG2 + "\")" +
-            " && " + FILTER_BY_NS_CONTENT +
             ")}";
 
     private static final String QUERY_SUB_CLASSES_OF = "SELECT DISTINCT ?name ?superclass " +
