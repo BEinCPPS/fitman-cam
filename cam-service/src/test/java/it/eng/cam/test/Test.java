@@ -62,6 +62,30 @@ public class Test extends Assert {
     public void getIndividuals() {
         List<IndividualItem> individuals;
         try {
+            String className = "NewClass_" + getNextRandom();
+            ClassItem root = dao.getClassHierarchy();
+            String parentName = root.getClassName();
+            try {
+                CAMRestImpl.createClass(dao, className, parentName);
+            } catch (Exception e) {
+                assertFalse(e.getMessage(), true);
+            }
+            tearDown();
+            setUp();
+            String assetModelName = "NewAssetModelName_" + getNextRandom();
+            try {
+                CAMRestImpl.createAssetModel(dao, assetModelName, className, DOMAIN_NAME);
+            } catch (Exception e) {
+                assertFalse(e.getMessage(), true);
+            }
+            tearDown();
+            setUp();
+            String assetName = "NewAsset_" + getNextRandom();
+            try {
+                CAMRestImpl.createAsset(dao, assetName, assetModelName, DOMAIN_NAME);
+            } catch (Exception e) {
+                assertFalse(e.getMessage(), true);
+            }
             individuals = dao.getIndividuals();
             assertNotNull("Null individuals", individuals);
             assertFalse("Empty indivduals list", individuals.isEmpty());

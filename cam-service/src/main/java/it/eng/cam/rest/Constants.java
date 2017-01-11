@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 public class Constants {
     public static final String DATE_PATTERN_DATE_TIME_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
     public static ResourceBundle finder = ResourceBundle.getBundle("cam-service");
+    public static final String ONTOLOGY_NAMESPACE_DEFAULT = finder.getString("ontology.namespace.default");
     public static final String IDM_URL = finder.getString("keyrock.url");
     public static final String IDM_URL_KEYSTONE = IDM_URL + ":8080/v3";
     public static final String ADMIN_USER = finder.getString("keyrock.admin.user");

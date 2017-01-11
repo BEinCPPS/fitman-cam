@@ -1,5 +1,6 @@
 package it.eng.ontorepo.sesame2;
 
+import com.sun.swing.internal.plaf.synth.resources.synth_sv;
 import it.eng.cam.rest.Constants;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.*;
@@ -62,55 +63,83 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 
     private static final String VARTAG = "???"; // tag to be replaced in queries
     private static final String VARTAG2 = "###"; // tag to be replaced in
+    private static final String NAMESPACE = BeInCpps.NS;
+    private static final String FILTER_BY_NS_CONTENT = " STRSTARTS(STR(?name), \"" + NAMESPACE + "\") ";
+    private static final String FILTER_BY_NS = " FILTER(" + FILTER_BY_NS_CONTENT + "). ";
     // queries
 
     private static final String QUERY_CLASSES = "SELECT DISTINCT ?name ?superclass " + "WHERE { ?name rdf:type <"
-            + OWL.CLASS + ">; " + "               rdfs:subClassOf ?superclass. }";
+            + OWL.CLASS + ">; " + "rdfs:subClassOf ?superclass." +
+            FILTER_BY_NS +
+            " }";
+
 
     private static final String QUERY_CLASS = "SELECT ?name " + "WHERE { ?name rdf:type <" + OWL.CLASS + ">. "
-            + "FILTER(?name = <" + VARTAG + ">) }";
+            + "FILTER(?name = <" + VARTAG + ">"
+            + " && " + FILTER_BY_NS_CONTENT
+            + ") }";
 
     private static final String QUERY_OBJECT_PROPS = "SELECT DISTINCT ?name ?range " + "WHERE { ?name rdf:type <"
-            + OWL.OBJECTPROPERTY + "> " + "OPTIONAL { ?name rdfs:range ?range } } " + "ORDER BY ?name";
+            + OWL.OBJECTPROPERTY + "> " + "OPTIONAL { ?name rdfs:range ?range } " +
+            FILTER_BY_NS
+            + "} " + "ORDER BY ?name";
 
     private static final String QUERY_OBJECT_PROP = "SELECT DISTINCT ?name ?range " + "WHERE { ?name rdf:type <"
             + OWL.OBJECTPROPERTY + "> " + "OPTIONAL { ?name rdfs:range ?range } " + "FILTER(?name = <" + VARTAG
-            + ">) }"; // replace VARTAG by qualified property name
+            + ">" +
+            " && " + FILTER_BY_NS_CONTENT +
+            ") }"; // replace VARTAG by qualified property name
 
     private static final String QUERY_DATA_PROPS = "SELECT DISTINCT ?name ?range " + "WHERE { ?name rdf:type <"
-            + OWL.DATATYPEPROPERTY + "> " + "OPTIONAL { ?name rdfs:range ?range } } " + "ORDER BY ?name";
+            + OWL.DATATYPEPROPERTY + "> " + "OPTIONAL { ?name rdfs:range ?range } " +
+            FILTER_BY_NS +
+            "} " + "ORDER BY ?name";
 
     private static final String QUERY_DATA_PROP = "SELECT DISTINCT ?name ?range " + "WHERE { ?name rdf:type <"
             + OWL.DATATYPEPROPERTY + "> " + "OPTIONAL { ?name rdfs:range ?range } " + "FILTER(?name = <" + VARTAG
-            + ">) }"; // replace VARTAG by qualified property name
+            + ">" +
+            " && " + FILTER_BY_NS_CONTENT
+            + ") }"; // replace VARTAG by qualified property name
 
     private static final String QUERY_INDIVIDUALS = "SELECT DISTINCT ?name ?class " + "WHERE { ?name rdf:type ?class; "
-            + "              rdf:type owl:NamedIndividual. " + "FILTER(!(?class = owl:NamedIndividual)) } "
+            + "              rdf:type owl:NamedIndividual. " + "FILTER(!(?class = owl:NamedIndividual)" +
+            " && " + FILTER_BY_NS_CONTENT +
+            ")} "
             + "ORDER BY ?name";
 
     private static final String QUERY_SINGLE_INDIVIDUAL = "SELECT DISTINCT ?class " + "WHERE { <" + VARTAG
             + "> rdf:type ?class; " + // replace VARTAG by qualified individual
             // name
-            "              rdf:type owl:NamedIndividual. " + "FILTER(!(?class = owl:NamedIndividual)) } ";
+            " rdf:type owl:NamedIndividual. " + "FILTER(!(?class = owl:NamedIndividual)" +
+            ")} ";
 
     private static final String QUERY_INDIVIDUALS_FOR_CLASS = "SELECT DISTINCT ?name " + "WHERE { ?name rdf:type <"
-            + VARTAG + "> } " + // replace VARTAG by qualified class name
+            + VARTAG + "> " +
+            FILTER_BY_NS +
+            "} " + // replace VARTAG by qualified class name
             "ORDER BY ?name";
 
     private static final String QUERY_PROPS_FOR_INDIVIDUAL = "SELECT DISTINCT ?name ?value ?type ?range " + "WHERE { <"
             + VARTAG + "> ?name ?value. " + // replace VARTAG by qualified
             // individual name
             "?name rdf:type ?type. " + "OPTIONAL { ?name rdfs:range ?range } " + "FILTER(!(?name = rdf:type)) "
-            + "FILTER(!(?type= owl:FunctionalProperty)) }" + "ORDER BY ?name";
+            + "FILTER(!(?type= owl:FunctionalProperty)" +
+            " && " + FILTER_BY_NS_CONTENT +
+            ")}" + "ORDER BY ?name";
 
     private static final String QUERY_PROP_FOR_INDIVIDUAL = "SELECT ?value " + "WHERE { <" + VARTAG + "> <" + VARTAG2
-            + "> ?value. } "; // replace VARTAG & VARTAG2 by qualified
+            + "> ?value. " +
+            "} "; // replace VARTAG & VARTAG2 by qualified
     // individual name and property name
 
     private static final String QUERY_PROP_ASSIGNMENTS = "SELECT ?name ?value " + "WHERE { ?name <" + VARTAG
-            + "> ?value. } "; // replace VARTAG by qualified property name
+            + "> ?value. " +
+            FILTER_BY_NS +
+            "} "; // replace VARTAG by qualified property name
 
-    private static final String QUERY_DEPENDENCIES = "SELECT ?name " + "WHERE { ?name ?x <" + VARTAG + "> } "; // replace
+    private static final String QUERY_DEPENDENCIES = "SELECT ?name " + "WHERE { ?name ?x <" + VARTAG + "> " +
+            FILTER_BY_NS +
+            "} "; // replace
     // VARTAG
     // by
     // qualified
@@ -120,7 +149,9 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
      * author @ascatox Modified at 20/09/2016
      */
     private static final String QUERY_ALL_DATA_PROPS = "SELECT DISTINCT ?name ?type ?range  " + "WHERE { "
-            + "OPTIONAL { ?name rdfs:range ?range } " + "} ";
+            + "OPTIONAL { ?name rdfs:range ?range } "
+            + FILTER_BY_NS
+            + "} ";
 
     /**
      * @author ascatox Modified at 03/11/2016
@@ -131,6 +162,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             + "FILTER(!(?class = owl:NamedIndividual)" +
             " && NOT EXISTS {?name <" + VARTAG + "> ?domain }" +
             " &&  regex(str(?name), \"^" + VARTAG2 + "\")" +
+            " && " + FILTER_BY_NS_CONTENT +
             "). "
             + "} ORDER by ?name";
 
@@ -139,19 +171,23 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             + "?name rdf:type ?class; rdf:type owl:NamedIndividual. "
             + "?name <" + VARTAG + "> ?domain ."
             + "FILTER(!(?class = owl:NamedIndividual)"
-            + " &&  regex(str(?domain), \"^" + VARTAG2 + "\")" +
-            "). "
+            + " &&  regex(str(?domain), \"^" + VARTAG2 + "\")"
+            + " && " + FILTER_BY_NS_CONTENT
+            + "). "
             + "} ORDER by ?name";
 
     private static final String QUERY_ALL_DOMAINS_IDM_URI = "SELECT DISTINCT ?domain "
             + "WHERE { "
             + "?name <" + VARTAG + "> ?domain "
-            + "FILTER regex( str(?domain ), \"^" + VARTAG2 + "\")  }";
+            + "FILTER (regex( str(?domain ), \"^" + VARTAG2 + "\")" +
+            ")}";
 
     private static final String QUERY_SUB_CLASSES_OF = "SELECT DISTINCT ?name ?superclass " +
             "WHERE { ?name rdf:type <"
             + OWL.CLASS + ">; " + "rdfs:subClassOf* ?superclass. " +
-            "FILTER(?superclass = <" + VARTAG + ">). " +
+            "FILTER(?superclass = <" + VARTAG + ">" +
+            " && " + FILTER_BY_NS_CONTENT +
+            "). " +
             "}";
 
     private static final String QUERY_INDIVIDUALS_BY_SUB_CLASSES = "SELECT DISTINCT ?name ?class WHERE "
@@ -159,7 +195,9 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             + "?nameclass rdf:type <http://www.w3.org/2002/07/owl#Class>; rdfs:subClassOf* ?superclass. "
             + "FILTER(?superclass = <" + VARTAG + ">). "
             + "?name rdf:type ?class; rdf:type owl:NamedIndividual. "
-            + " FILTER((?class = ?nameclass)). "
+            + " FILTER((?class = ?nameclass)" +
+            " && " + FILTER_BY_NS_CONTENT +
+            "). "
             + "} ORDER by ?name";
 
     // Modified by @ascatox 2016-04-26 to use MemoryStore in Unit Test
