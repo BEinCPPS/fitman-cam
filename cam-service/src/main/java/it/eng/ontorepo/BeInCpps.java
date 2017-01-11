@@ -10,7 +10,7 @@ public class BeInCpps {
     public static final String SYSTEM_NS = NS + "/ontology/system#";
     public static final String OWNER_CLASS = SYSTEM_NS + "ResourceOwner";
     public static final String USER_CLASS = SYSTEM_NS + "ResourceUser";
-    public static final String ORION_CONFIG_CLASS = SYSTEM_NS + "ResourcOrionConfig";
+    public static final String ORION_CONFIG_CLASS = SYSTEM_NS + "ResourceOrionConfig";
     public static final String instanceOf = "instanceOf";
     public static final String ownedBy = "ownedBy";
     public static final String createdOn = "createdOn";

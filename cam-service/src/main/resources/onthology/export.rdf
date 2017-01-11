@@ -4759,4 +4759,20 @@ Table Vacuum 220-440V, 3-phase, 60 Hz, 10-32 amps
 	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
 </rdf:Description>
 
+<rdf:Description rdf:about="http://cam.eng.it/ontology/system#instanceOf">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://cam.eng.it/ontology/system#createdOn">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://cam.eng.it/ontology/system#ownedBy">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<rdfs:range rdf:resource="http://cam.eng.it/ontology/system#ResourceOwner"/>
+</rdf:Description>
+
+
+
 </rdf:RDF>

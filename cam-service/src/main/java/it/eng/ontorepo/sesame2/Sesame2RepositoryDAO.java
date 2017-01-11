@@ -1,9 +1,9 @@
 package it.eng.ontorepo.sesame2;
 
-import com.sun.swing.internal.plaf.synth.resources.synth_sv;
 import it.eng.cam.rest.Constants;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.*;
+import org.eclipse.jetty.io.RuntimeIOException;
 import org.eclipse.rdf4j.IsolationLevels;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
@@ -32,6 +32,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
 import java.util.*;
 
 /**
@@ -124,7 +125,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             // individual name
             "?name rdf:type ?type. " + "OPTIONAL { ?name rdfs:range ?range } " + "FILTER(!(?name = rdf:type)) "
             + "FILTER(!(?type= owl:FunctionalProperty)" +
-            " && " + FILTER_BY_NS_CONTENT +
+            //" && " + FILTER_BY_NS_CONTENT +
             ")}" + "ORDER BY ?name";
 
     private static final String QUERY_PROP_FOR_INDIVIDUAL = "SELECT ?value " + "WHERE { <" + VARTAG + "> <" + VARTAG2
@@ -1071,16 +1072,15 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 
         if (null != domainName && !domainName.isEmpty()) {
             if (!Util.isValidDomainURI(domainName)) {
-                if (!Util.isLocalName(domainName)) {
-                    throw new IllegalArgumentException("Domain must not be qualified by a namespace: " + domainName);
-                }
-                domainName = Util.getGlobalName(BeInCpps.SYSTEM_NS, domainName);
-                if (getIndividualDeclarationCount(domainName) == 0) {
-                    throw new IllegalArgumentException("Domain " + domainName + " does not exist");
-                }
+                throw new IllegalArgumentException("Domain must be a valid IDM URI");
             }
             URI ownedByUri = vf.createURI(BeInCpps.SYSTEM_NS, BeInCpps.ownedBy);
-            URI domainUri = vf.createURI(domainName);
+            URI domainUri = null;
+            try {
+                domainUri = vf.createURI(Util.createIDMURI(domainName));
+            } catch (MalformedURLException e) {
+                throw new RuntimeIOException(e);
+            }
             statements.add(vf.createStatement(assetUri, ownedByUri, domainUri));
         }
 
@@ -1144,16 +1144,15 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 
         if (null != domainName && !domainName.isEmpty()) {
             if (!Util.isValidDomainURI(domainName)) {
-                if (!Util.isLocalName(domainName)) {
-                    throw new IllegalArgumentException("Domain must not be qualified by a namespace: " + domainName);
-                }
-                domainName = Util.getGlobalName(BeInCpps.SYSTEM_NS, domainName);
-                if (getIndividualDeclarationCount(domainName) == 0) {
-                    throw new IllegalArgumentException("Domain " + domainName + " does not exist");
-                }
+                throw new IllegalArgumentException("Domain must be a valid IDM URI");
             }
             URI ownedByUri = vf.createURI(BeInCpps.SYSTEM_NS, BeInCpps.ownedBy);
-            URI domainUri = vf.createURI(domainName);
+            URI domainUri = null;
+            try {
+                domainUri = vf.createURI(Util.createIDMURI(domainName));
+            } catch (MalformedURLException e) {
+                throw new RuntimeIOException(e);
+            }
             statements.add(vf.createStatement(assetUri, ownedByUri, domainUri));
         }
 

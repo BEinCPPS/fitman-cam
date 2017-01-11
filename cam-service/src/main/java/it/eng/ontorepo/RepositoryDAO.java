@@ -1,9 +1,9 @@
 package it.eng.ontorepo;
 
+import org.w3c.dom.Document;
+
 import java.io.File;
 import java.util.List;
-
-import org.w3c.dom.Document;
 
 /**
  * A simple Data Access Object to interact with the Reference Ontology (RO), whatever

@@ -2,13 +2,12 @@ package it.eng.ontorepo;
 
 import it.eng.cam.rest.Constants;
 
+import javax.xml.bind.DatatypeConverter;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.regex.Pattern;
-
-import javax.xml.bind.DatatypeConverter;
 
 /**
  * Collection of utility methods of general interest.
@@ -214,6 +213,7 @@ public class Util {
 
     /**
      * Checks if a given string is a valid URL
+     *
      * @param url
      * @return
      */
@@ -226,5 +226,24 @@ public class Util {
         }
     }
 
+    public static String createIDMURI(String domainUri) throws MalformedURLException {
+        if (!isValidDomainURI(domainUri)) throw new IllegalArgumentException("Not a valid Domain URI");
+        String[] split = domainUri.split("#");
+        String url_ = split[0];
+        String domainName = split[1];
+        URL url = new URL(url_);
+        return "idm:/" + url.getPath() + "#" + domainName;
+    }
+
+
+    public static void main(String[] args) {
+        String res = null;
+        try {
+            res = createIDMURI( Constants.IDM_PROJECTS_PREFIX + "/8388a90dc4fa494a8cefc11138da060c#Engineering");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(res);
+    }
 
 }
