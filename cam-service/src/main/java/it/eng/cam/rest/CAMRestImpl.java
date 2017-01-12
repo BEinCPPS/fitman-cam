@@ -11,7 +11,6 @@ import it.eng.ontorepo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.io.RuntimeIOException;
 
 import javax.ws.rs.WebApplicationException;
 import java.text.ParseException;
@@ -296,8 +295,7 @@ public class CAMRestImpl {
         assetJSON.setClassName(individual.getClassName());
         assetJSON.setName(individual.getIndividualName());
         String individualOrionConfig = dao.getIndividualOrionConfig(individualName);
-        if (null == individualOrionConfig)
-            throw new IllegalStateException("Individual " + individualName + " not connected to Orion.");
+        if (null == individualOrionConfig) return;
         assetJSON.setOrionConfigId(individualOrionConfig);
         List<AssetJSON> assets = new ArrayList<>();
         assets.add(assetJSON);
