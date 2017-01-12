@@ -80,16 +80,28 @@ camApp.controller('newAttributeController', [
                     Scopes.get('detailController').getAssetDetail($scope.selectedAssetName, ATTRIBUTES);
                     Scopes.get('detailController').getAttributes();
                     ngDialogManager.close();
+                    ngNotifier.success();
                     $route.reload();
                 }, function (err) {
                     ngDialogManager.close();
                     ngNotifier.error(err);
-                }).then(function () {
-                ngNotifier.success();
-            }, function (err) {
-                ngNotifier.error(err);
-            });
-        };
+                });
+        }
+
+        $scope.updateNewAttribute = function () {
+             entityManager.updateAttribute($scope.isModel, $scope.selectedAssetName,
+                    $scope.newAttribute.name, $scope.newAttribute)
+                    .success(function (data, status) {
+                        Scopes.get('detailController').getAssetDetail($scope.selectedAssetName, ATTRIBUTES);
+                        ngDialogManager.close();
+                        ngNotifier.success();
+                        $route.reload();
+                    }).error(function (err) {
+                    ngDialogManager.close();
+                    ngNotifier.error(err);
+               });
+        }
+
         var detailController = Scopes.get('detailController');
         $scope.attributes = detailController.attributes;
 
@@ -118,15 +130,15 @@ camApp.controller('newAttributeController', [
                 controller: 'confirmNewOperationController',
                 scope: $scope
             });
-        };
+        }
 
         $scope.manageEdit = function () {
             if ($scope.isAutocomplete) {
-                $scope.saveNewAttribute();
+                $scope.updateNewAttribute();
             } else {
                 $scope.openConfirmOperationPanel();
             }
-        };
+        }
 
     }]);
 

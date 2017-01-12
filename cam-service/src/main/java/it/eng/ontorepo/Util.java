@@ -226,20 +226,35 @@ public class Util {
         }
     }
 
-    public static String createIDMURI(String domainUri) throws MalformedURLException {
-        if (!isValidDomainURI(domainUri)) throw new IllegalArgumentException("Not a valid Domain URI");
-        String[] split = domainUri.split("#");
-        String url_ = split[0];
-        String domainName = split[1];
+    /**
+     * Convert an URL http://domain.com/v3/projects#projectName
+     * in an IDM URI idm://v3/projects#projectName
+     * @param domainUri
+     * @return
+     * @throws MalformedURLException
+     */
+    public static String getIdmURI(String domainUri) throws MalformedURLException {
+        if (domainUri.contains("idm://")) return domainUri;
+        if (!domainUri.contains(Constants.IDM_PROJECTS_PREFIX))
+            throw new IllegalArgumentException("Not a valid Domain URI");
+        String url_ = null;
+        String domainName = "";
+        if (!domainUri.contains("#"))
+            url_ = domainUri;
+        else {
+            String[] split = domainUri.split("#");
+            url_ = split[0];
+            domainName = "#" + split[1];
+        }
         URL url = new URL(url_);
-        return "idm:/" + url.getPath() + "#" + domainName;
+        return "idm:/" + url.getPath() + domainName;
     }
 
 
     public static void main(String[] args) {
         String res = null;
         try {
-            res = createIDMURI( Constants.IDM_PROJECTS_PREFIX + "/8388a90dc4fa494a8cefc11138da060c#Engineering");
+            res = getIdmURI(Constants.IDM_PROJECTS_PREFIX + "/8388a90dc4fa494a8cefc11138da060c#Engineering");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

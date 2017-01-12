@@ -194,7 +194,6 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
             return rejectNotLoggedCall();
     }
 
-
     entityManager.updateAsset = function (individualName, asset) {
         if (auth.isLoggedIn())
             return $http.put(BACK_END_URL_CONST + '/models/' + individualName,

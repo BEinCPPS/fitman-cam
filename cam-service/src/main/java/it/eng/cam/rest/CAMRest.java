@@ -290,7 +290,8 @@ public class CAMRest {
             List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(repoInstance, assetName);
             return individualAttributes.stream()
                     .filter(item -> !item.getNormalizedValue().equals(OWL.OBJECTPROPERTY.stringValue())
-                            || item.getNormalizedName().contains("system"))
+                            && !item.getNormalizedName().contains("system")
+                    )
                     .collect(Collectors.toList());
         } catch (Exception e) {
             logger.error(e);

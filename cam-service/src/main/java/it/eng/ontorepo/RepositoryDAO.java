@@ -412,6 +412,9 @@ public interface RepositoryDAO {
     public void setAttribute(String name, String individualName, String value, Class<?> type)
             throws IllegalArgumentException, RuntimeException;
 
+    void setAttribute(String name, String individualName, String value, Class<?> type, String namespace)
+            throws IllegalArgumentException, RuntimeException;
+
     /**
      * Sets an Object Property reference with the given name and value on the given Individual. If no
      * Object Property with this name already exists in the Reference Ontology, it is created; then,

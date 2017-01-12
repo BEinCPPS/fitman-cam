@@ -11,6 +11,7 @@ import it.eng.ontorepo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.io.RuntimeIOException;
 
 import javax.ws.rs.WebApplicationException;
 import java.text.ParseException;
@@ -151,12 +152,13 @@ public class CAMRestImpl {
                     projects) {
                 dao = releaseRepo(dao);
                 List<Asset> assets = IndividualtemToAssetTransformer.transformAll(dao,
-                        dao.getIndividualsForDomain(Constants.IDM_PROJECTS_PREFIX_WITH_SLASH + project.getId()), true);
+                        dao.getIndividualsForDomain(Util.getIdmURI(Constants.IDM_PROJECTS_PREFIX_WITH_SLASH + project.getId())), true);
                 individualsToGive.addAll(assets);
             }
             return individualsToGive;
         } else
-            return IndividualtemToAssetTransformer.transformAll(dao, dao.getIndividualsForDomain(Constants.IDM_PROJECTS_PREFIX_WITH_SLASH + domainId));
+            return IndividualtemToAssetTransformer.transformAll(dao,
+                    dao.getIndividualsForDomain(Util.getIdmURI(Constants.IDM_PROJECTS_PREFIX_WITH_SLASH + domainId)));
     }
 
     private static List<Project> extractLostDomainProjects(RepositoryDAO dao) {
@@ -176,8 +178,12 @@ public class CAMRestImpl {
         if (null != attrFound && !attrFound.isEmpty()) {
             throw new RuntimeException("This individual already has the property " + name);
         }
-        dao.setAttribute(name, individualName, value, Class.forName(type));
-        sendContext(dao, individualName);
+        try {
+            dao.setAttribute(name, individualName, value, Class.forName(type));
+            sendContext(dao, individualName);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static boolean isModel(RepositoryDAO dao, Class clazz, String individualName) {
@@ -360,11 +366,14 @@ public class CAMRestImpl {
                 List<PropertyValueItem> attributesByNS = dao.getAttributesByNS(orionConfigId, BeInCpps.SYSTEM_NS);
                 if (null != attributesByNS && attributesByNS.size() > 0) {
                     for (PropertyValueItem attribute : attributesByNS) {
-                        if (attribute.getNormalizedName().equals(OrionConfig.hasURL))
+                        if (attribute.getNormalizedName().equalsIgnoreCase(OrionConfig.hasURL)
+                                || attribute.getNormalizedName().equals(BeInCpps.SYSTEM_NS + OrionConfig.hasURL))
                             orionConfig.setUrl(attribute.getPropertyValue());
-                        else if (attribute.getNormalizedName().equals(OrionConfig.hasService))
+                        else if (attribute.getNormalizedName().contains(OrionConfig.hasService)
+                                || attribute.getNormalizedName().equals(BeInCpps.SYSTEM_NS + OrionConfig.hasService))
                             orionConfig.setService(attribute.getPropertyValue());
-                        else if (attribute.getNormalizedName().equals(OrionConfig.hasServicePath))
+                        else if (attribute.getNormalizedName().contains(OrionConfig.hasServicePath)
+                                || attribute.getNormalizedName().equals(BeInCpps.SYSTEM_NS + OrionConfig.hasServicePath))
                             orionConfig.setServicePath(attribute.getPropertyValue());
                     }
                 }

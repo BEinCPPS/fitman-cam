@@ -3,6 +3,7 @@ package it.eng.ontorepo.sesame2;
 import it.eng.cam.rest.Constants;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.ontorepo.*;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.io.RuntimeIOException;
 import org.eclipse.rdf4j.IsolationLevels;
 import org.eclipse.rdf4j.model.*;
@@ -153,7 +154,6 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             + "OPTIONAL { ?name rdfs:range ?range } "
             + FILTER_BY_NS
             + "} ";
-
     /**
      * @author ascatox Modified at 03/11/2016
      */
@@ -573,7 +573,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         return doGetIndividualAttributes(name, namespace);
     }
 
-    public List<PropertyValueItem> doGetIndividualAttributes(String namespace, String name) throws RuntimeException {
+    public List<PropertyValueItem> doGetIndividualAttributes(String name, String namespace) throws RuntimeException {
         if (null == name || name.length() == 0) {
             throw new IllegalArgumentException("Individual name is mandatory");
         }
@@ -736,7 +736,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             throw new IllegalArgumentException("Individual name is mandatory");
         if (orionConfigId == null || orionConfigId.isEmpty())
             throw new IllegalArgumentException("Orion config is mandatory");
-        setAttribute(BeInCpps.syncTo, individualName, orionConfigId);
+        setAttribute(BeInCpps.syncTo, individualName, orionConfigId, null, BeInCpps.SYSTEM_NS);
     }
 
     @Override
@@ -747,7 +747,8 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             throw new IllegalArgumentException("Orion config is mandatory");
         List<PropertyValueItem> attributesByNS = getAttributesByNS(individualName, getImplicitNamespace());
         for (PropertyValueItem attribute : attributesByNS) {
-            if (attribute.getNormalizedName().equals(BeInCpps.syncTo)) {
+            if (attribute.getNormalizedName().equals(BeInCpps.syncTo)
+                    || attribute.getNormalizedName().equals(BeInCpps.SYSTEM_NS + BeInCpps.syncTo)) {
                 if (attribute.getPropertyValue().equals(orionConfigId))
                     return true;
             }
@@ -761,7 +762,8 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             throw new IllegalArgumentException("Individual name is mandatory");
         List<PropertyValueItem> attributesByNS = getAttributesByNS(individualName, getImplicitNamespace());
         for (PropertyValueItem attribute : attributesByNS) {
-            if (attribute.getNormalizedName().equals(BeInCpps.syncTo)) {
+            if (attribute.getNormalizedName().equals(BeInCpps.syncTo)
+                    || attribute.getNormalizedName().equals(BeInCpps.SYSTEM_NS + BeInCpps.syncTo)) {
                 return attribute.getPropertyValue();
             }
         }
@@ -805,12 +807,12 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         statements.add(vf.createStatement(assetUri, RDF.TYPE, classUri));
         statements.add(vf.createStatement(assetUri, RDF.TYPE, ni));
         addStatements(statements);
-        setAttribute(OrionConfig.hasURL, orionConfig.getId(), orionConfig.getUrl());
+        setAttribute(OrionConfig.hasURL, orionConfig.getId(), orionConfig.getUrl(), null, BeInCpps.SYSTEM_NS);
         if (null != orionConfig.getService() && orionConfig.getService().length() > 0) {
-            setAttribute(OrionConfig.hasService, orionConfig.getId(), orionConfig.getService());
+            setAttribute(OrionConfig.hasService, orionConfig.getId(), orionConfig.getService(), null, BeInCpps.SYSTEM_NS);
         }
         if (null != orionConfig.getServicePath() && orionConfig.getServicePath().length() > 0) {
-            setAttribute(OrionConfig.hasServicePath, orionConfig.getId(), orionConfig.getServicePath());
+            setAttribute(OrionConfig.hasServicePath, orionConfig.getId(), orionConfig.getServicePath(), null, BeInCpps.SYSTEM_NS);
         }
     }
 
@@ -1077,7 +1079,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             URI ownedByUri = vf.createURI(BeInCpps.SYSTEM_NS, BeInCpps.ownedBy);
             URI domainUri = null;
             try {
-                domainUri = vf.createURI(Util.createIDMURI(domainName));
+                domainUri = vf.createURI(Util.getIdmURI(domainName));
             } catch (MalformedURLException e) {
                 throw new RuntimeIOException(e);
             }
@@ -1149,7 +1151,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             URI ownedByUri = vf.createURI(BeInCpps.SYSTEM_NS, BeInCpps.ownedBy);
             URI domainUri = null;
             try {
-                domainUri = vf.createURI(Util.createIDMURI(domainName));
+                domainUri = vf.createURI(Util.getIdmURI(domainName));
             } catch (MalformedURLException e) {
                 throw new RuntimeIOException(e);
             }
@@ -1190,6 +1192,12 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     public void setAttribute(String name, String individualName, String value, Class<?> type)
             throws IllegalArgumentException, RuntimeException {
         setProperty(name, individualName, value, type, true);
+    }
+
+    @Override
+    public void setAttribute(String name, String individualName, String value, Class<?> type, String namespace)
+            throws IllegalArgumentException, RuntimeException {
+        setProperty(name, individualName, value, type, true, namespace);
     }
 
     @Override
@@ -1473,6 +1481,11 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 
     private void setProperty(String name, String individualName, String value, Class<?> type, boolean dataProp)
             throws IllegalArgumentException, RuntimeException {
+        setProperty(name, individualName, value, type, dataProp, null);
+    }
+
+    private void setProperty(String name, String individualName, String value, Class<?> type, boolean dataProp, String namespace)
+            throws IllegalArgumentException, RuntimeException {
         if (null == name || name.length() == 0) {
             throw new IllegalArgumentException("Property name is mandatory");
         }
@@ -1485,6 +1498,8 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             throw new IllegalArgumentException(
                     "Individual name must not be qualified by a namespace: " + individualName);
         }
+        if (StringUtils.isBlank(namespace))
+            namespace = getImplicitNamespace();
         String individualName_ = Util.getGlobalName(getImplicitNamespace(), individualName);
         if (null == getIndividualDeclaration(individualName_)) {
             individualName_ = Util.getGlobalName(BeInCpps.SYSTEM_NS, individualName);
@@ -1495,7 +1510,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         URI indivUri = vf.createURI(individualName);
         URI propUri = null;
         if (Util.isLocalName(name)) {
-            propUri = vf.createURI(Util.getGlobalName(getImplicitNamespace(), name));
+            propUri = vf.createURI(Util.getGlobalName(namespace, name));
         } else {
             propUri = vf.createURI(name);
         }
