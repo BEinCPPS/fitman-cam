@@ -17,7 +17,7 @@ var KEYROCK_URL = '${keyrock.url}';
 var client_id = '${client.id}';
 
 var KEYROCK_SIGNUP_URL = KEYROCK_URL + '/sign_up';
-var KEYROCK_LOGOUT_URL = KEYROCK_URL + '/auth/logout';
+var KEYROCK_CHANGE_USER_URL = KEYROCK_URL; //+ '/auth/logout';
 var callback_uri = CAM_URL + '/oauth_callback.html';
 var OAUTH_LOGIN_URL = KEYROCK_URL + '/oauth2/authorize?response_type=token&client_id=' + client_id +
     '&redirect_uri=' + callback_uri;

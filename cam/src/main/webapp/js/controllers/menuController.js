@@ -47,12 +47,6 @@ camApp.controller('menuController', [
             $scope.loggedIn = auth.isLoggedIn();
              if (!$scope.loggedIn)
                 $scope.login();
-//            var nextPath = next.$$route.originalPath;
-//            if (!$scope.loggedIn && !auth.isInLogout) {
-//              $scope.login();
-//            } else if (!$scope.loggedIn && auth.isInLogout) {
-//                $location.path('/');
-//            }
         });
 
         $scope.isAdmin = function () {

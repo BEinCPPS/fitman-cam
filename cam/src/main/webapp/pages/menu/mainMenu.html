@@ -70,7 +70,7 @@
                     </li>
                     <li ng-if="loggedIn">
                         <button type="button" class="btn btn-sm btn-default" style="margin-top: 10px;"
-                                ng-click="doLogout()">Sign out
+                                ng-click="doLogout()">{{isOauth ? 'Change user': 'Sign out'}}
                         </button>
                     </li>
                 </ul>
