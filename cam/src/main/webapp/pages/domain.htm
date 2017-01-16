@@ -24,14 +24,6 @@
                     <div class="header-page-table-right">
                         <span><b>Domain</b> : {{currentNode.name}}</span>
                     </div>
-                    <div>
-                        <button type="button" data-toggle="tooltip" title="Send to Orion Context Broker"
-                                class="cam-btn-add-container  float-left"
-                                ng-click="openConfirmOperationPanel()" ng-show="createOCBVisible">
-                            <i class="fa fa-globe" data-toggle="modal" data-target="#newAttributeLabel"/> Send to Orion
-                            Context Broker
-                        </button>
-                    </div>
                     <table asset-table="overrideOptions" aa-data="assetList"
                            ao-column-defs="columnDefs" class="table table-striped cam-data-table">
                         <thead>
