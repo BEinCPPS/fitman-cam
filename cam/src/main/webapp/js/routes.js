@@ -11,7 +11,7 @@ camApp.config(function ($routeProvider) {
         templateUrl: 'pages/home.htm',
         controller: 'homeController'
     }).when('/detail/:selectedAssetName/:groupingType/:groupingName', {
-        templateUrl: 'pages/assetDetail.htm',
+        templateUrl: 'pages/detail/assetDetail.htm',
         controller: 'detailController'
     }).when('/domain/:domainName', {
         templateUrl: 'pages/domain.htm',

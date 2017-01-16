@@ -26,21 +26,21 @@
             <div class="panel with-nav-tabs panel-default">
                 <div class="panel-heading">
                     <ul class="nav nav-tabs">
-                        <li role="presentation" class="active">
+                        <li role="presentation" class="{{isTabAttrsActive}}">
                             <a ng-click="changeTab('attributes')">Attributes</a>
                         </li>
-                        <li role="presentation">
+                        <li role="presentation" class="{{isTabRelsActive}}">
                             <a ng-click="changeTab('relationships')">Relationships</a>
                         </li>
                     </ul>
                 </div>
                 <div class="panel-body">
                     <div class="tab-content">
-                        <div class="tab-pane fade in {{isTabAttrsActive}}" id="tab1default" ng-show="isAttributes">
-                            <div ng-include="'pages/assetDetailAttributes.htm'"></div>
+                        <div class="tab-pane fade in active" id="tab1default" ng-show="isAttributes">
+                            <div ng-include="'pages/detail/assetDetailAttributes.htm'"></div>
                         </div>
-                        <div class="tab-pane fade in {{isTabRelsActive}}" id="tab2default" ng-show="!isAttributes">
-                            <div ng-include="'pages/assetDetailRelationships.htm'"></div>
+                        <div class="tab-pane fade in active id="tab2default" ng-show="!isAttributes">
+                            <div ng-include="'pages/detail/assetDetailRelationships.htm'"></div>
                         </div>
                     </div>
                 </div>
