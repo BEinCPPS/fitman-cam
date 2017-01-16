@@ -774,7 +774,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     public void disconnectIndividualFromOrionConfig(String individualName) {
         if (individualName == null || individualName.length() == 0)
             throw new IllegalArgumentException("Individual name is mandatory");
-        removeProperty(BeInCpps.syncTo, individualName);
+        removeProperty(BeInCpps.SYSTEM_NS, BeInCpps.syncTo, individualName);
     }
 
     @Override
@@ -1208,6 +1208,14 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 
     @Override
     public void removeProperty(String name, String individualName) throws IllegalArgumentException, RuntimeException {
+        removeProperty(null, name, individualName);
+    }
+
+    @Override
+    public void removeProperty(String namespace, String name, String individualName) throws IllegalArgumentException, RuntimeException {
+        if(StringUtils.isBlank(namespace))
+            namespace = getImplicitNamespace();
+
         if (null == name || name.length() == 0) {
             throw new IllegalArgumentException("Property name is mandatory");
         }
@@ -1230,7 +1238,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             throw new IllegalArgumentException("Individual does not exist: " + individualName);
         }
 
-        name = Util.getGlobalName(getImplicitNamespace(), name);
+        name = Util.getGlobalName(namespace, name);
         if (null == getPropertyValue(individualName, name)) {
             throw new IllegalArgumentException("Property " + name + " is not set on Asset " + individualName);
         }

@@ -159,9 +159,16 @@ public class CAMRest {
     @Path("/classes/ancestors/{className}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<String> getTreePath(@PathParam("className") String className) {
-        if (null == className || "".equalsIgnoreCase(className.trim()))
-            return new ArrayList<String>();
-        return CAMRestImpl.getTreePath(className);
+        final RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
+        try {
+            if (null == className || "".equalsIgnoreCase(className.trim()))
+                return new ArrayList<String>();
+            return CAMRestImpl.getTreePath(repoInstance, className);
+        } catch (Exception e) {
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
     }
 
     // FINE CLASSES

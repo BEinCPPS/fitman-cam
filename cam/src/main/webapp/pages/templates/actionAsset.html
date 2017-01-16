@@ -1,6 +1,6 @@
 <div class="inline-flex-item">
     <button class="cam-table-button"
-            ng-click="openDetail('$value$','$className$')" data-toggle="tooltip"
+            ng-click="openDetail('$value$','$groupingType$','$groupingName$')" data-toggle="tooltip"
             title="Open detail">
         <i class="fa fa-arrow-circle-right cam-table-button"></i>
     </button>
@@ -12,9 +12,5 @@
     <button class="cam-table-button" ng-click="openNewAssetPanel('$value$')"
             data-toggle="tooltip" title="Create new asset from this model">
         <i class="fa fa-plus cam-table-button"></i>
-    </button>
-    <button class="cam-table-button" $visibility$
-            ng-click="openDisconnectFromOCB('$value$')"  data-toggle="tooltip" title="Disconnect from Orion">
-        <i class="fa fa-chain-broken cam-table-button"></i>
     </button>
 </div>

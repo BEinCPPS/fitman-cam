@@ -27,3 +27,7 @@ const EVERYTHING = '(EVERYTHING)';
 const NO_DOMAIN = 'NO_DOMAIN';
 const OAUTH = 'oAuth';
 const AUTH = 'auth';
+
+const GROUPING_CLASS_TYPE = "class";
+const GROUPING_DOMAIN_TYPE = "domain";
+const GROUPING_ORION_CONFIG_TYPE = "orionConfig";

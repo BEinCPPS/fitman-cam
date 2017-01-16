@@ -12,14 +12,35 @@
             </div>
             <div class="collapse navbar-collapse" id="navigationbar">
                 <ul class="nav navbar-nav" ng-if="loggedIn">
-                    <li ng-class="activeMenuClass()"><a href="#/classes"><i class="fa fa-object-group"
-                                                                            aria-hidden="true"></i>
-                        Classes</a>
+                    <li role="presentation" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-object-group" aria-hidden="true"/>
+                            Assets
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li ng-class="activeMenuClass()"><a href="#/classes"><i class="fa fa-object-group"
+                                                                                    aria-hidden="true"></i>
+                                Classes</a>
+                            </li>
+                            <li ng-class="activeMenuDomain()"><a href="#/domains">
+                                <i class="fa fa-users" aria-hidden="true"></i> Domains</a></li>
+                        </ul>
                     </li>
-                    <li ng-class="activeMenuDomain()"><a href="#/domains">
-                        <i class="fa fa-users" aria-hidden="true"></i> Domains</a></li>
-                    <li ng-class="activeMenuOrionConfig()" ng-if="isAdmin()"><a href="#/orion">
-                        <i class="fa fa-globe" aria-hidden="true"></i> Orion Config</a></li>
+                    <li role="presentation" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-cog" aria-hidden="true"/>
+                            Configuration
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li ng-class="activeMenuOrionConfig()" ng-if="isAdmin()">
+                                <a href="#/orion">
+                                    <i class="fa fa-globe" aria-hidden="true"></i> OCB</a>
+                            </li>
+                        </ul>
+                    </li>
+
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li ng-if="!loggedIn && !isOAuth">
@@ -35,7 +56,7 @@
                     </li>
 
                     <li ng-if="!loggedIn && isOAuth">
-                            <button type="button"   ng-click="login()" class="btn btn-sm btn-primary">Sign in</button>
+                        <button type="button" ng-click="login()" class="btn btn-sm btn-primary">Sign in</button>
                     </li>
 
                     <li ng-if="loggedIn" class="navbar-text">
@@ -52,7 +73,6 @@
                                 ng-click="doLogout()">Sign out
                         </button>
                     </li>
-
                 </ul>
             </div>
         </div>

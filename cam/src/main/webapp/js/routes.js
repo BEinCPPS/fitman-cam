@@ -10,12 +10,15 @@ camApp.config(function ($routeProvider) {
     }).when('/class/:className', {
         templateUrl: 'pages/home.htm',
         controller: 'homeController'
-    }).when('/detail/:selectedAssetName/:className', {
+    }).when('/detail/:selectedAssetName/:groupingType/:groupingName', {
         templateUrl: 'pages/assetDetail.htm',
         controller: 'detailController'
-    }).when('/domains', {
+    }).when('/domain/:domainName', {
         templateUrl: 'pages/domain.htm',
-        controller: 'domainController'
+        controller: 'homeController'
+     }).when('/domains', {
+        templateUrl: 'pages/domain.htm',
+        controller: 'homeController'
     }).when('/orion', {
         templateUrl: 'pages/orionConfig.htm',
         controller: 'orionConfigController'

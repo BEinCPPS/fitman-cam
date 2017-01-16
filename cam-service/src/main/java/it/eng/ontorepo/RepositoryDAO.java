@@ -455,6 +455,22 @@ public interface RepositoryDAO {
             throws IllegalArgumentException, RuntimeException;
 
     /**
+     * Removes the Data or Object Property reference with the given name from the given Individual.
+     * If, after removing the reference, no other references to this Property exist in the
+     * Reference Ontology, the Property declaration itself is deleted.
+     * <p/>
+     * This operation is safe, as it cannot have any side effects on existing items of the
+     * Reference Ontology. It fails if the Data or Object Property is predefined - i.e., it is part
+     * of the Base Ontology.
+     * @param namespace of the property to remove
+     * @param name
+     * @param individualName
+     * @throws IllegalArgumentException
+     * @throws RuntimeException
+     */
+    public void removeProperty(String namespace, String name, String individualName)
+            throws IllegalArgumentException, RuntimeException;
+    /**
      * Add a file in format RDF to the repository.
      *
      * @param rdfFile    The file xml RDF containing Ontology
@@ -486,5 +502,5 @@ public interface RepositoryDAO {
      */
     public List<PropertyDeclarationItem> getAttributes() throws RuntimeException;
 
-    //void setUserAttribute(OntoUser user, PropertyValueItem attribute);
+
 }

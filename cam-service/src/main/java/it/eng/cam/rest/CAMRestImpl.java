@@ -225,34 +225,26 @@ public class CAMRestImpl {
         return collectedAttributes;
     }
 
-    public static List<String> getTreePath(String className) {
-        RepositoryDAO repoInstance = null;
-        try {
-            List<String> hierarchy = new ArrayList<String>();
-            hierarchy.add(className); // add input class as a first element
-            repoInstance = SesameRepoManager.getRepoInstance(CAMRestImpl.class);
-            List<ClassItem> classes = CAMRestImpl.getClasses(repoInstance, false, false);
-            ClassItem clazz = CAMRestImpl.deepSearchClasses(classes, className);
-            while (null != clazz.getSuperClass() && !clazz.getSuperClass().getNormalizedName().contains("Thing")) {
-                // Add recursively ancestors of any class to build path
-                String parentName = clazz.getSuperClass().getNormalizedName();
-                hierarchy.add(parentName);
-                clazz = CAMRestImpl.deepSearchClasses(classes, parentName);
-            }
-            List<String> retval = new ArrayList<String>();
-            for (int i = hierarchy.size() - 1; i >= 0; i--) {// Invert order to
-                // find father
-                // in the first
-                // position
-                retval.add(hierarchy.get(i));
-            }
-            return retval;
-        } catch (Exception e) {
-            logger.error(e);
-            throw new WebApplicationException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+    public static List<String> getTreePath(RepositoryDAO dao, String className) throws Exception {
+        List<String> hierarchy = new ArrayList<String>();
+        hierarchy.add(className); // add input class as a first element
+        dao = SesameRepoManager.getRepoInstance(CAMRestImpl.class);
+        List<ClassItem> classes = CAMRestImpl.getClasses(dao, false, false);
+        ClassItem clazz = CAMRestImpl.deepSearchClasses(classes, className);
+        while (null != clazz.getSuperClass() && !clazz.getSuperClass().getNormalizedName().contains("Thing")) {
+            // Add recursively ancestors of any class to build path
+            String parentName = clazz.getSuperClass().getNormalizedName();
+            hierarchy.add(parentName);
+            clazz = CAMRestImpl.deepSearchClasses(classes, parentName);
         }
+        List<String> retval = new ArrayList<String>();
+        for (int i = hierarchy.size() - 1; i >= 0; i--) {// Invert order to
+            // find father
+            // in the first
+            // position
+            retval.add(hierarchy.get(i));
+        }
+        return retval;
     }
 
 

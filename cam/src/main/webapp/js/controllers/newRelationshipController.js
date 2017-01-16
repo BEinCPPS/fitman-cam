@@ -94,6 +94,7 @@ camApp.controller('newRelationshipController', [
                 return;
             }
             $scope.typeToAdd = 'relationship';
+            $scope.operationName = "Save";
             ngDialogManager.open({
                 template: 'pages/confirmNewOperation.htm',
                 controller: 'confirmNewOperationController',

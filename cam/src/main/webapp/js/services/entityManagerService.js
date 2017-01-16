@@ -38,10 +38,11 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
     }
 
     entityManager.getAssetDetail = function (name, type) {
-        if (auth.isLoggedIn())
-        //type attributes or relationships
-            return $http.get(BACK_END_URL_CONST + '/assets/' + name + '/' + type)
-        else
+        if (auth.isLoggedIn()) {
+        //type attributes or relationships empty for asset only
+            if(type)  type = '/' + type;
+            return $http.get(BACK_END_URL_CONST + '/assets/' + name + type)
+       } else
             return rejectNotLoggedCall();
     }
 

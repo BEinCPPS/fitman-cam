@@ -9,7 +9,9 @@ camApp.factory('currentNode', function () {
     currentNode.classNode = {};
     currentNode.orionConfigNode = {};
 
+
     currentNode.setDomain = function (node) {
+        currentNode = {};
         currentNode.domainNode = node;
     }
 
@@ -18,6 +20,7 @@ camApp.factory('currentNode', function () {
     }
 
     currentNode.setClass = function (node) {
+        currentNode = {};
         currentNode.classNode = node;
     }
 
@@ -26,6 +29,7 @@ camApp.factory('currentNode', function () {
     }
 
     currentNode.setOrionConfig = function (node) {
+        currentNode = {};
         currentNode.orionConfigNode = node;
     }
 
@@ -33,6 +37,14 @@ camApp.factory('currentNode', function () {
         return currentNode.orionConfigNode;
     }
 
+    currentNode.getCurrentNodeType = function() {
+        if(currentNode.classNode && currentNode.classNode.hasOwnProperty("className"))
+            return GROUPING_CLASS_TYPE
+        else if(currentNode.domainNode && currentNode.domainNode.hasOwnProperty("name"))
+            return GROUPING_DOMAIN_TYPE
+         else
+            return GROUPING_ORION_CONFIG_TYPE;
+    }
     return currentNode;
 
 });

@@ -49,7 +49,9 @@ camApp.config(function(toastrConfig) {
         positionClass: 'toast-top-right',
         preventDuplicates: false,
         preventOpenDuplicates: false,
-        target: 'body'
+        tapToDismiss: true,
+        timeOut: 0,
+        target: 'body',
     });
 });
 

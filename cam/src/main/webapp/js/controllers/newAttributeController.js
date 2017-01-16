@@ -11,7 +11,6 @@ camApp.controller('newAttributeController', [
         Scopes.store('newAttributeController', $scope);
         $scope.typeIsMandatoryMsg = "Type is mandatory";
         $scope.valueIsMandatoryMsg = "Value is mandatory";
-
         $scope.attrPanelTitle = "Add Attribute";
         $scope.invalidName = false;
         $scope.valueIsMandatory = false;
@@ -119,6 +118,7 @@ camApp.controller('newAttributeController', [
                 return;
             }
             $scope.typeToAdd = 'attribute';
+            $scope.operationName = "Save";
             $scope.titleOperationMessage = 'Create a new ';
             $scope.operationMessage = 'Are you sure you want to create a new ';
             if ($scope.isAutocomplete) {

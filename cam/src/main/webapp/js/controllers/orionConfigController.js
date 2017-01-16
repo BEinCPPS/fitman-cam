@@ -17,7 +17,7 @@ camApp.controller('orionConfigController', [
             }, function (error) {
                 ngNotifier.error(error);
             }).then(function () {
-                if (currentNode.getOrionConfig().id) {
+                if (currentNode.getOrionConfig() && currentNode.getOrionConfig().id) {
                     $scope.currentNode = currentNode.getOrionConfig();
                     $scope.expandAncestors($scope.currentNode.id);
                 } else {
