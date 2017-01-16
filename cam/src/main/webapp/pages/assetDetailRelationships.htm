@@ -1,0 +1,19 @@
+<div id="cam-asset-detail-btn-container" class="row-fluid" style="margin-top: 10px">
+    <button type="button" data-toggle="tooltip" title="New Relationship" class="cam-btn-add-container"
+            ng-click="openNewRelationshipPanel()">
+        <i class="fa fa-plus" data-toggle="modal" data-target="#newRelationshipLabel"/> New Relationship
+    </button>
+</div>
+<div id="asset-detail-table" class="cam-asset-detail-table-container">
+    <table asset-table="assetDetailOverrideOptions" aa-data="selectedAsset.relationships"
+           ao-column-defs="assetDetailColumnDefs" class="table table-striped cam-data-table">
+        <thead>
+        <tr>
+            <th style="width: 50px"></th>
+            <th style="width: 400px">Property</th>
+            <th style="width: 350px">Value</th>
+            <th style="width: 100px">Action</th>
+        </tr>
+        </thead>
+    </table>
+</div>
