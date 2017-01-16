@@ -44,6 +44,7 @@ camApp.controller('detailController',
                         var model;
                         var created;
                         var attrs = [];
+                        var rels = [];
                         var originalAttrs = data;
                         entityManager.getAssetDetail(name, RELATIONSHIPS)
                             .success(function (data) {
@@ -65,11 +66,16 @@ camApp.controller('detailController',
                                         while (day.length < 2)
                                             day = '0' + day;
                                         created = myDate.getFullYear() + "-" + month + "-" + day;
-                                    } else
-                                        attrs.push($scope.formatAssetDetailTableRow(data[i]));
+                                    } else {
+                                         if(data[i].type !== 'relationship')
+                                            attrs.push($scope.formatAssetDetailTableRow(data[i]));
+                                          else
+                                           rels.push($scope.formatAssetDetailTableRow(data[i]));
+                                    }
                                 }
                               $scope.selectedAsset = Scopes.get('homeController').selectedAsset;
                               $scope.selectedAsset.attributes = attrs;
+                              $scope.selectedAsset.relationships = rels;
                               $scope.selectedAsset.isModel = isEmpty(model);
                               $scope.isDomainEnabled = !isEmpty( $scope.selectedAsset.connectedToOrion);
                             })
@@ -82,7 +88,6 @@ camApp.controller('detailController',
 
 
             $scope.getAssetDetail($routeParams.selectedAssetName, ATTRIBUTES);
-
             $scope.retrieveSelectedAsset = function () {
                 for (var i = 0; i < $scope.assetList.length; i++) {
                     if ($scope.assetList[i].asset == $scope.selectedAssetName) {
@@ -266,7 +271,7 @@ camApp.controller('detailController',
                      .then(function (response) {
                          ngNotifier.success('Asset correctly disconnected from the Orion Context Broker.');
                          $scope.isDomainEnabled = false;
-                         $scope.selectedAsset.connectedToOrion = '';
+                          $scope.selectedAsset.connectedToOrion = '';
                          $route.reload();
                      }, function (error) {
                          ngNotifier.error(error);
