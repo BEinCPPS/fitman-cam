@@ -39,11 +39,11 @@
                 </div>
                 <div class="panel-body">
                     <div class="tab-content">
-                        <div class="tab-pane fade in active" id="tab1default" ng-show="isAttributes" ng-cloak>
-                            <div ng-include="'pages/detail/assetDetailAttributes.htm'"></div>
+                        <div class="tab-pane fade in active" id="tab1default">
+                            <div ng-include="'pages/detail/assetDetailAttributes.htm'" ng-show="isAttributes"></div>
                         </div>
-                        <div class="tab-pane fade in active" id="tab2default" ng-show="!isAttributes" ng-cloak>
-                            <div ng-include="'pages/detail/assetDetailRelationships.htm'"></div>
+                        <div class="tab-pane fade in active" id="tab2default">
+                            <div ng-include="'pages/detail/assetDetailRelationships.htm'" ng-show="!isAttributes"></div>
                         </div>
                     </div>
                 </div>

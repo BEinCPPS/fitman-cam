@@ -34,24 +34,24 @@
                 <div class="row-fluid"><label>Value</label>
                     <div ng-switch="newAttribute.type" on="selection">
                         <input ng-switch-when="java.lang.String" class="form-control" type="text"
-                               ng-model="newAttribute.value">
+                               ng-model="newAttribute.value" ng-cloak>
                         </input>
 
                         <input class="form-control" ng-switch-when="java.util.Calendar" type="text"
-                               ng-model="newAttribute.value" datepicker/>
+                               ng-model="newAttribute.value" datepicker ng-cloak/>
 
                         <input class="form-control" ng-switch-when="java.lang.Integer" type="number"
-                               ng-model="newAttribute.value"/>
+                               ng-model="newAttribute.value" ng-cloak/>
 
                         <input class="form-control" ng-switch-when="java.lang.Float" type="number"
-                               ng-model="newAttribute.value"/>
+                               ng-model="newAttribute.value" ng-cloak/>
 
-                        <select ng-model="newAttribute.value" class="form-control" ng-switch-when="java.lang.Boolean">
+                        <select ng-model="newAttribute.value" class="form-control" ng-switch-when="java.lang.Boolean" ng-cloak>
                             <option value="true">True</option>
                             <option value="false">False</option>
                         </select>
                         <input ng-switch-default class="form-control" type="text" ng-model="newAttribute.value"
-                               ng-required="newAttribute.type">
+                               ng-required="newAttribute.type" ng-cloak>
                         </input>
                         <span ng-show="valueIsMandatory">{{valueIsMandatoryMsg}}</span>
                     </div>

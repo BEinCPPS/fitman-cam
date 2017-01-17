@@ -201,6 +201,14 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             "). "
             + "} ORDER by ?name";
 
+    private static final String QUERY_INDIVIDUALS_BY_ORION_CONFIG = "SELECT DISTINCT ?name ?orionConfig WHERE "
+            + "{ "
+            + " ?name rdf:type ?class; rdf:type owl:NamedIndividual."
+            + " ?name <" + VARTAG + "> ?orionConfig."
+            + " FILTER(!(?class = owl:NamedIndividual) "
+            + "  &&  regex(str(?orionConfig), \"" + VARTAG2 + "\")"
+            + ").}";
+
     // Modified by @ascatox 2016-04-26 to use MemoryStore in Unit Test
     private AbstractRepository repo;
     private final ValueFactory vf;
@@ -541,6 +549,16 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         String qs = QUERY_INDIVIDUALS_BY_SUB_CLASSES.replace(VARTAG, className);
         return doGetIndividuals(qs, null);
     }
+
+    @Override
+    public List<IndividualItem> getIndividualsByOrionConfig(String orionConfig) throws RuntimeException {
+        if (StringUtils.isBlank(orionConfig))
+            throw new IllegalArgumentException("OrionConfig id is mandatory");
+        String qs = QUERY_INDIVIDUALS_BY_ORION_CONFIG.replace(VARTAG, BeInCpps.SYSTEM_NS + BeInCpps.syncTo)
+                .replace(VARTAG2, orionConfig);
+        return doGetIndividuals(qs, null);
+    }
+
 
     @Override
     public IndividualItem getIndividual(String name) throws RuntimeException {
@@ -1213,7 +1231,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
 
     @Override
     public void removeProperty(String namespace, String name, String individualName) throws IllegalArgumentException, RuntimeException {
-        if(StringUtils.isBlank(namespace))
+        if (StringUtils.isBlank(namespace))
             namespace = getImplicitNamespace();
 
         if (null == name || name.length() == 0) {

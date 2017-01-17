@@ -416,6 +416,12 @@ public class CAMRestImpl {
             dao.setAttribute(BeInCpps.syncTo, assetName, assetJSON.getOrionConfigId(), null, BeInCpps.SYSTEM_NS);
     }
 
+    public static List<Asset> getAssetsForOrionConfig(RepositoryDAO dao, String orionConfig) throws Exception {
+        if (StringUtils.isBlank(orionConfig))
+            throw new IllegalArgumentException("Orion Config Id is mandatory");
+        List<IndividualItem> individualsByOrionConfig = dao.getIndividualsByOrionConfig(orionConfig);
+        return IndividualtemToAssetTransformer.transformAll(dao, individualsByOrionConfig);
+    }
 
     private static String normalizeClassName(String normName) {
         if (null != normName && normName.contains("#") && !normName.contains("system"))

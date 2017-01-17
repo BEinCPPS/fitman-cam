@@ -127,6 +127,17 @@ public interface RepositoryDAO {
     /**
      * Reads the given Individual declaration from the Reference Ontology in the Repository.
      *
+     * @param orionConfig name or local name of the OCB configuration refrenced in Ontology
+     * @returna List of IndividualItem objects, or null if the given name does not match an
+     * Individual declaration
+     * @throws RuntimeException
+     */
+
+    public List<IndividualItem> getIndividualsByOrionConfig(String orionConfig) throws RuntimeException;
+
+    /**
+     * Reads the given Individual declaration from the Reference Ontology in the Repository.
+     *
      * @param name the local name or full URI of the target Individual
      * @return a single IndividualItem object, or null if the given name does not match an
      * Individual declaration

@@ -616,10 +616,6 @@ public class CAMRest {
         }
     }
 
-    //TODO Modify this method making it a real update function
-    // NO delete and insert
-    // checks the modified fields (name and class are not modifiable)
-    // for the other fields use setAttribute with system namespace
     @PUT
     @Path("/models/{modelName}")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
@@ -1091,6 +1087,27 @@ public class CAMRest {
             return Response.ok(
                     "Orion Context Broker configuration with id '" + orionConfigId + "' was successfully deleted!")
                     .build();
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
+    @GET
+    @Path("/orion/{configId}/assets")
+    @RolesAllowed({Role.ADMIN})
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Asset> getAssetsForOrionConfig(@PathParam("configId") String orionConfigId) {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            List<Asset> assets = AssetOwnershipFilter.filterAll(CAMRestImpl.getAssetsForOrionConfig(repoInstance, orionConfigId), securityContext);
+            return assets.stream()
+                    .filter(asset ->
+                            asset.getNamespace().equalsIgnoreCase(SesameRepoManager.getNamespace()))
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
