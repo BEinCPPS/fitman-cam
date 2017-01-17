@@ -389,7 +389,7 @@ public class CAMRestImpl {
 
     public static void deleteOrionConfig(RepositoryDAO dao, String orionConfigId) {
         List<IndividualItem> individualsByOrionConfig = dao.getIndividualsByOrionConfig(orionConfigId);
-        if (individualsByOrionConfig.size() > 0) {
+        if (null != individualsByOrionConfig && individualsByOrionConfig.size() > 0) {
             throw new IllegalStateException("Orion Configuration cannot be deleted as it is referenced somewhere else");
         }
         dao = releaseRepo(dao);
