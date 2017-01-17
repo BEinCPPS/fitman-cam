@@ -201,7 +201,7 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
             "). "
             + "} ORDER by ?name";
 
-    private static final String QUERY_INDIVIDUALS_BY_ORION_CONFIG = "SELECT DISTINCT ?name ?orionConfig WHERE "
+    private static final String QUERY_INDIVIDUALS_BY_ORION_CONFIG = "SELECT DISTINCT ?name ?class ?orionConfig WHERE "
             + "{ "
             + " ?name rdf:type ?class; rdf:type owl:NamedIndividual."
             + " ?name <" + VARTAG + "> ?orionConfig."
