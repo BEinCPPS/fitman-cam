@@ -1,6 +1,6 @@
 camApp.controller('detailController',
     ['$scope', '$routeParams', '$location', '$q', 'ngDialogManager', 'Scopes', 'ngNotifier', 'entityManager', '$route',
-        function ($scope, $routeParams, $location, $q, ngDialogManager, Scopes, ngNotifier, entityManager) {
+        function ($scope, $routeParams, $location, $q, ngDialogManager, Scopes, ngNotifier, entityManager, $route) {
             Scopes.store('detailController', $scope);
             if (isEmpty($routeParams.selectedAssetName)) {
                 $location.path('/');
@@ -204,6 +204,43 @@ camApp.controller('detailController',
                     $scope.isTabRelsActive = 'active';
                 }
              }
+
+            $scope.openUpdateDomainPanel = function () {
+             $scope.domainsListNoDomain = Scopes.get('homeController').domainsListNoDomain;
+                 $scope.asset = $scope.selectedAsset;
+                 $scope.title = 'Update domain';
+                 ngDialogManager.open({
+                     template: 'pages/updateDomain.htm',
+                     controller: 'detailController',
+                     scope: $scope
+                 });
+              }
+
+              $scope.panelTitle = 'Update Domain';
+              $scope.updateAssetDomain = function () {
+                  var assetToSend = {
+                      name: $scope.asset.individualName,
+                      className: $scope.asset.className,
+                      domainName: $scope.asset.domainName
+                  }
+                  var domain =  $scope.asset.domainName.split('#')[1];
+                  entityManager.updateAsset($scope.asset.individualName, assetToSend)
+                      .then(function () {
+                          ngNotifier.success();
+                          $scope.closePanelUpdateDomain();
+                          $scope.selectedAsset.domain = domain;
+                          if($scope.groupingType === 'domains')
+                            $scope.groupingName = domain;
+                          $route.reload();
+                      }, function (err) {
+                          ngNotifier.error(err);
+                      })
+              }
+
+              $scope.closePanelUpdateDomain = function () {
+                  $scope.asset = null;
+                  ngDialogManager.close();
+              }
 
              //OCB Section
              $scope.selectedOcbAsset = [];

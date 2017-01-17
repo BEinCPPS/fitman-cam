@@ -363,11 +363,6 @@ camApp.controller('homeController', [
 
         $scope.openErrorPanel = function (err) {
             $scope.errorMsg = err;
-            // ngDialogManager.open({
-            //     template: 'pages/error.htm',
-            //     controller: 'openErrorController',
-            //     scope: $scope
-            // });
             console.log($scope.errorMsg);
             if (typeof ($scope.errorMsg) === 'object')
                 $scope.errorMsg = JSON.stringify($scope.errorMsg);

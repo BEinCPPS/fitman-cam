@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import javax.ws.rs.WebApplicationException;
+import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -287,7 +287,7 @@ public class CAMRestImpl {
         assetJSON.setClassName(individual.getClassName());
         assetJSON.setName(individual.getIndividualName());
         String individualOrionConfig = dao.getIndividualOrionConfig(individualName);
-        if (null == individualOrionConfig) return;
+        if (StringUtils.isBlank(individualOrionConfig)) return;
         assetJSON.setOrionConfigId(individualOrionConfig);
         List<AssetJSON> assets = new ArrayList<>();
         assets.add(assetJSON);
@@ -405,6 +405,15 @@ public class CAMRestImpl {
             orionConfigsCreated.add(orionConfig);
         }
         return orionConfigsCreated;
+    }
+
+
+    public static void editAsset(RepositoryDAO dao, String assetName, AssetJSON assetJSON) throws MalformedURLException {
+        if (!StringUtils.isBlank(assetJSON.getDomainName()))
+            dao.setAttribute(BeInCpps.ownedBy, assetName, Util.getIdmURI(assetJSON.getDomainName()), null, BeInCpps.SYSTEM_NS);
+        dao = releaseRepo(dao);
+        if (!StringUtils.isBlank(assetJSON.getOrionConfigId()))
+            dao.setAttribute(BeInCpps.syncTo, assetName, assetJSON.getOrionConfigId(), null, BeInCpps.SYSTEM_NS);
     }
 
 

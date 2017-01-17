@@ -1,17 +1,20 @@
 package it.eng.cam.rest;
 
+import it.eng.cam.rest.exception.CAMServiceWebException;
 import it.eng.cam.rest.orion.context.ContextElement;
 import it.eng.cam.rest.security.authentication.CAMPrincipal;
 import it.eng.cam.rest.security.authorization.AssetOwnershipFilter;
 import it.eng.cam.rest.security.authorization.DomainOwnershipFilter;
 import it.eng.cam.rest.security.project.Project;
+import it.eng.cam.rest.security.roles.Role;
 import it.eng.cam.rest.security.service.AuthenticationService;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
-import it.eng.cam.rest.sesame.dto.*;
-import it.eng.cam.rest.exception.CAMServiceWebException;
 import it.eng.cam.rest.security.user.UserLoginJSON;
-import it.eng.cam.rest.security.roles.Role;
 import it.eng.cam.rest.sesame.SesameRepoManager;
+import it.eng.cam.rest.sesame.dto.AssetJSON;
+import it.eng.cam.rest.sesame.dto.AttributeJSON;
+import it.eng.cam.rest.sesame.dto.ClassJSON;
+import it.eng.cam.rest.sesame.dto.RelationshipJSON;
 import it.eng.ontorepo.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -250,10 +253,7 @@ public class CAMRest {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             individualAttributes = CAMRestImpl.getIndividualAttributes(repoInstance, assetName);
             if (individualAttributes != null) {
-                repoInstance = SesameRepoManager.getRepoInstance(getClass());
-                CAMRestImpl.deleteIndividual(repoInstance, assetName);
-                repoInstance = SesameRepoManager.getRepoInstance(getClass());
-                CAMRestImpl.createAsset(repoInstance, asset.getName(), asset.getModelName(), asset.getDomainName());
+                CAMRestImpl.editAsset(repoInstance, assetName, asset);
                 return Response.ok("Asset with name '" + asset.getName() + "' for Model '" + asset.getModelName()
                         + "' for Domain '" + asset.getDomainName() + "' was successfully updated!").build();
             } else {
@@ -616,6 +616,10 @@ public class CAMRest {
         }
     }
 
+    //TODO Modify this method making it a real update function
+    // NO delete and insert
+    // checks the modified fields (name and class are not modifiable)
+    // for the other fields use setAttribute with system namespace
     @PUT
     @Path("/models/{modelName}")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
@@ -626,10 +630,7 @@ public class CAMRest {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(repoInstance, modelName);
             if (individualAttributes != null) {
-                CAMRestImpl.deleteIndividual(repoInstance, modelName);
-                repoInstance = SesameRepoManager.getRepoInstance(null);
-                CAMRestImpl.createAssetModel(repoInstance, model.getName(), model.getClassName(),
-                        model.getDomainName());
+                CAMRestImpl.editAsset(repoInstance, modelName, model);
                 return Response.ok("Model with name '" + model.getName() + "' for Model '" + model.getClassName()
                         + "' for Domain '" + model.getDomainName() + "' was successfully updated!").build();
             } else {

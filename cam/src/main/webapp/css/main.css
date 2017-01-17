@@ -628,3 +628,7 @@ div#orionConfigFormGroup {
     margin-left: 0px;
     margin-top: 15px;
 }
+
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
