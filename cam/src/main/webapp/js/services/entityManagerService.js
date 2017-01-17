@@ -239,7 +239,12 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
     entityManager.deleteOrionConfig = function (configId) {
         return $http.delete(BACK_END_URL_CONST + '/orion/config/' + configId);
     }
-
+    entityManager.getAssetsFromOrionConfig = function (orionConfigId) {
+        if (auth.isLoggedIn())
+            return $http.get(BACK_END_URL_CONST + '/orion/' + orionConfigId + '/assets');
+        else
+            return rejectNotLoggedCall();
+    }
     // return our entire userFactory object
     return entityManager;
 
