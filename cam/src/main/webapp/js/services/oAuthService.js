@@ -18,7 +18,7 @@ camApp.factory('oAuth', function ($http, $window, $q, $cacheFactory) {
     // log a user out by clearing the token
     // Change the current user
     oAuthFactory.logout = function () {
-        oAuthFactory.isInLogout = true;
+         oAuthFactory.isInLogout = true;
         // clear the token
         TokenManager.removeToken();
         $window.open(KEYROCK_CHANGE_USER_URL);

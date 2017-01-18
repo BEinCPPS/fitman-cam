@@ -19,7 +19,7 @@
                 <div class="row-fluid"><label>Model:</label> <span> {{selectedAsset.model}}</span></div>
                 <div class="row-fluid"><label>Created:</label> <span> {{selectedAsset.createdOn}}</span></div>
                 <div class="row-fluid"><label>Domain:</label> <span> {{selectedAsset.domain}}</span>
-                    <button class="cam-table-button" ng-click="openUpdateDomainPanel()"
+                    <button class="cam-table-button" ng-click="openUpdateDomainPanel()" ng-if="isDomainEnabled"
                             data-toggle="tooltip" title="Update domain">
                         <i class="fa fa-pencil cam-table-button"></i>
                     </button>

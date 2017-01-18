@@ -78,6 +78,8 @@ camApp.controller('detailController',
                               $scope.selectedAsset.relationships = rels;
                               $scope.selectedAsset.isModel = isEmpty(model);
                               $scope.isOCBEnabled = !isEmpty( $scope.selectedAsset.connectedToOrion);
+                              $scope.domainsListNoDomain = Scopes.get('homeController').domainsListNoDomain;
+                              $scope.isDomainEnabled = $scope.domainsListNoDomain && $scope.domainsListNoDomain.length > 0;
                             })
                     })
                     .error(function (error) {
@@ -206,7 +208,6 @@ camApp.controller('detailController',
              }
 
             $scope.openUpdateDomainPanel = function () {
-             $scope.domainsListNoDomain = Scopes.get('homeController').domainsListNoDomain;
                  $scope.asset = $scope.selectedAsset;
                  $scope.title = 'Update domain';
                  ngDialogManager.open({
