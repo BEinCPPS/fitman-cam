@@ -5,9 +5,9 @@ camApp.factory('oAuth', function ($http, $window, $q, $cacheFactory) {
 
     var oAuthFactory = {};
     var cache = $cacheFactory('camCache');
-     oAuthFactory.mySelf = function () {
-            return OAUTH;
-        }
+    oAuthFactory.mySelf = function () {
+        return OAUTH;
+    }
     // log a user in
     oAuthFactory.login = function () {
         // return the promise object and its data
@@ -21,7 +21,7 @@ camApp.factory('oAuth', function ($http, $window, $q, $cacheFactory) {
         oAuthFactory.isInLogout = true;
         // clear the token
         TokenManager.removeToken();
-        $window.location.href= KEYROCK_CHANGE_USER_URL;
+        $window.location.href = KEYROCK_CHANGE_USER_URL;
     };
 
     // check if a user is logged in
