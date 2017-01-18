@@ -52,6 +52,7 @@ camApp.config(function(toastrConfig) {
         tapToDismiss: false,
         closeButton: true,
         timeOut: 0,
+        extendedTimeOut: 0,
         target: 'body',
     });
 });
