@@ -77,7 +77,7 @@ camApp.controller('detailController',
                               $scope.selectedAsset.attributes = attrs;
                               $scope.selectedAsset.relationships = rels;
                               $scope.selectedAsset.isModel = isEmpty(model);
-                              $scope.isDomainEnabled = !isEmpty( $scope.selectedAsset.connectedToOrion);
+                              $scope.isOCBEnabled = !isEmpty( $scope.selectedAsset.connectedToOrion);
                             })
                     })
                     .error(function (error) {
@@ -280,7 +280,7 @@ camApp.controller('detailController',
                      .then(function (response) {
                          console.log(JSON.stringify(response.data));
                          ngNotifier.success("Asset correctly added to the Orion Context Broker.");
-                         $scope.isDomainEnabled = true;
+                         $scope.isOCBEnabled = true;
                          $scope.selectedAsset.connectedToOrion = selectedOrionConfigId;
                          $route.reload();
                      }, function (error) {
@@ -307,7 +307,7 @@ camApp.controller('detailController',
                  entityManager.disconnectAssetsFromOCB($scope.selectedAssetNameToDisconnect)
                      .then(function (response) {
                          ngNotifier.success('Asset correctly disconnected from the Orion Context Broker.');
-                         $scope.isDomainEnabled = false;
+                         $scope.isOCBEnabled = false;
                           $scope.selectedAsset.connectedToOrion = '';
                          $route.reload();
                      }, function (error) {

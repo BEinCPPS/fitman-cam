@@ -3,12 +3,12 @@
             ng-click="openNewAttributePanel()">
         <i class="fa fa-plus" data-toggle="modal" data-target="#newAttributeLabel"/> New Attribute
     </button>
-    <button type="button" data-toggle="tooltip"  title="Send to Orion Context Broker" ng-show="!isDomainEnabled"
+    <button type="button" data-toggle="tooltip"  title="Send to Orion Context Broker" ng-show="!isOCBEnabled"
             class="cam-btn-add-container"
             ng-click="openConfirmOperationPanel()">
         <i class="fa fa-globe" data-toggle="modal" data-target="#newAttributeLabel"/> Send to Orion Context Broker
     </button>
-    <button type="button" data-toggle="tooltip"  title="Disconnect from Orion" ng-show="isDomainEnabled"
+    <button type="button" data-toggle="tooltip"  title="Disconnect from Orion" ng-show="isOCBEnabled"
             class="cam-btn-add-container"
             ng-click="openDisconnectFromOCB(selectedAsset.individualName)">
         <i class="fa fa-chain-broken cam-table-button"></i> Disconnect from {{selectedAsset.connectedToOrion}}
