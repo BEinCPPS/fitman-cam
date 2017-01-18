@@ -75,6 +75,7 @@ camApp.controller('menuController', [
         };
 
         $scope.isOAuth = auth.mySelf() == OAUTH;
+        $scope.logoutLabel = $scope.isOAuth ? 'Change user' : 'Sign out';
 
 
         //NOT USED with OAuth2

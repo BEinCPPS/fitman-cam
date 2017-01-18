@@ -21,7 +21,7 @@ camApp.factory('oAuth', function ($http, $window, $q, $cacheFactory) {
         oAuthFactory.isInLogout = true;
         // clear the token
         TokenManager.removeToken();
-        $window.open(KEYROCK_CHANGE_USER_URL);
+        $window.location.href= KEYROCK_CHANGE_USER_URL;
     };
 
     // check if a user is logged in
