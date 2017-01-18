@@ -62,7 +62,7 @@ camApp.controller('menuController', [
         }
         // function to handle logging out
         $scope.doLogout = function () {
-            $scope.user = '';
+            $scope.user = {};
             auth.logout();
         };
 
@@ -75,7 +75,8 @@ camApp.controller('menuController', [
         };
 
         $scope.isOAuth = auth.mySelf() == OAUTH;
-        $scope.logoutLabel = $scope.isOAuth ? 'Change user' : 'Sign out';
+        $scope.logoutLabel = 'Sign out';
+            //$scope.isOAuth ? 'Change user' : 'Sign out';
 
 
         //NOT USED with OAuth2
