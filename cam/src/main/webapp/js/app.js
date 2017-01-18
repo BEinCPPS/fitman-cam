@@ -49,7 +49,8 @@ camApp.config(function(toastrConfig) {
         positionClass: 'toast-top-right',
         preventDuplicates: false,
         preventOpenDuplicates: false,
-        tapToDismiss: true,
+        tapToDismiss: false,
+        closeButton: true,
         timeOut: 0,
         target: 'body',
     });

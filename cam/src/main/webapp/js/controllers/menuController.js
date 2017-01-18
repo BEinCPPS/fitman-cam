@@ -45,7 +45,7 @@ camApp.controller('menuController', [
             });
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
             $scope.loggedIn = auth.isLoggedIn();
-             if (!$scope.loggedIn)
+            if (!$scope.loggedIn)
                 $scope.login();
         });
 
@@ -57,7 +57,7 @@ camApp.controller('menuController', [
                         return true;
                 }
 
-    }
+            }
             return false;
         }
         // function to handle logging out
@@ -74,7 +74,7 @@ camApp.controller('menuController', [
             }
         };
 
-         $scope.isOAuth = auth.mySelf() == OAUTH;
+        $scope.isOAuth = auth.mySelf() == OAUTH;
 
 
         //NOT USED with OAuth2
