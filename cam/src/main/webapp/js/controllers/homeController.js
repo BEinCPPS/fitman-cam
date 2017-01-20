@@ -174,7 +174,7 @@ camApp.controller('homeController', [
         }, {
             "mDataProp": "createdOn",
             "aTargets": [4],
-            "bSortable": false
+            "bSortable": true
         }, {
             "mDataProp": "action",
             "aTargets": [5],
