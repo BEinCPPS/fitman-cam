@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.org/BEinCPPS/fitman-cam.svg?branch=master)](https://travis-ci.org/BEinCPPS/fitman-cam)
 
-#Fitman-cam project
+# Fitman-cam project
 
-###Description of the component
+## Description of the component
 
 The **Collaborative Asset Management (CAM)** Specific Enabler is a web-based, integrated platform for the management of Virtualized Asset. This Specific Enabler is targeted to the business user, who is not required to have IT expertise, nor an in-depth knowledge of ontology-related concepts and technologies.
 
@@ -13,15 +13,15 @@ CAM is delivered as a module that allows the user to manipulate ontologies addin
 
 This CAM release contains two modules, **Cam** and **Cam-Service**.
  
-**Cam**
+### Cam
 
 Cam is a web application that exploits cam-service APIs. Cam allows user to create, manipulate and delete Assets using a web interface.
 
-**Cam-Service**
+### Cam-Service
 
 Cam-Service component exposes its own public, proprietary REST-based web API. By means of API calls, the reference ontology, the asset repository and the service registry can be queried by external applications. The usual CRUD operations will be allowed on Class, Assets, Owners and Attributes.
 	
-###Developer environment
+## Developer environment
 
 This procedure assumes that you have [Apache Tomcat](https://tomcat.apache.org/download-80.cgi) (version >= **7**)
 and [RDF4J 2.0M2](http://rdf4j.org/download/) installed in your environment.
@@ -40,7 +40,7 @@ We will refer to this repository as ```<EXAMPLE_REPO>```.
 If creation is successful the user will be redirected to repository summary.
 
 
-**A.** Your project structure is as follows: <br/>
++ **A.** Your project structure is as follows: <br/>
 
 ```
 <your_project_dir>
@@ -48,14 +48,14 @@ If creation is successful the user will be redirected to repository summary.
    |__ cam-service
 ```
 
-**B.** Install Cam: <br/>
++ **B.** Install Cam: <br/>
 
 1.	Open a terminal window and go to the root folder of CAM project .
 2.	Type the command: mvn package.
 3.	Copy the war in ```target/``` to ```<PATH_TO_TOMCAT>/webapps```.
 4.	Browse to ```<YOUR_HOST>:<YOUR_PORT>/CAM ``` to start using application.
 
-**C.** Install Cam-Service:<br/>
++ **C.** Install Cam-Service:<br/>
 ```bash
 $ cd CAMService
 $ mvn package -P prod
@@ -63,7 +63,7 @@ $ mvn package -P prod
 
 To skip Unit Tests use ``-DskipTests`` maven parameter.
 
-**D.** Integration Test (This test uses **Sesame Repository in Memory** and **Apache Tomcat 7 Maven embedded**):
++ **D.** Integration Test (This test uses **Sesame Repository in Memory** and **Apache Tomcat 7 Maven embedded**):
 
 ```bash
 $ cd CAMService
