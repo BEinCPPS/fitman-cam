@@ -1,0 +1,20 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="closeConfirmDeletePanel()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+            <h4 class="modal-title" id="confirmDeleteLabel">Delete <b>{{elementToDelete}}</b></h4>
+        </div>
+        <div class="modal-body">
+            <span>Are you sure you want to delete this {{typeToDelete}}?</span>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-default" ng-click="closeConfirmDeletePanel()"> Close
+            </button>
+            <button type="button" class="btn btn-sm btn-danger" ng-click="confirmDelete()"> Delete
+            </button>
+        </div>
+    </div>
+</div>
+

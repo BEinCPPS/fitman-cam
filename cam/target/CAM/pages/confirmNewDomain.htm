@@ -1,0 +1,20 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="closeConfirmNewOperationPanel()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+            <h4 class="modal-title" id="confirmDomainLabel">Create a new  <b>{{typeToAdd}}</b></h4>
+        </div>
+        <div class="modal-body">
+            <span>Are you sure you want to create a new Domain <b>{{domain.name}}</b>?</span>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-default" ng-click="closeConfirmNewOperationPanel()"> Cancel
+            </button>
+            <button type="button" class="btn btn-sm btn-primary" ng-click="confirmNewOperation()"> Create
+            </button>
+        </div>
+    </div>
+</div>
+

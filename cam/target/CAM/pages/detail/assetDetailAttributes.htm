@@ -1,0 +1,29 @@
+<div id="cam-asset-detail-btn-container" class="row-fluid" style="margin-top: 10px">
+    <button type="button" data-toggle="tooltip" title="New Attribute" class="cam-btn-add-container"
+            ng-click="openNewAttributePanel()">
+        <i class="fa fa-plus" data-toggle="modal" data-target="#newAttributeLabel"/> New Attribute
+    </button>
+    <button type="button" data-toggle="tooltip"  title="Send to Orion Context Broker" ng-show="!isOCBEnabled"
+            class="cam-btn-add-container"
+            ng-click="openConfirmOperationPanel()">
+        <i class="fa fa-globe" data-toggle="modal" data-target="#newAttributeLabel"/> Send to Orion Context Broker
+    </button>
+    <button type="button" data-toggle="tooltip"  title="Disconnect from Orion" ng-show="isOCBEnabled"
+            class="cam-btn-add-container"
+            ng-click="openDisconnectFromOCB(selectedAsset.individualName)">
+        <i class="fa fa-chain-broken cam-table-button"></i> Disconnect from {{selectedAsset.connectedToOrion}}
+    </button>
+</div>
+<div id="asset-detail-table" class="cam-asset-detail-table-container">
+    <table asset-table="assetDetailOverrideOptions" aa-data="selectedAsset.attributes"
+           ao-column-defs="assetDetailColumnDefs" class="table table-striped cam-data-table">
+        <thead>
+        <tr>
+            <th style="width: 50px"></th>
+            <th style="width: 400px">Property</th>
+            <th style="width: 350px">Value</th>
+            <th style="width: 100px">Action</th>
+        </tr>
+        </thead>
+    </table>
+</div>

@@ -1,0 +1,20 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="closeConfirmNewOperationPanel()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+            <h4 class="modal-title" id="confirmNewOperationLabel">{{titleOperationMessage}}  <b>{{typeToAdd}}</b></h4>
+        </div>
+        <div class="modal-body">
+            <span>{{operationMessage}} {{typeToAdd}}?</span>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-default" ng-click="closeConfirmNewOperationPanel()"> Cancel
+            </button>
+            <button type="button" class="btn btn-sm btn-primary" ng-click="confirmNewOperation()" ng-init="Create"> {{operationName}}
+            </button>
+        </div>
+    </div>
+</div>
+

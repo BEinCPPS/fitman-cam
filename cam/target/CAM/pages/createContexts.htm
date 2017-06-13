@@ -1,0 +1,30 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="closeConfirmNewOperationPanel()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+            <h4 class="modal-title" id="confirmNewOperationLabel">{{titleOperationMessage}}  <b>{{typeToAdd}}</b></h4>
+        </div>
+        <div class="modal-body">
+            <span>{{operationMessage}} {{typeToAdd}}?</span>
+            <br/>
+            <br/>
+            <div class="row-fluid"><label>Select Orion Context Broker</label>
+                <select ng-model="selectedOrionConfigId" class="form-control" ng-init="orionConfigsList[0].id">
+                    <option style="display:none" value=""></option>
+                    <option ng-repeat="orionConfig in orionConfigsList" value="{{orionConfig.id}}">
+                        {{orionConfig.id}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-default" ng-click="closeConfirmNewOperationPanel()"> Cancel
+            </button>
+            <button type="button" class="btn btn-sm btn-primary" ng-click="confirmNewOperation()"> Create
+            </button>
+        </div>
+    </div>
+</div>
+

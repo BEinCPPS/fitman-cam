@@ -1,0 +1,50 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="closeCreateClassPanel()">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+            <h4 class="modal-title" id="newClassLabel">{{title}} <b>{{className}}</b></h4>
+        </div>
+        <form name="newClassForm" ng-submit="" style="border:none;">
+            <div class="modal-body">
+                <div class="row-fluid"><label>Class Name:</label>
+                    <input class="form-control" type="text"
+                       ng-model="newClass.name"
+                       ng-readonly="isNewClassNameReadonly"
+                       name="name" ng-pattern="regexPattern">
+                    </input>
+                    <span ng-show="newClassForm.name.$error.pattern">{{invalidNameMsg}}</span>
+                    <span ng-show="invalidName">{{nameIsMandatory}}</span></div>
+
+                <div ng-switch on="isNewRootClass">
+                    <div ng-switch-when="true">
+                        <div class="row-fluid"><label>Parent Name:</label>
+                            <input class="form-control" type="text"
+                                   ng-model="newClass.parentName "
+                                   ng-disabled="true">
+                            </input>
+                        </div>
+                    </div>
+                    <div ng-switch-when="false">
+                        <div class="row-fluid"><label>Parent Name:</label>
+                            <select ng-model="newClass.parentName"
+                                    ng-options="o.className as o.className for o in select.options"
+                                    lazy-load-classes-options=""
+                                    data-options="select.options" class="form-control"
+                                    ng-disabled="isParentNameReadonly">
+                                <option value=""> {{newClass.parentName}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" ng-click="closeCreateClassPanel()"> Cancel
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary" ng-click="saveNewClass()"> Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

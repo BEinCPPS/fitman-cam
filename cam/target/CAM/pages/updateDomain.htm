@@ -1,0 +1,23 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="closePanelUpdateDomain()">
+                <i aria-hidden="true" class="fa fa-remove cam-table-button"></i></button>
+            <h4 class="modal-title">{{panelTitle}}</h4>
+        </div>
+        <form name="domainForm" ng-submit="" style="border:none;">
+            <div class="modal-body">
+                <div class="row-fluid"><label>Domain</label>
+                    <select ng-model="asset.domainName" class="form-control">
+                        <option ng-repeat="domain in domainsListNoDomain" value="{{domain.iri}}">{{domain.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" ng-click="closePanelUpdateDomain()"> Cancel</button>
+                <button type="button" class="btn btn-sm btn-primary" ng-click="updateAssetDomain()"> Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+

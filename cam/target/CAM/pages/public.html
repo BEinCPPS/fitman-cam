@@ -1,0 +1,33 @@
+<div ng-controller="menuController">
+    <div ng-include="'pages/menu/mainMenu.html'"></div>
+   
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-3">Fitman CAM</h1>
+            <p><label class="text-bold">Collaborative Asset Management (CAM)</label> is a platform for the online management of virtualized Asset. It was originally released as a <label class="text-italic">FITMAN Specific Enabler</label> and is now a federated component of the <label class="text-bold">BEinCPPS Future Internet Platform.</label></p>
+            <p><a class="btn btn-lg" href="https://github.com/BEinCPPS/fitman-cam/wiki" role="button">Learn more</a></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Example row of columns -->
+        <div class="row">
+            <div class="col-md-6">
+                <h2><b>CAM</b></h2>
+                <p>CAM is a web application which provides a user interface for exploiting the CAM-Service API interactively. CAM allows user to create, read, update and delete Classes, Models, Assets, Attributes, Relationships and Owners through a web interface.</p>
+                <p><a class="btn btn-secondary" href="#" ng-click="$window.scrollTop()" role="button">Login &raquo;</a></p>
+            </div>                              
+            <div class="col-md-6">
+                <h2><b>CAM-Service</b></h2>
+                <p>CAM-Service is a web application with no user interface. It provides a REST-based abstraction on top of the reference ontology that is stored in the RDF4J repository (not included: see installation instructions below). By means of API calls, applications can query the reference ontology: CRUD operations are allowed on Classes, Models, Assets, Attributes, Relationships and Owners. CAM-Service also implements the integration with the FIWARE Orion Context Broker and with FIWARE security.</p>
+                <p><a class="btn btn-secondary" ng-href={{linkCamService()}} role="button">CAM Service &raquo;</a></p>
+            </div>
+        </div>
+        <hr>
+        <footer>
+            2017 ©
+            <a href="http://www.fiware.org/">FIWARE</a>
+        </footer>
+    </div>
+</div>
+

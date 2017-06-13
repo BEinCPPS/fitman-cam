@@ -1,0 +1,9 @@
+[ {
+				"className" : "Root",
+				"classId" : "root",
+				"children" : [ {
+					"className" : "Example Class",
+					"classId" : "exclass",
+					"children" : []
+				} ]
+			} ]

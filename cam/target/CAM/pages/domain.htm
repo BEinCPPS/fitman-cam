@@ -1,0 +1,46 @@
+<div ng-include="'pages/menu/mainMenu.html'"></div>
+<div id="panel-container" class="panel panel-default panel-height">
+    <div id="owner-detail" class="panel-body">
+        <div class="row-fluid">
+            <div class="cam-tree-container">
+                <div class="header-page-table-left">
+                    <span><b>Domains</b></span>
+                </div>
+                <div class="tree-nodes-container"
+                     data-angular-treeview="true"
+                     data-tree-model="domainsList"
+                     data-node-id="classId"
+                     data-node-label="name"
+                     data-node-children=""
+                     data-tree-id="domainTreeId"
+                     data-right-click-enabled="false"
+                     data-icon-class-name="fa fa-users"
+                >
+                </div>
+            </div>
+
+            <div name="asset-table-container" class="cam-table-container">
+                <div>
+                    <div class="header-page-table-right">
+                        <span><b>Domain</b> : {{currentNode.name}}</span>
+                    </div>
+                    <table asset-table="overrideOptions" aa-data="assetList"
+                           ao-column-defs="columnDefs" class="table table-striped cam-data-table">
+                        <thead>
+                        <tr>
+                            <th style="width: 5%">OCB</th>
+                            <th style="width: 25%">Asset</th>
+                            <th style="width: 20%">Class</th>
+                            <th style="width: 20%">Domain</th>
+                            <th style="width: 15%">Created</th>
+                            <th style="width: 5%">Action</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>

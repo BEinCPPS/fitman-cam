@@ -1,0 +1,16 @@
+<div class="inline-flex-item">
+    <button class="cam-table-button"
+            ng-click="openDetail('$value$','$groupingType$','$groupingName$')" data-toggle="tooltip"
+            title="Open detail">
+        <i class="fa fa-arrow-circle-right cam-table-button"></i>
+    </button>
+    <button class="cam-table-button"
+            ng-click="openRemoveAssetPanel('$value$', '$elementType$')"
+            data-toggle="tooltip" title="Delete asset">
+        <i class="fa fa-trash cam-table-button"></i>
+    </button>
+    <button class="cam-table-button" ng-click="openNewAssetPanel('$value$')"
+            data-toggle="tooltip" title="Create new asset from this model">
+        <i class="fa fa-plus cam-table-button"></i>
+    </button>
+</div>

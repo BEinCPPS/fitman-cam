@@ -1,0 +1,25 @@
+<form class="form-horizontal">
+    <div class="form-group form-group-sm">
+        <label class="control-label col-xs-2">User:</label>
+        <div class="col-xs-10">
+            <p class="form-control-static"> {{userDisplay.name}}</p>
+        </div>
+    </div>
+    <div class="form-group form-group-sm">
+        <label class="control-label col-xs-2">Email:</label>
+        <div class="col-xs-10">
+            <p class="form-control-static">{{userDisplay.email}}</p>
+        </div>
+    </div>
+    <div class="form-group form-group-sm" ng-if="userDisplay.organizations.length >0">
+        <label class="control-label col-xs-2">Domains:</label>
+        <div class="col-xs-10">
+            <ul class="list-style-none">
+                <li class="form-control-static"
+                    ng-repeat="organization in userDisplay.organizations">
+                    <span class="label label-info">{{organization.name}}</span>
+                </li>
+            </ul>  
+        </div>
+    </div>
+</form>
