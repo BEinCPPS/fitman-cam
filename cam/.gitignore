@@ -1,5 +1,6 @@
-/target/
-.idea/
-.settings/
-/CAM.iml
-/pom.xml
+.target/*
+.idea/*
+.settings/*
+*.iml
+.classpath
+.project
