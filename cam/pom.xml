@@ -12,7 +12,7 @@
     <!-- oAuth, OAuth2 Supported at the moment -->
     <!-- Auth, is Keystone method authentication-->
     <properties>
-        <authentication.service>oAuth</authentication.service>
+        <authentication.service>Auth</authentication.service>
         <keyrock.url>http://161.27.159.76</keyrock.url>
         <!-- OAUTH2 CLIENT ID-->
         <client.id>6a636dc9ff1d4e4395ae01c60fb9d3b5</client.id>
@@ -35,7 +35,6 @@
                                 </includes>
                             </resource>
                         </webResources>
-<!--                         <outputDirectory>C:\Program Files\apache-tomcat-8.0.33\webapps</outputDirectory> -->
                         <outputDirectory>/home/ascatox/Documenti/Sviluppo/Servers/apache-tomcat-8.5.15/webapps</outputDirectory>
                     </configuration>
                 </plugin>
