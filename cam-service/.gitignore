@@ -1,5 +1,4 @@
 .idea/
 .settings/
-/.gitignore
-/CAMService.iml
-/pom.xml
+.gitignore
+CAMService.iml
