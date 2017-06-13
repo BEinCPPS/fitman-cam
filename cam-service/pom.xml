@@ -127,7 +127,7 @@
                     <artifactId>maven-war-plugin</artifactId>
                     <version>3.0.0</version>
                     <configuration>
-                        <outputDirectory>C:\Users\alberti\WORK\BEinCPPS\apache-tomcat-8.0.33\webapps</outputDirectory>
+                        <outputDirectory>/home/ascatox/Documenti/Sviluppo/Servers/apache-tomcat-8.5.15/webapps</outputDirectory>
                         <!--<outputDirectory>C:\Program Files\apache-tomcat-8.0.33\webapps</outputDirectory>-->
                     </configuration>
                 </plugin>
