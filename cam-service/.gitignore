@@ -1,4 +1,6 @@
-.idea/
-.settings/
-.gitignore
+.idea/*
+.settings/*
+target/*
+.classpath
+.project
 CAMService.iml
