@@ -449,7 +449,7 @@ public class CAMRestImpl {
     }
 
 
-    public static String exportContextsToDownloadableFile(RepositoryDAO dao, List<AssetJSON> assetJSONs) throws Exception {
+    public static String createIDASMappingFile(RepositoryDAO dao, List<AssetJSON> assetJSONs) throws Exception {
         if (null == assetJSONs || assetJSONs.isEmpty())
             throw new IllegalArgumentException("No Context in input");
         List<IDASMappingContext> contextElements = AssetToIDASMappingTrasformer.transformAll(dao, assetJSONs, false);

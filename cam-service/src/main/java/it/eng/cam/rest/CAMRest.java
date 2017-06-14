@@ -23,9 +23,7 @@ import org.eclipse.rdf4j.model.vocabulary.OWL;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -1036,11 +1034,7 @@ public class CAMRest {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            return CAMRestImpl.exportContextsToDownloadableFile(repoInstance, assetJSONs);
-//            return Response
-//                    .ok(jsonFile.getBytes(), MediaType.APPLICATION_OCTET_STREAM)
-//                    .header("content-disposition","attachment; filename = contexts.json")
-//                    .build();
+            return CAMRestImpl.createIDASMappingFile(repoInstance, assetJSONs);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
