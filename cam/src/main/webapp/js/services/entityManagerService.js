@@ -39,10 +39,10 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
 
     entityManager.getAssetDetail = function (name, type) {
         if (auth.isLoggedIn()) {
-        //type attributes or relationships empty for asset only
-            if(type)  type = '/' + type;
+            //type attributes or relationships empty for asset only
+            if (type) type = '/' + type;
             return $http.get(BACK_END_URL_CONST + '/assets/' + name + type)
-       } else
+        } else
             return rejectNotLoggedCall();
     }
 
@@ -219,7 +219,7 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
 
     entityManager.disconnectAssetsFromOCB = function (selectedAsset) {
         if (auth.isLoggedIn())
-            return $http.delete(BACK_END_URL_CONST + '/orion/contexts/'+selectedAsset);
+            return $http.delete(BACK_END_URL_CONST + '/orion/contexts/' + selectedAsset);
         else
             return rejectNotLoggedCall();
     }
@@ -242,6 +242,15 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
     entityManager.getAssetsFromOrionConfig = function (orionConfigId) {
         if (auth.isLoggedIn())
             return $http.get(BACK_END_URL_CONST + '/orion/' + orionConfigId + '/assets');
+        else
+            return rejectNotLoggedCall();
+    }
+    entityManager.downloadAssetsForIDAS = function (selectedAssets) {
+        var config = {
+            responseType: 'arraybuffer'
+        };
+        if (auth.isLoggedIn())
+            return $http.post(BACK_END_URL_CONST + '/orion/download', selectedAssets, config);
         else
             return rejectNotLoggedCall();
     }

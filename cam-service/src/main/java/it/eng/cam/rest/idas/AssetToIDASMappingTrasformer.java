@@ -1,7 +1,5 @@
-package it.eng.cam.rest.orion;
+package it.eng.cam.rest.idas;
 
-import it.eng.cam.rest.orion.context.Attribute;
-import it.eng.cam.rest.orion.context.ContextElement;
 import it.eng.cam.rest.sesame.SesameRepoManager;
 import it.eng.cam.rest.sesame.dto.AssetJSON;
 import it.eng.ontorepo.BeInCpps;
@@ -19,19 +17,19 @@ import java.util.List;
 /**
  * Created by ascatox on 29/11/16.
  */
-public class AssetToContextTrasformer {
+public class AssetToIDASMappingTrasformer {
 
 
-    public static List<ContextElement> transformAll(RepositoryDAO dao, List<AssetJSON> assets, boolean useNameSpace) throws java.text.ParseException {
+    public static List<IDASMappingContext> transformAll(RepositoryDAO dao, List<AssetJSON> assets, boolean useNameSpace) throws ParseException {
         return doTransformAll(dao, assets, useNameSpace);
     }
 
-    public static ContextElement transform(RepositoryDAO dao, AssetJSON asset, boolean useNameSpace) throws java.text.ParseException {
+    public static IDASMappingContext transform(RepositoryDAO dao, AssetJSON asset, boolean useNameSpace) throws ParseException {
         return doTransform(dao, asset, useNameSpace);
     }
 
-    private static List<ContextElement> doTransformAll(RepositoryDAO dao, List<AssetJSON> assets, boolean useNameSpace) throws ParseException {
-        List<ContextElement> contextElements = new ArrayList<>();
+    private static List<IDASMappingContext> doTransformAll(RepositoryDAO dao, List<AssetJSON> assets, boolean useNameSpace) throws ParseException {
+        List<IDASMappingContext> contextElements = new ArrayList<>();
         if (assets == null) return null;
         assets.stream().forEach(asset -> {
             try {
@@ -43,10 +41,10 @@ public class AssetToContextTrasformer {
         return contextElements;
     }
 
-    private static ContextElement doTransform(RepositoryDAO dao, AssetJSON asset, boolean useNameSpace) throws java.text.ParseException {
+    private static IDASMappingContext doTransform(RepositoryDAO dao, AssetJSON asset, boolean useNameSpace) throws ParseException {
         if (asset == null || StringUtils.isBlank(asset.getName()))
             throw new IllegalArgumentException("No asset in input.");
-        ContextElement contextElement = new ContextElement();
+        IDASMappingContext contextElement = new IDASMappingContext();
         SesameRepoManager.releaseRepoDaoConn(dao);
         dao = SesameRepoManager.getRepoInstance(null);
         IndividualItem individual = dao.getIndividual(asset.getName());
@@ -58,8 +56,6 @@ public class AssetToContextTrasformer {
             contextElement.setType(individual.getNormalizedValue());
         else
             contextElement.setType(individual.getClassName());
-        contextElement.setOriginalAssetName(asset.getName());
-        contextElement.setOrionConfigId(asset.getOrionConfigId());
         SesameRepoManager.releaseRepoDaoConn(dao);
         dao = SesameRepoManager.getRepoInstance(null);
         List<PropertyValueItem> propertyValueItems = dao.getIndividualAttributes(asset.getName());
@@ -69,13 +65,12 @@ public class AssetToContextTrasformer {
                     || propertyValueItem.getNormalizedName().contains(BeInCpps.createdOn)
                     || propertyValueItem.getNormalizedName().contains(BeInCpps.instanceOf)
                     ) continue;
-            Attribute attribute = new Attribute();
-            attribute.setName(propertyValueItem.getNormalizedName());
+            IDASMappingAttribute attribute = new IDASMappingAttribute();
+            attribute.setOcb_id(propertyValueItem.getNormalizedName());
             attribute.setType(propertyValueItem.getPropertyType().getSimpleName().toLowerCase());
             if (propertyValueItem.getPropertyType().getSimpleName().equalsIgnoreCase(Calendar.class.getSimpleName()))
                 attribute.setType(Date.class.getSimpleName().toLowerCase());
-            attribute.setValue(propertyValueItem.getPropertyOriginalValue());
-            contextElement.getAttributes().add(attribute);
+            contextElement.getMappings().add(attribute);
         }
         return contextElement;
     }

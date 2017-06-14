@@ -67,19 +67,19 @@ camApp.controller('detailController',
                                             day = '0' + day;
                                         created = myDate.getFullYear() + "-" + month + "-" + day;
                                     } else {
-                                         if(data[i].type !== 'relationship')
+                                        if (data[i].type !== 'relationship')
                                             attrs.push($scope.formatAssetDetailTableRow(data[i]));
-                                          else
-                                           rels.push($scope.formatAssetDetailTableRow(data[i]));
+                                        else
+                                            rels.push($scope.formatAssetDetailTableRow(data[i]));
                                     }
                                 }
-                              $scope.selectedAsset = Scopes.get('homeController').selectedAsset;
-                              $scope.selectedAsset.attributes = attrs;
-                              $scope.selectedAsset.relationships = rels;
-                              $scope.selectedAsset.isModel = isEmpty(model);
-                              $scope.isOCBEnabled = !isEmpty( $scope.selectedAsset.connectedToOrion);
-                              $scope.domainsListNoDomain = Scopes.get('homeController').domainsListNoDomain;
-                              $scope.isDomainEnabled = $scope.domainsListNoDomain && $scope.domainsListNoDomain.length > 0;
+                                $scope.selectedAsset = Scopes.get('homeController').selectedAsset;
+                                $scope.selectedAsset.attributes = attrs;
+                                $scope.selectedAsset.relationships = rels;
+                                $scope.selectedAsset.isModel = isEmpty(model);
+                                $scope.isOCBEnabled = !isEmpty($scope.selectedAsset.connectedToOrion);
+                                $scope.domainsListNoDomain = Scopes.get('homeController').domainsListNoDomain;
+                                $scope.isDomainEnabled = $scope.domainsListNoDomain && $scope.domainsListNoDomain.length > 0;
                             })
                     })
                     .error(function (error) {
@@ -194,125 +194,148 @@ camApp.controller('detailController',
             $scope.isAttributes = true;
             $scope.isTabAttrsActive = 'active';
             $scope.isTabRelsActive = '';
-            $scope.changeTab = function(type) {
-            if (type === ATTRIBUTES) {
-                 $scope.isAttributes = true;
-                 $scope.isTabAttrsActive = 'active';
-                  $scope.isTabRelsActive = '';
+            $scope.changeTab = function (type) {
+                if (type === ATTRIBUTES) {
+                    $scope.isAttributes = true;
+                    $scope.isTabAttrsActive = 'active';
+                    $scope.isTabRelsActive = '';
                 }
-               else if (type === RELATIONSHIPS) {
+                else if (type === RELATIONSHIPS) {
                     $scope.isAttributes = false;
                     $scope.isTabAttrsActive = '';
                     $scope.isTabRelsActive = 'active';
                 }
-             }
+            }
 
             $scope.openUpdateDomainPanel = function () {
-                 $scope.asset = $scope.selectedAsset;
-                 $scope.title = 'Update domain';
-                 ngDialogManager.open({
-                     template: 'pages/updateDomain.htm',
-                     controller: 'detailController',
-                     scope: $scope
-                 });
-              }
+                $scope.asset = $scope.selectedAsset;
+                $scope.title = 'Update domain';
+                ngDialogManager.open({
+                    template: 'pages/updateDomain.htm',
+                    controller: 'detailController',
+                    scope: $scope
+                });
+            }
 
-              $scope.panelTitle = 'Update Domain';
-              $scope.updateAssetDomain = function () {
-                  var assetToSend = {
-                      name: $scope.asset.individualName,
-                      className: $scope.asset.className,
-                      domainName: $scope.asset.domainName
-                  }
-                  var domain =  $scope.asset.domainName.split('#')[1];
-                  entityManager.updateAsset($scope.asset.individualName, assetToSend)
-                      .then(function () {
-                          ngNotifier.success();
-                          $scope.closePanelUpdateDomain();
-                          $scope.selectedAsset.domain = domain;
-                          if($scope.groupingType === 'domains')
+            $scope.panelTitle = 'Update Domain';
+            $scope.updateAssetDomain = function () {
+                var assetToSend = {
+                    name: $scope.asset.individualName,
+                    className: $scope.asset.className,
+                    domainName: $scope.asset.domainName
+                }
+                var domain = $scope.asset.domainName.split('#')[1];
+                entityManager.updateAsset($scope.asset.individualName, assetToSend)
+                    .then(function () {
+                        ngNotifier.success();
+                        $scope.closePanelUpdateDomain();
+                        $scope.selectedAsset.domain = domain;
+                        if ($scope.groupingType === 'domains')
                             $scope.groupingName = domain;
-                          $route.reload();
-                      }, function (err) {
-                          ngNotifier.error(err);
-                      })
-              }
+                        $route.reload();
+                    }, function (err) {
+                        ngNotifier.error(err);
+                    })
+            }
 
-              $scope.closePanelUpdateDomain = function () {
-                  $scope.asset = null;
-                  ngDialogManager.close();
-              }
+            $scope.closePanelUpdateDomain = function () {
+                $scope.asset = null;
+                ngDialogManager.close();
+            }
 
-             //OCB Section
-             $scope.selectedOcbAsset = [];
-                 $scope.openConfirmOperationPanel = function () {
-                     $scope.selectedOcbAsset = $scope.selectedAsset;
-                     if (isEmpty($scope.selectedOcbAsset)) {
-                         ngNotifier.warn("Select assets please!");
-                         return;
-                     }
-                     entityManager.getOrionConfigs().then(function (response) {
-                         $scope.orionConfigsList = response.data;
-                     }, function (error) {
-                         ngNotifier.error(error);
-                     });
-                     $scope.typeToAdd = 'Orion Context Broker';
-                     $scope.subTypeToAdd = 'createInOCB';
-                     $scope.titleOperationMessage = 'Create assets to the ';
-                     $scope.operationMessage = 'Are you sure you want to create these ' + $scope.selectedOcbAsset.length + ' assets into the ';
-                     ngDialogManager.open({
-                         template: 'pages/createContexts.htm',
-                         controller: 'confirmNewOperationController',
-                         scope: $scope
-                     });
-              }
+            //OCB Section
+            $scope.selectedOcbAsset = [];
+            $scope.openConfirmOperationPanel = function () {
+                $scope.selectedOcbAsset = $scope.selectedAsset;
+                if (isEmpty($scope.selectedOcbAsset)) {
+                    ngNotifier.warn("Select assets please!");
+                    return;
+                }
+                entityManager.getOrionConfigs().then(function (response) {
+                    $scope.orionConfigsList = response.data;
+                }, function (error) {
+                    ngNotifier.error(error);
+                });
+                $scope.typeToAdd = 'Orion Context Broker';
+                $scope.subTypeToAdd = 'createInOCB';
+                $scope.titleOperationMessage = 'Create assets to the ';
+                $scope.operationMessage = 'Are you sure you want to create these ' + $scope.selectedOcbAsset.length + ' assets into the ';
+                ngDialogManager.open({
+                    template: 'pages/createContexts.htm',
+                    controller: 'confirmNewOperationController',
+                    scope: $scope
+                });
+            }
 
-             $scope.originalController = Scopes.get('detailController');
-             $scope.createAssetsToOCB = function (selectedOrionConfigId) {
-              var selectedAssetsJson = [];
-              var selectedAssetJson = {
-                     name:  $scope.selectedOcbAsset.individualName,
-                     className:  $scope.selectedOcbAsset.className,
-                     domainName:  $scope.selectedOcbAsset.domain,
-                     orionConfigId: selectedOrionConfigId
-              };
-              selectedAssetsJson.push(selectedAssetJson);
-               entityManager.createAssetsToOCB(selectedAssetsJson)
-                     .then(function (response) {
-                         console.log(JSON.stringify(response.data));
-                         ngNotifier.success("Asset correctly added to the Orion Context Broker.");
-                         $scope.isOCBEnabled = true;
-                         $scope.selectedAsset.connectedToOrion = selectedOrionConfigId;
-                         $route.reload();
-                     }, function (error) {
-                         ngNotifier.error(error);
-                     });
-             }
+            $scope.originalController = Scopes.get('detailController');
+            $scope.createAssetsToOCB = function (selectedOrionConfigId) {
+                var selectedAssetsJson = [];
+                var selectedAssetJson = {
+                    name: $scope.selectedOcbAsset.individualName,
+                    className: $scope.selectedOcbAsset.className,
+                    domainName: $scope.selectedOcbAsset.domain,
+                    orionConfigId: selectedOrionConfigId
+                };
+                selectedAssetsJson.push(selectedAssetJson);
+                entityManager.createAssetsToOCB(selectedAssetsJson)
+                    .then(function (response) {
+                        console.log(JSON.stringify(response.data));
+                        ngNotifier.success("Asset correctly added to the Orion Context Broker.");
+                        $scope.isOCBEnabled = true;
+                        $scope.selectedAsset.connectedToOrion = selectedOrionConfigId;
+                        $route.reload();
+                    }, function (error) {
+                        ngNotifier.error(error);
+                    });
+            }
 
-             $scope.selectedAssetNameToDisconnect = null;
-             $scope.openDisconnectFromOCB = function (assetName) {
-                 $scope.selectedAssetNameToDisconnect = assetName;
-                 $scope.typeToAdd = 'Orion Context Broker';
-                 $scope.subTypeToAdd = 'disconnectFromOCB';
-                 $scope.titleOperationMessage = 'Disconnect asset from the ';
-                 $scope.operationMessage = 'Are you sure you want to disconnect this asset from the ';
-                 $scope.operationName = "Disconnect";
-                 ngDialogManager.open({
-                     template: 'pages/confirmNewOperation.htm',
-                     controller: 'confirmNewOperationController',
-                     scope: $scope
-                 });
-             }
+            $scope.downloadAssetsForIDAS = function (selectedAsset) {
+                var selectedAssetsJson = [];
+                var selectedAssetJson = {
+                    name: selectedAsset.individualName,
+                    className: selectedAsset.className,
+                    domainName: selectedAsset.domain
+                };
+                selectedAssetsJson.push(selectedAssetJson);
+                entityManager.downloadAssetsForIDAS(selectedAssetsJson)
+                    .then(function (response) {
+                        var data = response.data;
+                        console.log(JSON.stringify(data));
+                        var url = URL.createObjectURL(new Blob([data]));
+                        var a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'config_'+selectedAsset.individualName+'.json';
+                        a.target = '_blank';
+                        a.click();
+                    }, function (error) {
+                        ngNotifier.error(error);
+                    });
+            }
 
-             $scope.disconnectAssetFromOCB = function () {
-                 entityManager.disconnectAssetsFromOCB($scope.selectedAssetNameToDisconnect)
-                     .then(function (response) {
-                         ngNotifier.success('Asset correctly disconnected from the Orion Context Broker.');
-                         $scope.isOCBEnabled = false;
-                          $scope.selectedAsset.connectedToOrion = '';
-                         $route.reload();
-                     }, function (error) {
-                         ngNotifier.error(error);
-                     });
-             }
+            $scope.selectedAssetNameToDisconnect = null;
+            $scope.openDisconnectFromOCB = function (assetName) {
+                $scope.selectedAssetNameToDisconnect = assetName;
+                $scope.typeToAdd = 'Orion Context Broker';
+                $scope.subTypeToAdd = 'disconnectFromOCB';
+                $scope.titleOperationMessage = 'Disconnect asset from the ';
+                $scope.operationMessage = 'Are you sure you want to disconnect this asset from the ';
+                $scope.operationName = "Disconnect";
+                ngDialogManager.open({
+                    template: 'pages/confirmNewOperation.htm',
+                    controller: 'confirmNewOperationController',
+                    scope: $scope
+                });
+            }
+
+            $scope.disconnectAssetFromOCB = function () {
+                entityManager.disconnectAssetsFromOCB($scope.selectedAssetNameToDisconnect)
+                    .then(function (response) {
+                        ngNotifier.success('Asset correctly disconnected from the Orion Context Broker.');
+                        $scope.isOCBEnabled = false;
+                        $scope.selectedAsset.connectedToOrion = '';
+                        $route.reload();
+                    }, function (error) {
+                        ngNotifier.error(error);
+                    });
+            }
         }]);

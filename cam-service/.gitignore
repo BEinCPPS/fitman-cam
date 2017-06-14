@@ -5,3 +5,4 @@ target/*
 .project
 *.iml
 .idea/
+/src/test/test.iml

@@ -1,8 +1,11 @@
 package it.eng.cam.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.eng.cam.rest.orion.AssetToContextTrasformer;
 import it.eng.cam.rest.orion.OrionRestClient;
 import it.eng.cam.rest.orion.context.ContextElement;
+import it.eng.cam.rest.idas.AssetToIDASMappingTrasformer;
+import it.eng.cam.rest.idas.IDASMappingContext;
 import it.eng.cam.rest.security.project.Project;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
 import it.eng.cam.rest.sesame.SesameRepoManager;
@@ -254,7 +257,7 @@ public class CAMRestImpl {
         List<OrionConfig> orionConfigs = getOrionConfigs(dao);
         List<ContextElement> contextElements = null;
         try {
-            contextElements = AssetToContextTrasformer.transformAll(dao, assetJSONs);
+            contextElements = AssetToContextTrasformer.transformAll(dao, assetJSONs, true);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -357,13 +360,13 @@ public class CAMRestImpl {
                 if (null != attributesByNS && attributesByNS.size() > 0) {
                     for (PropertyValueItem attribute : attributesByNS) {
                         if (attribute.getNormalizedName().equalsIgnoreCase(OrionConfig.hasURL)
-                                || attribute.getNormalizedName().equals(BeInCpps.SYSTEM_NS + OrionConfig.hasURL))
+                                || attribute.getNormalizedName().equalsIgnoreCase(BeInCpps.SYSTEM_NS + OrionConfig.hasURL))
                             orionConfig.setUrl(attribute.getPropertyValue());
-                        else if (attribute.getNormalizedName().contains(OrionConfig.hasService)
-                                || attribute.getNormalizedName().equals(BeInCpps.SYSTEM_NS + OrionConfig.hasService))
+                        else if (attribute.getNormalizedName().equalsIgnoreCase(OrionConfig.hasService)
+                                || attribute.getNormalizedName().equalsIgnoreCase(BeInCpps.SYSTEM_NS + OrionConfig.hasService))
                             orionConfig.setService(attribute.getPropertyValue());
-                        else if (attribute.getNormalizedName().contains(OrionConfig.hasServicePath)
-                                || attribute.getNormalizedName().equals(BeInCpps.SYSTEM_NS + OrionConfig.hasServicePath))
+                        else if (attribute.getNormalizedName().equalsIgnoreCase(OrionConfig.hasServicePath)
+                                || attribute.getNormalizedName().equalsIgnoreCase(BeInCpps.SYSTEM_NS + OrionConfig.hasServicePath))
                             orionConfig.setServicePath(attribute.getPropertyValue());
                     }
                 }
@@ -443,5 +446,16 @@ public class CAMRestImpl {
         SesameRepoManager.releaseRepoDaoConn(dao);
         dao = SesameRepoManager.getRepoInstance(null);
         return dao;
+    }
+
+
+    public static String exportContextsToDownloadableFile(RepositoryDAO dao, List<AssetJSON> assetJSONs) throws Exception {
+        if (null == assetJSONs || assetJSONs.isEmpty())
+            throw new IllegalArgumentException("No Context in input");
+        List<IDASMappingContext> contextElements = AssetToIDASMappingTrasformer.transformAll(dao, assetJSONs, false);
+        if (null == contextElements || contextElements.isEmpty())
+            throw new IllegalStateException("No assets transformed in contexts.");
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(contextElements);
     }
 }

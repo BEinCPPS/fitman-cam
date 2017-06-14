@@ -23,7 +23,9 @@ import org.eclipse.rdf4j.model.vocabulary.OWL;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -1024,6 +1026,30 @@ public class CAMRest {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
     }
+
+
+    @POST
+    @Path("/orion/download")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
+    @Produces({"application/json"})
+    public Response downloadContexts(List<AssetJSON> assetJSONs) throws IOException {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            String jsonFile = CAMRestImpl.exportContextsToDownloadableFile(repoInstance, assetJSONs);
+            return Response
+                    .ok(jsonFile.getBytes(), MediaType.APPLICATION_OCTET_STREAM)
+                    .header("content-disposition","attachment; filename = contexts.json")
+                    .build();
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
+
 
     @POST
     @Path("/orion/config")

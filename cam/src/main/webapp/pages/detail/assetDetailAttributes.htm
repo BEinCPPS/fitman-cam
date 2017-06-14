@@ -13,6 +13,10 @@
             ng-click="openDisconnectFromOCB(selectedAsset.individualName)">
         <i class="fa fa-chain-broken cam-table-button"></i> Disconnect from {{selectedAsset.connectedToOrion}}
     </button>
+    <button type="button" data-toggle="tooltip"  title="Download assets for IDAS" class="cam-btn-add-container"
+            ng-click="downloadAssetsForIDAS(selectedAsset)">
+        <i class="fa fa-download cam-table-button"></i> Download IDAS configuration
+    </button>
 </div>
 <div id="asset-detail-table" class="cam-asset-detail-table-container">
     <table asset-table="assetDetailOverrideOptions" aa-data="selectedAsset.attributes"
