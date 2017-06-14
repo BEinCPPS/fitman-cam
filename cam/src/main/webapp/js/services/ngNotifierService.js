@@ -12,10 +12,10 @@ camApp.factory('ngNotifier', ['toastr', '${authentication.service}', function (t
         console.log(error);
         if (typeof error === 'object' && error.error)
             error = error.error.message;
-        else if (typeof error === 'object' && error.statusText) {
+        else if (typeof error === 'object' && typeof error.statusText !== 'undefined' &&  error.statusText !== null) {
             error = error.data + ' <br/> ' + error.statusText;
         }
-        if (typeof error === 'object' && error.message && error.message.indexOf('ERROR_NOT_LOGGED') != -1)
+        if (typeof error === 'object' && error.message &&  error.message.indexOf('ERROR_NOT_LOGGED') != -1)
             return;
 
         toastr.error(error, 'Error');
