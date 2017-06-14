@@ -1032,15 +1032,15 @@ public class CAMRest {
     @Path("/orion/download")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces({"application/json"})
-    public Response downloadContexts(List<AssetJSON> assetJSONs) throws IOException {
+    public String downloadContexts(List<AssetJSON> assetJSONs) throws IOException {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            String jsonFile = CAMRestImpl.exportContextsToDownloadableFile(repoInstance, assetJSONs);
-            return Response
-                    .ok(jsonFile.getBytes(), MediaType.APPLICATION_OCTET_STREAM)
-                    .header("content-disposition","attachment; filename = contexts.json")
-                    .build();
+            return CAMRestImpl.exportContextsToDownloadableFile(repoInstance, assetJSONs);
+//            return Response
+//                    .ok(jsonFile.getBytes(), MediaType.APPLICATION_OCTET_STREAM)
+//                    .header("content-disposition","attachment; filename = contexts.json")
+//                    .build();
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());
@@ -1048,7 +1048,6 @@ public class CAMRest {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
     }
-
 
 
     @POST
