@@ -5,6 +5,9 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
 
     // create a new object
     var entityManager = {};
+    var ignoreLoadingBar = {
+        ignoreLoadingBar: true
+    };
 
     function rejectNotLoggedCall() {
         var defer = $q.defer();
@@ -25,7 +28,7 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
 
     entityManager.getClasses = function () {
         if (auth.isLoggedIn())
-            return $http.get(BACK_END_URL_CONST + '/classes');
+            return $http.get(BACK_END_URL_CONST + '/classes', ignoreLoadingBar);
         else
             return rejectNotLoggedCall();
     }
@@ -48,7 +51,7 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
 
     entityManager.getDomains = function () {
         if (auth.isLoggedIn()) {
-            var cache = {cache: true};
+            var cache = {cache: true, ignoreLoadingBar: true};
             return $http.get(BACK_END_URL_CONST + '/domains', cache);
         } else
             return rejectNotLoggedCall();
@@ -56,7 +59,7 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
 
     entityManager.getAncestors = function (className) {
         if (auth.isLoggedIn())
-            return $http.get(BACK_END_URL_CONST + '/classes/ancestors/' + className);
+            return $http.get(BACK_END_URL_CONST + '/classes/ancestors/' + className, ignoreLoadingBar);
         else
             return rejectNotLoggedCall();
     }
@@ -219,13 +222,13 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
 
     entityManager.disconnectAssetsFromOCB = function (selectedAsset) {
         if (auth.isLoggedIn())
-            return $http.delete(BACK_END_URL_CONST + '/orion/contexts/' + selectedAsset);
+            return $http.delete(BACK_END_URL_CONST + '/orion/contexts/' + selectedAsset, ignoreLoadingBar);
         else
             return rejectNotLoggedCall();
     }
 
     entityManager.getOrionConfigs = function () {
-        return $http.get(BACK_END_URL_CONST + '/orion/config');
+        return $http.get(BACK_END_URL_CONST + '/orion/config', ignoreLoadingBar);
     }
 
     entityManager.editOrionConfigs = function (selectedOrionConfigs) {
@@ -247,7 +250,8 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
     }
     entityManager.downloadAssetsForIDAS = function (selectedAssets) {
         var config = {
-            responseType: 'arraybuffer'
+            responseType: 'arraybuffer',
+            ignoreLoadingBar: true
         };
         if (auth.isLoggedIn())
             return $http.post(BACK_END_URL_CONST + '/orion/download', selectedAssets, config);
