@@ -371,6 +371,10 @@ public class CAMRest {
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             CAMRestImpl.removeProperty(repoInstance, assetName, attributeName);
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             CAMRestImpl.setAttribute(repoInstance, attribute.getName(), assetName, attribute.getValue(),
                     attribute.getType());
@@ -497,9 +501,6 @@ public class CAMRest {
             CAMRestImpl.removeProperty(repoInstance, assetName, relationshipName);
         } catch (Exception e) {
             logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
         try {
             repoInstance = SesameRepoManager.getRepoInstance(null);
@@ -745,12 +746,8 @@ public class CAMRest {
             CAMRestImpl.removeProperty(repoInstance, modelName, attributeName);
         } catch (Exception e) {
             logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
         try {
-            repoInstance = SesameRepoManager.getRepoInstance(null);
             CAMRestImpl.setAttribute(repoInstance, attribute.getName(), modelName, attribute.getValue(),
                     attribute.getType());
             return Response.ok(

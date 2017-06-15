@@ -23,11 +23,11 @@ var OAUTH_LOGIN_URL = KEYROCK_URL + '/oauth2/authorize?response_type=token&clien
     '&redirect_uri=' + callback_uri;
 var OAUTH_USER_LOGGED_URL = KEYROCK_URL + '/user?access_token=';
 
-const EVERYTHING = '(EVERYTHING)';
-const NO_DOMAIN = 'NO_DOMAIN';
-const OAUTH = 'oAuth';
-const AUTH = 'auth';
+var EVERYTHING = '(EVERYTHING)';
+var NO_DOMAIN = 'NO_DOMAIN';
+var OAUTH = 'oAuth';
+var AUTH = 'auth';
 
-const GROUPING_CLASS_TYPE = "class";
-const GROUPING_DOMAIN_TYPE = "domain";
-const GROUPING_ORION_CONFIG_TYPE = "orionConfig";
+var GROUPING_CLASS_TYPE = "class";
+var GROUPING_DOMAIN_TYPE = "domain";
+var GROUPING_ORION_CONFIG_TYPE = "orionConfig";

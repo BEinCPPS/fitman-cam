@@ -193,16 +193,16 @@ camApp.controller('detailController',
 
             $scope.isAttributes = true;
             $scope.isTabAttrsActive = 'active';
-            $scope.isTabRelsActive = 'not-active';
+            $scope.isTabRelsActive = 'not-active-tab';
             $scope.changeTab = function (type) {
                 if (type === ATTRIBUTES) {
                     $scope.isAttributes = true;
                     $scope.isTabAttrsActive = 'active';
-                    $scope.isTabRelsActive = 'not-active';
+                    $scope.isTabRelsActive = 'not-active-tab';
                 }
                 else if (type === RELATIONSHIPS) {
                     $scope.isAttributes = false;
-                    $scope.isTabAttrsActive = 'not-active';
+                    $scope.isTabAttrsActive = 'not-active-tab';
                     $scope.isTabRelsActive = 'active';
                 }
             }

@@ -633,6 +633,6 @@ div#orionConfigFormGroup {
   display: none !important;
 }
 
-.not-active {
+.not-active-tab {
     cursor: pointer;
 }
