@@ -304,7 +304,8 @@ camApp.controller('detailController',
                         var url = URL.createObjectURL(new Blob([data]));
                         var a = document.createElement('a');
                         a.href = url;
-                        a.download = 'config_'+selectedAsset.individualName+'.json';
+                        // a.download = 'config_'+selectedAsset.individualName+'.json';
+                        a.download = 'config-idas.json';
                         a.target = '_blank';
                         a.click();
                     }, function (error) {

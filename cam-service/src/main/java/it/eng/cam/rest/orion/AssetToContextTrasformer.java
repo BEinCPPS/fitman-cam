@@ -68,6 +68,8 @@ public class AssetToContextTrasformer {
             if (propertyValueItem.getNormalizedName().contains(BeInCpps.ownedBy)
                     || propertyValueItem.getNormalizedName().contains(BeInCpps.createdOn)
                     || propertyValueItem.getNormalizedName().contains(BeInCpps.instanceOf)
+                    || propertyValueItem.getNormalizedName().contains(BeInCpps.syncTo)
+                    || propertyValueItem.getPropertyType().getSimpleName().equalsIgnoreCase("Object") //Relationships
                     ) continue;
             Attribute attribute = new Attribute();
             attribute.setName(propertyValueItem.getNormalizedName());
