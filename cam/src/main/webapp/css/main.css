@@ -632,3 +632,7 @@ div#orionConfigFormGroup {
 [ng\:cloak], [ng-cloak], .ng-cloak {
   display: none !important;
 }
+
+.not-active-tab {
+    cursor: pointer;
+}

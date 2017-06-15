@@ -1,31 +1,31 @@
 (function (l) {
-    l.module("angularTreeview", []).directive("treeModel",['currentNode', '$compile', function (currentNode, $compile) {
+    l.module("angularTreeview", []).directive("treeModel", ['currentNode', '$compile', function (currentNode, $compile) {
         return {
             restrict: "A",
             link: function (a, g, c) {
                 var e = c.treeModel
                     , h = c.nodeLabel || "label"
                     , d = c.nodeChildren || "children"
-                    , l = String(c.rightClickEnabled) == "true"? true :false
-                    , m = l ? 'ng-right-click="classRightClicked($event)"':  ''
-                    , n = l ? 'data-context-menu="pages/ctxtMenu.htm"' :''
+                    , l = String(c.rightClickEnabled) == "true" ? true : false
+                    , m = l ? 'ng-right-click="classRightClicked($event)"' : ''
+                    , n = l ? 'data-context-menu="pages/ctxtMenu.htm"' : ''
                     , o = c.iconClassName
                     , k = '<ul id="home-tree-nodes">' +
                     '<li data-ng-repeat="node in ' + e + '">' +
-                    '<i class="collapsed '+o+'" data-ng-show="node.' + d + '.length && node.collapsed"' +
-                         ' data-ng-click="selectNodeHead(node, $event)"></i>' +
-                    '<i class="expanded '+o+'" data-ng-show="node.' + d + '.length && !node.collapsed" ' +
-                        'data-ng-click="selectNodeHead(node, $event)">' +
+                    '<i class="collapsed ' + o + '" data-ng-show="node.' + d + '.length && node.collapsed"' +
+                    ' data-ng-click="selectNodeHead(node, $event)"></i>' +
+                    '<i class="expanded ' + o + '" data-ng-show="node.' + d + '.length && !node.collapsed" ' +
+                    'data-ng-click="selectNodeHead(node, $event)">' +
                     '</i>' +
-                    '<i class="normal '+o+'" data-ng-hide="node.' +
+                    '<i class="normal ' + o + '" data-ng-hide="node.' +
                     d + '.length"></i>' +
-                    ' <span '+m+'" ' +
+                    ' <span ' + m + '" ' +
                     'data-ng-class="node.selected" data-ng-click="selectNodeLabel(node, $event)" ' +
-                     n+' ng-model="node">{{node.' + h + '}}</span>' +
+                    n + ' ng-model="node">{{node.' + h + '}}</span>' +
                     '<div data-ng-hide="node.collapsed" data-tree-model="node.' + d +
                     '" data-node-id=' + (c.nodeId || "id") + " " +
-                    "data-node-label=" + h + " data-node-children=" + d + " data-icon-class-name=\""+o+"\" " +
-                    "data-right-click-enabled=\""+l+"\" >" +
+                    "data-node-label=" + h + " data-node-children=" + d + " data-icon-class-name=\"" + o + "\" " +
+                    "data-right-click-enabled=\"" + l + "\" >" +
                     "</div>" +
                     "</li></ul>";
                 e && e.length && (c.angularTreeview ? (a.$watch(e, function (m, b) {
@@ -47,11 +47,11 @@
                                 a.currentNode && a.currentNode.selected && (a.currentNode.selected = void 0);
                                 c.selected = "selected";
                                 a.currentNode = c;
-                                if(a.currentNode.className)
+                                if (a.currentNode.className)
                                     currentNode.setClass(a.currentNode);
-                                else if(a.currentNode.name)
+                                else if (a.currentNode.name)
                                     currentNode.setDomain(a.currentNode);
-                                else if(a.currentNode.id) {
+                                else if (a.currentNode.id) {
                                     currentNode.setOrionConfig(a.currentNode);
                                     a.isEditing = false;
                                     a.isNew = false;

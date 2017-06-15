@@ -57,3 +57,6 @@ camApp.config(function(toastrConfig) {
     });
 });
 
+camApp.config(function(cfpLoadingBarProvider) {
+    cfpLoadingBarProvider.latencyThreshold = 500;
+});
