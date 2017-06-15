@@ -64,6 +64,7 @@ public class AssetToIDASMappingTrasformer {
             if (propertyValueItem.getNormalizedName().contains(BeInCpps.ownedBy)
                     || propertyValueItem.getNormalizedName().contains(BeInCpps.createdOn)
                     || propertyValueItem.getNormalizedName().contains(BeInCpps.instanceOf)
+                    || propertyValueItem.getNormalizedName().contains(BeInCpps.syncTo)
                     ) continue;
             IDASMappingAttribute attribute = new IDASMappingAttribute();
             attribute.setOcb_id(propertyValueItem.getNormalizedName());
