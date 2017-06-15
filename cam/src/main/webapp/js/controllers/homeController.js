@@ -85,6 +85,7 @@ camApp.controller('homeController', [
                         search(array[i].children, name);
                     }
                 }
+
                 var promise = entityManager.getAncestors(elem);
                 var isLeaf = false;
                 promise.then(function (response) {
@@ -98,6 +99,7 @@ camApp.controller('homeController', [
                     ngNotifier.error(error);
                 });
             }
+
             function expandDomains() {
                 for (var i in $scope.domainsList) {
                     if ($scope.domainsList[i].name === elem) {
@@ -113,10 +115,11 @@ camApp.controller('homeController', [
                     }
                 }
             }
-            if(grouping === GROUPING_CLASS_TYPE)
-                expandClasses();    
-             else
-                expandDomains();   
+
+            if (grouping === GROUPING_CLASS_TYPE)
+                expandClasses();
+            else
+                expandDomains();
         }
 
         entityManager.getClasses()
@@ -125,61 +128,61 @@ camApp.controller('homeController', [
             }, function (error) {
                 ngNotifier.error(error);
             }).then(function () {
-                if (!isEmpty($routeParams.className)) {
-                    $scope.currentNode = {};
-                    $scope.currentNode.className = currentNode.getClass().className;
-                    // $routeParams.className;
-                    $scope.getAssets($routeParams.className, true);
-                    if ($scope.currentNode && $scope.currentNode.className)
-                        $scope.expandAncestors($scope.currentNode.className, GROUPING_CLASS_TYPE);
-                    $scope.newAssetVisible = true;
-                } else {
-                    if (currentNode.getClass() && currentNode.getClass().className) {
-                        $scope.currentNode = currentNode.getClass();
-                        $scope.expandAncestors($scope.currentNode.className, GROUPING_CLASS_TYPE);
-                    }
+            if (!isEmpty($routeParams.className)) {
+                $scope.currentNode = {};
+                $scope.currentNode.className = currentNode.getClass().className;
+                // $routeParams.className;
+                $scope.getAssets($routeParams.className, true);
+                if ($scope.currentNode && $scope.currentNode.className)
+                    $scope.expandAncestors($scope.currentNode.className, GROUPING_CLASS_TYPE);
+                $scope.newAssetVisible = true;
+            } else {
+                if (currentNode.getClass() && currentNode.getClass().className) {
+                    $scope.currentNode = currentNode.getClass();
+                    $scope.expandAncestors($scope.currentNode.className, GROUPING_CLASS_TYPE);
                 }
-            });
+            }
+        });
         $scope.columnDefs = [
-        {
-            "mDataProp": "connectedToOrion",
-            "aTargets": [0],
-            "bSortable": false,
-            "fnRender": function (data) {
-            var connectedTo = data.aData.connectedToOrion;
-            if (!isEmpty(connectedTo))
-                return '<i class="fa fa-globe" aria-hidden="true" data-toggle="tooltip" data-original-title="Connected with ' + connectedTo + '"></i>';
-            else
-                return '';
+            {
+                "mDataProp": "connectedToOrion",
+                "aTargets": [0],
+                "bSortable": false,
+                "fnRender": function (data) {
+                    var connectedTo = data.aData.connectedToOrion;
+                    if (!isEmpty(connectedTo))
+                        return '<i class="fa fa-globe" aria-hidden="true" data-toggle="tooltip" data-original-title="Connected with ' + connectedTo + '"></i>';
+                    else
+                        return '';
 
-            }
-        },
-        {
-            "mDataProp": "individualName",
-            "aTargets": [1],
-            "bSearchable": true
-        },
-        {
-            "mDataProp": "className",
-            "aTargets": [2],
-            "bSearchable": true
-        }, {
-            "mDataProp": "domain",
-            "aTargets": [3],
-            "bSearchable": true,
-            "fnRender": function (data) {
-                var retVal = data.aData.domain;
-                return '<span aria-hidden="true" ></span>&nbsp;' + retVal;
-            }
-        }, {
-            "mDataProp": "createdOn",
-            "aTargets": [4],
-            "bSortable": true
-        }, {
-            "mDataProp": "action",
-            "aTargets": [5],
-            "bSortable": false
-        }];
+                }
+            },
+            {
+                "mDataProp": "individualName",
+                "aTargets": [1],
+                "bSearchable": true
+            },
+            {
+                "mDataProp": "className",
+                "aTargets": [2],
+                "bSearchable": true
+            }, {
+                "mDataProp": "domain",
+                "aTargets": [3],
+                "bSearchable": true,
+                "fnRender": function (data) {
+                    var retVal = data.aData.domain;
+                    return '<span aria-hidden="true" ></span>&nbsp;' + retVal;
+                }
+            }, {
+                "mDataProp": "createdOn",
+                "aTargets": [4],
+                "bSortable": true
+            }, {
+                "mDataProp": "action",
+                "aTargets": [5],
+                "bSortable": false
+            }];
 
         $scope.overrideOptions = {
             "bStateSave": true,
@@ -208,6 +211,7 @@ camApp.controller('homeController', [
             if (clsName) {
                 if ($scope.currentNode.className.toUpperCase() == EVERYTHING) {
                     clsName = '';
+                    $scope.newAssetVisible = false;
                 }
                 entityManager.getChildrenForClass(clsName)
                     .then(function (response) {
@@ -239,9 +243,11 @@ camApp.controller('homeController', [
                 var clsName = $scope.currentNode.className;
                 if ($scope.currentNode.className.toUpperCase() == EVERYTHING) {
                     clsName = '';
+                    $scope.newAssetVisible = false;
                 }
                 $scope.getAssets(clsName, true);
-                $scope.newAssetVisible = true;
+                if (clsName !== '')
+                    $scope.newAssetVisible = true;
             } else {
                 $scope.assetList = [];
                 $scope.newAssetVisible = false;
@@ -271,9 +277,9 @@ camApp.controller('homeController', [
                         scope: $scope
                     });
                 }).error(function (error) {
-                    $scope.domainsList = [];
-                    ngNotifier.error(error);
-                });
+                $scope.domainsList = [];
+                ngNotifier.error(error);
+            });
         }
 
         $scope.openNewAssetPanel = function (selectedModel) {
@@ -454,7 +460,7 @@ camApp.controller('homeController', [
         }
 
         $scope.openDetail = function (value, groupingType, groupingName) {
-            $location.path('/detail/' + value + '/' + groupingType + '/'+ groupingName);
+            $location.path('/detail/' + value + '/' + groupingType + '/' + groupingName);
             $scope.selectedAsset = $scope.assetMap[value];
         }
     }]);
