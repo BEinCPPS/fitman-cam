@@ -1,0 +1,15 @@
+<configuration>
+    <!-- LOGBACK logging config file, see http://logback.qos.ch/manual/joran.html -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <!-- http://logback.qos.ch/manual/layouts.html#ClassicPatternLayout -->
+            <Pattern>%-5level %msg [%logger{16} %d{HH:mm:ss}]%n</Pattern>
+        </layout>
+    </appender>
+
+    <root level="error">
+        <appender-ref ref="STDOUT" />
+    </root>
+    <logger name="org.apache" level="ERROR" />
+    <logger name="httpclient.wire" level="ERROR" />
+</configuration>

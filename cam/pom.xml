@@ -12,7 +12,7 @@
     <!-- oAuth, OAuth2 Supported at the moment -->
     <!-- Auth, is Keystone method authentication-->
     <properties>
-        <authentication.service>Auth</authentication.service>
+        <authentication.service>oAuth</authentication.service>
         <keyrock.url>http://161.27.159.76</keyrock.url>
         <!-- OAUTH2 CLIENT ID-->
         <client.id>6a636dc9ff1d4e4395ae01c60fb9d3b5</client.id>

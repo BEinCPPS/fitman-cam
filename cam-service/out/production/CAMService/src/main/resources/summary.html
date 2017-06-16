@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CAMService REST API</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+          crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+          crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+            crossorigin="anonymous"></script>
+</head>
+<style>
+    body {
+         font-family: 'Roboto', sans-serif;
+         font-size: 14px;
+         -webkit-font-smoothing: antialiased;
+         -moz-osx-font-smoothing: grayscale;
+        }
+</style>
+<body>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="jumbotron">
+            <h1 class="display-3">Fitman CAM</h1>
+            <p><label class="text-bold"> artifactInfo</label>
+        </div>
+        <table style="width: 100%" class="table table-striped table-bordered">
+            <tr>
+                <th style="text-align: left">Method</th>
+                <th style="text-align: left">Path</th>
+                <th style="text-align: left">Produces</th>
+                <th style="text-align: left">Consumes</th>
+                <th style="text-align: left">Name</th>
+                <th style="text-align: left">Role</th>
+            </tr>
+            <tr></tr>
+            <tr></tr>
+            <tr>
+                <td>POST</td>
+                <td>/authenticate</td>
+                <td>JSON{String}</td>
+                <td>JSON{String}</td>
+                <td>authenticate</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/classes</td>
+                <td>JSON</td>
+                <td></td>
+                <td>getClasses</td>
+                <td>BASIC</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/classes/ancestors/{className}</td>
+                <td>JSON</td>
+                <td></td>
+                <td>getTreePath</td>
+                <td>BASIC</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/classes/{className}</td>
+                <td>JSON</td>
+                <td></td>
+                <td>getIndividuals</td>
+                <td>BASIC</td>
+            </tr>
+
+            <tr>
+                <td>POST</td>
+                <td>/classes/{name}/{parentName}</td>
+                <td></td>
+                <td>JSON</td>
+                <td>createClass</td>
+                <td>BASIC</td>
+            </tr>
+            <tr>
+                <td>PUT</td>
+                <td>/classes/{name}/{parentName}</td>
+                <td></td>
+                <td>JSON</td>
+                <td>moveClass</td>
+                <td>BASIC</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/classes/{name}</td>
+                <td></td>
+                <td></td>
+                <td>deleteClass</td>
+                <td>BASIC</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/classes/model/{name}/{className}/{domainName}</td>
+                <td></td>
+                <td>JSON</td>
+                <td>createAssetModel</td>
+                <td>BASIC</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/classes/{name}/{modelName}/{domainName}</td>
+                <td></td>
+                <td>JSON</td>
+                <td>createAsset</td>
+                <td>BASIC</td>
+            </tr>
+            <tr>
+                <td>PUT</td>
+                <td>/classes/{name}/{individualName}/{referredName}</td>
+                <td></td>
+                <td>JSON</td>
+                <td>setRelationship</td>
+                <td>BASIC</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/classes/attribute</td>
+                <td></td>
+                <td>JSON</td>
+                <td>setAttribute</td>
+                <td>BASIC</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/classes/property/{propertyName}/{assetName}</td>
+                <td></td>
+                <td></td>
+                <td>removeProperty</td>
+                <td>BASIC</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/assets</td>
+                <td>JSON</td>
+                <td></td>
+                <td>getIndividuals</td>
+                <td>BASIC</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/assets/{assetName}</td>
+                <td>JSON</td>
+                <td></td>
+                <td>getIndividualAttributes</td>
+                <td>BASIC</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/domains</td>
+                <td>JSON</td>
+                <td>JSON</td>
+                <td>getDomains</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/domains/{domainName}</td>
+                <td>JSON</td>
+                <td>JSON</td>
+                <td>getDomain</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/domains/{domainName}</td>
+                <td></td>
+                <td>JSON</td>
+                <td>createDomain</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/domains/{domainName}</td>
+                <td></td>
+                <td></td>
+                <td>deleteDomain</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>PUT</td>
+                <td>/domains/{domainName}/users</td>
+                <td>JSON</td>
+                <td></td>
+                <td>insertUsersInDomain</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/attributes</td>
+                <td>JSON</td>
+                <td></td>
+                <td>getAttributes</td>
+                <td>BASIC</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/users</td>
+                <td>JSON</td>
+                <td>JSON</td>
+                <td>getUsers</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/users/{username}</td>
+                <td>JSON</td>
+                <td>JSON</td>
+                <td>getUser</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/users/{username}</td>
+                <td>JSON</td>
+                <td></td>
+                <td>deleteUser</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>PUT</td>
+                <td>/users/import</td>
+                <td></td>
+                <td></td>
+                <td>importUsers</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/orion/contexts</td>
+                <td>JSON</td>
+                <td>JSON</td>
+                <td>createContexts</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>PUT</td>
+                <td>/orion/contexts</td>
+                <td>JSON</td>
+                <td>JSON</td>
+                <td>updateContexts</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/orion/contexts/{name}</td>
+                <td></td>
+                <td></td>
+                <td>disconnectFromContext</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/orion/config</td>
+                <td>JSON</td>
+                <td>JSON</td>
+                <td>createOrionConfigs</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>PUT</td>
+                <td>/orion/config</td>
+                <td>JSON</td>
+                <td>JSON</td>
+                <td>editOrionConfigs</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/orion/config</td>
+                <td>JSON</td>
+                <td>JSON</td>
+                <td>getOrionConfigs</td>
+                <td>ADMIN</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/orion/config/{configId}</td>
+                <td></td>
+                <td></td>
+                <td>deleteOrionConfig</td>
+                <td>ADMIN</td>
+            </tr>
+        </table>
+        <div class="panel-footer"><span>2017 &#174; </span><a href="http://www.fiware.org/">FIWARE</a></div>
+    </div>
+</body>
+</html>
+
