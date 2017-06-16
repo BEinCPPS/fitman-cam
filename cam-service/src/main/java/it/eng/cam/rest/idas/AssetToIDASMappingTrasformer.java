@@ -6,6 +6,7 @@ import it.eng.ontorepo.BeInCpps;
 import it.eng.ontorepo.IndividualItem;
 import it.eng.ontorepo.PropertyValueItem;
 import it.eng.ontorepo.RepositoryDAO;
+import it.eng.ontorepo.sesame2.Sesame2RepositoryDAO;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
@@ -45,8 +46,7 @@ public class AssetToIDASMappingTrasformer {
         if (asset == null || StringUtils.isBlank(asset.getName()))
             throw new IllegalArgumentException("No asset in input.");
         IDASMappingContext contextElement = new IDASMappingContext();
-        SesameRepoManager.releaseRepoDaoConn(dao);
-        dao = SesameRepoManager.getRepoInstance(null);
+        dao = SesameRepoManager.restartRepoDaoConn(dao);
         IndividualItem individual = dao.getIndividual(asset.getName());
         if (!useNameSpace)
             contextElement.setId(individual.getNormalizedName());
@@ -56,8 +56,7 @@ public class AssetToIDASMappingTrasformer {
             contextElement.setType(individual.getNormalizedValue());
         else
             contextElement.setType(individual.getClassName());
-        SesameRepoManager.releaseRepoDaoConn(dao);
-        dao = SesameRepoManager.getRepoInstance(null);
+        dao = SesameRepoManager.restartRepoDaoConn(dao);
         List<PropertyValueItem> propertyValueItems = dao.getIndividualAttributes(asset.getName());
         if (null == propertyValueItems || propertyValueItems.isEmpty()) return contextElement;
         for (PropertyValueItem propertyValueItem : propertyValueItems) {

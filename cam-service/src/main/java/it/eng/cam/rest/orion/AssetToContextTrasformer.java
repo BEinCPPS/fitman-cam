@@ -47,8 +47,7 @@ public class AssetToContextTrasformer {
         if (asset == null || StringUtils.isBlank(asset.getName()))
             throw new IllegalArgumentException("No asset in input.");
         ContextElement contextElement = new ContextElement();
-        SesameRepoManager.releaseRepoDaoConn(dao);
-        dao = SesameRepoManager.getRepoInstance(null);
+        dao = SesameRepoManager.restartRepoDaoConn(dao);
         IndividualItem individual = dao.getIndividual(asset.getName());
         if (!useNameSpace)
             contextElement.setId(individual.getNormalizedName());
@@ -60,8 +59,7 @@ public class AssetToContextTrasformer {
             contextElement.setType(individual.getClassName());
         contextElement.setOriginalAssetName(asset.getName());
         contextElement.setOrionConfigId(asset.getOrionConfigId());
-        SesameRepoManager.releaseRepoDaoConn(dao);
-        dao = SesameRepoManager.getRepoInstance(null);
+        dao = SesameRepoManager.restartRepoDaoConn(dao);
         List<PropertyValueItem> propertyValueItems = dao.getIndividualAttributes(asset.getName());
         if (null == propertyValueItems || propertyValueItems.isEmpty()) return contextElement;
         for (PropertyValueItem propertyValueItem : propertyValueItems) {

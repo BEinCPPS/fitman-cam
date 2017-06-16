@@ -54,6 +54,21 @@ public class SesameRepoManager {
         return null;
     }
 
+    public static RepositoryDAO getRepoInstance(String connectionType, Class<?> clazz) {
+        try {
+            if (null != connectionType) {
+                if (connectionType.toLowerCase().contains("http"))
+                    return getRepoInstanceImpl(clazz);
+                else if (connectionType.toLowerCase().contains("memory"))
+                    return getRepoInstanceInMemoryImpl(clazz);
+            } else
+                return getRepoInstance(null);
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        return null;
+    }
+
     public static RepositoryDAO getRepoInstanceImpl(Class<?> clazz) {
         RepositoryDAO repoInstance = new Sesame2RepositoryDAO(SESAME_REPO_URL, SESAME_REPO_NAME, getNamespace());
         if (null != clazz)
@@ -66,7 +81,7 @@ public class SesameRepoManager {
     public static RepositoryDAO getRepoInstanceInMemoryImpl(Class<?> clazz) {
         logger.warn("\nUsing in MEMORY Store Repo\nONLY For DEV Purpose!");
         RepositoryDAO repoInstance = null;
-        URL url = clazz.getResource(SESAME_MEMORY_STORE_DATA_DIR);
+        URL url = SesameRepoManager.class.getResource(SESAME_MEMORY_STORE_DATA_DIR);
         File dataDir = null;
         try {
             dataDir = new File(url.toURI());
@@ -74,8 +89,8 @@ public class SesameRepoManager {
             logger.error(e);
         }
         repoInstance = new Sesame2RepositoryDAO(dataDir, getNamespace());
-        addRdfFileToInstance(repoInstance, clazz, false);
-
+        if (null != clazz)
+            addRdfFileToInstance(repoInstance, clazz, false);
         return repoInstance;
     }
 
@@ -100,6 +115,16 @@ public class SesameRepoManager {
             sRepo.release();
             repoInstance = null;
         }
+    }
+
+    public static RepositoryDAO restartRepoDaoConn(RepositoryDAO repoInstance) {
+        if (repoInstance != null) {
+            Sesame2RepositoryDAO sRepo = (Sesame2RepositoryDAO) repoInstance;
+            String connection = sRepo.getRepo().getConnection().toString();
+            sRepo.release();
+            return getRepoInstance(connection, null);
+        }
+        return null;
     }
 
     public static String getNamespace() {

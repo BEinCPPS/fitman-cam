@@ -430,6 +430,16 @@ public class CAMRestImpl {
         return IndividualtemToAssetTransformer.transformAll(dao, individualsByOrionConfig);
     }
 
+    public static String createIDASMappingFile(RepositoryDAO dao, List<AssetJSON> assetJSONs) throws Exception {
+        if (null == assetJSONs || assetJSONs.isEmpty())
+            throw new IllegalArgumentException("No Context in input");
+        List<IDASMappingContext> contextElements = AssetToIDASMappingTrasformer.transformAll(dao, assetJSONs, false);
+        if (null == contextElements || contextElements.isEmpty())
+            throw new IllegalStateException("No assets transformed in contexts.");
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(contextElements);
+    }
+
     private static String normalizeClassName(String normName) {
         if (null != normName && normName.contains("#") && !normName.contains("system"))
             return normName.substring(normName.indexOf("#") + 1);
@@ -449,13 +459,5 @@ public class CAMRestImpl {
     }
 
 
-    public static String createIDASMappingFile(RepositoryDAO dao, List<AssetJSON> assetJSONs) throws Exception {
-        if (null == assetJSONs || assetJSONs.isEmpty())
-            throw new IllegalArgumentException("No Context in input");
-        List<IDASMappingContext> contextElements = AssetToIDASMappingTrasformer.transformAll(dao, assetJSONs, false);
-        if (null == contextElements || contextElements.isEmpty())
-            throw new IllegalStateException("No assets transformed in contexts.");
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(contextElements);
-    }
+
 }

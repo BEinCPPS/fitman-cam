@@ -215,6 +215,10 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     private final URI ni;
     private final String ns;
 
+    public AbstractRepository getRepo() {
+        return repo;
+    }
+
     /**
      * Constructs a RepositoryDAO for accessing a Reference Ontology in a given
      * Sesame2 Repository. The Repository is identified by a server URL and a

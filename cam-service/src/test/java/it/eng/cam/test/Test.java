@@ -3,10 +3,8 @@ package it.eng.cam.test;
 import it.eng.cam.rest.CAMRestImpl;
 import it.eng.cam.rest.Constants;
 import it.eng.cam.rest.sesame.SesameRepoManager;
-import it.eng.ontorepo.ClassItem;
-import it.eng.ontorepo.IndividualItem;
-import it.eng.ontorepo.OrionConfig;
-import it.eng.ontorepo.RepositoryDAO;
+import it.eng.cam.rest.sesame.dto.AssetJSON;
+import it.eng.ontorepo.*;
 import org.junit.*;
 import org.w3c.dom.Document;
 
@@ -404,7 +402,7 @@ public class Test extends Assert {
     }
 
     @org.junit.Test
-    public void deleteOrionConfig(){
+    public void deleteOrionConfig() {
         try {
             List<OrionConfig> orionConfigs = new ArrayList<>();
             OrionConfig orionConfig = new OrionConfig();
@@ -414,11 +412,59 @@ public class Test extends Assert {
             List<OrionConfig> orionConfigsRet = CAMRestImpl.createOrionConfigs(dao, orionConfigs);
             tearDown();
             setUp();
-            CAMRestImpl.deleteOrionConfig(dao,orionConfig.getId());
+            CAMRestImpl.deleteOrionConfig(dao, orionConfig.getId());
         } catch (Exception e) {
             assertFalse(e.getMessage(), true);
         }
 
+    }
+
+    @org.junit.Test
+    public void createIDASMappingFile() {
+        try {
+            String className = "NewClass_" + getNextRandom();
+            ClassItem root = dao.getClassHierarchy();
+            String parentName = root.getClassName();
+            try {
+                CAMRestImpl.createClass(dao, className, parentName);
+            } catch (Exception e) {
+                assertFalse(e.getMessage(), true);
+            }
+            tearDown();
+            setUp();
+            String assetModelName = "NewAssetModelName_" + getNextRandom();
+            try {
+                CAMRestImpl.createAssetModel(dao, assetModelName, className, DOMAIN_NAME);
+            } catch (Exception e) {
+                assertFalse(e.getMessage(), true);
+            }
+            tearDown();
+            setUp();
+            String assetName = "NewAsset_" + getNextRandom();
+            try {
+                CAMRestImpl.createAsset(dao, assetName, assetModelName, DOMAIN_NAME);
+            } catch (Exception e) {
+                assertFalse(e.getMessage(), true);
+            }
+            IndividualItem individual = dao.getIndividual(assetName);
+            List<IndividualItem> individuals = dao.getIndividuals();
+            List<IndividualItem> individualsFiltered = individuals.stream()
+                    .filter(ind -> ind.getNormalizedName().equals(assetName)).collect(Collectors.toList());
+
+            List<AssetJSON> assetJSONS = individualsFiltered.stream().map(indiv -> {
+                AssetJSON assetJSON = new AssetJSON();
+                assetJSON.setName(indiv.getIndividualName());
+                return assetJSON;
+            }).collect(Collectors.toList());
+            tearDown();
+            setUp();
+            String idasMappingFileJSON = CAMRestImpl.createIDASMappingFile(dao, assetJSONS);
+            assertNotNull(idasMappingFileJSON);
+            assertNotEquals(idasMappingFileJSON,"");
+
+        } catch (Exception e) {
+            assertFalse(e.getMessage(), true);
+        }
     }
 
     private int getNextRandom() {
