@@ -58,7 +58,7 @@ public class SesameRepoManager {
         try {
             if (null != connectionType) {
                 if (connectionType.toLowerCase().contains("http"))
-                    return getRepoInstanceImpl(clazz);
+                    return getRepoInstanceImpl(null);
                 else if (connectionType.toLowerCase().contains("memory"))
                     return getRepoInstanceInMemoryImpl(clazz);
             } else
@@ -81,7 +81,7 @@ public class SesameRepoManager {
     public static RepositoryDAO getRepoInstanceInMemoryImpl(Class<?> clazz) {
         logger.warn("\nUsing in MEMORY Store Repo\nONLY For DEV Purpose!");
         RepositoryDAO repoInstance = null;
-        URL url = SesameRepoManager.class.getResource(SESAME_MEMORY_STORE_DATA_DIR);
+        URL url = clazz.getResource(SESAME_MEMORY_STORE_DATA_DIR);
         File dataDir = null;
         try {
             dataDir = new File(url.toURI());
@@ -122,7 +122,7 @@ public class SesameRepoManager {
             Sesame2RepositoryDAO sRepo = (Sesame2RepositoryDAO) repoInstance;
             String connection = sRepo.getRepo().getConnection().toString();
             sRepo.release();
-            return getRepoInstance(connection, null);
+            return getRepoInstance(connection, repoInstance.getClass());
         }
         return null;
     }
