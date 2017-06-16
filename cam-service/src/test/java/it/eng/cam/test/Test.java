@@ -419,7 +419,7 @@ public class Test extends Assert {
 
     }
 
-    @org.junit.Test
+   // @org.junit.Test
     public void createIDASMappingFile() {
         try {
             String className = "NewClass_" + getNextRandom();
