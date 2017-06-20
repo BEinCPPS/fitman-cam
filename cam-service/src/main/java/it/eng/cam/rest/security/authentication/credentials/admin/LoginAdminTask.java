@@ -67,7 +67,7 @@ public class LoginAdminTask extends TimerTask {
         final JsonObject dataJson = response.readEntity(JsonObject.class);
         final JsonObject tokenJson = dataJson.getJsonObject("token");
         String expiresAt = tokenJson.getString("expires_at");
-        System.out.println("DATE EXPIRES AT: " + expiresAt); //TODO Remove
+        //System.out.println("DATE EXPIRES AT: " + expiresAt); //TODO Remove
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
         return dateFormat.parse(expiresAt);
     }

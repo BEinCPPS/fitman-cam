@@ -377,6 +377,7 @@ public class Test extends Assert {
             individuals = dao.getIndividuals();
             assertNotNull("individuals for class " + className + " are null", individuals);
             assertFalse("Empty individuals list", individuals.isEmpty());
+            tearDown();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -419,7 +420,7 @@ public class Test extends Assert {
 
     }
 
-   // @org.junit.Test
+   //@org.junit.Test
     public void createIDASMappingFile() {
         try {
             String className = "NewClass_" + getNextRandom();
@@ -503,10 +504,6 @@ public class Test extends Assert {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        CAMRestImpl.deleteIndividual(SesameRepoManager.getRepoInstance(Test.class), "http://www.msee-ip.eu/ontology/system#MyService_002d001");
     }
 
 

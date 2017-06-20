@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ContextToAssetTransformer {
 
-    public static List<ContextElement> transformAll(RepositoryDAO dao, List<ContextElement> contextElements) throws java.text.ParseException {
+    public static List<Asset> transformAll(RepositoryDAO dao, List<ContextElement> contextElements) throws java.text.ParseException {
         return doTransformAll(dao, contextElements);
     }
 
@@ -24,7 +24,7 @@ public class ContextToAssetTransformer {
         return doTransform(dao, contextElement);
     }
 
-    private static List<ContextElement> doTransformAll(RepositoryDAO dao, List<ContextElement> contextElements) throws java.text.ParseException {
+    private static List<Asset> doTransformAll(RepositoryDAO dao, List<ContextElement> contextElements) throws java.text.ParseException {
         List<Asset> assets = new ArrayList<>();
         if (contextElements == null) return null;
         contextElements.parallelStream().forEach(contextElement -> {
@@ -34,13 +34,15 @@ public class ContextToAssetTransformer {
                 throw new RuntimeException(e);
             }
         });
-        return contextElements;
+        return assets;
     }
 
     private static Asset doTransform(RepositoryDAO dao, ContextElement contextElement) throws java.text.ParseException {
         if (contextElement == null) throw new IllegalArgumentException("No context in input.");
         Asset asset = new Asset(dao.getImplicitNamespace(), contextElement.getId(), contextElement.getType());
         asset.setCreatedOn(new Date());
+        asset.setConnectedToOrion(contextElement.getOrionConfigId());
+        asset.setDomain(contextElement.getDomainName());
         if (null == contextElement.getAttributes() || contextElement.getAttributes().isEmpty())
             return asset;
         for (Attribute attribute : contextElement.getAttributes()) {

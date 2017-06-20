@@ -926,6 +926,30 @@ public class CAMRest {
             SesameRepoManager.releaseRepoDaoConn(repoInstance);
         }
     }
+
+    @PUT
+    @Path("/assets/{assetName}/orion/refresh")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response refreshAssetFromOCB(@PathParam("assetName") String assetName, AssetJSON assetJSON) {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            if (!isOCBEnabled(assetJSON.getName()))
+                return Response.status(405).entity("Individual " + assetJSON.getName() + " is not linked to Orion").build();
+            CAMRestImpl.refreshAssetFromOCB(repoInstance, assetName, assetJSON);
+            return Response.ok(
+                    "Data refreshing from OCB '" + assetJSON.getOrionConfigId() + "'for Individual '" + assetJSON.getName() + "' was successful!")
+                    .build();
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
+
     // FINE MODELS
 
     // DOMAINS
@@ -1046,24 +1070,6 @@ public class CAMRest {
 
 
     @POST
-    @Path("/orion/download")
-    @RolesAllowed({Role.BASIC, Role.ADMIN})
-    @Produces({"application/json"})
-    public String downloadContexts(List<AssetJSON> assetJSONs) throws IOException {
-        RepositoryDAO repoInstance = null;
-        try {
-            repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            return CAMRestImpl.createIDASMappingFile(repoInstance, assetJSONs);
-        } catch (Exception e) {
-            logger.error(e);
-            throw new CAMServiceWebException(e.getMessage());
-        } finally {
-            SesameRepoManager.releaseRepoDaoConn(repoInstance);
-        }
-    }
-
-
-    @POST
     @Path("/orion/config")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
     @Produces(MediaType.APPLICATION_JSON)
@@ -1146,6 +1152,23 @@ public class CAMRest {
                     .filter(asset ->
                             asset.getNamespace().equalsIgnoreCase(SesameRepoManager.getNamespace()))
                     .collect(Collectors.toList());
+        } catch (Exception e) {
+            logger.error(e);
+            throw new CAMServiceWebException(e.getMessage());
+        } finally {
+            SesameRepoManager.releaseRepoDaoConn(repoInstance);
+        }
+    }
+
+    @POST
+    @Path("/idas/download")
+    @RolesAllowed({Role.BASIC, Role.ADMIN})
+    @Produces({"application/json"})
+    public String downloadContexts(List<AssetJSON> assetJSONs) throws IOException {
+        RepositoryDAO repoInstance = null;
+        try {
+            repoInstance = SesameRepoManager.getRepoInstance(getClass());
+            return CAMRestImpl.createIDASMappingFile(repoInstance, assetJSONs);
         } catch (Exception e) {
             logger.error(e);
             throw new CAMServiceWebException(e.getMessage());

@@ -21,11 +21,11 @@ public class OrionRestClient {
 
     private static final Logger logger = LogManager.getLogger(OrionRestClient.class.getName());
 
-    public static List<ContextResponse> getContexts(OrionConfig config, String contextName) {
+    public static List<ContextResponse> queryContexts(OrionConfig config, String contextName) {
         if(null == config || config.isEmpty())
             throw new IllegalArgumentException("Orion configuration is mandatory.");
         Client client = ClientBuilder.newClient();
-        if (null == contextName) contextName = "";
+        if (StringUtils.isBlank(contextName)) contextName = "";
         WebTarget webTarget = client.target(config.getUrl()).path("contextEntities").path(contextName);
         Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         addServiceHeaders(config.getService(), config.getServicePath(), invocationBuilder);
@@ -40,7 +40,7 @@ public class OrionRestClient {
         return contextContainerJSON.getContextResponses();
     }
 
-    public static ContextElement sendContext(OrionConfig config,
+    public static ContextElement postContext(OrionConfig config,
                                              ContextElement context) {
         if (null == context) return null;
         Client client = ClientBuilder.newClient();

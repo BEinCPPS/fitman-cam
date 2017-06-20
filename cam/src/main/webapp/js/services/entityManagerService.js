@@ -254,7 +254,7 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
             ignoreLoadingBar: true
         };
         if (auth.isLoggedIn())
-            return $http.post(BACK_END_URL_CONST + '/orion/download', selectedAssets, config);
+            return $http.post(BACK_END_URL_CONST + '/idas/download', selectedAssets, config);
         else
             return rejectNotLoggedCall();
     }

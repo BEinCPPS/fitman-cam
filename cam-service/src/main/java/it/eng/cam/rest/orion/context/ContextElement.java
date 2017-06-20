@@ -16,6 +16,9 @@ public class ContextElement {
     private String originalAssetName;
     @JsonIgnore
     private String orionConfigId;
+    @JsonIgnore
+    private String domainName;
+
 
     public ContextElement(String id, String type, ArrayList<Attribute> attributes, String isPattern) {
         this.attributes = new ArrayList<>();
@@ -104,4 +107,11 @@ public class ContextElement {
         this.originalAssetName = originalAssetName;
     }
 
+    public String getDomainName() {
+        return domainName;
+    }
+
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
+    }
 }

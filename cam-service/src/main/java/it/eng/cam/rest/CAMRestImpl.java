@@ -2,10 +2,12 @@ package it.eng.cam.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.eng.cam.rest.orion.AssetToContextTrasformer;
+import it.eng.cam.rest.orion.ContextToAssetTransformer;
 import it.eng.cam.rest.orion.OrionRestClient;
 import it.eng.cam.rest.orion.context.ContextElement;
 import it.eng.cam.rest.idas.AssetToIDASMappingTrasformer;
 import it.eng.cam.rest.idas.IDASMappingContext;
+import it.eng.cam.rest.orion.context.ContextResponse;
 import it.eng.cam.rest.security.project.Project;
 import it.eng.cam.rest.security.service.impl.IDMKeystoneService;
 import it.eng.cam.rest.sesame.SesameRepoManager;
@@ -14,6 +16,7 @@ import it.eng.ontorepo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.eclipse.rdf4j.query.algebra.Str;
 
 import java.net.MalformedURLException;
 import java.text.ParseException;
@@ -269,7 +272,7 @@ public class CAMRestImpl {
                     .filter(cfg -> cfg.getId().equals(contextElement.getOrionConfigId())).findAny();
             if (!configFound.isPresent() || configFound.get().isEmpty())
                 throw new IllegalStateException("Orion configuration '" + contextElement.getOrionConfigId() + "' not exists.");
-            OrionRestClient.sendContext(configFound.get(), contextElement);
+            OrionRestClient.postContext(configFound.get(), contextElement);
             dao = releaseRepo(dao);
             if (!dao.isIndividualConnectedToOrionConfig(contextElement.getOriginalAssetName(),
                     contextElement.getOrionConfigId()) && isNew)
@@ -440,6 +443,34 @@ public class CAMRestImpl {
         return mapper.writeValueAsString(contextElements);
     }
 
+
+    public static void refreshAssetFromOCB(RepositoryDAO dao, final String assetName, final AssetJSON assetJSON) throws Exception {
+        if (StringUtils.isBlank(assetName) || null == assetJSON || StringUtils.isBlank(assetJSON.getOrionConfigId()))
+            throw new Exception("Asset name and Orion configuration are mandatory!");
+        List<OrionConfig> orionConfigs = getOrionConfigs(dao);
+        Optional<OrionConfig> orionConfig = orionConfigs.stream().filter(oc -> oc.getId().equals(assetJSON.getOrionConfigId())).findAny();
+        if (!orionConfig.isPresent()) throw new Exception("Could not determine Orion configuration for the Individual");
+        final List<ContextResponse> contextResponses = OrionRestClient.queryContexts(orionConfig.get(), assetJSON.getName());
+        if (null == contextResponses || contextResponses.isEmpty())
+            throw new Exception("Data from OCB for the Individual not retrieved correctly!");
+        List<ContextElement> contextElements = contextResponses.stream()
+                .map(cr -> {
+                    ContextElement contextElement = cr.getContextElement();
+                    contextElement.setOrionConfigId(orionConfig.get().getId());
+                    contextElement.setOriginalAssetName(assetJSON.getName());
+                    contextElement.setDomainName(assetJSON.getDomainName());
+                    return contextElement;
+                }).collect(Collectors.toList());
+        List<Asset> assets = ContextToAssetTransformer.transformAll(releaseRepo(dao), contextElements);
+        if (null == assets || assets.isEmpty())
+            throw new Exception("Data from OCB for the Individual not transformed correctly!");
+        Asset asset = assets.get(0); //Only one
+        deleteIndividual(releaseRepo(dao), assetJSON.getName());
+        createAssetModel(releaseRepo(dao), assetJSON.getName(), assetJSON.getClassName(), assetJSON.getDomainName());
+        editAsset(releaseRepo(dao), assetJSON.getName(), assetJSON);
+    }
+
+
     private static String normalizeClassName(String normName) {
         if (null != normName && normName.contains("#") && !normName.contains("system"))
             return normName.substring(normName.indexOf("#") + 1);
@@ -453,8 +484,9 @@ public class CAMRestImpl {
     }
 
     private static RepositoryDAO releaseRepo(RepositoryDAO dao) {
-        SesameRepoManager.releaseRepoDaoConn(dao);
-        dao = SesameRepoManager.getRepoInstance(null);
+//        SesameRepoManager.releaseRepoDaoConn(dao);
+//        dao = SesameRepoManager.getRepoInstance(null);
+        dao = SesameRepoManager.restartRepoDaoConn(dao);
         return dao;
     }
 

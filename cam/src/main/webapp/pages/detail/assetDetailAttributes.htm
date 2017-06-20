@@ -17,7 +17,8 @@
             class="cam-btn-add-container" ng-click="downloadAssetsForIDAS(selectedAsset)">
         <i class="fa fa-download cam-table-button"></i> Download IDAS configuration
     </button>
-    <i class="fa fa-circle-o-notch fa-spin" style="font-size:24px" ng-show="isOCBEnabled && isRefreshig"></i>
+    <i class="fa fa-circle-o-notch fa-spin" data-toggle="tooltip" title="Refreshing from Orion"
+       style="font-size:24px" ng-show="isOCBEnabled && isRefreshig"></i>
     <button type="button" data-toggle="tooltip" title="Refresh context from Orion"
             ng-show="isOCBEnabled && !isRefreshig"
             ng-click="refreshAssetFromOCB()" class="cam-btn-add-container" style="margin-right: 0px;">
