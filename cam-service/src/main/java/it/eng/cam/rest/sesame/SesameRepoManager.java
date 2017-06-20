@@ -119,8 +119,10 @@ public class SesameRepoManager {
 
     public static RepositoryDAO restartRepoDaoConn(RepositoryDAO repoInstance) {
         if (repoInstance != null) {
+            String connection = null;
             Sesame2RepositoryDAO sRepo = (Sesame2RepositoryDAO) repoInstance;
-            String connection = sRepo.getRepo().getConnection().toString();
+            if (null != sRepo && null != sRepo.getRepo() && null != sRepo.getRepo().getConnection())
+                connection = sRepo.getRepo().getConnection().toString();
             sRepo.release();
             return getRepoInstance(connection, repoInstance.getClass());
         }

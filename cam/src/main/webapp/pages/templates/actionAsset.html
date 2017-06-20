@@ -6,7 +6,7 @@
     </button>
     <button class="cam-table-button"
             ng-click="openRemoveAssetPanel('$value$', '$elementType$')"
-            data-toggle="tooltip" title="Delete asset">
+            data-toggle="tooltip" title="Delete asset" ng-disabled="connectedTo">
         <i class="fa fa-trash cam-table-button"></i>
     </button>
     <button class="cam-table-button" ng-click="openNewAssetPanel('$value$')"

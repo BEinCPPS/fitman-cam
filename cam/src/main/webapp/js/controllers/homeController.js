@@ -149,9 +149,9 @@ camApp.controller('homeController', [
                 "aTargets": [0],
                 "bSortable": false,
                 "fnRender": function (data) {
-                    var connectedTo = data.aData.connectedToOrion;
-                    if (!isEmpty(connectedTo))
-                        return '<i class="fa fa-globe" aria-hidden="true" data-toggle="tooltip" data-original-title="Connected with ' + connectedTo + '"></i>';
+                    $scope.connectedTo = data.aData.connectedToOrion;
+                    if (!isEmpty($scope.connectedTo))
+                        return '<i class="fa fa-globe" aria-hidden="true" data-toggle="tooltip" data-original-title="Connected with ' + $scope.connectedTo + '"></i>';
                     else
                         return '';
 

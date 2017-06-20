@@ -175,7 +175,7 @@ div[data-tree-model] li .selected {
 }
 
 .cam-btn-add-container {
-    color: #000 !important;
+    color: #000 ;
     /*float: right;*/
     margin-top: 15px;
     margin-right: 64px;

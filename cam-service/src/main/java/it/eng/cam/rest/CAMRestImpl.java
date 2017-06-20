@@ -458,6 +458,4 @@ public class CAMRestImpl {
         return dao;
     }
 
-
-
 }

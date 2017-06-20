@@ -31,4 +31,6 @@ public class Constants {
     public static final String DEFAULT_SERVICE = finder.getString("orion.service.default");
     public static final String DEFAULT_SUB_SERVICE = finder.getString("orion.service.sub.default");
 
+    public static final String NGSI = "ngsi";
+
 }

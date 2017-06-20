@@ -1,5 +1,6 @@
 package it.eng.cam.rest.orion;
 
+import it.eng.cam.rest.Constants;
 import it.eng.cam.rest.orion.context.Attribute;
 import it.eng.cam.rest.orion.context.ContextElement;
 import it.eng.cam.rest.sesame.SesameRepoManager;
@@ -68,6 +69,7 @@ public class AssetToContextTrasformer {
                     || propertyValueItem.getNormalizedName().contains(BeInCpps.instanceOf)
                     || propertyValueItem.getNormalizedName().contains(BeInCpps.syncTo)
                     || propertyValueItem.getPropertyType().getSimpleName().equalsIgnoreCase("Object") //Relationships
+                    || !propertyValueItem.getNormalizedName().toLowerCase().startsWith(Constants.NGSI) //each attribute starts with ngsi
                     ) continue;
             Attribute attribute = new Attribute();
             attribute.setName(propertyValueItem.getNormalizedName());

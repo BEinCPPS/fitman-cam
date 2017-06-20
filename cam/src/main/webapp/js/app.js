@@ -44,7 +44,7 @@ camApp.config(function(toastrConfig) {
         allowHtml: true,
         autoDismiss: false,
         containerId: 'toast-container',
-        maxOpened: 2,
+        maxOpened: 1,
         newestOnTop: true,
         positionClass: 'toast-top-right',
         preventDuplicates: false,

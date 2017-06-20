@@ -1,21 +1,27 @@
 <div id="cam-asset-detail-btn-container" class="row-fluid" style="margin-top: 10px">
     <button type="button" data-toggle="tooltip" title="New Attribute" class="cam-btn-add-container"
-            ng-click="openNewAttributePanel()">
+            ng-click="openNewAttributePanel()" ng-disabled="isOCBEnabled">
         <i class="fa fa-plus" data-toggle="modal" data-target="#newAttributeLabel"/> New Attribute
     </button>
-    <button type="button" data-toggle="tooltip"  title="Send to Orion Context Broker" ng-show="!isOCBEnabled"
+    <button type="button" data-toggle="tooltip" title="Send to Orion Context Broker" ng-show="!isOCBEnabled"
             class="cam-btn-add-container"
             ng-click="openConfirmOperationPanel()">
-        <i class="fa fa-globe" data-toggle="modal" data-target="#newAttributeLabel"/> Send to Orion Context Broker
+        <i class="fa fa-globe" data-toggle="modal" data-target="#newAttributeLabel"/> Link to Orion Context Broker
     </button>
-    <button type="button" data-toggle="tooltip"  title="Disconnect from Orion" ng-show="isOCBEnabled"
+    <button type="button" data-toggle="tooltip" title="Disconnect from Orion" ng-show="isOCBEnabled"
             class="cam-btn-add-container"
             ng-click="openDisconnectFromOCB(selectedAsset.individualName)">
         <i class="fa fa-chain-broken cam-table-button"></i> Disconnect from {{selectedAsset.connectedToOrion}}
     </button>
-    <button type="button" data-toggle="tooltip"  title="Download assets for IDAS" class="cam-btn-add-container"
-            ng-click="downloadAssetsForIDAS(selectedAsset)">
+    <button type="button" data-toggle="tooltip" ng-show="isOCBEnabled" title="Download assets for IDAS"
+            class="cam-btn-add-container" ng-click="downloadAssetsForIDAS(selectedAsset)">
         <i class="fa fa-download cam-table-button"></i> Download IDAS configuration
+    </button>
+    <i class="fa fa-circle-o-notch fa-spin" style="font-size:24px" ng-show="isOCBEnabled && isRefreshig"></i>
+    <button type="button" data-toggle="tooltip" title="Refresh context from Orion"
+            ng-show="isOCBEnabled && !isRefreshig"
+            ng-click="refreshAssetFromOCB()" class="cam-btn-add-container" style="margin-right: 0px;">
+        <i class="fa fa-circle-o-notch"></i> Refresh from OCB
     </button>
 </div>
 <div id="asset-detail-table" class="cam-asset-detail-table-container">

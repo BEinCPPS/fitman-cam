@@ -16,6 +16,7 @@ import it.eng.cam.rest.sesame.dto.AttributeJSON;
 import it.eng.cam.rest.sesame.dto.ClassJSON;
 import it.eng.cam.rest.sesame.dto.RelationshipJSON;
 import it.eng.ontorepo.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.rdf4j.model.vocabulary.OWL;
@@ -44,6 +45,7 @@ import java.util.stream.Collectors;
 @Path("/")
 @PermitAll
 public class CAMRest {
+    public static final String OCB_ENABLED_READ_ONLY_MESSAGE = "This individual is linked to OCB and IS READ ONLY!";
     private static final Logger logger = LogManager.getLogger(CAMRest.class.getName());
     @Context
     SecurityContext securityContext;
@@ -250,6 +252,8 @@ public class CAMRest {
         List<PropertyValueItem> individualAttributes = null;
         RepositoryDAO repoInstance = null;
         try {
+            if (isOCBEnabled(assetName))
+                return Response.status(405).entity(OCB_ENABLED_READ_ONLY_MESSAGE).build();
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             individualAttributes = CAMRestImpl.getIndividualAttributes(repoInstance, assetName);
             if (individualAttributes != null) {
@@ -274,6 +278,8 @@ public class CAMRest {
     public Response deleteAsset(@PathParam("assetName") String assetName) {
         RepositoryDAO repoInstance = null;
         try {
+            if (isOCBEnabled(assetName))
+                return Response.status(405).entity(OCB_ENABLED_READ_ONLY_MESSAGE).build();
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             cleanProps(assetName);
             CAMRestImpl.deleteIndividual(repoInstance, assetName);
@@ -338,6 +344,8 @@ public class CAMRest {
     public Response setAttribute(@PathParam("assetName") String assetName, AttributeJSON attribute) {
         RepositoryDAO repoInstance = null;
         try {
+            if (isOCBEnabled(assetName))
+                return Response.status(405).entity(OCB_ENABLED_READ_ONLY_MESSAGE).build();
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             CAMRestImpl.setAttribute(repoInstance, attribute.getName(), assetName, attribute.getValue(),
                     attribute.getType());
@@ -369,6 +377,8 @@ public class CAMRest {
                                  @PathParam("attributeName") String attributeName, AttributeJSON attribute) {
         RepositoryDAO repoInstance = null;
         try {
+            if (isOCBEnabled(assetName))
+                return Response.status(405).entity(OCB_ENABLED_READ_ONLY_MESSAGE).build();
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             CAMRestImpl.removeProperty(repoInstance, assetName, attributeName);
         } catch (Exception e) {
@@ -406,6 +416,8 @@ public class CAMRest {
                                     @PathParam("attributeName") String attributeName) {
         RepositoryDAO repoInstance = null;
         try {
+            if (isOCBEnabled(assetName))
+                return Response.status(405).entity(OCB_ENABLED_READ_ONLY_MESSAGE).build();
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             CAMRestImpl.removeProperty(repoInstance, assetName, attributeName);
             return Response.ok("Attribute with name '" + attributeName + "'for individual '" + assetName
@@ -624,6 +636,8 @@ public class CAMRest {
     public Response updateAssetModel(@PathParam("modelName") String modelName, AssetJSON model) {
         RepositoryDAO repoInstance = null;
         try {
+            if (isOCBEnabled(modelName))
+                return Response.status(405).entity(OCB_ENABLED_READ_ONLY_MESSAGE).build();
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(repoInstance, modelName);
             if (individualAttributes != null) {
@@ -648,6 +662,8 @@ public class CAMRest {
     public Response deleteModel(@PathParam("modelName") String modelName) {
         RepositoryDAO repoInstance = null;
         try {
+            if (isOCBEnabled(modelName))
+                return Response.status(405).entity(OCB_ENABLED_READ_ONLY_MESSAGE).build();
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             cleanProps(modelName);
             CAMRestImpl.deleteIndividual(repoInstance, modelName);
@@ -711,6 +727,8 @@ public class CAMRest {
     public Response setModelAttribute(@PathParam("modelName") String modelName, AttributeJSON attribute) {
         RepositoryDAO repoInstance = null;
         try {
+            if (isOCBEnabled(modelName))
+                return Response.status(405).entity(OCB_ENABLED_READ_ONLY_MESSAGE).build();
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             CAMRestImpl.setAttribute(repoInstance, attribute.getName(), modelName, attribute.getValue(),
                     attribute.getType());
@@ -742,6 +760,8 @@ public class CAMRest {
                                       @PathParam("attributeName") String attributeName, AttributeJSON attribute) {
         RepositoryDAO repoInstance = null;
         try {
+            if (isOCBEnabled(modelName))
+                return Response.status(405).entity(OCB_ENABLED_READ_ONLY_MESSAGE).build();
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             CAMRestImpl.removeProperty(repoInstance, modelName, attributeName);
         } catch (Exception e) {
@@ -779,6 +799,8 @@ public class CAMRest {
                                          @PathParam("attributeName") String attributeName) {
         RepositoryDAO repoInstance = null;
         try {
+            if (isOCBEnabled(modelName))
+                return Response.status(405).entity(OCB_ENABLED_READ_ONLY_MESSAGE).build();
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
             CAMRestImpl.removeProperty(repoInstance, modelName, attributeName);
             return Response.ok("Attribute with name '" + attributeName + "'for individual '" + modelName
@@ -1183,6 +1205,31 @@ public class CAMRest {
                 SesameRepoManager.releaseRepoDaoConn(repoInstance);
             }
         }
+    }
+
+    /**
+     * If an asset is linked to the OCB is not possible to modify the asset is READ ONLY.
+     * Every change should come from OCB.
+     *
+     * @param individualName
+     * @return
+     * @throws Exception
+     */
+    private Boolean isOCBEnabled(String individualName) throws Exception {
+        if (StringUtils.isBlank(individualName)) {
+            throw new Exception("Individual Name is empty!");
+        }
+        RepositoryDAO repoInstance = SesameRepoManager.getRepoInstance(getClass());
+        List<PropertyValueItem> individualAttributes = CAMRestImpl.getIndividualAttributes(repoInstance,
+                individualName);
+        if (null == individualAttributes) {
+            throw new Exception("Could not determine if OCB is enabled for individual: " + individualName);
+        }
+        SesameRepoManager.restartRepoDaoConn(repoInstance);
+        long count = individualAttributes.stream().filter(indiv -> indiv.getNormalizedName().contains(BeInCpps.syncTo)).count();
+        SesameRepoManager.restartRepoDaoConn(repoInstance);
+        if (count > 0) return true;
+        return false;
     }
 }
 

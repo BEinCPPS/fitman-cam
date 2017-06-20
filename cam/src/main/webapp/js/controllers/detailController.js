@@ -27,7 +27,7 @@ camApp.controller('detailController',
                 if (data.type == 'relationship')
                     elementType = 'relationship';
 
-                attribute.action = '<div class="inline-flex-item"><button class="cam-table-button" ng-click="openRemovePropertyPanel(\'' + attribute.name + '\', \'' + elementType + '\', \'' + individualName + '\')' + '"> <i data-toggle="tooltip" title="Delete ' + elementType + '" class="fa fa-trash cam-table-button"></i> </button>' + '<button class="cam-table-button" ng-click="openAttributeDetailPanel(\'' + data.normalizedName + '\', \'' + elementType + '\')' + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-pencil cam-table-button"></i> </button>';
+                attribute.action = '<div class="inline-flex-item"><button ng-disabled="isOCBEnabled" class="cam-table-button" ng-click="openRemovePropertyPanel(\'' + attribute.name + '\', \'' + elementType + '\', \'' + individualName + '\')' + '"> <i data-toggle="tooltip" title="Delete ' + elementType + '" class="fa fa-trash cam-table-button"></i> </button>' + '<button ng-disabled="isOCBEnabled" class="cam-table-button" ng-click="openAttributeDetailPanel(\'' + data.normalizedName + '\', \'' + elementType + '\')' + '"> <i data-toggle="tooltip" title="Open detail" class="fa fa-pencil cam-table-button"></i> </button>';
 
                 if (data.type == 'relationship')
                     attribute.type = '<i data-toggle="tooltip" title="relationship" class="fa fa-link" ><i/>';
@@ -338,5 +338,13 @@ camApp.controller('detailController',
                     }, function (error) {
                         ngNotifier.error(error);
                     });
+            }
+
+            $scope.refreshAssetFromOCB = function () {
+                $scope.isRefreshig = true;
+                setTimeout(function () {
+                    $scope.isRefreshig = false;
+                    $scope.$apply()
+                }, 5000);
             }
         }]);
