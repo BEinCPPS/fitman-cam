@@ -132,6 +132,7 @@ in **Home** page, in **Applications** section, **Register** a new application wi
 >You can edit only the properties in `prod` profile.
 
 **4**. From the same folder launch the command `mvn package -P prod`
+
 **5**. Copy the `CAM war` and `CAMService.war` in your Tomcat webapps installation
 ```bash
 $ cp ./cam-service/target/CAMService.war ./apache-tomcat-8.0.33/webapps && ./cam/target/CAM.war ./apache-tomcat-8.0.33/webapps
