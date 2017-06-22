@@ -57,7 +57,7 @@ If creation is successful the user will be redirected to repository summary.
 
 + **C.** Install Cam-Service:<br/>
 ```bash
-$ cd CAMService
+$ cd cam-service
 $ mvn package -P prod
 ```
 
@@ -66,7 +66,7 @@ To skip Unit Tests use ``-DskipTests`` maven parameter.
 + **D.** Integration Test (This test uses **Sesame Repository in Memory** and **Apache Tomcat 7 Maven embedded**):
 
 ```bash
-$ cd CAMService
+$ cd cam-service
 $ mvn package
 $ mvn verify 
 ```
@@ -84,7 +84,7 @@ sesame.namespace
 Copy the CAMService.war into a Tomcat installation.
 
 ```bash
-$ cp ./CAMService/target/CAMService.war ./apache-tomcat-8.0.33/webapps
+$ cp ./cam-service/target/CAMService.war ./apache-tomcat-8.0.33/webapps
 ```
 
 ## Authentication
