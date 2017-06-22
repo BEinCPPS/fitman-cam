@@ -116,7 +116,6 @@ in **Home** page, in **Applications** section, **Register** a new application wi
 ```bash
 <authentication.service>oAuth</authentication.service>
 <horizon.url>http://localhost:8000</horizon.url>
-<!-- OAUTH2 CLIENT ID-->
 <client.id>your Client ID</client.id>
 ```
 **2**. From the same folder launch the command `mvn package`
