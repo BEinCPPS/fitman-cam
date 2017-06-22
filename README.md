@@ -88,8 +88,8 @@ $ cp ./CAMService/target/CAMService.war ./apache-tomcat-8.0.33/webapps
 ```
 
 ## Authentication
-In the latest version of the project, authentication is mandatory for every environment.<br/>
-Cam Project uses [OAuth2](https://oauth.net/2/) by means of the Fiware enabler [Identity Management - KeyRock](https://catalogue.fiware.org/enablers/identity-management-keyrock) for authentication and authorization.<br/>
+In the latest version of the project, authentication is **mandatory** for every type of environment.<br/>
+Cam Project uses [OAuth2](https://oauth.net/2/) by means of the *Fiware enabler* **[Identity Management - KeyRock](https://catalogue.fiware.org/enablers/identity-management-keyrock)** for authentication and authorization.<br/>
 **Identity Manager - KeyRock** could be installed with different possibilities as explained in the official [Github page](https://github.com/ging/fiware-idm). <br/>
 
 ### Basic configuration
