@@ -13,7 +13,7 @@
     <!-- Auth, is Keystone method authentication-->
     <properties>
         <authentication.service>oAuth</authentication.service>
-        <horizon.url>http://localhost:8002</horizon.url>
+        <horizon.url>http://localhost:8000</horizon.url>
         <!-- OAUTH2 CLIENT ID-->
        <!-- <client.id>6a636dc9ff1d4e4395ae01c60fb9d3b5</client.id> -->
         <client.id>4c6a29bf67e24a68a3c8826dc272ac14</client.id>
