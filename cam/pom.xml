@@ -36,7 +36,7 @@
                                 </includes>
                             </resource>
                         </webResources>
-                        <outputDirectory>/Users/ascatox/Documents/Servers/apache-tomcat-8.0.33/webapps</outputDirectory>
+                        <!--<outputDirectory>/Users/ascatox/Documents/Servers/apache-tomcat-8.0.33/webapps</outputDirectory>-->
                     </configuration>
                 </plugin>
             </plugins>
