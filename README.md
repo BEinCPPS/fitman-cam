@@ -106,7 +106,6 @@ in **Home** page, in **Applications** section, **Register** a new application wi
 | URL           | http://localhost:8080/CAM                     | 
 | Callback URL  | http://localhost:8080/CAM/oauth_callback.html |
 
-<br/>
 **2**. Click next to register data.<br/>
 **3**. In **Applications** section open CAM Application and in **OAuth2 Credentials** copy your **Client ID**.
 >(*) Fitman-cam local installation on Tomcat standard port.
