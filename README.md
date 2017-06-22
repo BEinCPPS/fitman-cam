@@ -98,7 +98,7 @@ The **fastest way** to have a working idM instance in your environment, is using
 
 #### IdM OAuth2 configuration
 **1**. Follow this [link](http://localhost:8000) to access to idM and authenticate with user and password of your installation (`idm/idm`in Docker image).<br/>
-in **Home** page, in **Applications** section, **Register** a new application with this data (*):
+in **Home** page, in **Applications** section, **Register** a new application with these data (*):
 
 | Data        | Value                                           | 
 | ------------- |:---------------------------------------------:| 
