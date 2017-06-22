@@ -18,7 +18,7 @@
                         account_username: parameterMap.account_username
                 }
             };
-            console.log(token.oauth);
+            console.log(JSON.stringify(token.oauth));
             TokenManager.setToken(token.oauth.access_token); //TODO Object
             window.location.href = CAM_URL;
         } else {

@@ -13,15 +13,15 @@ var ATTRIBUTES = 'attributes';
 var RELATIONSHIPS = 'relationships';
 
 
-var KEYROCK_URL = '${keyrock.url}';
+var HORIZON_URL = '${horizon.url}';
 var client_id = '${client.id}';
 
-var KEYROCK_SIGNUP_URL = KEYROCK_URL + '/sign_up';
-var KEYROCK_CHANGE_USER_URL = KEYROCK_URL + '/auth/logout';
+var KEYROCK_SIGNUP_URL = HORIZON_URL + '/sign_up';
+var KEYROCK_CHANGE_USER_URL = HORIZON_URL + '/auth/logout';
 var callback_uri = CAM_URL + '/oauth_callback.html';
-var OAUTH_LOGIN_URL = KEYROCK_URL + '/oauth2/authorize?response_type=token&client_id=' + client_id +
+var OAUTH_LOGIN_URL = HORIZON_URL + '/oauth2/authorize?response_type=token&client_id=' + client_id +
     '&redirect_uri=' + callback_uri;
-var OAUTH_USER_LOGGED_URL = KEYROCK_URL + '/user?access_token=';
+var OAUTH_USER_LOGGED_URL = HORIZON_URL + '/user?access_token=';
 
 var EVERYTHING = '(EVERYTHING)';
 var NO_DOMAIN = 'NO_DOMAIN';
