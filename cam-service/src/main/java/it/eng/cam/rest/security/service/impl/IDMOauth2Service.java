@@ -22,7 +22,7 @@ public class IDMOauth2Service implements IDMService {
 
     public  Response validateAuthToken(String token) {
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(Constants.IDM_URL).path("user")
+        WebTarget webTarget = client.target(Constants.IDM_URL_HORIZON).path("user")
                 .queryParam("access_token", token);
         Invocation.Builder invocationBuilder = webTarget.request();
         Response response = invocationBuilder.get();
@@ -31,7 +31,7 @@ public class IDMOauth2Service implements IDMService {
 
     public CAMPrincipal getUserPrincipalByToken(String token) {
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(Constants.IDM_URL).path("user")
+        WebTarget webTarget = client.target(Constants.IDM_URL_HORIZON).path("user")
                 .queryParam("access_token", token);
         Invocation.Builder invocationBuilder = webTarget.request();
         Response response = invocationBuilder.get();
