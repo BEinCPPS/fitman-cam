@@ -17,12 +17,18 @@
     </repositories>
 
     <properties>
-        <!-- <maven.compiler.source>1.8</maven.compiler.source> -->
-        <!-- <maven.compiler.target>1.8</maven.compiler.target> -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jersey.version>2.22.2</jersey.version>
         <log4j.version>2.5</log4j.version>
+        <version>${version}</version>
+        <artifact.id>${artifactId}</artifact.id>
+        <ontology.namespace.default>http://cam.eng.it</ontology.namespace.default> <!-- http://www.msee-ip.eu OLD-->
+        <!-- ORION CONFIGURATION-->
+        <orion.service.header>Fiware-Service</orion.service.header>
+        <orion.service.sub.header>Fiware-ServicePath</orion.service.sub.header>
+        <orion.service.default>camService</orion.service.default>
+        <orion.service.sub.default>/camSubService</orion.service.sub.default>
     </properties>
 
     <dependencies>
@@ -248,15 +254,9 @@
     </build>
     <profiles>
         <profile>
-            <!-- Development environments -->
+            <!-- Development environments IN MEMORY-->
             <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
-                <version>${version}</version>
-                <artifact.id>${artifactId}</artifact.id>
-                <ontology.namespace.default>http://cam.eng.it</ontology.namespace.default>
                 <sesame.url></sesame.url>
                 <sesame.repository>TEST</sesame.repository>
                 <sesame.namespace>beincppsns</sesame.namespace>
@@ -278,12 +278,6 @@
                 <keystone.admin.password></keystone.admin.password> <!-- INSERT PASSWORD -->
                 <!-- KEYSTONE -->
                 <!-- END KEYROCK IDM SECTION -->
-
-                <!-- ORION CONFIGURATION-->
-                <orion.service.header>Fiware-Service</orion.service.header>
-                <orion.service.sub.header>Fiware-ServicePath</orion.service.sub.header>
-                <orion.service.default>camService</orion.service.default>
-                <orion.service.sub.default>/camSubService</orion.service.sub.default>
             </properties>
         </profile>
         <!-- Production environment @ production server DEFAULT PROFILE-->
@@ -293,10 +287,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <version>${version}</version>
-                <artifact.id>${artifactId}</artifact.id>
-                <ontology.namespace.default>http://cam.eng.it</ontology.namespace.default>
-                <!-- http://www.msee-ip.eu OLD-->
                 <sesame.url>http://localhost:8080/rdf4j-server/</sesame.url>
                 <sesame.repository>CAM_REPO</sesame.repository>
                 <sesame.namespace>beincppsns</sesame.namespace>
@@ -318,12 +308,6 @@
                 <keystone.admin.password>idm</keystone.admin.password> <!-- INSERT PASSWORD -->
                 <!-- KEYSTONE -->
                 <!-- END KEYROCK IDM SECTION -->
-
-                <!-- ORION CONFIGURATION-->
-                <orion.service.header>Fiware-Service</orion.service.header>
-                <orion.service.sub.header>Fiware-ServicePath</orion.service.sub.header>
-                <orion.service.default>camService</orion.service.default>
-                <orion.service.sub.default>/camSubService</orion.service.sub.default>
             </properties>
         </profile>
     </profiles>
