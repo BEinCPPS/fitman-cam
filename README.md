@@ -94,7 +94,7 @@ Cam Project uses [OAuth2](https://oauth.net/2/) by means of the *Fiware enabler*
 
 ### Basic configuration
 The **fastest way** to have a working idM instance in your environment, is using the *Docker image*, following this [guide](https://github.com/ging/fiware-idm/blob/master/extras/docker/README.md).
->In particular follow the section *Run the container from the last release in Docker Hub*.
+>In particular way, follow the section '*Run the container from the last release in Docker Hub*'.
 
 #### IdM OAuth2 configuration
 **1**. Follow this [link](http://localhost:8000) to access to idM and authenticate with user and password of your installation (`idm/idm`in Docker image).<br/>
