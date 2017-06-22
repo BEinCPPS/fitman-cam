@@ -87,4 +87,52 @@ Copy the CAMService.war into a Tomcat installation.
 $ cp ./CAMService/target/CAMService.war ./apache-tomcat-8.0.33/webapps
 ```
 
-**Note**: This project uses [travis-ci](https://travis-ci.org/) for continuous integration.
+###Authentication
+In the latest version of the project, authentication is mandatory for every environment.<br/>
+Cam Project uses [OAuth2](https://oauth.net/2/) by means of the Fiware enabler [Identity Management - KeyRock](https://catalogue.fiware.org/enablers/identity-management-keyrock) for authentication and authorization.<br/>
+**Identity Manager - KeyRock** could be installed with different possibilities as explained in the official [Github page](https://github.com/ging/fiware-idm). <br/>
+
+####Basic configuration
+The **fastest way** to have a working idM instance in your environment, is using the *Docker image*, following this [guide](https://github.com/ging/fiware-idm/blob/master/extras/docker/README.md).
+>In particular follow the section *Run the container from the last release in Docker Hub*.
+
+#####IdM OAuth2 configuration
+**1**. Follow this [link](http://localhost:8000) to access to idM and authenticate with user and password of your installation (`idm/idm`in Docker image).<br/>
+in **Home** page, in **Applications** section, **Register** a new application with this data (*):
+| Data        | Value                                           | 
+| ------------- |:---------------------------------------------:| 
+| Name		      | CAM			                                  | 
+| URL           | http://localhost:8080/CAM                     | 
+| Callback URL  | http://localhost:8080/CAM/oauth_callback.html |
+<br/>
+**2**. Click next to register data.<br/>
+**3**. In **Applications** section open CAM Application and in **OAuth2 Credentials** copy your **Client ID**.
+>(*) Fitman-cam local installation on Tomcat standard port.
+
+#####Fitman-cam OAuth2 configuration
+**1**. In **cam** folder edit the following properties in [pom.xml](https://github.com/BEinCPPS/fitman-cam/blob/master/cam/pom.xml):
+
+```bash
+<authentication.service>oAuth</authentication.service>
+<horizon.url>http://localhost:8000</horizon.url>
+<!-- OAUTH2 CLIENT ID-->
+<client.id>your Client ID</client.id>
+```
+**2**. From the same folder launch the command `mvn package`
+
+**3**. In **cam-service** folder edit the following properties in [pom.xml](https://github.com/BEinCPPS/fitman-cam/blob/master/cam-service/pom.xml):
+ 
+```bash
+<keyrock.authentication.service>OAUTH2</keyrock.authentication.service>
+<horizon.url>http://localhost:8000</horizon.url>
+<keystone.url>http://localhost:5000</keystone.url>
+<keystone.admin.user>idm</keystone.admin.user>
+<keystone.admin.password>idm</keystone.admin.password> 
+```
+>You can edit only the properties in `prod` profile.
+
+**4**. From the same folder launch the command `mvn package -P prod`
+
+
+
+**Note**: This project uses [Travis-Ci](https://travis-ci.org/) for continuous integration.
