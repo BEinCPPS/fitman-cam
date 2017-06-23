@@ -13,10 +13,6 @@
     <!-- Auth, is Keystone method authentication-->
     <properties>
         <authentication.service>oAuth</authentication.service>
-        <horizon.url>http://localhost:8000</horizon.url>
-        <!-- OAUTH2 CLIENT ID-->
-       <!-- <client.id>6a636dc9ff1d4e4395ae01c60fb9d3b5</client.id> -->
-        <client.id>4c6a29bf67e24a68a3c8826dc272ac14</client.id>
     </properties>
     <build>
         <finalName>CAM</finalName>
@@ -36,10 +32,33 @@
                                 </includes>
                             </resource>
                         </webResources>
-                        <!--<outputDirectory>/Users/ascatox/Documents/Servers/apache-tomcat-8.0.33/webapps</outputDirectory>-->
+                        <outputDirectory>${tomcat.output.dir}</outputDirectory>
                     </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
     </build>
+    <profiles>
+        <profile>
+            <id>prod</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <horizon.url>http://localhost:8000</horizon.url>
+                <!-- OAUTH2 CLIENT ID-->
+                <client.id>4c6a29bf67e24a68a3c8826dc272ac14</client.id>
+                <tomcat.output.dir>${project.basedir}/target</tomcat.output.dir>
+            </properties>
+        </profile>
+        <profile>
+            <id>eng</id>
+            <properties>
+                <horizon.url>http://161.27.159.76</horizon.url>
+                <!-- OAUTH2 CLIENT ID-->
+                <client.id>6a636dc9ff1d4e4395ae01c60fb9d3b5</client.id>
+                <tomcat.output.dir>/Users/ascatox/Documents/Servers/apache-tomcat-8.0.33/webapps</tomcat.output.dir>
+            </properties>
+        </profile>
+    </profiles>
 </project>

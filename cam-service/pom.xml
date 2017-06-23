@@ -30,7 +30,6 @@
         <orion.service.default>camService</orion.service.default>
         <orion.service.sub.default>/camSubService</orion.service.sub.default>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -133,7 +132,7 @@
                     <artifactId>maven-war-plugin</artifactId>
                     <version>3.0.0</version>
                     <configuration>
-                        <!--<outputDirectory>/Users/ascatox/Documents/Servers/apache-tomcat-8.0.33/webapps</outputDirectory>-->
+                        <outputDirectory>${tomcat.output.dir}</outputDirectory>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -254,8 +253,8 @@
     </build>
     <profiles>
         <profile>
-            <!-- Development environments IN MEMORY-->
-            <id>dev</id>
+            <!-- In Memory environment-->
+            <id>mem</id>
             <properties>
                 <sesame.url></sesame.url>
                 <sesame.repository>TEST</sesame.repository>
@@ -271,13 +270,14 @@
                 <!-- OAUTH2, KEYSTONE Supported at the moment -->
                 <keyrock.authentication.service>OAUTH2</keyrock.authentication.service>
                 <!-- HORIZON -->
-                <horizon.url>http://161.27.159.76</horizon.url>
+                <horizon.url>http://localhost:8000</horizon.url>
                 <!-- KEYSTONE -->
-                <keystone.url>http://161.27.159.76:8080</keystone.url>
-                <keystone.admin.user></keystone.admin.user> <!-- INSERT USER -->
-                <keystone.admin.password></keystone.admin.password> <!-- INSERT PASSWORD -->
+                <keystone.url>http://localhost:5000</keystone.url>
+                <keystone.admin.user>idm</keystone.admin.user> <!-- INSERT USER -->
+                <keystone.admin.password>idm</keystone.admin.password> <!-- INSERT PASSWORD -->
                 <!-- KEYSTONE -->
                 <!-- END KEYROCK IDM SECTION -->
+                <tomcat.output.dir>${project.basedir}/target</tomcat.output.dir>
             </properties>
         </profile>
         <!-- Production environment @ production server DEFAULT PROFILE-->
@@ -308,6 +308,34 @@
                 <keystone.admin.password>idm</keystone.admin.password> <!-- INSERT PASSWORD -->
                 <!-- KEYSTONE -->
                 <!-- END KEYROCK IDM SECTION -->
+                <tomcat.output.dir>${project.basedir}/target</tomcat.output.dir>
+            </properties>
+        </profile>
+        <profile>
+            <id>eng</id>
+            <properties>
+                <sesame.url>http://localhost:8080/rdf4j-server/</sesame.url>
+                <sesame.repository>CAM_REPO</sesame.repository>
+                <sesame.namespace>beincppsns</sesame.namespace>
+                <sesame.memory.store.data.dir>/data</sesame.memory.store.data.dir>
+                <sesame.rdf.file>/onthology/export.rdf</sesame.rdf.file>
+                <!-- MEMORY or HTTP supported at the moment -->
+                <sesame.repo.type>HTTP</sesame.repo.type>
+                <destination.url.integration>http://localhost:8080/${artifactId}/</destination.url.integration>
+                <!-- CORS API ENABLING true or false -->
+                <cors.api>true</cors.api>
+                <!-- START KEYROCK IDM SECTION -->
+                <!-- OAUTH2, KEYSTONE Supported at the moment -->
+                <keyrock.authentication.service>OAUTH2</keyrock.authentication.service>
+                <!-- HORIZON -->
+                <horizon.url>http://161.27.159.76</horizon.url>
+                <!-- KEYSTONE -->
+                <keystone.url>http://161.27.159.76:8080</keystone.url>
+                <keystone.admin.user>idm</keystone.admin.user> <!-- INSERT USER -->
+                <keystone.admin.password>fiware</keystone.admin.password> <!-- INSERT PASSWORD -->
+                <!-- KEYSTONE -->
+                <!-- END KEYROCK IDM SECTION -->
+                <tomcat.output.dir>/Users/ascatox/Documents/Servers/apache-tomcat-8.0.33/webapps</tomcat.output.dir>
             </properties>
         </profile>
     </profiles>
