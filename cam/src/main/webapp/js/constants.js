@@ -31,3 +31,5 @@ var AUTH = 'auth';
 var GROUPING_CLASS_TYPE = "class";
 var GROUPING_DOMAIN_TYPE = "domain";
 var GROUPING_ORION_CONFIG_TYPE = "orionConfig";
+
+var NGSI_PREFIX = 'ngsi_';

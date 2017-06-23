@@ -35,8 +35,6 @@ th {
     text-align: left !important;
 }
 
-
-
 td {
     /*font-family: "Times New Roman", Times, serif;*/
     text-align: left;
@@ -175,7 +173,7 @@ div[data-tree-model] li .selected {
 }
 
 .cam-btn-add-container {
-    color: #000 ;
+    color: #000;
     /*float: right;*/
     margin-top: 15px;
     margin-right: 64px;
@@ -630,9 +628,16 @@ div#orionConfigFormGroup {
 }
 
 [ng\:cloak], [ng-cloak], .ng-cloak {
-  display: none !important;
+    display: none !important;
 }
 
 .not-active-tab {
     cursor: pointer;
+}
+
+.attribute-name-label-message {
+    font-size: 12px;
+    font-weight: normal;
+    color: #337ab7;
+    text-align: right;
 }

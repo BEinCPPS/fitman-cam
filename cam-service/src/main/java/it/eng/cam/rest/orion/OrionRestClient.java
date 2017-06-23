@@ -1,9 +1,8 @@
 package it.eng.cam.rest.orion;
 
-import it.eng.cam.rest.orion.context.ContextContainerJSON;
+import it.eng.cam.rest.Constants;
 import it.eng.cam.rest.orion.context.ContextElement;
 import it.eng.cam.rest.orion.context.ContextResponse;
-import it.eng.cam.rest.Constants;
 import it.eng.ontorepo.OrionConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
@@ -12,8 +11,6 @@ import org.apache.log4j.Logger;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by ascatox on 28/11/16.

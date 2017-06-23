@@ -1,7 +1,7 @@
 "use strict";
 
 function isEmpty(obj) {
-    if (obj === null || obj === undefined || obj == 'undefined' || obj === '' || obj == 'null' || obj.length == 0) {
+    if (typeof obj === 'undefined' || obj === null || obj === undefined || obj == 'undefined' || obj === '' || obj == 'null' || obj.length == 0) {
         return true;
     }
     return false;
@@ -25,7 +25,7 @@ var Routes = {
     DETAIL: "/:selectedAssetName"
 }
 
-String.prototype.replaceAll = function(str1, str2, ignoreCase) {
+String.prototype.replaceAll = function (str1, str2, ignoreCase) {
     return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g, "\\$&"), (ignoreCase ? "gi" : "g")), (typeof(str2) == "string") ? str2.replace(/\$/g, "$$$$") : str2);
 }
 

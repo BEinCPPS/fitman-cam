@@ -7,7 +7,6 @@ import it.eng.ontorepo.BeInCpps;
 import it.eng.ontorepo.IndividualItem;
 import it.eng.ontorepo.PropertyValueItem;
 import it.eng.ontorepo.RepositoryDAO;
-import it.eng.ontorepo.sesame2.Sesame2RepositoryDAO;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;

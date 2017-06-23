@@ -259,7 +259,7 @@ camApp.controller('detailController',
                 $scope.typeToAdd = 'Orion Context Broker';
                 $scope.subTypeToAdd = 'createInOCB';
                 $scope.titleOperationMessage = 'Create assets to the ';
-                $scope.operationMessage = 'Are you sure you want to create these ' + $scope.selectedOcbAsset.length + ' assets into the ';
+                $scope.operationMessage = 'Are you sure you want to create this ' + $scope.selectedOcbAsset.individualName + ' asset into the ';
                 ngDialogManager.open({
                     template: 'pages/createContexts.htm',
                     controller: 'confirmNewOperationController',

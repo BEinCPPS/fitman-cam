@@ -53,7 +53,6 @@ public class IDMOauth2Service implements IDMService {
         if (rolesJson != null && rolesJson.size() > 0) {
             for (int i = 0; i < rolesJson.size(); i++) {
                 JsonObject rol = rolesJson.getJsonObject(i);
-                //user.getRoles().add(Role.valueOf(rol.getString("name")));
                 user.getRoles().add(Constants.roleManager.getRolesLookup().get(rol.getString("name")));
             }
         } else
@@ -69,7 +68,6 @@ public class IDMOauth2Service implements IDMService {
                 if (organizationsRoles != null)
                     for (int j = 0; j < organizationsRoles.size(); j++) {
                         JsonObject orgRoleJson = organizationsRoles.getJsonObject(i);
-                        //org.getRoles().add(orgRoleJson.getString("name"));
                         org.getRoles().add(Constants.roleManager.getRolesLookup().get(orgRoleJson.getString("name")));
                     }
                 user.getOrganizations().add(org);

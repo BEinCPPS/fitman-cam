@@ -421,7 +421,8 @@ camApp.controller('homeController', [
                         .replaceAll('$elementType$', elementType)
                         .replaceAll('$groupingType$', groupingType)
                         .replaceAll('$groupingName$', groupingName)
-                        .replaceAll('$visibility$', visibility);
+                        .replaceAll('$visibility$', visibility)
+                        .replaceAll('$isOCBEnabled$', !isEmpty(data[i].connectedToOrion));
 
                 })();
             }
