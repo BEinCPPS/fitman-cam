@@ -339,12 +339,26 @@ camApp.controller('detailController',
                         ngNotifier.error(error);
                     });
             }
-
-            $scope.refreshAssetFromOCB = function () {
+            //TODO REMOVE
+            $scope.refreshAssetFromOCBMock = function () {
                 $scope.isRefreshig = true;
                 setTimeout(function () {
                     $scope.isRefreshig = false;
                     $scope.$apply()
                 }, 5000);
+            }
+            $scope.refreshAssetFromOCB = function () {
+                $scope.isRefreshig = true;
+                entityManager.refreshAssetFromOCB($scope.selectedAssetName)
+                    .then(function (response) {
+                        console.log(JSON.stringify(response.data));
+                        ngNotifier.success("Asset correctly refreshed from the Orion Context Broker.");
+                        $scope.isRefreshig = false;
+                        $route.reload();
+                    }, function (err) {
+                        ngNotifier.error(err);
+                        $scope.isRefreshig = false;
+                        $scope.$apply()
+                    })
             }
         }]);

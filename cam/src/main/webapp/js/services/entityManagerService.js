@@ -258,6 +258,12 @@ camApp.factory('entityManager', ['$q', '$http', '${authentication.service}', fun
         else
             return rejectNotLoggedCall();
     }
+    entityManager.refreshAssetFromOCB = function (individualName, selectedAsset) {
+        if (auth.isLoggedIn())
+            return $http.put(BACK_END_URL_CONST + '/assets/' + individualName + '/orion/refresh');
+        else
+            return rejectNotLoggedCall();
+    }
     // return our entire userFactory object
     return entityManager;
 

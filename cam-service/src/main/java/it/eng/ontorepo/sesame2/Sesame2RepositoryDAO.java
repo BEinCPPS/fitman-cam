@@ -214,6 +214,31 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     private final ValueFactory vf;
     private final URI ni;
     private final String ns;
+    private boolean inTransaction;
+    private RepositoryConnection connection;
+
+    public RepositoryConnection getConnection() {
+        if (!isInTransaction())
+            return repo.getConnection();
+        return connection;
+    }
+
+    public void setConnection(RepositoryConnection connection) {
+        this.connection = connection;
+    }
+
+    public boolean isInTransaction() {
+        return inTransaction;
+    }
+
+    public void setInTransaction(boolean inTransaction) {
+        this.inTransaction = inTransaction;
+    }
+
+    public void setInTransaction(boolean inTransaction, RepositoryConnection connection) {
+       setInTransaction(inTransaction);
+        setConnection(connection);
+    }
 
     public AbstractRepository getRepo() {
         return repo;
@@ -1680,16 +1705,19 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     private void addStatements(List<Statement> statements) {
         RepositoryConnection con = null;
         try {
-            con = repo.getConnection();
-            con.begin();
+            con = getConnection();
+            if (!isInTransaction())
+                con.begin(IsolationLevels.SERIALIZABLE);
             for (Statement statement : statements) {
                 con.add(statement);
             }
-            con.commit();
+            if (!isInTransaction())
+                con.commit();
         } catch (RepositoryException e) {
             if (null != con) {
                 try {
-                    con.rollback();
+                    if (!isInTransaction())
+                        con.rollback();
                 } catch (RepositoryException e1) {
                     throw new RuntimeException(e);
                 }
@@ -1698,7 +1726,8 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         } finally {
             if (null != con) {
                 try {
-                    con.close();
+                    if (!isInTransaction())
+                        con.close();
                 } catch (RepositoryException e) {
                     e.printStackTrace();
                 }
@@ -1709,17 +1738,20 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
     private void removeAllStatements(Resource subject, URI predicate, Value object) {
         RepositoryConnection con = null;
         try {
-            con = repo.getConnection();
-            con.begin(IsolationLevels.READ_COMMITTED);
+            con = getConnection();
+            if (!isInTransaction())
+                con.begin(IsolationLevels.READ_COMMITTED);
             RepositoryResult<Statement> statements = con.getStatements(subject, predicate, object, false);
             while (statements.hasNext()) {
                 con.remove(statements.next());
             }
-            con.commit();
+            if (!isInTransaction())
+                con.commit();
         } catch (RepositoryException e) {
             if (null != con) {
                 try {
-                    con.rollback();
+                    if (!isInTransaction())
+                        con.rollback();
                 } catch (RepositoryException e1) {
                     throw new RuntimeException(e);
                 }
@@ -1728,7 +1760,8 @@ public class Sesame2RepositoryDAO implements RepositoryDAO {
         } finally {
             if (null != con) {
                 try {
-                    con.close();
+                    if (!isInTransaction())
+                        con.close();
                 } catch (RepositoryException e) {
                     e.printStackTrace();
                 }

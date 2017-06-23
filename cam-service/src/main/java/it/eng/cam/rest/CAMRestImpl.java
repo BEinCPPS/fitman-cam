@@ -16,7 +16,8 @@ import it.eng.ontorepo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.eclipse.rdf4j.query.algebra.Str;
+import org.eclipse.rdf4j.IsolationLevels;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 
 import java.net.MalformedURLException;
 import java.text.ParseException;
@@ -185,7 +186,7 @@ public class CAMRestImpl {
         }
         try {
             dao.setAttribute(name, individualName, value, Class.forName(type));
-            sendContext(dao, individualName);
+            // sendContext(dao, individualName);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -255,7 +256,7 @@ public class CAMRestImpl {
 
 
     public static List<ContextElement> sendContexts(RepositoryDAO dao, List<AssetJSON> assetJSONs,
-                                                    boolean isNew) {
+                                                    boolean isNew) throws Exception {
         if (assetJSONs == null || assetJSONs.isEmpty()) throw new IllegalArgumentException("No assets in input.");
         List<OrionConfig> orionConfigs = getOrionConfigs(dao);
         List<ContextElement> contextElements = null;
@@ -283,7 +284,7 @@ public class CAMRestImpl {
     }
 
 
-    public static void sendContext(RepositoryDAO dao, String individualName) throws RuntimeException {
+    public static void sendContext(RepositoryDAO dao, String individualName) throws Exception {
         if (StringUtils.isBlank(individualName))
             throw new IllegalArgumentException("No asset in input.");
         dao = releaseRepo(dao);
@@ -401,6 +402,8 @@ public class CAMRestImpl {
         dao.deleteOrionConfig(orionConfigId);
     }
 
+
+    //Transaction
     public static List<OrionConfig> editOrionConfigs(RepositoryDAO dao, List<OrionConfig> orionConfigs) {
         List<OrionConfig> orionConfigsCreated = new ArrayList<>();
         if (orionConfigs == null || orionConfigs.size() == 0)
@@ -443,31 +446,48 @@ public class CAMRestImpl {
         return mapper.writeValueAsString(contextElements);
     }
 
-
-    public static void refreshAssetFromOCB(RepositoryDAO dao, final String assetName, final AssetJSON assetJSON) throws Exception {
-        if (StringUtils.isBlank(assetName) || null == assetJSON || StringUtils.isBlank(assetJSON.getOrionConfigId()))
-            throw new Exception("Asset name and Orion configuration are mandatory!");
-        List<OrionConfig> orionConfigs = getOrionConfigs(dao);
-        Optional<OrionConfig> orionConfig = orionConfigs.stream().filter(oc -> oc.getId().equals(assetJSON.getOrionConfigId())).findAny();
-        if (!orionConfig.isPresent()) throw new Exception("Could not determine Orion configuration for the Individual");
-        final List<ContextResponse> contextResponses = OrionRestClient.queryContexts(orionConfig.get(), assetJSON.getName());
-        if (null == contextResponses || contextResponses.isEmpty())
+    public static void refreshAssetFromOCB(RepositoryDAO dao, final String assetName) throws Exception {
+        if (StringUtils.isBlank(assetName))
+            throw new Exception("Asset name is mandatory!");
+        IndividualItem individual = dao.getIndividual(assetName);
+        Asset asset = IndividualtemToAssetTransformer.transform(releaseRepo(dao), individual);
+        List<OrionConfig> orionConfigs = getOrionConfigs(releaseRepo(dao));
+        Optional<OrionConfig> orionConfig = orionConfigs.stream().filter(oc ->
+                oc.getId().equals(asset.getConnectedToOrion())).findAny();
+        if (!orionConfig.isPresent() || null == orionConfig.get() || orionConfig.get().isEmpty())
+            throw new Exception("Could not determine Orion configuration for the Individual");
+        final ContextResponse contextResponse = OrionRestClient.queryContext(orionConfig.get(),
+                asset.getNormalizedName());
+        if (null == contextResponse || null == contextResponse.getContextElement())
             throw new Exception("Data from OCB for the Individual not retrieved correctly!");
-        List<ContextElement> contextElements = contextResponses.stream()
-                .map(cr -> {
-                    ContextElement contextElement = cr.getContextElement();
-                    contextElement.setOrionConfigId(orionConfig.get().getId());
-                    contextElement.setOriginalAssetName(assetJSON.getName());
-                    contextElement.setDomainName(assetJSON.getDomainName());
-                    return contextElement;
-                }).collect(Collectors.toList());
-        List<Asset> assets = ContextToAssetTransformer.transformAll(releaseRepo(dao), contextElements);
-        if (null == assets || assets.isEmpty())
+
+        ContextElement contextElement = contextResponse.getContextElement();
+        contextElement.setOrionConfigId(orionConfig.get().getId());
+        contextElement.setOriginalAssetName(asset.getOriginalName());
+        contextElement.setDomainName(asset.getDomain());
+
+        Asset assetRetrieved = ContextToAssetTransformer.transform(releaseRepo(dao), contextElement);
+        if (null == assetRetrieved || StringUtils.isBlank(assetRetrieved.getIndividualName()))
             throw new Exception("Data from OCB for the Individual not transformed correctly!");
-        Asset asset = assets.get(0); //Only one
-        deleteIndividual(releaseRepo(dao), assetJSON.getName());
-        createAssetModel(releaseRepo(dao), assetJSON.getName(), assetJSON.getClassName(), assetJSON.getDomainName());
-        editAsset(releaseRepo(dao), assetJSON.getName(), assetJSON);
+        dao = releaseRepo(dao);
+        try {
+            if (null != assetRetrieved.getAttributes() && !assetRetrieved.getAttributes().isEmpty())
+                for (PropertyValueItem propertyValueItem : assetRetrieved.getAttributes()) {
+                    if (propertyValueItem.getNormalizedName().startsWith(Constants.NGSI)) {
+                        if (asset.getAttributes() != null) {
+                            long count = asset.getAttributes().stream().filter(attOrig -> attOrig.getNormalizedName().equals(propertyValueItem.getNormalizedName())).count();
+                            if (count > 0)
+                                removeProperty(dao, assetRetrieved.getNormalizedName(), propertyValueItem.getNormalizedName());
+                        }
+                        setAttribute(dao, propertyValueItem.getNormalizedName(),
+                                assetRetrieved.getNormalizedName(), propertyValueItem.getPropertyOriginalValue(),
+                                propertyValueItem.getPropertyType().getName());
+                    }
+                }
+        } catch (Exception e) {
+            logger.error("Error in refreshing: " + e.getMessage());
+            throw new Exception(e);
+        }
     }
 
 

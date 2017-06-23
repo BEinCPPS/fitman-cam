@@ -1,5 +1,7 @@
 package it.eng.ontorepo;
 
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.base.AbstractRepository;
 import org.w3c.dom.Document;
 
 import java.io.File;
@@ -20,6 +22,24 @@ import java.util.List;
  * @author Mauro Isaja mauro.isaja@eng.it
  */
 public interface RepositoryDAO {
+
+    void setConnection(RepositoryConnection connection);
+
+    void setInTransaction(boolean inTransaction);
+
+    RepositoryConnection getConnection();
+
+    boolean isInTransaction();
+
+    void setInTransaction(boolean inTransaction, RepositoryConnection connection);
+
+    /**
+     * author ascatox
+     * access to base Repo for managing transactions
+     *
+     * @return
+     */
+    public AbstractRepository getRepo();
 
     /**
      * Reads all RDF statements from the Reference Ontology in the Repository,
@@ -128,9 +148,9 @@ public interface RepositoryDAO {
      * Reads the given Individual declaration from the Reference Ontology in the Repository.
      *
      * @param orionConfig name or local name of the OCB configuration refrenced in Ontology
+     * @throws RuntimeException
      * @returna List of IndividualItem objects, or null if the given name does not match an
      * Individual declaration
-     * @throws RuntimeException
      */
 
     public List<IndividualItem> getIndividualsByOrionConfig(String orionConfig) throws RuntimeException;
@@ -169,7 +189,8 @@ public interface RepositoryDAO {
 
     /**
      * Reads all the Domains and returns a String containing the local name
-     *     *
+     * *
+     *
      * @return
      * @throws RuntimeException
      */
@@ -473,7 +494,8 @@ public interface RepositoryDAO {
      * This operation is safe, as it cannot have any side effects on existing items of the
      * Reference Ontology. It fails if the Data or Object Property is predefined - i.e., it is part
      * of the Base Ontology.
-     * @param namespace of the property to remove
+     *
+     * @param namespace      of the property to remove
      * @param name
      * @param individualName
      * @throws IllegalArgumentException
@@ -481,6 +503,7 @@ public interface RepositoryDAO {
      */
     public void removeProperty(String namespace, String name, String individualName)
             throws IllegalArgumentException, RuntimeException;
+
     /**
      * Add a file in format RDF to the repository.
      *

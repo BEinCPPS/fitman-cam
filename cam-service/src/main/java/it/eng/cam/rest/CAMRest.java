@@ -930,16 +930,15 @@ public class CAMRest {
     @PUT
     @Path("/assets/{assetName}/orion/refresh")
     @RolesAllowed({Role.BASIC, Role.ADMIN})
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response refreshAssetFromOCB(@PathParam("assetName") String assetName, AssetJSON assetJSON) {
+    public Response refreshAssetFromOCB(@PathParam("assetName") String assetName) {
         RepositoryDAO repoInstance = null;
         try {
             repoInstance = SesameRepoManager.getRepoInstance(getClass());
-            if (!isOCBEnabled(assetJSON.getName()))
-                return Response.status(405).entity("Individual " + assetJSON.getName() + " is not linked to Orion").build();
-            CAMRestImpl.refreshAssetFromOCB(repoInstance, assetName, assetJSON);
+            if (!isOCBEnabled(assetName))
+                return Response.status(405).entity("Individual " + assetName + " is not linked to Orion").build();
+            CAMRestImpl.refreshAssetFromOCB(repoInstance, assetName);
             return Response.ok(
-                    "Data refreshing from OCB '" + assetJSON.getOrionConfigId() + "'for Individual '" + assetJSON.getName() + "' was successful!")
+                    "Data refreshing from OCB for Individual '" + assetName + "' was successful!")
                     .build();
         } catch (Exception e) {
             logger.error(e);

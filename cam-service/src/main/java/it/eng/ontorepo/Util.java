@@ -229,6 +229,7 @@ public class Util {
     /**
      * Convert an URL http://domain.com/v3/projects#projectName
      * in an IDM URI idm://v3/projects#projectName
+     *
      * @param domainUri
      * @return
      * @throws MalformedURLException
@@ -243,7 +244,8 @@ public class Util {
             url_ = domainUri;
         else {
             String[] split = domainUri.split("#");
-            url_ = split[0];
+            if (split.length < 2) return "";
+                url_ = split[0];
             domainName = "#" + split[1];
         }
         URL url = new URL(url_);

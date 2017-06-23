@@ -72,7 +72,8 @@ public class AssetToContextTrasformer {
                     || !propertyValueItem.getNormalizedName().toLowerCase().startsWith(Constants.NGSI) //each attribute starts with ngsi
                     ) continue;
             Attribute attribute = new Attribute();
-            attribute.setName(propertyValueItem.getNormalizedName());
+            String[] split = propertyValueItem.getNormalizedName().split(Constants.NGSI);
+            attribute.setName(split[1]);
             attribute.setType(propertyValueItem.getPropertyType().getSimpleName().toLowerCase());
             if (propertyValueItem.getPropertyType().getSimpleName().equalsIgnoreCase(Calendar.class.getSimpleName()))
                 attribute.setType(Date.class.getSimpleName().toLowerCase());

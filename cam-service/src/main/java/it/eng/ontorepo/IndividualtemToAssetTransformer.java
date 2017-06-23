@@ -53,24 +53,29 @@ public class IndividualtemToAssetTransformer {
         String domainIri = "";
         Date date = null;
         String connectedToOrion = "";
+        List<PropertyValueItem> attributes = new ArrayList<>();
         List<PropertyValueItem> individualAttributes = dao.getAttributesByNS(individual.getIndividualName(),
                 dao.getImplicitNamespace());
         for (PropertyValueItem attribute :
                 individualAttributes) {
             if (attribute.getNormalizedName().contains(BeInCpps.ownedBy)) {
                 String[] split = attribute.getPropertyValue().split("#");
-                domain = split[1];
+                if (split.length > 1)
+                    domain = split[1];
                 domainIri = attribute.getPropertyValue();
             } else if (attribute.getNormalizedName().contains(BeInCpps.createdOn)) {
                 date = DateUtils.parseDate(attribute.getPropertyValue(), Constants.DATE_PATTERN_DATE_TIME_TIMEZONE);
                 //date = DateFormatUtils.format(data, "dd/MM/yyyy");
             } else if (attribute.getNormalizedName().contains(BeInCpps.syncTo)) {
                 connectedToOrion = attribute.getPropertyValue();
+            } else {
+                attributes.add(attribute);
             }
         }
         Asset asset = new Asset(individual, domain, date, lostDomain);
         asset.setDomainIri(domainIri);
         asset.setConnectedToOrion(connectedToOrion);
+        asset.getAttributes().addAll(attributes);
         return asset;
     }
 
