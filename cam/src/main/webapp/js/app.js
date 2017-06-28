@@ -42,7 +42,7 @@ camApp.config(function(toastrConfig) {
     //Info on params and configuration here -> https://github.com/Foxandxss/angular-toastr
     angular.extend(toastrConfig, {
         allowHtml: true,
-        autoDismiss: false,
+        autoDismiss: true,
         containerId: 'toast-container',
         maxOpened: 2,
         newestOnTop: true,
@@ -51,7 +51,7 @@ camApp.config(function(toastrConfig) {
         preventOpenDuplicates: false,
         tapToDismiss: true,
         closeButton: true,
-        timeOut: 0,
+        timeOut: 3000,
         extendedTimeOut: 0,
         target: 'body',
     });

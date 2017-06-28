@@ -15,7 +15,7 @@
         <authentication.service>oAuth</authentication.service>
     </properties>
     <build>
-        <finalName>CAM</finalName>
+        <finalName>Asset-Registry-for-CPPS</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -45,9 +45,9 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <horizon.url>http://localhost:8000</horizon.url>
+                <horizon.url>http://localhost:8002</horizon.url>
                 <!-- OAUTH2 CLIENT ID-->
-                <client.id>4c6a29bf67e24a68a3c8826dc272ac14</client.id>
+                <client.id>1b3eb201061844c4bb2f8e05b3b7d83e</client.id>
                 <tomcat.output.dir>${project.basedir}/target</tomcat.output.dir>
             </properties>
         </profile>

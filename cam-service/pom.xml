@@ -301,7 +301,7 @@
                 <!-- OAUTH2, KEYSTONE Supported at the moment -->
                 <keyrock.authentication.service>OAUTH2</keyrock.authentication.service>
                 <!-- HORIZON -->
-                <horizon.url>http://localhost:8000</horizon.url>
+                <horizon.url>http://localhost:8002</horizon.url>
                 <!-- KEYSTONE -->
                 <keystone.url>http://localhost:5000</keystone.url>
                 <keystone.admin.user>idm</keystone.admin.user> <!-- INSERT USER -->

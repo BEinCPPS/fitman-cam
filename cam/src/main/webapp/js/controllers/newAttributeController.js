@@ -88,58 +88,103 @@ camApp.controller('newAttributeController', [
         }
 
         $scope.updateNewAttribute = function () {
-             entityManager.updateAttribute($scope.isModel, $scope.selectedAssetName,
-                    $scope.newAttribute.name, $scope.newAttribute)
-                    .success(function (data, status) {
-                        Scopes.get('detailController').getAssetDetail($scope.selectedAssetName, ATTRIBUTES);
-                        ngDialogManager.close();
-                        ngNotifier.success();
-                        $route.reload();
-                    }).error(function (err) {
+            entityManager.updateAttribute($scope.isModel, $scope.selectedAssetName,
+                $scope.newAttribute.name, $scope.newAttribute)
+                .success(function (data, status) {
+                    Scopes.get('detailController').getAssetDetail($scope.selectedAssetName, ATTRIBUTES);
                     ngDialogManager.close();
-                    ngNotifier.error(err);
-               });
+                    ngNotifier.success();
+                    $route.reload();
+                }).error(function (err) {
+                ngDialogManager.close();
+                ngNotifier.error(err);
+            });
         }
 
         var detailController = Scopes.get('detailController');
         $scope.attributes = detailController.attributes;
 
-        $scope.openConfirmOperationPanel = function () {
-            if (isEmpty($scope.newAttribute.name)) {
-                $scope.invalidName = true;
-                return;
-            }
-            if (isEmpty($scope.newAttribute.type)) {
-                $scope.typeIsMandatory = true;
-                return;
-            }
-            if (isEmpty($scope.newAttribute.value)) {
-                $scope.valueIsMandatory = true;
-                return;
-            }
-            $scope.typeToAdd = 'attribute';
-            $scope.operationName = "Save";
-            $scope.titleOperationMessage = 'Create a new ';
-            $scope.operationMessage = 'Are you sure you want to create a new ';
-            if ($scope.isAutocomplete) {
-                $scope.operationMessage = 'Are you sure you want to select this ';
-                $scope.titleOperationMessage = 'Select this ';
-            }
-            ngDialogManager.open({
-                template: 'pages/confirmNewOperation.htm',
-                controller: 'confirmNewOperationController',
-                scope: $scope
-            });
-        }
+        /**
+         * modified after Mauro mail 27-06-2017
+         *
+         * $scope.openConfirmOperationPanel();
+         */
+        /*$scope.openConfirmOperationPanel = function () {
+         if (isEmpty($scope.newAttribute.name)) {
+         $scope.invalidName = true;
+         return;
+         }
+         if (isEmpty($scope.newAttribute.type)) {
+         $scope.typeIsMandatory = true;
+         return;
+         }
+         if (typeof $scope.newAttribute.value === 'undefined' || $scope.newAttribute.value === null) {
+         //$scope.valueIsMandatory = true;
+         $scope.newAttribute.value = '';
+         return;
+         }
+         $scope.typeToAdd = 'attribute';
+         $scope.operationName = "Save";
+         $scope.titleOperationMessage = 'Create a new ';
+         $scope.operationMessage = 'Are you sure you want to create a new ';
+         if ($scope.isAutocomplete) {
+         $scope.operationMessage = 'Are you sure you want to select this ';
+         $scope.titleOperationMessage = 'Select this ';
+         }
+         ngDialogManager.open({
+         template: 'pages/confirmNewOperation.htm',
+         controller: 'confirmNewOperationController',
+         scope: $scope
+         });
+         }*/
 
         $scope.manageEdit = function () {
             if ($scope.isAutocomplete) {
                 $scope.updateNewAttribute();
             } else {
-                $scope.openConfirmOperationPanel();
+                /**
+                 * modified after Mauro mail 27-06-2017
+                 *
+                 * $scope.openConfirmOperationPanel();
+                 */
+                if (isEmpty($scope.newAttribute.name)) {
+                    $scope.invalidName = true;
+                    return;
+                }
+                if (isEmpty($scope.newAttribute.type)) {
+                    $scope.typeIsMandatory = true;
+                    return;
+                }
+                if (typeof $scope.newAttribute.value === 'undefined' || $scope.newAttribute.value === null) {
+                    //$scope.valueIsMandatory = true;
+                    $scope.newAttribute.value = '';
+                    return;
+                }
+                $scope.saveNewAttribute();
+
             }
         }
 
+        $scope.isNGSIAttribute = function () {
+            if ($scope.newAttribute.name.startsWith(NGSI_PREFIX)) return true;
+            return false;
+        }
+
+        $scope.initValue = function () {
+            if (!isEmpty($scope.newAttribute.value)) return;
+            $scope.newAttribute.value = '';
+            /*if ($scope.newAttribute.type === 'java.lang.String')
+             $scope.newAttribute.value = '';
+             else if ($scope.newAttribute.type === 'java.lang.Integer'
+             || $scope.newAttribute.type === 'java.lang.Double'
+             || $scope.newAttribute.type === 'java.lang.Float')
+             $scope.newAttribute.value = 0;
+             else if ($scope.newAttribute.type === 'java.util.Calendar')
+             $scope.newAttribute.value = getCurrentDate();
+             else if ($scope.newAttribute.type === 'java.lang.Boolean')
+             $scope.newAttribute.value = 'false';
+             */
+        }
     }]);
 
 

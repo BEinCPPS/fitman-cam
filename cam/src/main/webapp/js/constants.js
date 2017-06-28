@@ -23,7 +23,7 @@ var OAUTH_LOGIN_URL = HORIZON_URL + '/oauth2/authorize?response_type=token&clien
     '&redirect_uri=' + callback_uri;
 var OAUTH_USER_LOGGED_URL = HORIZON_URL + '/user?access_token=';
 
-var EVERYTHING = '(EVERYTHING)';
+var EVERYTHING = '(ALL ASSETS)';
 var NO_DOMAIN = 'NO_DOMAIN';
 var OAUTH = 'oAuth';
 var AUTH = 'auth';
