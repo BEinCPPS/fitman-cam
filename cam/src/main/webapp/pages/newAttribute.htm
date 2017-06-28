@@ -52,10 +52,20 @@
                                type="text"
                                ng-model="newAttribute.value" ng-init="initValue()" ng-cloak/>
 
-                        <input class="form-control" ng-switch-when="java.lang.Float" type="number"
+                        <input class="form-control" ng-switch-when="java.lang.Float" ng-if="!isNGSIAttribute()"
+                               type="number"
                                ng-model="newAttribute.value" ng-init="initValue()" ng-cloak/>
 
-                        <input class="form-control" ng-switch-when="java.lang.Double" type="number"
+                        <input class="form-control" ng-switch-when="java.lang.Float" ng-if="isNGSIAttribute()"
+                               type="text"
+                               ng-model="newAttribute.value" ng-init="initValue()" ng-cloak/>
+
+                        <input class="form-control" ng-switch-when="java.lang.Double" ng-if="!isNGSIAttribute()"
+                               type="number"
+                               ng-model="newAttribute.value" ng-init="initValue()" ng-cloak/>
+
+                        <input class="form-control" ng-switch-when="java.lang.Double" ng-if="isNGSIAttribute()"
+                               type="text"
                                ng-model="newAttribute.value" ng-init="initValue()" ng-cloak/>
 
                         <select ng-model="newAttribute.value" ng-init="initValue()"
