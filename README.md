@@ -103,8 +103,8 @@ in **Home** page, in **Applications** section, **Register** a new application wi
 | Data        | Value                                           | 
 | ------------- |:---------------------------------------------:| 
 | Name		      | CAM			                | 
-| URL           | http://localhost:8080/CAM                     | 
-| Callback URL  | http://localhost:8080/CAM/oauth_callback.html |
+| URL           | http://localhost:8080/Asset-Registry-for-CPPS                     | 
+| Callback URL  | http://localhost:8080/Asset-Registry-for-CPPS/oauth_callback.html |
 
 **2**. Click next to register data.<br/>
 **3**. In **Applications** section open CAM Application and in **OAuth2 Credentials** copy your **Client ID**.
@@ -133,9 +133,9 @@ in **Home** page, in **Applications** section, **Register** a new application wi
 
 **4**. From the same folder launch the command `mvn package -P prod`
 
-**5**. Copy the `CAM war` and `CAMService.war` in your Tomcat webapps installation
+**5**. Copy the `Asset-Registry-for-CPPS war` and `CAMService.war` in your Tomcat webapps installation
 ```bash
-$ cp ./cam-service/target/CAMService.war ./apache-tomcat-8.0.33/webapps && ./cam/target/CAM.war ./apache-tomcat-8.0.33/webapps
+$ cp ./cam-service/target/CAMService.war ./apache-tomcat-8.0.33/webapps && ./cam/target/Asset-Registry-for-CPPS.war ./apache-tomcat-8.0.33/webapps
 ```
 
 
