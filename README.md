@@ -6,14 +6,14 @@
 
 The **Asset Registry for CPPS (CAM)** Specific Enabler is a web-based, integrated platform for the management of Virtualized Asset. This Specific Enabler is targeted to the business user, who is not required to have IT expertise, nor an in-depth knowledge of ontology-related concepts and technologies.
 
-CAM is based on several open source components, covering different functional areas; on top of these, it adds a rich layer of web-based, custom front-end functionalities which integrates low-level services into a unified, user-friendly experience.
+Asset Registry for CPPS is based on several open source components, covering different functional areas; on top of these, it adds a rich layer of web-based, custom front-end functionalities which integrates low-level services into a unified, user-friendly experience.
 
-CAM is delivered as a module that allows the user to manipulate ontologies adding classes and templates and create, manipulate and delete Assets.
+Asset Registry for CPPS is delivered as a module that allows the user to manipulate ontologies adding classes and templates and create, manipulate and delete Assets.
 
 
-This CAM release contains two modules, **Cam** and **Cam-Service**.
+This Asset Registry for CPPS release contains two modules, **Asset-Registry-for-CPPS** and **Cam-Service**.
  
-### Cam
+### Asset-Registry-for-CPPS
 
 Cam is a web application that exploits cam-service APIs. Cam allows user to create, manipulate and delete Assets using a web interface.
 
