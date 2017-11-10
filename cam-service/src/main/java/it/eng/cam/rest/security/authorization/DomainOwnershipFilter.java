@@ -15,7 +15,8 @@ public class DomainOwnershipFilter {
 
 
     public static List<Project> filterAll(List<Project> projects, SecurityContext securityContext) {
-        if (projects == null || projects.isEmpty() || securityContext == null) return projects;
+        if (projects == null || projects.isEmpty() || securityContext == null)
+            return projects;
         List<Project> projectsToGive = new ArrayList<>();
         projects.stream().forEach(project -> {
             Project filter = filter(project, securityContext);
@@ -26,10 +27,13 @@ public class DomainOwnershipFilter {
     }
 
     public static Project filter(Project project, SecurityContext securityContext) {
-        if (project == null || securityContext == null) return null;
+        if (project == null || securityContext == null)
+            return null;
         CAMPrincipal principal = (CAMPrincipal) securityContext.getUserPrincipal();
-        if (principal.isAdmin()) return project;
-        if (Constants.NO_DOMAIN.equals(project.getId())) return project; //SHOW NOT_SET
+        if (principal.isAdmin() || Constants.ADMIN_USER.equals(principal.getUsername()))
+            return project;
+        if (Constants.NO_DOMAIN.equals(project.getId()))
+            return project; //SHOW NOT_SET
         for (CAMPrincipal.Organization organization :
                 principal.getOrganizations()) {
             if (organization.getName().equals(project.getName()))
