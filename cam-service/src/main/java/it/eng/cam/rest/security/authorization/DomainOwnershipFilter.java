@@ -28,7 +28,8 @@ public class DomainOwnershipFilter {
     public static Project filter(Project project, SecurityContext securityContext) {
         if (project == null || securityContext == null) return null;
         CAMPrincipal principal = (CAMPrincipal) securityContext.getUserPrincipal();
-        if (principal.isAdmin()) return project;
+        if (principal.isAdmin() || Constants.ADMIN_USER.equals(principal.getUsername()))
+             return project;
         if (Constants.NO_DOMAIN.equals(project.getId())) return project; //SHOW NOT_SET
         for (CAMPrincipal.Organization organization :
                 principal.getOrganizations()) {
